@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NMR Spectrum Viewer</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230E1419'/%3E%3Crect x='0.6' y='0.6' width='30.8' height='30.8' rx='6.6' fill='none' stroke='%235FD3C8' stroke-opacity='0.30'/%3E%3Cline x1='3' y1='26' x2='29' y2='26' stroke='%23E8B04B' stroke-width='1.2' stroke-linecap='round'/%3E%3Cpath d='M3 25 8 25 10 6 12 25 15 25 17 14.5 19 25 21 18 23 25 29 25' fill='none' stroke='%235FD3C8' stroke-width='1.9' stroke-linejoin='round' stroke-linecap='round'/%3E%3C/svg%3E">
 <style>
 :root{
   --bg:#0E1419; --panel:#131C24; --panel2:#0F171E; --grid:#1E2A35; --gridw:#24333F;
@@ -55,6 +56,10 @@ input[type=number]:focus,input[type=text]:focus{border-color:var(--trace)}
 .cmp .eye{background:none;border:none;cursor:pointer;padding:0 2px;display:inline-flex;align-items:center;color:var(--dim);opacity:.9}
 .cmp .eye .svi{width:15px;height:15px}
 .cmp .eye.off{opacity:.4;color:var(--faint)}
+.cmp .bgk{background:none;border:none;cursor:pointer;padding:0 2px;display:inline-flex;align-items:center;color:var(--dim);opacity:.9}
+.cmp .bgk:hover{color:var(--ink)}
+.cmp .bgk.on{color:var(--trace);opacity:1}
+.cmp .bgk .svi{width:15px;height:15px}
 .dtog{display:flex;align-items:center;justify-content:space-between;padding:4px 3px;font-size:12px;color:var(--dim);border-bottom:1px solid var(--grid)}
 .dtog:last-child{border-bottom:none}
 .dtog .eye{background:none;border:none;cursor:pointer;padding:0 2px;display:inline-flex;align-items:center;color:var(--dim);opacity:.9}
@@ -71,7 +76,9 @@ input[type=number]:focus,input[type=text]:focus{border-color:var(--trace)}
 .item .irm{background:none;border:none;color:var(--faint);cursor:pointer;font-size:14px;line-height:1;padding:0 2px;flex:0 0 auto}
 .item .irm:hover{color:var(--err)}
 .cmp .thumb{height:20px;max-width:34px;border-radius:3px;border:1px solid var(--line);object-fit:cover;flex:none}
-#markColor{width:22px;height:22px;border:1px solid var(--line);border-radius:5px;background:var(--panel2);padding:2px;cursor:pointer}
+.tmrow input[type=color]{width:26px;height:20px;border:1px solid var(--line);border-radius:5px;background:var(--panel2);padding:2px;cursor:pointer;flex:none}
+.tmrow input[type=color]::-webkit-color-swatch-wrapper{padding:0}
+.tmrow input[type=color]::-webkit-color-swatch{border:none;border-radius:3px}
 .colorbtn{width:22px;height:22px;border:1px solid var(--line);border-radius:5px;cursor:pointer;padding:0}
 .colorpop{position:fixed;z-index:9999;background:var(--panel);border:1px solid var(--line);border-radius:9px;box-shadow:0 8px 28px rgba(0,0,0,.28);padding:10px;width:178px;font-size:12px}
 .colorpop .cpgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:9px}
@@ -100,6 +107,11 @@ aside::-webkit-scrollbar{width:9px}
 aside::-webkit-scrollbar-thumb{background:var(--gridw);border-radius:5px}
 .sect{border-bottom:1px solid var(--line);padding:13px 16px}
 .sect h3{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin-bottom:10px;font-weight:600;display:flex;align-items:center;justify-content:space-between}
+.sect h3 .h3l{display:inline-flex;align-items:center;gap:8px}
+.sect h3 .vzall{border:1px solid var(--line);background:none;color:var(--faint);cursor:pointer;border-radius:4px;width:25px;height:19px;display:inline-flex;align-items:center;justify-content:center;padding:0}
+.sect h3 .vzall:hover{color:var(--dim);border-color:var(--trace)}
+.sect h3 .vzall.on{color:var(--trace);border-color:var(--trace);background:color-mix(in srgb,var(--trace) 13%,transparent)}
+.sect h3 .vzall .svi{width:14px;height:14px}
 .meta{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-family:var(--mono);font-size:11.5px}
 .meta dt{color:var(--faint)}
 .meta dd{color:var(--ink);text-align:right;word-break:break-word}
@@ -137,6 +149,13 @@ input[type=color]::-webkit-color-swatch{border:none;border-radius:3px}
 .sprow .ord button:disabled{opacity:.25;cursor:default}
 .sprow .solo{border:1px solid var(--line);background:none;color:var(--faint);cursor:pointer;font-size:9px;border-radius:3px;width:16px;height:16px;line-height:1;padding:0}
 .sprow .solo:hover{color:var(--trace);border-color:var(--trace)}
+.sprow .vzt{border:1px solid var(--line);background:none;color:var(--faint);cursor:pointer;border-radius:4px;width:21px;height:18px;display:inline-flex;align-items:center;justify-content:center;padding:0;flex:none}
+.sprow .vzt:hover{color:var(--dim);border-color:var(--trace)}
+.sprow .vzt.on{color:var(--trace);border-color:var(--trace);background:color-mix(in srgb,var(--trace) 13%,transparent)}
+.sprow .vzt .svi{width:13px;height:13px}
+.sprow .nmrestore{border:none;background:none;color:var(--faint);cursor:pointer;padding:0 1px;flex:none;line-height:1;display:inline-flex}
+.sprow .nmrestore:hover{color:var(--accent)}
+.sprow .nmrestore .svi{width:13px;height:13px}
 .tbtn.disabled{opacity:.32;pointer-events:none}
 .toolhint{font-size:10.5px;color:var(--accent);margin-left:4px;white-space:nowrap}
 .rgrip{cursor:grab;color:var(--faint);font-size:13px;user-select:none;padding:0 2px}
@@ -155,6 +174,7 @@ tr.rowoff .reye{opacity:.4}
 main{grid-row:1;position:relative;display:flex;flex-direction:column;background:var(--bg);min-width:0}
 #toolbar{display:flex;align-items:center;gap:4px;padding:7px 12px;border-bottom:1px solid var(--line);background:var(--panel2);flex-wrap:wrap}
 .tbtn{background:transparent;border:1px solid var(--line);color:var(--dim);padding:5px 10px;border-radius:6px;cursor:pointer;font-size:11.5px;transition:.12s;white-space:nowrap}
+#btnInertia,#btnInvert{white-space:normal;line-height:1.2;padding-left:6px;padding-right:6px;overflow:hidden;text-overflow:ellipsis}
 .tbtn:hover{color:var(--ink);border-color:var(--gridw)}
 .tbtn:disabled{opacity:.35;cursor:default;pointer-events:none}
 .tbtn.on{border-color:var(--accent);color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,transparent)}
@@ -196,6 +216,8 @@ main{grid-row:1;position:relative;display:flex;flex-direction:column;background:
 .tmtog.on .eyeic{color:var(--trace)}
 .tmtog .eyeslash{display:none}
 .tmtog:not(.on) .eyeslash{display:inline}
+.tmpanel2 .tmcol>.tmtog{flex:0 0 auto;width:100%;box-sizing:border-box}
+.tmtog.indent{padding-left:30px}
 .vistog{display:flex;align-items:center;gap:6px;width:100%;min-width:0;background:none;border:none;color:var(--faint);padding:4px 6px;border-radius:6px;cursor:pointer;font-size:11px;text-align:left;white-space:nowrap}
 .vistog:hover{background:var(--panel2)}
 .vistog .eyeic{display:inline-flex;flex:none}
@@ -219,6 +241,7 @@ main{grid-row:1;position:relative;display:flex;flex-direction:column;background:
 .impfield2 select,.impfield2 input{margin-left:auto;padding:3px 6px;border:1px solid var(--line);border-radius:6px;background:var(--panel2);color:var(--ink);font-size:12px}
 .impfield2 input[type=number]{width:64px}
 .impnote2{font-size:9.5px;color:var(--faint);line-height:1.45;padding:4px 6px}
+.impnote2 a{color:var(--trace);text-decoration:underline}.impnote2 a:hover{color:var(--ink)}
 .impmini{max-height:120px;overflow-y:auto;padding:2px 4px}
 .impmini .mrow{display:flex;gap:6px;font-size:11px;padding:2px 4px;align-items:baseline}
 .impmini .mppm{font-family:var(--mono);color:var(--trace);min-width:40px}
@@ -351,10 +374,7 @@ html[data-theme=light] #drop{background:rgba(251,250,246,.94)}
       <div class="brand"><span class="mark">NMR <b>Spectrum</b> Viewer</span></div>
     </div>
     <div class="sect">
-      <h3><span data-i18n="secSpectra">Spectra</span><span class="tag" id="spCount"></span></h3>
-      <div class="ctl" id="layoutRow" style="display:none">
-        <div class="seg" id="segLayout"><button data-v="overlay" data-i18n="optOverlay">Overlay</button><button data-v="stack" class="on" data-i18n="optStacked">Stacked</button></div>
-      </div>
+      <h3><span class="h3l"><span data-i18n="secSpectra">Spectra</span><span class="tag" id="spCount"></span></span><button class="vzall" id="btnVzAll" style="display:none" data-i18n-title="ttVzAll"><svg class="svi" viewBox="0 0 16 16"><path d="M8 2.6v10.8"/><path d="M5.2 5.2 8 2.4l2.8 2.8"/><path d="M5.2 10.8 8 13.6l2.8-2.8"/></svg></button></h3>
       <div class="splist" id="splist"><div class="none" data-i18n="noSpectra">No spectra loaded</div></div>
     </div>
     <div class="sect" id="acqSect">
@@ -405,10 +425,24 @@ html[data-theme=light] #drop{background:rgba(251,250,246,.94)}
           </div>
           <input type="file" id="fileIn" multiple webkitdirectory>
         </div>
+        <div class="menu">
+          <button class="mbtn"><span class="mi"><svg class="svi" viewBox="0 0 16 16"><path d="M8 2.4v7.2"/><path d="M5 6.8 8 9.8l3-3"/><path d="M2.6 12.4h10.8"/></svg></span><span data-i18n="menuExport">Export</span></button>
+          <div class="mpanel">
+            <button class="mitem" id="btnPng"><span class="ic"><svg class="svi" viewBox="0 0 16 16"><rect x="2" y="3" width="12" height="10" rx="1.2"/><circle cx="5.6" cy="6.4" r="1.1"/><path d="m3 12 3.4-3.3 2.2 2.1 2.3-2.5L14 11.4"/></svg></span><span data-i18n="expPng">Image (PNG)</span></button>
+            <button class="mitem" id="btnCopyImg"><span class="ic"><svg class="svi" viewBox="0 0 16 16"><rect x="5" y="5" width="9" height="9" rx="1.2"/><path d="M11 5V3.2c0-.6-.4-1-1-1H3.2c-.6 0-1 .4-1 1V10c0 .6.4 1 1 1H5"/></svg></span><span data-i18n="expCopy">Copy image to clipboard</span></button>
+            <button class="mitem" id="btnCsv"><span class="ic"><svg class="svi" viewBox="0 0 16 16"><path d="M1.5 11.5V5M14.5 11.5V5"/><path d="M1.5 10c1.3 0 1.5-5.2 2.9-5.2S6 11 7.6 11s1.2-5.6 2.6-5.6 1.2 3.4 2.4 3.4c.7 0 1.1-.6 1.4-1.2"/></svg></span><span data-i18n="expCsv">Spectrum (CSV)</span></button>
+            <button class="mitem" id="btnReport"><span class="ic"><svg class="svi" viewBox="0 0 16 16"><rect x="3" y="2" width="10" height="12" rx="1"/><path d="M5.2 5.2h5.6M5.2 7.6h5.6M5.2 10h3.4"/></svg></span><span data-i18n="expReport">Analysis report (CSV)</span></button>
+            <div class="msep"></div>
+            <button class="mitem" id="btnSession"><span class="ic"><svg class="svi" viewBox="0 0 16 16"><path d="M2.5 3.5h11v9h-11z"/><path d="M5 3.5v3h6v-3M5 12.5V9h6v3.5"/></svg></span><span data-i18n="expSession">Save session (JSON)</span></button>
+            <button class="mitem" id="btnLoadSession"><span class="ic"><svg class="svi" viewBox="0 0 16 16"><path d="M2.5 11.5V4.2c0-.4.3-.7.7-.7h3l1.3 1.4h5.3c.4 0 .7.3.7.7v5.9c0 .4-.3.7-.7.7H3.2c-.4 0-.7-.3-.7-.7Z"/><path d="M8 10.5V6.5M6.3 8.2 8 6.5l1.7 1.7"/></svg></span><span data-i18n="expLoadSession">Load session…</span></button>
+            <input type="file" id="sessionIn" accept=".json,application/json" style="display:none">
+          </div>
+        </div>
         <div class="menu" id="menuViewBox">
           <button class="mbtn"><span class="mi"><svg class="svi" viewBox="0 0 16 16"><path d="M1.2 8S3.6 3.6 8 3.6 14.8 8 14.8 8 12.4 12.4 8 12.4 1.2 8 1.2 8Z"/><circle cx="8" cy="8" r="2.1"/></svg></span><span data-i18n="menuView">View</span></button>
           <div class="mpanel viewpanel">
             <div class="vcol">
+            <div class="tmhead" data-i18n="secRegion">Region</div>
             <div class="ctl">
               <label data-i18n="lblRange">δ range</label>
               <div class="row3" style="grid-template-columns:1fr auto 1fr;align-items:center;gap:6px">
@@ -427,6 +461,7 @@ html[data-theme=light] #drop{background:rgba(251,250,246,.94)}
               </div>
             </div>
             <div class="msep"></div>
+            <div class="tmhead" data-i18n="secSpectra">Spectra</div>
             <div class="ctl">
               <label data-i18n="tbIntensity">Spectrum intensity</label>
               <div class="row3">
@@ -436,19 +471,14 @@ html[data-theme=light] #drop{background:rgba(251,250,246,.94)}
               </div>
               <button class="tbtn" id="btnLinkY" style="width:100%;margin-top:6px" data-i18n="lblLinkY">Link all spectra</button>
             </div>
-            <div class="msep"></div>
-            <div class="ctl" id="srcRow" style="display:none">
-              <label><span data-i18n="lblSource">Data source</span> <span class="tag" id="srcTag" style="font-family:var(--mono);font-size:10px;color:var(--faint)"></span></label>
-              <div class="seg" id="segSrc"><button data-v="proc" class="on" data-i18n="optProcessed">Processed</button><button data-v="fid" data-i18n="optRawFid">Raw FID</button></div>
-            </div>
-            <div class="ctl">
-              <label data-i18n="lblMode">Mode</label>
-              <div class="seg" id="segMode"><button data-v="real" class="on" data-i18n="optReal">Real</button><button data-v="mag" data-i18n="optMag">Magnitude</button></div>
+            <div class="ctl" id="layoutRow" style="display:none">
+              <label data-i18n="lblLayout">Layout</label>
+              <div class="seg" id="segLayout"><button data-v="overlay" data-i18n="optOverlay">Overlay</button><button data-v="stack" class="on" data-i18n="optStacked">Stacked</button></div>
             </div>
             </div>
             <div class="vcol">
+            <div class="tmhead" data-i18n="hdViewVis">Show / hide</div>
             <div class="ctl">
-              <label data-i18n="hdViewVis">Show / hide</label>
               <div class="row2">
                 <button class="vistog on" id="btnNames"><span class="eyeic"><svg class="svi" viewBox="0 0 16 16"><path d="M1.5 8S4 3.8 8 3.8 14.5 8 14.5 8 12 12.2 8 12.2 1.5 8 1.5 8z"/><circle cx="8" cy="8" r="2"/><line class="eyeslash" x1="2.5" y1="13.5" x2="13.5" y2="2.5"/></svg></span><span data-i18n="lblNames">File names</span></button>
                 <button class="vistog on" id="btnInsets"><span class="eyeic"><svg class="svi" viewBox="0 0 16 16"><path d="M1.5 8S4 3.8 8 3.8 14.5 8 14.5 8 12 12.2 8 12.2 1.5 8 1.5 8z"/><circle cx="8" cy="8" r="2"/><line class="eyeslash" x1="2.5" y1="13.5" x2="13.5" y2="2.5"/></svg></span><span data-i18n="lblInsets">Images</span></button>
@@ -480,49 +510,7 @@ html[data-theme=light] #drop{background:rgba(251,250,246,.94)}
             </div>
             </div>
             <div class="vcol">
-            <div class="ctl">
-              <label data-i18n="lblPalette">Color palette</label>
-              <div id="paletteList" class="pallist"></div>
-              <div class="mkrow" id="monoBaseRow" style="display:none"><label data-i18n="lblMonoBase">Base color</label><input type="color" id="monoBase" value="#0E6E7E"></div>
-              <div id="customRow" style="display:none;margin-top:7px">
-                <label data-i18n="lblCustomPal" style="display:block;font-size:11px;color:var(--dim);margin-bottom:5px">Custom colors</label>
-                <div id="customSwatches" class="customsw"></div>
-                <button class="tbtn" id="btnAddCustom" style="width:100%;margin-top:6px" data-i18n="lblAddColor">+ Add color</button>
-              </div>
-              <button class="tbtn" id="btnApplyPalette" style="width:100%;margin-top:7px" data-i18n="lblApplyPalette">Re-apply to all</button>
-            </div>
-            <div class="ctl">
-              <label><span data-i18n="lblBg">Background</span> <input type="color" id="bgColor" value="#fbfaf6"></label>
-            </div>
-            </div>
-          </div>
-        </div>
-        <div class="menu">
-          <button class="mbtn"><span class="mi"><svg class="svi" viewBox="0 0 16 16"><path d="M8 2.4v7.2"/><path d="M5 6.8 8 9.8l3-3"/><path d="M2.6 12.4h10.8"/></svg></span><span data-i18n="menuExport">Export</span></button>
-          <div class="mpanel">
-            <button class="mitem" id="btnPng"><span class="ic"><svg class="svi" viewBox="0 0 16 16"><rect x="2" y="3" width="12" height="10" rx="1.2"/><circle cx="5.6" cy="6.4" r="1.1"/><path d="m3 12 3.4-3.3 2.2 2.1 2.3-2.5L14 11.4"/></svg></span><span data-i18n="expPng">Image (PNG)</span></button>
-            <button class="mitem" id="btnCopyImg"><span class="ic"><svg class="svi" viewBox="0 0 16 16"><rect x="5" y="5" width="9" height="9" rx="1.2"/><path d="M11 5V3.2c0-.6-.4-1-1-1H3.2c-.6 0-1 .4-1 1V10c0 .6.4 1 1 1H5"/></svg></span><span data-i18n="expCopy">Copy image to clipboard</span></button>
-            <button class="mitem" id="btnCsv"><span class="ic"><svg class="svi" viewBox="0 0 16 16"><path d="M1.5 11.5V5M14.5 11.5V5"/><path d="M1.5 10c1.3 0 1.5-5.2 2.9-5.2S6 11 7.6 11s1.2-5.6 2.6-5.6 1.2 3.4 2.4 3.4c.7 0 1.1-.6 1.4-1.2"/></svg></span><span data-i18n="expCsv">Spectrum (CSV)</span></button>
-            <button class="mitem" id="btnReport"><span class="ic"><svg class="svi" viewBox="0 0 16 16"><rect x="3" y="2" width="10" height="12" rx="1"/><path d="M5.2 5.2h5.6M5.2 7.6h5.6M5.2 10h3.4"/></svg></span><span data-i18n="expReport">Analysis report (CSV)</span></button>
-            <div class="msep"></div>
-            <button class="mitem" id="btnSession"><span class="ic"><svg class="svi" viewBox="0 0 16 16"><path d="M2.5 3.5h11v9h-11z"/><path d="M5 3.5v3h6v-3M5 12.5V9h6v3.5"/></svg></span><span data-i18n="expSession">Save session (JSON)</span></button>
-            <button class="mitem" id="btnLoadSession"><span class="ic"><svg class="svi" viewBox="0 0 16 16"><path d="M2.5 11.5V4.2c0-.4.3-.7.7-.7h3l1.3 1.4h5.3c.4 0 .7.3.7.7v5.9c0 .4-.3.7-.7.7H3.2c-.4 0-.7-.3-.7-.7Z"/><path d="M8 10.5V6.5M6.3 8.2 8 6.5l1.7 1.7"/></svg></span><span data-i18n="expLoadSession">Load session…</span></button>
-            <input type="file" id="sessionIn" accept=".json,application/json" style="display:none">
-          </div>
-        </div>
-        <div class="menu">
-          <button class="mbtn"><span class="mi"><svg class="svi" viewBox="0 0 24 24"><path d="M10.3 2.6h3.4l.5 2.3 1.9.8 2-1.3 2.4 2.4-1.3 2 .8 1.9 2.3.5v3.4l-2.3.5-.8 1.9 1.3 2-2.4 2.4-2-1.3-1.9.8-.5 2.3h-3.4l-.5-2.3-1.9-.8-2 1.3-2.4-2.4 1.3-2-.8-1.9-2.3-.5v-3.4l2.3-.5.8-1.9-1.3-2 2.4-2.4 2 1.3 1.9-.8.5-2.3Z"/><circle cx="12" cy="12" r="3.1"/></svg></span><span data-i18n="menuSettings">Settings</span></button>
-          <div class="mpanel viewpanel" style="min-width:245px">
-            <div class="vcol">
-            <div class="ctl">
-              <label data-i18n="lblLang">Language</label>
-              <div class="seg" id="segLang"><button data-v="ja" class="on">日本語</button><button data-v="en">English</button></div>
-            </div>
-            <div class="ctl">
-              <label data-i18n="lblTheme">Theme</label>
-              <div class="seg" id="segTheme"><button data-v="dark" data-i18n="optDark">Dark</button><button data-v="light" class="on" data-i18n="optLight">Light</button></div>
-            </div>
-            <div class="msep"></div>
+            <div class="tmhead" data-i18n="setLook">Appearance</div>
             <div class="ctl">
               <label><span data-i18n="lblLineW">Line width</span> <span class="val" id="lwv">1.1</span></label>
               <input type="range" id="lineW" min="0.5" max="3" step="0.1" value="1.1">
@@ -539,7 +527,6 @@ html[data-theme=light] #drop{background:rgba(251,250,246,.94)}
               <label data-i18n="lblFontFamily">Plot font</label>
               <div class="seg" id="segFont"><button data-v="mono" class="on" data-i18n="optMono">Mono</button><button data-v="sans" data-i18n="optSans">Sans</button><button data-v="serif" data-i18n="optSerif">Serif</button></div>
             </div>
-            <div class="msep"></div>
             <div class="ctl">
               <label><span data-i18n="lblAxisDigits">δ-axis decimals</span> <span class="val" id="digv">2</span></label>
               <input type="range" id="ppmDigits" min="1" max="6" step="1" value="2">
@@ -558,8 +545,50 @@ html[data-theme=light] #drop{background:rgba(251,250,246,.94)}
             </div>
             <div class="msep"></div>
             <div class="ctl">
-              <label data-i18n="hdWheel">Wheel / scroll</label>
-              <label style="margin-top:2px"><span data-i18n="lblWheel">Wheel sensitivity</span> <span class="val" id="wsv">1.0</span></label>
+              <label><span data-i18n="lblBg">Background</span> <input type="color" id="bgColor" value="#fbfaf6"></label>
+            </div>
+            </div>
+            <div class="vcol">
+            <div class="tmhead" data-i18n="lblPalette">Color palette</div>
+            <div class="ctl">
+              <div id="paletteList" class="pallist"></div>
+              <div class="mkrow" id="monoBaseRow" style="display:none"><label data-i18n="lblMonoBase">Base color</label><input type="color" id="monoBase" value="#0E6E7E"></div>
+              <div id="customRow" style="display:none;margin-top:7px">
+                <label data-i18n="lblCustomPal" style="display:block;font-size:11px;color:var(--dim);margin-bottom:5px">Custom colors</label>
+                <div id="customSwatches" class="customsw"></div>
+                <button class="tbtn" id="btnAddCustom" style="width:100%;margin-top:6px" data-i18n="lblAddColor">+ Add color</button>
+              </div>
+              <button class="tbtn" id="btnApplyPalette" style="width:100%;margin-top:7px" data-i18n="lblApplyPalette">Re-apply to all</button>
+            </div>
+            </div>
+          </div>
+        </div>
+        <div class="menu">
+          <button class="mbtn"><span class="mi"><svg class="svi" viewBox="0 0 24 24"><path d="M10.3 2.6h3.4l.5 2.3 1.9.8 2-1.3 2.4 2.4-1.3 2 .8 1.9 2.3.5v3.4l-2.3.5-.8 1.9 1.3 2-2.4 2.4-2-1.3-1.9.8-.5 2.3h-3.4l-.5-2.3-1.9-.8-2 1.3-2.4-2.4 1.3-2-.8-1.9-2.3-.5v-3.4l2.3-.5.8-1.9-1.3-2 2.4-2.4 2 1.3 1.9-.8.5-2.3Z"/><circle cx="12" cy="12" r="3.1"/></svg></span><span data-i18n="menuSettings">Settings</span></button>
+          <div class="mpanel viewpanel" style="min-width:245px">
+            <div class="vcol">
+            <div class="tmhead" data-i18n="setGen">General</div>
+            <div class="ctl">
+              <label data-i18n="lblLang">Language</label>
+              <div class="seg" id="segLang"><button data-v="ja" class="on">日本語</button><button data-v="en">English</button></div>
+            </div>
+            <div class="ctl">
+              <label data-i18n="lblTheme">Theme</label>
+              <div class="seg" id="segTheme"><button data-v="dark" data-i18n="optDark">Dark</button><button data-v="light" class="on" data-i18n="optLight">Light</button></div>
+            </div>
+            <div class="tmhead" data-i18n="secData">Data</div>
+            <div class="ctl" id="srcRow" style="display:none">
+              <label><span data-i18n="lblSource">Data source</span> <span class="tag" id="srcTag" style="font-family:var(--mono);font-size:10px;color:var(--faint)"></span></label>
+              <div class="seg" id="segSrc"><button data-v="proc" class="on" data-i18n="optProcessed">Processed</button><button data-v="fid" data-i18n="optRawFid">Raw FID</button></div>
+            </div>
+            <div class="ctl">
+              <label data-i18n="lblMode">Mode</label>
+              <div class="seg" id="segMode"><button data-v="real" class="on" data-i18n="optReal">Real</button><button data-v="mag" data-i18n="optMag">Magnitude</button></div>
+              <div style="font-size:10px;color:var(--faint);line-height:1.35;margin-top:5px" data-i18n="lblModeHint">Real = phased absorption (normal) · Magnitude = phase-independent</div>
+            </div>
+            <div class="tmhead" data-i18n="hdWheel">Wheel / scroll</div>
+            <div class="ctl">
+              <label><span data-i18n="lblWheel">Wheel sensitivity</span> <span class="val" id="wsv">1.0</span></label>
               <input type="range" id="wheelSens" min="0.3" max="3" step="0.1" value="1">
               <div class="row2" style="margin-top:8px">
                 <button class="tbtn" id="btnInertia" data-i18n="lblInertia">Inertia</button>
@@ -571,8 +600,8 @@ html[data-theme=light] #drop{background:rgba(251,250,246,.94)}
             <button class="mitem" id="btnResetSet"><span class="ic"><svg class="svi" viewBox="0 0 16 16"><path d="M3.2 8a4.8 4.8 0 1 0 1.5-3.5"/><path d="M2.4 2.8v2.6h2.6"/></svg></span><span data-i18n="btnResetDef">Reset to defaults</span></button>
             </div>
             <div class="vcol">
+              <div class="tmhead" data-i18n="secKeyboard">Keyboard</div>
               <div class="ctl">
-                <label data-i18n="secKeyboard">Keyboard</label>
                 <div class="kbdlist" id="kbdList"></div>
               </div>
             </div>
@@ -586,7 +615,7 @@ html[data-theme=light] #drop{background:rgba(251,250,246,.94)}
           <div class="tmhead" data-i18n="hdSolvent">Residual solvent → auto</div>
           <div id="solvList"></div>
           <div class="tmsep"></div>
-          <button class="tmitem erase" data-act="calReset"><span class="tmic">⟲</span><span data-i18n="actCalReset">Reset calibration</span></button>
+          <button class="tmitem erase" data-act="calReset"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M3.2 8a4.8 4.8 0 1 0 1.5-3.5"/><path d="M2.4 2.8v2.6h2.6"/></svg></span><span data-i18n="actCalReset">Reset calibration</span></button>
         </div>
       </span>
 
@@ -596,9 +625,9 @@ html[data-theme=light] #drop{background:rgba(251,250,246,.94)}
           <button class="tmitem" data-act="detectThr"><span class="tmic">⋀</span><span data-i18n="actDetectThr">Detect all ≥ threshold</span></button>
           <div class="tmrow indent"><span class="tmic">⌁</span><span data-i18n="actThreshold">Threshold</span><input type="range" id="thrSlider" min="1" max="50" step="1" value="5"><span class="thrval" id="thrVal">5%</span></div>
           <div class="tmsep"></div>
-          <button class="tmitem erase" data-act="tDelPeak"><span class="tmic">⌫</span><span data-i18n="actDelSelPeak">Select &amp; delete (click a peak)</span></button>
-          <button class="tmitem erase" data-act="tErasePk"><span class="tmic">⌫</span><span data-i18n="actRemoveRange">Remove (drag range)</span></button>
-          <button class="tmitem erase" data-act="clearPk"><span class="tmic">⌫</span><span data-i18n="actClearAll">Clear all</span></button>
+          <button class="tmitem erase" data-act="tDelPeak"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M2.5 4.5h11"/><path d="M6 4.5V3h4v1.5"/><path d="M4.1 4.5l.6 8.2a1 1 0 0 0 1 .9h4.6a1 1 0 0 0 1-.9l.6-8.2"/><path d="M6.6 7.2v3.8M9.4 7.2v3.8"/></svg></span><span data-i18n="actDelSelPeak">Select &amp; delete (click a peak)</span></button>
+          <button class="tmitem erase" data-act="tErasePk"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M2.5 4.5h11"/><path d="M6 4.5V3h4v1.5"/><path d="M4.1 4.5l.6 8.2a1 1 0 0 0 1 .9h4.6a1 1 0 0 0 1-.9l.6-8.2"/><path d="M6.6 7.2v3.8M9.4 7.2v3.8"/></svg></span><span data-i18n="actRemoveRange">Remove (drag range)</span></button>
+          <button class="tmitem erase" data-act="clearPk"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M2.5 4.5h11"/><path d="M6 4.5V3h4v1.5"/><path d="M4.1 4.5l.6 8.2a1 1 0 0 0 1 .9h4.6a1 1 0 0 0 1-.9l.6-8.2"/><path d="M6.6 7.2v3.8M9.4 7.2v3.8"/></svg></span><span data-i18n="actClearAll">Clear all</span></button>
           <div class="tmsep"></div>
           <div class="tmrow indent"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><rect x="2.5" y="2.5" width="11" height="11" rx="2.2"/><path d="M2.5 10l3-3 2.5 2.5L11 6l2.5 2.5"/></svg></span><span data-i18n="lblPeakColor">Peak color</span><input type="color" id="peakColor" value="#B5562A"></div>
           <div class="tmrow indent"><span class="tmic">.0</span><span data-i18n="lblPeakDigits">Label decimals</span><input type="range" id="pkDigits" min="1" max="6" step="1" value="2"><span class="thrval" id="pkdigv">2</span></div>
@@ -613,9 +642,9 @@ html[data-theme=light] #drop{background:rgba(251,250,246,.94)}
       <span class="toolmenu" id="tmInteg">
         <button class="tbtn main" id="tInteg" data-i18n="tIntegMain" title="">∫ Integrals</button>        <div class="tmpanel">
           <button class="tmitem" data-act="tInteg"><span class="tmic">∫</span><span data-i18n="actIntegrate">Integrate (drag range)</span></button>
-          <button class="tmitem erase" data-act="tEraseInt"><span class="tmic">⌫</span><span data-i18n="actRemoveRange">Remove (drag range)</span></button>
-          <button class="tmitem erase" data-act="delInteg"><span class="tmic">⌫</span><span data-i18n="actDelSel">Delete selected</span></button>
-          <button class="tmitem erase" data-act="clearInteg"><span class="tmic">⌫</span><span data-i18n="actClearAll">Clear all</span></button>
+          <button class="tmitem erase" data-act="tEraseInt"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M2.5 4.5h11"/><path d="M6 4.5V3h4v1.5"/><path d="M4.1 4.5l.6 8.2a1 1 0 0 0 1 .9h4.6a1 1 0 0 0 1-.9l.6-8.2"/><path d="M6.6 7.2v3.8M9.4 7.2v3.8"/></svg></span><span data-i18n="actRemoveRange">Remove (drag range)</span></button>
+          <button class="tmitem erase" data-act="delInteg"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M2.5 4.5h11"/><path d="M6 4.5V3h4v1.5"/><path d="M4.1 4.5l.6 8.2a1 1 0 0 0 1 .9h4.6a1 1 0 0 0 1-.9l.6-8.2"/><path d="M6.6 7.2v3.8M9.4 7.2v3.8"/></svg></span><span data-i18n="actDelSel">Delete selected</span></button>
+          <button class="tmitem erase" data-act="clearInteg"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M2.5 4.5h11"/><path d="M6 4.5V3h4v1.5"/><path d="M4.1 4.5l.6 8.2a1 1 0 0 0 1 .9h4.6a1 1 0 0 0 1-.9l.6-8.2"/><path d="M6.6 7.2v3.8M9.4 7.2v3.8"/></svg></span><span data-i18n="actClearAll">Clear all</span></button>
           <div class="tmsep"></div>
           <div class="tmrow indent"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><rect x="2.5" y="2.5" width="11" height="11" rx="2.2"/><path d="M2.5 10l3-3 2.5 2.5L11 6l2.5 2.5"/></svg></span><span data-i18n="lblIntegColor">Integral color</span><input type="color" id="integColor" value="#2E6FA8"></div>
           <div class="tmrow indent"><span class="tmic">↕</span><span data-i18n="lblIntegPos">Height</span><input type="range" id="integShift" min="-30" max="40" step="2" value="0"></div>
@@ -630,10 +659,14 @@ html[data-theme=light] #drop{background:rgba(251,250,246,.94)}
 
       <span class="toolmenu" id="tmMult">
         <button class="tbtn main ic-btn" id="tMult" title=""><svg class="svi" viewBox="0 0 24 24"><line x1="12" y1="3" x2="12" y2="10"/><line x1="12" y1="10" x2="6" y2="14"/><line x1="12" y1="10" x2="18" y2="14"/><line x1="6" y1="14" x2="6" y2="21"/><line x1="18" y1="14" x2="18" y2="21"/></svg><span data-i18n="tMultTxt">Multiplets</span></button>        <div class="tmpanel">
-          <button class="tmitem" data-act="tMult"><span class="tmic">⋔</span><span data-i18n="actMultPick">Select peaks (click) / drag range</span></button>
-          <button class="tmitem" data-act="defineMult"><span class="tmic">✓</span><span data-i18n="actMultDefine">Define from selection</span></button>
+          <button class="tmitem" data-act="tMult"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M8 2.5v3"/><path d="M8 5.5 4 8.8"/><path d="M8 5.5l4 3.3"/><path d="M4 8.8v3.2"/><path d="M12 8.8v3.2"/></svg></span><span data-i18n="actMultPick">Select peaks (click) / drag range</span></button>
+          <button class="tmitem" data-act="defineMult"><span class="tmic">✓</span><span data-i18n="actMultDefine">From selected peaks</span></button>
+          <button class="tmitem erase" data-act="clearMultSel"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M2.5 4.5h11"/><path d="M6 4.5V3h4v1.5"/><path d="M4.1 4.5l.6 8.2a1 1 0 0 0 1 .9h4.6a1 1 0 0 0 1-.9l.6-8.2"/><path d="M6.6 7.2v3.8M9.4 7.2v3.8"/></svg></span><span data-i18n="actMultClearSel">Clear selection</span></button>
+          <div class="tmrow indent"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><rect x="2.5" y="2.5" width="11" height="11" rx="2.2"/><path d="M2.5 10l3-3 2.5 2.5L11 6l2.5 2.5"/></svg></span><span data-i18n="lblMultColor">Multiplet color</span><input type="color" id="multColor" value="#7A4A98"></div>
+          <div class="tmrow indent"><span class="tmic">#</span><span data-i18n="lblMultDigits">J decimals</span><input type="range" id="multDigits" min="0" max="3" step="1" value="2"><span class="thrval" id="mdgv">2</span></div>
           <div class="tmsep"></div>
-          <button class="tmitem erase" data-act="clearMultSel"><span class="tmic">⌫</span><span data-i18n="actMultClearSel">Clear selection</span></button>
+          <button class="tmitem erase" data-act="tEraseMult"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M2.5 4.5h11"/><path d="M6 4.5V3h4v1.5"/><path d="M4.1 4.5l.6 8.2a1 1 0 0 0 1 .9h4.6a1 1 0 0 0 1-.9l.6-8.2"/><path d="M6.6 7.2v3.8M9.4 7.2v3.8"/></svg></span><span data-i18n="actRemoveRange">Remove (drag range)</span></button>
+          <button class="tmitem erase" data-act="clearMult"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M2.5 4.5h11"/><path d="M6 4.5V3h4v1.5"/><path d="M4.1 4.5l.6 8.2a1 1 0 0 0 1 .9h4.6a1 1 0 0 0 1-.9l.6-8.2"/><path d="M6.6 7.2v3.8M9.4 7.2v3.8"/></svg></span><span data-i18n="actClearAll">Clear all</span></button>
           <div class="tmsep"></div>
           <div class="tmhead" data-i18n="hdVisibility">Show / hide</div>
           <div class="tmtoggles">
@@ -646,36 +679,35 @@ html[data-theme=light] #drop{background:rgba(251,250,246,.94)}
         <button class="tbtn main ic-btn" id="tMark" title=""><svg class="svi" viewBox="0 0 24 24"><path d="M20.59 13.41 13.42 20.58a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><circle cx="7" cy="7" r="2.3"/></svg><span data-i18n="tAssignGrp">Assign</span></button>        <div class="tmpanel tmpanel2">
          <div class="tmcol">
           <button class="tmitem" data-act="tMark"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><circle cx="8" cy="8" r="4.5" fill="currentColor" stroke="none"/></svg></span><span data-i18n="actMark">Mark</span></button>
-          <div class="tmrow indent"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><rect x="2.5" y="2.5" width="11" height="11" rx="2.2"/><path d="M2.5 10l3-3 2.5 2.5L11 6l2.5 2.5"/></svg></span><span data-i18n="markColorLbl">Mark color</span><button type="button" class="colorbtn" id="markColor" style="background:#0E6E7E"></button></div>
+          <div class="tmrow indent"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><rect x="2.5" y="2.5" width="11" height="11" rx="2.2"/><path d="M2.5 10l3-3 2.5 2.5L11 6l2.5 2.5"/></svg></span><span data-i18n="markColorLbl">Mark color</span><input type="color" id="markColor" value="#0E6E7E"></div>
           <div class="tmrow indent"><span class="tmic">●</span><span data-i18n="lblMarkSize">Size</span><input type="range" id="markSize" min="2" max="12" step="0.5" value="4.6"><span class="thrval" id="mkv">4.6</span></div>
-          <button class="tmitem indent" data-act="resetMark"><span class="tmic">⟲</span><span data-i18n="btnResetDef">Reset to defaults</span></button>
+          <button class="tmitem indent" data-act="resetMark"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M3.2 8a4.8 4.8 0 1 0 1.5-3.5"/><path d="M2.4 2.8v2.6h2.6"/></svg></span><span data-i18n="btnResetDef">Reset to defaults</span></button>
+          <button class="tmtog indent" id="tgMark"><span class="eyeic"><svg class="svi" viewBox="0 0 16 16"><path d="M1.5 8S4 3.8 8 3.8 14.5 8 14.5 8 12 12.2 8 12.2 1.5 8 1.5 8z"/><circle cx="8" cy="8" r="2"/><line class="eyeslash" x1="2.5" y1="13.5" x2="13.5" y2="2.5"/></svg></span><span data-i18n="lblVisToggle">Show / hide</span></button>
+          <div class="tmsep"></div>
           <button class="tmitem" data-act="tAssign"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M2 13l1-3 7-7 2 2-7 7z"/><path d="M9.5 3.5l2 2"/></svg></span><span data-i18n="actText">Text label</span></button>
-          <div class="tmrow indent"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><rect x="2.5" y="2.5" width="11" height="11" rx="2.2"/><path d="M2.5 10l3-3 2.5 2.5L11 6l2.5 2.5"/></svg></span><span data-i18n="textColorLbl">Text color</span><button type="button" class="colorbtn" id="textColor" style="background:#7A4A98"></button></div>
+          <div class="tmrow indent"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><rect x="2.5" y="2.5" width="11" height="11" rx="2.2"/><path d="M2.5 10l3-3 2.5 2.5L11 6l2.5 2.5"/></svg></span><span data-i18n="textColorLbl">Text color</span><input type="color" id="textColor" value="#7A4A98"></div>
           <div class="tmrow indent"><span class="tmic">A</span><span data-i18n="lblTextSize">Font size</span><input type="range" id="textSize" min="7" max="20" step="0.5" value="10.5"><span class="thrval" id="tsv">10.5</span></div>
-          <button class="tmitem indent" data-act="resetText"><span class="tmic">⟲</span><span data-i18n="btnResetDef">Reset to defaults</span></button>
+          <button class="tmitem indent" data-act="resetText"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M3.2 8a4.8 4.8 0 1 0 1.5-3.5"/><path d="M2.4 2.8v2.6h2.6"/></svg></span><span data-i18n="btnResetDef">Reset to defaults</span></button>
+          <button class="tmtog indent" id="tgText"><span class="eyeic"><svg class="svi" viewBox="0 0 16 16"><path d="M1.5 8S4 3.8 8 3.8 14.5 8 14.5 8 12 12.2 8 12.2 1.5 8 1.5 8z"/><circle cx="8" cy="8" r="2"/><line class="eyeslash" x1="2.5" y1="13.5" x2="13.5" y2="2.5"/></svg></span><span data-i18n="lblVisToggle">Show / hide</span></button>
+          <div class="tmsep"></div>
           <button class="tmitem" data-act="tShade"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M2 12c1.5 0 1.5-7 3-7s1.5 7 3 7 1.5-7 3-7 1.5 7 3 7"/><path d="M2 14h12"/></svg></span><span data-i18n="actShade">Shade (drag)</span></button>
-          <div class="tmrow indent"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><rect x="2.5" y="2.5" width="11" height="11" rx="2.2"/><path d="M2.5 10l3-3 2.5 2.5L11 6l2.5 2.5"/></svg></span><span data-i18n="shadeColorLbl">Shade color</span><button type="button" class="colorbtn" id="shadeColor" style="background:#D33A2C"></button></div>
-          <button class="tmitem erase indent" data-act="tDelShade"><span class="tmic">⌫</span><span data-i18n="actDelShade">Delete shade</span></button>
-          <button class="tmitem erase indent" data-act="clearShade"><span class="tmic">⌫</span><span data-i18n="actClearShade">Clear all shades</span></button>
+          <div class="tmrow indent"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><rect x="2.5" y="2.5" width="11" height="11" rx="2.2"/><path d="M2.5 10l3-3 2.5 2.5L11 6l2.5 2.5"/></svg></span><span data-i18n="shadeColorLbl">Shade color</span><input type="color" id="shadeColor" value="#D33A2C"></div>
+          <button class="tmitem erase indent" data-act="tDelShade"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M2.5 4.5h11"/><path d="M6 4.5V3h4v1.5"/><path d="M4.1 4.5l.6 8.2a1 1 0 0 0 1 .9h4.6a1 1 0 0 0 1-.9l.6-8.2"/><path d="M6.6 7.2v3.8M9.4 7.2v3.8"/></svg></span><span data-i18n="actDelShade">Delete shade</span></button>
+          <button class="tmitem erase indent" data-act="clearShade"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M2.5 4.5h11"/><path d="M6 4.5V3h4v1.5"/><path d="M4.1 4.5l.6 8.2a1 1 0 0 0 1 .9h4.6a1 1 0 0 0 1-.9l.6-8.2"/><path d="M6.6 7.2v3.8M9.4 7.2v3.8"/></svg></span><span data-i18n="actClearShade">Clear all shades</span></button>
+          <button class="tmtog indent" id="tgShade"><span class="eyeic"><svg class="svi" viewBox="0 0 16 16"><path d="M1.5 8S4 3.8 8 3.8 14.5 8 14.5 8 12 12.2 8 12.2 1.5 8 1.5 8z"/><circle cx="8" cy="8" r="2"/><line class="eyeslash" x1="2.5" y1="13.5" x2="13.5" y2="2.5"/></svg></span><span data-i18n="lblVisToggle">Show / hide</span></button>
+          <div class="tmsep"></div>
           <button class="tmitem" data-act="tLine"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><circle cx="3.5" cy="12.5" r="1.5"/><circle cx="12.5" cy="3.5" r="1.5"/><line x1="4.6" y1="11.4" x2="11.4" y2="4.6" stroke-dasharray="2.4 2"/></svg></span><span data-i18n="actLine">Connector (2-pt drag)</span></button>
-          <div class="tmrow indent"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><rect x="2.5" y="2.5" width="11" height="11" rx="2.2"/><path d="M2.5 10l3-3 2.5 2.5L11 6l2.5 2.5"/></svg></span><span data-i18n="lineColorLbl">Color</span><button type="button" class="colorbtn" id="lineColor" style="background:#3A4750"></button></div>
-          <button class="tmitem erase indent" data-act="tDelLine"><span class="tmic">⌫</span><span data-i18n="actDelLine">Delete connector</span></button>
-          <button class="tmitem erase indent" data-act="clearLines"><span class="tmic">⌫</span><span data-i18n="actClearLines">Clear all connectors</span></button>
+          <div class="tmrow indent"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><rect x="2.5" y="2.5" width="11" height="11" rx="2.2"/><path d="M2.5 10l3-3 2.5 2.5L11 6l2.5 2.5"/></svg></span><span data-i18n="lineColorLbl">Color</span><input type="color" id="lineColor" value="#3A4750"></div>
+          <button class="tmitem erase indent" data-act="tDelLine"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M2.5 4.5h11"/><path d="M6 4.5V3h4v1.5"/><path d="M4.1 4.5l.6 8.2a1 1 0 0 0 1 .9h4.6a1 1 0 0 0 1-.9l.6-8.2"/><path d="M6.6 7.2v3.8M9.4 7.2v3.8"/></svg></span><span data-i18n="actDelLine">Delete connector</span></button>
+          <button class="tmitem erase indent" data-act="clearLines"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M2.5 4.5h11"/><path d="M6 4.5V3h4v1.5"/><path d="M4.1 4.5l.6 8.2a1 1 0 0 0 1 .9h4.6a1 1 0 0 0 1-.9l.6-8.2"/><path d="M6.6 7.2v3.8M9.4 7.2v3.8"/></svg></span><span data-i18n="actClearLines">Clear all connectors</span></button>
+          <button class="tmtog indent" id="tgLine"><span class="eyeic"><svg class="svi" viewBox="0 0 16 16"><path d="M1.5 8S4 3.8 8 3.8 14.5 8 14.5 8 12 12.2 8 12.2 1.5 8 1.5 8z"/><circle cx="8" cy="8" r="2"/><line class="eyeslash" x1="2.5" y1="13.5" x2="13.5" y2="2.5"/></svg></span><span data-i18n="lblVisToggle">Show / hide</span></button>
           <div class="tmsep"></div>
           <button class="tmitem" id="btnAddImg"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><rect x="2" y="3" width="12" height="10" rx="1.2"/><circle cx="5.6" cy="6.4" r="1.1"/><path d="m3 12 3.4-3.3 2.2 2.1 2.3-2.5L14 11.4"/></svg></span><span data-i18n="btnAddImg">＋ Add image</span></button>
           <input type="file" id="imgIn" accept="image/*" multiple style="display:none">
-          <div class="tmsep"></div>
-          <div class="tmhead" data-i18n="hdVisibility">Show / hide</div>
-          <div class="tmtoggles">
-            <button class="tmtog" id="tgMark"><span class="eyeic"><svg class="svi" viewBox="0 0 16 16"><path d="M1.5 8S4 3.8 8 3.8 14.5 8 14.5 8 12 12.2 8 12.2 1.5 8 1.5 8z"/><circle cx="8" cy="8" r="2"/><line class="eyeslash" x1="2.5" y1="13.5" x2="13.5" y2="2.5"/></svg></span><span data-i18n="lblShowMarks">Marks</span></button>
-            <button class="tmtog" id="tgText"><span class="eyeic"><svg class="svi" viewBox="0 0 16 16"><path d="M1.5 8S4 3.8 8 3.8 14.5 8 14.5 8 12 12.2 8 12.2 1.5 8 1.5 8z"/><circle cx="8" cy="8" r="2"/><line class="eyeslash" x1="2.5" y1="13.5" x2="13.5" y2="2.5"/></svg></span><span data-i18n="lblShowText">Text</span></button>
-            <button class="tmtog" id="tgShade"><span class="eyeic"><svg class="svi" viewBox="0 0 16 16"><path d="M1.5 8S4 3.8 8 3.8 14.5 8 14.5 8 12 12.2 8 12.2 1.5 8 1.5 8z"/><circle cx="8" cy="8" r="2"/><line class="eyeslash" x1="2.5" y1="13.5" x2="13.5" y2="2.5"/></svg></span><span data-i18n="lblShowShades">Shades</span></button>
-            <button class="tmtog" id="tgLine"><span class="eyeic"><svg class="svi" viewBox="0 0 16 16"><path d="M1.5 8S4 3.8 8 3.8 14.5 8 14.5 8 12 12.2 8 12.2 1.5 8 1.5 8z"/><circle cx="8" cy="8" r="2"/><line class="eyeslash" x1="2.5" y1="13.5" x2="13.5" y2="2.5"/></svg></span><span data-i18n="lblShowLines">Connectors</span></button>
-            <button class="tmtog" id="tgInsets"><span class="eyeic"><svg class="svi" viewBox="0 0 16 16"><path d="M1.5 8S4 3.8 8 3.8 14.5 8 14.5 8 12 12.2 8 12.2 1.5 8 1.5 8z"/><circle cx="8" cy="8" r="2"/><line class="eyeslash" x1="2.5" y1="13.5" x2="13.5" y2="2.5"/></svg></span><span data-i18n="lblInsets">Images</span></button>
-          </div>
+          <button class="tmtog indent" id="tgInsets"><span class="eyeic"><svg class="svi" viewBox="0 0 16 16"><path d="M1.5 8S4 3.8 8 3.8 14.5 8 14.5 8 12 12.2 8 12.2 1.5 8 1.5 8z"/><circle cx="8" cy="8" r="2"/><line class="eyeslash" x1="2.5" y1="13.5" x2="13.5" y2="2.5"/></svg></span><span data-i18n="lblVisToggle">Show / hide</span></button>
          </div>
          <div class="tmcol tmcol-imp">
-          <div class="tmhead" data-i18n="tabImp">Impurities</div>
+          <div class="tmhead" data-i18n="impInvestigate">Find impurities</div>
           <div id="impPanel"></div>
          </div>
         </div>
@@ -719,11 +751,11 @@ const I18N={
   actOpenFolder:"Open folder…", actReopenLast:"Reopen last folder", hintDropFolder:"Tip: drag several dataset folders (or one parent folder) onto the window to import them all at once — no prompt.",
   lblLang:"Language", lblTheme:"Theme", optDark:"Dark", optLight:"Light",
   lblZoom:"Zoom", mZoomIn:"⊕ In", mZoomOut:"⊖ Out", lblWheel:"Wheel sensitivity", lblAxisH:"δ-axis height", lblBaseGap:"δ-axis ↔ spectrum gap",
-  lblInertia:"Wheel inertia", lblInvert:"Invert wheel direction", lblHscroll:"H-scroll = pan δ",
+  lblInertia:"Inertia", lblInvert:"Invert", lblHscroll:"H-scroll = pan δ",
   lblRange:"δ range", btnApply:"Apply", hdViewVis:"Show / hide",
   secImages:"Images", btnAddImg:"＋ Add image", imgItem:"Image",
   imgHint:"Paste a screenshot (Ctrl+V) or add a PNG. Click to select · drag corner to resize · Del to remove (when no tool is active).",
-  ttImgEye:"Show this image on the spectrum", secDisplay:"Display", secData:"Data", ttShowHide:"Show / hide", cpCustom:"Custom", cpOk:"OK", cpCancel:"Cancel",
+  ttImgEye:"Show this image on the spectrum", ttImgBg:"Make background transparent (toggle)", secDisplay:"Display", secData:"Data", ttShowHide:"Show / hide", cpCustom:"Custom", cpOk:"OK", cpCancel:"Cancel",
   lblInsets:"Images", lblNames:"File names", lblShowPeaks:"Peaks", lblShowIntegs:"Integrals", lblShowShades:"Shades", lblJTree:"Coupling tree",
   lblPalette:"Color palette", lblApplyPalette:"Re-apply to all", lblMonoBase:"Base color", lblSigDigits:"δ decimal places",
   btnResetDisp:"Reset display defaults", lblCustomPal:"Custom colors", lblAddColor:"+ Add color",
@@ -734,12 +766,12 @@ const I18N={
   lblShowLines:"Connectors", lblShowZooms:"Zoom views", lblShowLanes:"Lane lines",
   tZoomTxt:"Zoom view", tLineTxt:"Connector", ttZoom:"Drag a δ window → floating magnified view (× to remove)",
   ttLine:"Drag two points → dashed connector; click a line to remove",
-  hdAnnotate:"Annotate", hdVisibility:"Show / hide", hdWheel:"Wheel / scroll", secKeyboard:"Keyboard",
+  hdAnnotate:"Annotate", hdVisibility:"Show / hide", lblVisToggle:"Show / hide", hdWheel:"Wheel / scroll", secKeyboard:"Keyboard", setGen:"General", setLook:"Appearance", setAxis:"δ-axis", secRegion:"Region",
   actCalManual:"Manual (click a peak)", hdSolvent:"Residual solvent → auto", actCalReset:"Reset calibration",
   expCopy:"Copy image to clipboard", expSession:"Save session (JSON)", expLoadSession:"Load session…",
-  lblMinimap:"Minimap", lblZoomLeaders:"Zoom leaders", lblFontScale:"Plot font size", lblNameScale:"File-name size", lblAxisScale:"δ-axis text size", lblMarkSize:"Size", lblFontFamily:"Plot font",
+  lblMinimap:"Minimap", lblZoomLeaders:"Zoom leaders", lblFontScale:"Font size", lblNameScale:"File-name size", lblAxisScale:"δ-axis text size", lblMarkSize:"Size", lblFontFamily:"Font",
   optMono:"Mono", optSans:"Sans", optSerif:"Serif",
-  msgCopied:"Image copied to clipboard", msgCopyFail:"Copy failed — try PNG export", msgSessionLoaded:"Session loaded", msgBadSession:"Could not read session file",
+  msgCopied:"Image copied to clipboard", msgCopyFail:"Copy failed — try PNG export", msgBgFail:"Could not process image background", msgCalOk:"Calibrated", msgCalNone:"No peak found near that position to calibrate", msgCalApprox:"No picked peak nearby — calibrated to the strongest point", msgSessionLoaded:"Session loaded", msgBadSession:"Could not read session file",
   actLine:"Connector (2-pt drag)", actDelLine:"Delete connector", actClearLines:"Clear all connectors",
   kbCalib:"Calibrate", kbPeaks:"Pick peaks", kbErasePk:"Erase peaks", kbInteg:"Integrate",
   kbEraseInt:"Erase integrals", kbMult:"Multiplets", kbText:"Text label", kbMark:"Mark",
@@ -765,12 +797,12 @@ const I18N={
   actDetect:"Detect (drag range)", actThreshold:"Threshold", actDetectThr:"Detect all ≥ threshold", actRemoveRange:"Remove (drag range)", actClearAll:"Clear all",
   actDelSelPeak:"Select & delete (click a peak)",
   actIntegrate:"Integrate (drag range)", actDelSel:"Delete selected", actMark:"Mark", actText:"Text label",
-  actMultPick:"Select peaks (click) / drag range", actMultDefine:"Define from selection", actMultClearSel:"Clear selection",
+  actMultPick:"Select peaks (click) / drag range", actMultDefine:"From selected peaks", actMultClearSel:"Clear selection", lblMultColor:"Multiplet color", lblMultDigits:"J decimals", ttEraseMult:"Drag a region to remove multiplets there", msgMultSplit:"Excluded distant peaks; analyzed the largest cluster", msgMultBigJ:"Coupling looks too large — the range may span separate signals",
   lblPeakColor:"Peak color", lblIntegColor:"Integral color", lblIntegPos:"Height", lblIntegDigits:"Decimals", lineColorLbl:"Color",
   tErasePk:"⌫⋀ Reset peaks", tEraseInt:"⌫∫ Reset integrals", btnResetDef:"Reset to defaults",
-  optOverlay:"Overlay", optStacked:"Stacked", toolNeedOne:"No spectrum visible",
+  optOverlay:"Overlay", optStacked:"Stacked", lblLayout:"Layout", lblModeHint:"Real = phased absorption (normal) · Magnitude = phase-independent, always positive", toolNeedOne:"No spectrum visible",
   ttErasePk:"Drag a region to remove peaks & multiplets there", ttEraseInt:"Drag a region to remove integrals there",
-  ttVis:"Show / hide", ttRemove:"Remove",
+  ttVis:"Show / hide", ttRemove:"Remove", ttVzoom:"Responds to vertical zoom (on = scales)", ttRestoreName:"Restore original file name", ttVzAll:"Vertical-zoom: select / clear all",
   tbIntensity:"Spectrum intensity", tbAuto:"Auto", tbFull:"Full", lblLinkY:"Link all spectra",
   hintBig:"Load a Bruker dataset to begin",
   hintSmall:"Drag &amp; drop one or more dataset folders (the numbered expno folders), or use <b>Open…</b>. "+
@@ -779,8 +811,8 @@ const I18N={
     "<b>zoom inset</b>: click to select · <b>drag source box</b> = move / resize δ · <b>drag its top edge</b> = vertical magnify (reveals weak peaks) · <b>scroll</b> = δ-width",
   dropTitle:"Drop Bruker folder(s)", dropSub:"reads fid + acqus, and pdata/ if present",
   tabPeaks:"Peaks", tabInteg:"Integrals", tabMult:"Multiplets", tabAssign:"Assignments", tabShade:"Shade", markColorLbl:"Color", textColorLbl:"Color", lblTextSize:"Size",
-  tabImp:"Impurities", impSolvent:"Solvent", impTol:"± ppm", impOverlay:"Overlay on spectrum",
-  impNote:"¹H residual-impurity shifts (Fulmer 2010; Babij 2016). Reference your spectrum to the solvent residual first.", impNote13C:"¹³C impurity & solvent shifts (Fulmer 2010); most complete for CDCl₃. Reference to the solvent signal first.",
+  tabImp:"Impurities", impInvestigate:"Find impurities", impSolvent:"Solvent", impTol:"± ppm", impOverlay:"Overlay on spectrum",
+  impNote:"¹H residual-impurity shifts (<a href='https://doi.org/10.1021/om100106e' target='_blank' rel='noopener'>Fulmer 2010</a>; <a href='https://doi.org/10.1021/acs.oprd.5b00417' target='_blank' rel='noopener'>Babij 2016</a>). Reference your spectrum to the solvent residual first.", impNote13C:"¹³C impurity & solvent shifts (<a href='https://doi.org/10.1021/om100106e' target='_blank' rel='noopener'>Fulmer 2010</a>); most complete for CDCl₃. Reference to the solvent signal first.",
   impMatchHd:"Detected peaks → candidates", impRefHd:"Reference table", impFilterPh:"Filter by name…",
   impPin:"Pin marker on spectrum", impCand:"Candidate(s)", impNoMatch:"—", impNoPeaks:"No detected peaks yet. Use the Peaks tool, then candidates appear here.",
   actShade:"Shade (drag)", shadeColorLbl:"Color", actDelShade:"Delete shade", actClearShade:"Clear all shades", emptyShade:"Drag across a region to shade the trace with a translucent color.",
@@ -812,11 +844,11 @@ const I18N={
   actOpenFolder:"フォルダを開く…", actReopenLast:"前のフォルダを再読み込み", hintDropFolder:"ヒント：複数のデータフォルダ（または親フォルダ）をまとめてウィンドウにドラッグ&ドロップすれば、確認なしで一度に読み込めます。",
   lblLang:"言語", lblTheme:"テーマ", optDark:"ダーク", optLight:"ライト",
   lblZoom:"ズーム", mZoomIn:"⊕ 拡大", mZoomOut:"⊖ 縮小", lblWheel:"ホイール感度", lblAxisH:"δ軸の高さ", lblBaseGap:"δ軸とスペクトルの間隔",
-  lblInertia:"ホイール慣性", lblInvert:"ホイールの向きを反転", lblHscroll:"横スクロールでδ移動",
+  lblInertia:"ホイール慣性", lblInvert:"向きを反転", lblHscroll:"横スクロールでδ移動",
   lblRange:"δ 表示範囲", btnApply:"適用", hdViewVis:"表示・非表示",
   secImages:"画像", btnAddImg:"＋ 画像を追加", imgItem:"画像",
   imgHint:"スクリーンショットを貼り付け（Ctrl+V）またはPNGを追加。クリックで選択・角ドラッグで拡縮・Delで削除（ツール未選択時）。",
-  ttImgEye:"この画像をスペクトル上に表示", secDisplay:"表示", secData:"データ", ttShowHide:"表示 / 非表示", cpCustom:"カスタム", cpOk:"OK", cpCancel:"キャンセル",
+  ttImgEye:"この画像をスペクトル上に表示", ttImgBg:"背景を透過（クリックで切替）", secDisplay:"表示", secData:"データ", ttShowHide:"表示 / 非表示", cpCustom:"カスタム", cpOk:"OK", cpCancel:"キャンセル",
   lblInsets:"画像を表示", lblNames:"ファイル名", lblShowPeaks:"ピーク", lblShowIntegs:"積分", lblShowShades:"塗りつぶし", lblJTree:"カップリングツリー",
   lblPalette:"カラーパレット", lblApplyPalette:"全てに再適用", lblMonoBase:"基準色", lblSigDigits:"δ 小数桁数",
   btnResetDisp:"表示設定をリセット", lblCustomPal:"カスタムカラー", lblAddColor:"+ 色を追加",
@@ -827,12 +859,12 @@ const I18N={
   lblShowLines:"破線コネクタ", lblShowZooms:"拡大図", lblShowLanes:"レーン区切り線",
   tZoomTxt:"拡大図", tLineTxt:"破線コネクタ", ttZoom:"δ範囲をドラッグ→拡大図をフロート配置（×で削除）",
   ttLine:"2点をドラッグ→破線で結ぶ／線をクリックで削除",
-  hdAnnotate:"注釈", hdVisibility:"表示・非表示", hdWheel:"ホイール / スクロール", secKeyboard:"キーボード",
+  hdAnnotate:"注釈", hdVisibility:"表示・非表示", lblVisToggle:"表示 / 非表示", hdWheel:"ホイール / スクロール", secKeyboard:"キーボード", setGen:"全般", setLook:"見た目", setAxis:"δ軸", secRegion:"領域",
   actCalManual:"手動（ピークをクリック）", hdSolvent:"残留溶媒 → 自動", actCalReset:"校正をリセット",
   expCopy:"画像をクリップボードにコピー", expSession:"セッションを保存（JSON）", expLoadSession:"セッションを読み込み…",
-  lblMinimap:"ミニマップ", lblZoomLeaders:"拡大引き出し線", lblFontScale:"プロットのフォントサイズ", lblNameScale:"ファイル名のサイズ", lblAxisScale:"δ軸テキストのサイズ", lblMarkSize:"大きさ", lblFontFamily:"プロットのフォント",
+  lblMinimap:"ミニマップ", lblZoomLeaders:"拡大引き出し線", lblFontScale:"フォントサイズ", lblNameScale:"ファイル名のサイズ", lblAxisScale:"δ軸テキストのサイズ", lblMarkSize:"大きさ", lblFontFamily:"フォント",
   optMono:"等幅", optSans:"ゴシック", optSerif:"明朝",
-  msgCopied:"画像をコピーしました", msgCopyFail:"コピー失敗 — PNG出力をお試しください", msgSessionLoaded:"セッションを読み込みました", msgBadSession:"セッションファイルを読み込めません",
+  msgCopied:"画像をコピーしました", msgCopyFail:"コピー失敗 — PNG出力をお試しください", msgBgFail:"画像の背景を処理できませんでした", msgCalOk:"校正しました", msgCalNone:"近くに校正できるピークが見つかりませんでした", msgCalApprox:"近くにピーク未検出のため最大強度点で校正しました", msgSessionLoaded:"セッションを読み込みました", msgBadSession:"セッションファイルを読み込めません",
   actLine:"コネクタ（2点をドラッグ）", actDelLine:"コネクタを削除", actClearLines:"コネクタを全て削除",
   kbCalib:"校正", kbPeaks:"ピーク検出", kbErasePk:"ピーク消去", kbInteg:"積分",
   kbEraseInt:"積分消去", kbMult:"多重線", kbText:"テキスト帰属", kbMark:"マーク",
@@ -858,12 +890,12 @@ const I18N={
   actDetect:"範囲選択で検出", actThreshold:"閾値", actDetectThr:"閾値以上を全検出", actRemoveRange:"範囲選択で削除", actClearAll:"全て削除",
   actDelSelPeak:"選択して削除（ピークをクリック）",
   actIntegrate:"範囲選択で積分", actDelSel:"選択した積分を削除", actMark:"マーク", actText:"テキストラベル",
-  actMultPick:"ピークを選択（クリック）／範囲ドラッグ", actMultDefine:"選択から定義", actMultClearSel:"選択をクリア",
+  actMultPick:"ピークを選択（クリック）／範囲ドラッグ", actMultDefine:"選択したピークから作成", actMultClearSel:"選択をクリア", lblMultColor:"多重線の色", lblMultDigits:"J小数桁", ttEraseMult:"範囲をドラッグして多重線を消去", msgMultSplit:"離れたピークを除外し、最も大きな一群で解析しました", msgMultBigJ:"結合定数が大きすぎます。別シグナルをまたいだ範囲かもしれません",
   lblPeakColor:"ピークの色", lblIntegColor:"積分の色", lblIntegPos:"高さ", lblIntegDigits:"小数桁", lineColorLbl:"色",
   tErasePk:"⌫⋀ ピーク消去", tEraseInt:"⌫∫ 積分消去", btnResetDef:"デフォルトに戻す",
-  optOverlay:"重ね", optStacked:"並べる", toolNeedOne:"スペクトルが表示されていません",
+  optOverlay:"重ね", optStacked:"並べる", lblLayout:"レイアウト", lblModeHint:"実部＝位相補正した通常の表示／絶対値＝位相に依存せず常に正（線幅は広め）", toolNeedOne:"スペクトルが表示されていません",
   ttErasePk:"範囲をドラッグしてピーク・多重線を消去", ttEraseInt:"範囲をドラッグして積分を消去",
-  ttVis:"表示 / 非表示", ttRemove:"削除",
+  ttVis:"表示 / 非表示", ttRemove:"削除", ttVzoom:"縦ズーム対象（ONのスペクトルが動く）", ttRestoreName:"元のファイル名に戻す", ttVzAll:"縦ズーム対象を全て選択 / 全解除",
   tbIntensity:"スペクトル強度", tbAuto:"自動", tbFull:"全体", lblLinkY:"全スペクトル連動",
   hintBig:"Bruker データを読み込んでください",
   hintSmall:"データセットフォルダ（番号付きexpno）を1つ以上ドラッグ＆ドロップ、または<b>開く</b>。"+
@@ -872,8 +904,8 @@ const I18N={
     "<b>拡大図</b>：クリックで選択 ・ <b>元範囲の枠をドラッグ</b>＝移動/δ幅・<b>上辺をドラッグ</b>＝縦拡大（弱いピークを拡大）・ <b>スクロール</b>＝δ幅",
   dropTitle:"Bruker フォルダをドロップ", dropSub:"fid + acqus、あれば pdata/ も読みます",
   tabPeaks:"ピーク", tabInteg:"積分", tabMult:"多重線", tabAssign:"帰属", tabShade:"塗りつぶし", markColorLbl:"色", textColorLbl:"色", lblTextSize:"大きさ",
-  tabImp:"不純物", impSolvent:"溶媒", impTol:"± ppm", impOverlay:"スペクトルに重ねて表示",
-  impNote:"¹H 残留不純物シフト（Fulmer 2010; Babij 2016）。先に溶媒残留ピークで基準合わせを。", impNote13C:"¹³C 不純物・溶媒シフト（Fulmer 2010）。CDCl₃が最も充実。先に溶媒シグナルで基準合わせを。",
+  tabImp:"不純物", impInvestigate:"不純物を調べる", impSolvent:"溶媒", impTol:"± ppm", impOverlay:"スペクトルに重ねて表示",
+  impNote:"¹H 残留不純物シフト（<a href='https://doi.org/10.1021/om100106e' target='_blank' rel='noopener'>Fulmer 2010</a>; <a href='https://doi.org/10.1021/acs.oprd.5b00417' target='_blank' rel='noopener'>Babij 2016</a>）。先に溶媒残留ピークで基準合わせを。", impNote13C:"¹³C 不純物・溶媒シフト（<a href='https://doi.org/10.1021/om100106e' target='_blank' rel='noopener'>Fulmer 2010</a>）。CDCl₃が最も充実。先に溶媒シグナルで基準合わせを。",
   impMatchHd:"検出ピーク → 候補", impRefHd:"参照テーブル", impFilterPh:"名前で絞り込み…",
   impPin:"スペクトルにマーカー固定", impCand:"候補", impNoMatch:"—", impNoPeaks:"検出ピークがありません。ピークツールで検出すると候補が表示されます。",
   actShade:"塗りつぶし（ドラッグ）", shadeColorLbl:"色", actDelShade:"塗りつぶしを削除", actClearShade:"塗りつぶしを全て削除", emptyShade:"範囲をドラッグすると、その部分のスペクトルを半透明色で塗りつぶします。",
@@ -993,7 +1025,7 @@ const PAL_QUAL={
   set2  :['#66c2a5','#fc8d62','#8da0cb','#e78ac3','#a6d854','#ffd92f','#e5c494','#b3b3b3'],
   dark2 :['#1b9e77','#d95f02','#7570b3','#e7298a','#66a61e','#e6ab02','#a6761d','#666666']
 };
-const PALETTES=['wbHC','kbHC','viridis','plasma','inferno','magma','cividis','turbo','coolwarm','rdbu','bwr','spectral','blues','reds','greens','oranges','purples','okabe','tab10','set2','dark2','mono','custom','black','white'];
+const PALETTES=['wbHC','kbHC','viridis','plasma','inferno','magma','cividis','turbo','coolwarm','rdbu','bwr','spectral','blues','reds','greens','oranges','purples','okabe','tab10','set2','dark2','mono','white','black','custom'];
 const PAL_LABEL={wbHC:'White bg (HC)',kbHC:'Black bg (HC)',
   viridis:'Viridis',plasma:'Plasma',inferno:'Inferno',magma:'Magma',cividis:'Cividis',turbo:'Turbo',
   coolwarm:'Cool–Warm',rdbu:'Red → Blue',bwr:'Blue → Red',spectral:'Spectral',
@@ -1033,12 +1065,12 @@ function paletteColors(name, n){
 // preview swatch strip (6 samples) for a palette name
 function paletteSwatch(name){ return paletteColors(name,6); }
 const DEFAULTS={lineW:1.1, wheelSens:1, wheelInertia:false, wheelInvert:false, hscroll:true, axisPad:56, baseGap:0.035,
-  fontScale:1, nameScale:1, axisScale:1, markSize:4.6, markColor:'#0E6E7E', shadeColor:'#D33A2C', textColor:null, textSize:10.5, lineColor:null, integDigits:3, plotFont:'mono', ppmDigits:2, pkDigits:2};
+  fontScale:1, nameScale:1, axisScale:1, markSize:4.6, markColor:'#0E6E7E', shadeColor:'#D33A2C', textColor:null, textSize:10.5, lineColor:null, integDigits:3, multColor:null, multDigits:2, plotFont:'mono', ppmDigits:2, pkDigits:2};
 const S={ spectra:[], active:-1, view:{pHi:1,pLo:0}, yscale:1, tool:null,
   lineW:1.1, wheelSens:1, wheelInertia:false, wheelInvert:false, hscroll:true, selInteg:-1, selImg:-1, selZoom:-1,
   selPeak:-1, selPeaks:[], selMults:[], thr:0.05, axisPad:56, baseGap:0.035, integShift:0,
-  peakColor:null, integColor:null,
-  markColor:'#0E6E7E', shadeColor:'#D33A2C', markSize:4.6, textColor:null, textSize:10.5, lineColor:null, integDigits:3, showInsets:true, showNames:true, showPeaks:true, showIntegs:true, showShades:true, showMarks:true, showText:true, linkY:false,
+  peakColor:null, integColor:null, multColor:null, multDigits:2,
+  markColor:'#0E6E7E', shadeColor:'#D33A2C', markSize:4.6, textColor:null, textSize:10.5, lineColor:null, integDigits:3, showInsets:true, showNames:true, showPeaks:true, showIntegs:true, showShades:true, showMarks:true, showText:true,
   resTab:'peaks', asgSub:'text', docked:true, nextColor:0, layout:'stack', palette:'wbHC', monoBase:'#0E6E7E', ppmDigits:2,
   pkDigits:2, showMults:true, showJTree:true, showLanes:false, showLines:true, showZooms:true, lines:[], zooms:[],
   fontScale:1, nameScale:1, axisScale:1, plotFont:'mono', showMinimap:false, zoomLeaders:true,
@@ -1318,18 +1350,39 @@ function multipletFromPeaks(sp, idxs){
 }
 function analyzeMultiplet(sp,pA,pB){
   const lo=Math.min(pA,pB), hi=Math.max(pA,pB);
-  const lines=(sp.peaks||[]).filter(p=>p.ppm>=lo&&p.ppm<=hi).sort((a,b)=>b.ppm-a.ppm); // high->low ppm
+  let lines=(sp.peaks||[]).filter(p=>p.ppm>=lo&&p.ppm<=hi).sort((a,b)=>b.ppm-a.ppm); // high->low ppm
   if(!lines.length) return false;
+  // #6: a range spanning separate signals → split by big gaps and keep the largest contiguous cluster
+  let split=false;
+  if(lines.length>=3){
+    const hz=lines.map(l=>l.hz);
+    const gaps=[]; for(let i=0;i<hz.length-1;i++) gaps.push(Math.abs(hz[i]-hz[i+1]));
+    const med=[...gaps].sort((a,b)=>a-b)[Math.floor(gaps.length/2)]||1;
+    const brk=Math.max(40, med*6);                       // a gap larger than this = a separate signal
+    const clusters=[[lines[0]]];
+    for(let i=1;i<lines.length;i++){ if(Math.abs(hz[i-1]-hz[i])>brk) clusters.push([]); clusters[clusters.length-1].push(lines[i]); }
+    if(clusters.length>1){ split=true;
+      clusters.sort((a,b)=> b.length-a.length || (b.reduce((s,p)=>s+p.v,0)-a.reduce((s,p)=>s+p.v,0)));
+      lines=clusters[0];
+    }
+  }
   let wsum=0, wv=0; lines.forEach(p=>{wsum+=p.v*p.ppm; wv+=p.v;});
   const center=wsum/wv;
   const linesHz=lines.map(l=>l.hz);
   const Js=decomposeJ(linesHz, lines.map(l=>l.v));
-  const d=dispOf(sp); let ia=idxAtPpm(sp,pA), ib=idxAtPpm(sp,pB); if(ia>ib){const t=ia;ia=ib;ib=t;}
+  const ppms=lines.map(l=>l.ppm), mhi=Math.max(...ppms), mlo=Math.min(...ppms);
+  const d=dispOf(sp); let ia=idxAtPpm(sp,mhi), ib=idxAtPpm(sp,mlo); if(ia>ib){const tt=ia;ia=ib;ib=tt;}
+  ia=Math.max(0,Math.min(sp.N-1,ia)); ib=Math.max(0,Math.min(sp.N-1,ib));
   let integ=0; for(let i=ia;i<=ib;i++) integ+=Math.max(0,d[i]);
   sp.multiplets=sp.multiplets||[];
-  hideContainedMultiplets(sp, hi, lo);
-  sp.multiplets.push({a:hi,b:lo,center,n:lines.length,
-    mult:multLabelFromJs(Js), Js, integ, lines:lines.map(l=>l.ppm), linesHz});
+  hideContainedMultiplets(sp, mhi, mlo);
+  sp.multiplets.push({a:mhi,b:mlo,center,n:lines.length,
+    mult:multLabelFromJs(Js), Js, integ, lines:ppms, linesHz});
+  // #6: warn if couplings still look implausible (likely spanning separate signals)
+  const maxJ=Math.max(0,...(Js||[]));
+  const warnJ = nucKind(sp)==='13C' ? 250 : 40;
+  if(maxJ>warnJ) toast(t('msgMultBigJ'));
+  else if(split) toast(t('msgMultSplit'));
   return true;
 }
 
@@ -1372,6 +1425,40 @@ function removeImage(k){ const sp=A(); if(!sp) return;
   im.splice(k,1);
   if(S.selImg===k) S.selImg=-1; else if(S.selImg>k) S.selImg--;
   saveAnnot(sp); renderImgs(); draw(); }
+/* make a pasted image's background transparent: auto-detect the colour from the
+   four corners and clear every pixel within `tol` (per-channel) of it. */
+function keyOutBg(srcURL, tol){
+  return new Promise(resolve=>{
+    const img=new Image();
+    img.onload=()=>{
+      const w=img.naturalWidth, h=img.naturalHeight; if(!w||!h){ resolve(null); return; }
+      const c=document.createElement('canvas'); c.width=w; c.height=h;
+      const cx=c.getContext('2d'); cx.drawImage(img,0,0);
+      let dat; try{ dat=cx.getImageData(0,0,w,h); }catch(_){ resolve(null); return; }
+      const d=dat.data, px=(x,y)=>{ const i=(y*w+x)*4; return [d[i],d[i+1],d[i+2]]; };
+      const cor=[px(0,0),px(w-1,0),px(0,h-1),px(w-1,h-1)];
+      const bg=[0,1,2].map(j=>Math.round((cor[0][j]+cor[1][j]+cor[2][j]+cor[3][j])/4));
+      const T=Math.max(4, tol||50);
+      for(let i=0;i<d.length;i+=4){
+        if(Math.abs(d[i]-bg[0])<=T && Math.abs(d[i+1]-bg[1])<=T && Math.abs(d[i+2]-bg[2])<=T) d[i+3]=0;
+      }
+      cx.putImageData(dat,0,0); resolve(c.toDataURL('image/png'));
+    };
+    img.onerror=()=>resolve(null);
+    img.src=srcURL;
+  });
+}
+async function toggleImgBg(sp,k){
+  const rec=imgsOf(sp)[k]; if(!rec) return;
+  if(rec.bgRemoved){                                  // revert to the original
+    if(rec.origSrc){ rec.src=rec.origSrc; delete rec.origSrc; }
+    rec.bgRemoved=false; delete IMGCACHE[rec.id]; saveAnnot(sp); renderImgs(); draw(); return;
+  }
+  const orig=rec.src, out=await keyOutBg(orig, rec.bgTol||50);
+  if(!out){ toast(t('msgBgFail')); return; }
+  rec.origSrc=orig; rec.src=out; rec.bgRemoved=true;
+  delete IMGCACHE[rec.id]; saveAnnot(sp); renderImgs(); draw();
+}
 function drawInsets(){
   IMGBOXES=[];
   if(!S.showInsets) return;
@@ -1465,11 +1552,13 @@ function renderImgs(){
     row.innerHTML=`<img class="thumb" src="${rec.src}">`+
       `<span class="cn">${t('imgItem')} ${k+1}</span>`+
       `<span class="cs">${rec.w}×${rec.h}</span>`+
+      `<button class="bgk${rec.bgRemoved?' on':''}" title="${t('ttImgBg')}"><svg class="svi" viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" rx="1.5"/><rect x="2" y="2" width="6" height="6" fill="currentColor" stroke="none"/><rect x="8" y="8" width="6" height="6" fill="currentColor" stroke="none"/></svg></button>`+
       `<button class="eye${off?' off':''}" title="">${eye}</button>`+
       `<button class="rrm" title="">×</button>`;
     row.querySelector('.eye').title=t('ttImgEye');
     row.querySelector('.eye').onclick=e=>{ e.stopPropagation();
       rec.on=rec.on===false; saveAnnot(sp); renderImgs(); draw(); };
+    row.querySelector('.bgk').onclick=e=>{ e.stopPropagation(); toggleImgBg(sp,k); };
     row.querySelector('.rrm').onclick=e=>{ e.stopPropagation(); removeImage(k); };
     el.appendChild(row);
   });
@@ -1603,8 +1692,10 @@ function lineHit(x,y){ // returns index of a connector whose body is near (x,y)
 /* ===== coupling tree (splitting diagram) drawn above each multiplet of the active spectrum ===== */
 function drawJTrees(){
   if(!S.showJTree || !S.showMults) return;
-  const sp=A(); if(!sp || !sp.visible) return;
   const li=laneInfo(); const VW=curView();
+  const sps = li.mode==='stack' ? li.vs : (A()&&A().visible&&A().mag ? [A()] : []);
+  const mcol = S.multColor||css('--mult');
+  for(const sp of sps){ if(!sp || !sp.visible || !sp.mag) continue;
   const mhz=refMHz(sp)||500;
   (sp.multiplets||[]).forEach(m=>{
     if(m.hidden) return;
@@ -1631,7 +1722,7 @@ function drawJTrees(){
     let levelH=Math.min(20, (leavesY-topLimit)/(k+0.4));
     if(levelH<7) levelH=7;
     const topY = Math.max(topLimit, leavesY - k*levelH);
-    const ink=hexA(css('--axis'),.9), inkF=css('--axis');
+    const ink=hexA(mcol,.85), inkF=mcol;
     ctx.save();
     ctx.strokeStyle=ink; ctx.lineWidth=1; ctx.lineJoin='round';
     // leaf x extent (for right-aligned J labels)
@@ -1644,7 +1735,7 @@ function drawJTrees(){
     const centerBaseY = multBaseY - fpx*0.95 - 2;
     ctx.fillStyle=inkF; ctx.textAlign='center'; ctx.font=plotFont(11,'600');
     ctx.fillText(m.mult, cX, multBaseY);
-    ctx.font=plotFont(9.5); ctx.fillStyle=hexA(css('--axis'),.7);
+    ctx.font=plotFont(9.5); ctx.fillStyle=hexA(mcol,.7);
     ctx.fillText(fmtPpm(m.center), cX, centerBaseY);
     // brackets level by level (each group splits a parent into c+1 equally-spaced children)
     let lastJY=-1e9;
@@ -1664,19 +1755,20 @@ function drawJTrees(){
       // J label for this level (right column; nudged down if it would collide with the previous one)
       let jy=ymid+jpx*0.35; if(jy < lastJY + jpx*1.15) jy=lastJY + jpx*1.15; lastJY=jy;
       ctx.fillStyle=inkF; ctx.textAlign='left'; ctx.font=plotFont(9.5);
-      ctx.fillText(J.toFixed(2), maxX+8, jy);
+      ctx.fillText(J.toFixed(S.multDigits??2), maxX+8, jy);
     }
     // leaves: short feet + faint guide down to the peak tops
     const leaves=levels[levels.length-1];
     ctx.strokeStyle=ink;
     leaves.forEach(h=>{ const xx=X(h);
       ctx.beginPath(); ctx.moveTo(xx, topY+k*levelH); ctx.lineTo(xx, topY+k*levelH+5); ctx.stroke(); });
-    ctx.strokeStyle=hexA(css('--axis'),.18); ctx.setLineDash([2,3]);
+    ctx.strokeStyle=hexA(mcol,.18); ctx.setLineDash([2,3]);
     leaves.forEach(h=>{ const xx=X(h);
       ctx.beginPath(); ctx.moveTo(xx, topY+k*levelH+5); ctx.lineTo(xx, pkTopY-2); ctx.stroke(); });
     ctx.setLineDash([]);
     ctx.restore();
   });
+  }
 }
 
 /* ===== zoom insets: a floating magnified view of a ppm window ===== */
@@ -1981,12 +2073,12 @@ function renderContent(opts){
       if(m.hidden) return;
       const x1=Math.min(ppmToX(m.a),ppmToX(m.b)), x2=Math.max(ppmToX(m.a),ppmToX(m.b));
       if(x2<XL||x1>XR) return;
-      const hasTree = S.showJTree && sp===A() && (m.Js||[]).some(j=>j>0.05);
-      if(!hasTree){ ctx.fillStyle=css('--mult'); ctx.textAlign='center'; ctx.font=plotFont(11);
+      const hasTree = S.showJTree && (m.Js||[]).some(j=>j>0.05);
+      if(!hasTree){ ctx.fillStyle=S.multColor||css('--mult'); ctx.textAlign='center'; ctx.font=plotFont(11);
         ctx.fillText(m.mult, ppmToX(m.center), lt+12); }
     });
     // when a coupling tree covers a region, suppress the per-peak labels there (the tree shows the lines)
-    const treeRanges = (S.showJTree && S.showMults && sp===A())
+    const treeRanges = (S.showJTree && S.showMults)
       ? (sp.multiplets||[]).filter(m=>!m.hidden && (m.Js||[]).some(j=>j>0.05)).map(m=>[Math.min(m.a,m.b),Math.max(m.a,m.b)])
       : [];
     const inTree = ppm => treeRanges.some(r=>ppm>=r[0]&&ppm<=r[1]);
@@ -2074,7 +2166,7 @@ function draw(){
       /* click-to-delete: no drag rectangle */
     } else {
     const col = dragRect.tool==='tInteg'||dragRect.tool==='tEraseInt'?css('--integ'):
-                dragRect.tool==='tMult'||dragRect.tool==='tAssign'?css('--mult'):
+                dragRect.tool==='tMult'||dragRect.tool==='tAssign'||dragRect.tool==='tEraseMult'?css('--mult'):
                 dragRect.tool==='tMark'?S.markColor:
                 dragRect.tool==='tPeaks'||dragRect.tool==='tErasePk'?css('--peak'):css('--trace');
     ctx.fillStyle=hexA(col,.14); ctx.strokeStyle=col;
@@ -2100,7 +2192,7 @@ function draw(){
 }
 
 /* ===================== interaction ===================== */
-const TOOLS=['tCalib','tPeaks','tInteg','tMult','tAssign','tMark','tErasePk','tEraseInt','tDelPeak','tShade','tZoom','tLine','tDelLine'];
+const TOOLS=['tCalib','tPeaks','tInteg','tMult','tAssign','tMark','tErasePk','tEraseInt','tEraseMult','tDelPeak','tShade','tZoom','tLine','tDelLine'];
 function toolsEnabled(){ return visibleSpectra().length>=1; }
 function toolOk(id){ return visibleSpectra().length>=1; }
 /* lane → spectrum (stacked); overlay → active. Activates it for annotation. */
@@ -2120,7 +2212,7 @@ function activateAt(y){ const sp=spAtY(y); if(!sp) return null;
 }
 function updateToolAvail(){
   const any=visibleSpectra().length>=1;
-  const KH={tCalib:'C',tPeaks:'P',tInteg:'I',tMult:'M',tAssign:'A',tMark:'D',tErasePk:'⇧P',tEraseInt:'⇧I',tZoom:'Z',tLine:'G',tDelLine:'⇧G'};
+  const KH={tCalib:'C',tPeaks:'P',tInteg:'I',tMult:'M',tAssign:'A',tMark:'D',tErasePk:'⇧P',tEraseInt:'⇧I',tEraseMult:'⇧M',tZoom:'Z',tLine:'G',tDelLine:'⇧G'};
   TOOLS.forEach(id=>{ const el=document.getElementById(id); if(!el)return;
     el.classList.toggle('disabled',!any);
     el.title=any?t('tt'+id.slice(1))+' ['+KH[id]+']':t('toolNeedOne'); });
@@ -2143,19 +2235,40 @@ function syncToolMains(){
   setOn('tCalib', armed('tCalib'));
   setOn('tPeaks', armed('tPeaks')||armed('tErasePk')||armed('tDelPeak'));
   setOn('tInteg', armed('tInteg')||armed('tEraseInt'));
-  setOn('tMult', armed('tMult'));
+  setOn('tMult', armed('tMult')||armed('tEraseMult'));
   setOn('tMark', armed('tMark')||armed('tAssign')||armed('tShade')||armed('tDelShade')||armed('tLine')||armed('tDelLine'));
 }
+/* which main-button group a tool belongs to (for releasing the tool when another tab/menu opens) */
+function toolGroup(t){
+  if(t==='tPeaks'||t==='tErasePk'||t==='tDelPeak') return 'tPeaks';
+  if(t==='tInteg'||t==='tEraseInt') return 'tInteg';
+  if(t==='tMult'||t==='tEraseMult') return 'tMult';
+  if(t==='tMark'||t==='tAssign'||t==='tShade'||t==='tDelShade'||t==='tLine'||t==='tDelLine') return 'tMark';
+  return t;
+}
+function disarmTool(){ if(!S.tool && !(S.selPeaks&&S.selPeaks.length)) return;
+  S.tool=null; S.selPeaks=[]; S.selPeak=-1;
+  TOOLS.forEach(x=>{ const el=document.getElementById(x); if(el) el.classList.remove('on'); });
+  syncToolMains(); draw(); }
 /* Calibrate/Peaks/Integrals/Multiplets/Assign main buttons are hover-only for ARMING:
    hover reveals their dropdown + tooltip, and a click never ARMS the tool (use the
    dropdown items for that). A click DOES still turn the tool OFF when this group is
    currently armed. Zoom keeps its plain click-to-arm/toggle. */
 const HOVER_ONLY_TOOLS=new Set(['tCalib','tPeaks','tInteg','tMult','tMark']);
+/* keep a wide docked dropdown inside the viewport (shift left if it would overflow the right edge) */
+function clampDockedPanel(anchor, panel){ if(!anchor||!panel) return;
+  panel.style.left='0px';
+  const aRect=anchor.getBoundingClientRect(), pw=panel.offsetWidth, vw=window.innerWidth||document.documentElement.clientWidth||1200;
+  let left=0; const overR=aRect.left+pw+8-vw;
+  if(overR>0) left=-overR;
+  if(aRect.left+left<8) left=8-aRect.left;
+  panel.style.left=Math.round(left)+'px'; }
+function clampWidePanel(tm){ clampDockedPanel(tm, tm&&tm.querySelector('.tmpanel2')); }
 TOOLS.forEach(id=>{ const el=document.getElementById(id); if(!el) return;
   el.onclick = HOVER_ONLY_TOOLS.has(id)
     ? ()=>{ const tm=el.closest('.toolmenu'); if(!tm||tm.classList.contains('floating')) return;   // click toggles a pinned (sticky) dropdown
-        const wasOpen=tm.classList.contains('open'); closeMenus(); closeToolMenus();
-        if(!wasOpen){ tm.classList.add('open','sticky'); if(tm.id==='tmAssign'&&typeof renderImpPanel==='function') renderImpPanel(); } }
+        const wasOpen=tm.classList.contains('open'); closeMenus(); closeToolMenus(); if(S.tool && toolGroup(S.tool)!==id) disarmTool();
+        if(!wasOpen){ tm.classList.add('open','sticky'); if(tm.id==='tmAssign'){ if(typeof renderImpPanel==='function') renderImpPanel(); clampWidePanel(tm); } } }
     : ()=>setTool(id); });
 
 let panning=false,panStart=0,panHi=0,panLo=0,dragging=false,edgeDrag=null,zoomDrag=null,lineDrag=null,mmDrag=false;
@@ -2348,6 +2461,7 @@ cv.addEventListener('pointerup',e=>{
     else if(S.tool==='tMult'&&sp){ pushUndo(sp); analyzeMultiplet(sp,pA,pB); S.resTab='mult'; openResults(); saveAnnot(sp); }
     else if(S.tool==='tErasePk'&&sp){ pushUndo(sp); erasePeaksRegion(sp,pA,pB); saveAnnot(sp); }
     else if(S.tool==='tEraseInt'&&sp){ pushUndo(sp); eraseIntegRegion(sp,pA,pB); saveAnnot(sp); }
+    else if(S.tool==='tEraseMult'&&sp){ pushUndo(sp); eraseMultRegion(sp,pA,pB); S.resTab='mult'; openResults(); saveAnnot(sp); }
     else if(S.tool==='tMark'&&sp){
       const lo=Math.min(pA,pB), hi=Math.max(pA,pB);
       const tgt=(sp.peaks||[]).filter(p=>p.ppm>=lo&&p.ppm<=hi);
@@ -2406,10 +2520,14 @@ cv.addEventListener('contextmenu',e=>{
 });
 /* continuous wheel actions (smooth for trackpads; ±100/notch ≈ old discrete steps) */
 function applyYscale(sp, f){ sp.yscale=Math.max(.02,Math.min(5000,ysc(sp)*f)); }
+/* vertical zoom targets the per-spectrum "↕" armed set (visible & sp.vzoom).
+   When none are armed: wheel falls back to the spectrum under the cursor, buttons/keys to the active one. */
+function vzoomArmed(){ return visibleSpectra().filter(sp=>sp.vzoom!==false); }
 function wheelInt(dy, tsp){
   const inv=S.wheelInvert?-1:1; const f=Math.exp(-dy*0.00115*S.wheelSens*inv);
-  if(S.linkY){ visibleSpectra().forEach(sp=>applyYscale(sp,f)); }
-  else { const sp=tsp||A(); if(sp) applyYscale(sp,f); } }
+  const set=vzoomArmed();
+  const tg = set.length ? set : (tsp && visibleSpectra().indexOf(tsp)>=0 ? [tsp] : (A()?[A()]:[]));
+  tg.forEach(sp=>applyYscale(sp,f)); }
 function wheelZoom(dy,pc){ const inv=S.wheelInvert?-1:1; const f=Math.exp(dy*0.0014*S.wheelSens*inv);
   S.view.pHi=pc+(S.view.pHi-pc)*f; S.view.pLo=pc-(pc-S.view.pLo)*f; }
 function wheelPan(dx){ const inv=S.wheelInvert?-1:1; const span=S.view.pHi-S.view.pLo,
@@ -2462,23 +2580,26 @@ cv.addEventListener('wheel',e=>{
   wheelZoom(e.deltaY,pc); draw(); kickMomentum('zoom', e.deltaY, pc);
 },{passive:false});
 
-function intensity(m){ 
-  if(S.linkY){ visibleSpectra().forEach(sp=>applyYscale(sp,m)); }
-  else { const sp=A(); if(sp) applyYscale(sp,m); }
-  draw(); }
+function intensity(m){ const set=vzoomArmed(); (set.length?set:(A()?[A()]:[])).forEach(sp=>applyYscale(sp,m)); draw(); }
 function autoIntensity(){
   const fit=sp=>{ if(!sp||!sp.mag) return; const d=dispOf(sp);
     let iL=idxAtPpm(sp,S.view.pHi),iR=idxAtPpm(sp,S.view.pLo); if(iL>iR){const t=iL;iL=iR;iR=t;}
     iL=Math.max(0,iL);iR=Math.min(sp.N-1,iR); let mx=1e-9; for(let i=iL;i<=iR;i++) if(d[i]>mx)mx=d[i];
     sp.yscale=sp.gmax/mx; };
-  if(S.linkY) visibleSpectra().forEach(fit); else fit(A());
+  const set=vzoomArmed(); (set.length?set:(A()?[A()]:[])).forEach(fit);
   draw(); }
 function zoomOut(){ const c=(S.view.pHi+S.view.pLo)/2, h=(S.view.pHi-S.view.pLo)/2*1.4;
   S.view={pHi:c+h,pLo:c-h}; draw(); }
 function zoomIn(){ const c=(S.view.pHi+S.view.pLo)/2, h=(S.view.pHi-S.view.pLo)/2/1.4;
   S.view={pHi:c+h,pLo:c-h}; draw(); }
-document.getElementById('btnLinkY').onclick=()=>{ S.linkY=!S.linkY;
-  document.getElementById('btnLinkY').classList.toggle('on',S.linkY); };
+function toggleAllVzoom(){ const vs=S.spectra; if(!vs.length) return;
+  const allOn=vs.every(sp=>sp.vzoom!==false);
+  vs.forEach(sp=>sp.vzoom=!allOn); renderList(); }
+function refreshVzoomBtn(){ const vs=S.spectra, allOn=vs.length>0 && vs.every(sp=>sp.vzoom!==false);
+  const b=document.getElementById('btnLinkY'); if(b) b.classList.toggle('on', allOn);
+  const b2=document.getElementById('btnVzAll'); if(b2){ b2.classList.toggle('on', allOn); b2.style.display = vs.length>1?'':'none'; } }
+document.getElementById('btnLinkY').onclick=toggleAllVzoom;
+{ const _vzAll=document.getElementById('btnVzAll'); if(_vzAll) _vzAll.onclick=toggleAllVzoom; }
 document.getElementById('btnResultsView').onclick=()=>toggleResults();
 /* ---- color palette comparison list ---- */
 let rebuildPaletteUI=null;
@@ -2571,6 +2692,9 @@ if(thrS){ thrS.value=Math.round(S.thr*100);
   const ic=document.getElementById('integColor');
   if(ic){ ic.value=S.integColor||css('--integ')||'#2E6FA8';
     ic.oninput=e=>{ S.integColor=e.target.value; draw(); }; }
+  const mc=document.getElementById('multColor');
+  if(mc){ mc.value=S.multColor||css('--mult')||'#7A4A98';
+    mc.oninput=e=>{ S.multColor=e.target.value; draw(); }; }
   const ish=document.getElementById('integShift');
   if(ish){ ish.value=Math.round((S.integShift||0)*100);
     ish.oninput=e=>{ S.integShift=(+e.target.value)/100; draw(); }; }
@@ -2586,6 +2710,8 @@ function syncColorPickers(){
   if(pc) pc.value=S.peakColor||css('--peak')||'#B5562A';
   const ic=document.getElementById('integColor');
   if(ic) ic.value=S.integColor||css('--integ')||'#2E6FA8';
+  const mc=document.getElementById('multColor');
+  if(mc) mc.value=S.multColor||css('--mult')||'#7A4A98';
 }
 /* ---- clear / delete actions (used by tool dropdowns) ---- */
 function clearPeaks(){ const sp=A(); if(!sp||!(sp.peaks||[]).length)return;
@@ -2609,6 +2735,7 @@ function doToolAction(act){
   if(act==='detectThr') return detectThreshold();
   if(act==='defineMult') return defineMultipletFromSel();
   if(act==='clearMultSel'){ S.selPeaks=[]; S.selMults=[]; renderResults(); draw(); return; }
+  if(act==='clearMult'){ const sp=A(); if(sp){ pushUndo(sp); sp.multiplets=[]; saveAnnot(sp); } S.selMults=[]; S.resTab='mult'; openResults(); renderResults(); draw(); return; }
   if(act==='clearShade') return clearShades();
   if(act==='clearLines'){ S.lines=[]; persistUI(); draw(); return; }
   if(act==='calReset') return resetCalibration();
@@ -2693,7 +2820,8 @@ document.getElementById('zoomReset').onclick=()=>{ const g=globalRange(); if(g){
 function doCalibrate(clickedPpm, tsp){ const sp=tsp||A(); if(!sp)return;
   const v=prompt(t('calPrompt'),'7.26'); if(v===null)return; const tg=parseFloat(v); if(isNaN(tg))return;
   pushUndo(sp);
-  sp.sr=(sp.sr||0)+(tg-clickedPpm); finalize(sp); saveAnnot(sp); draw(); renderResults(); }
+  sp.sr=(sp.sr||0)+(tg-clickedPpm); finalize(sp); saveAnnot(sp); draw(); renderResults();
+  toast(t('msgCalOk')+': '+tg.toFixed(2)+' ppm'); }
 
 /* residual-solvent / TMS presets for one-click referencing (¹H δ and ¹³C δ of the solvent signal) */
 const SOLVENTS=[
@@ -2899,14 +3027,15 @@ function buildSolventList(){ const box=document.getElementById('solvList'); if(!
     const b=document.createElement('button');
     b.className='tmitem solvitem';
     b.innerHTML=`<span class="tmic">⌖</span><span>${s.nm}</span><b class="solvppm">${ppm.toFixed(2)}</b>`;
-    b.onclick=e=>{ e.stopPropagation(); closeToolMenus(); calibrateSolvent(ppm); };
+    b.onclick=e=>{ e.stopPropagation(); closeToolMenus(); calibrateSolvent(ppm, s.nm); };
     box.appendChild(b); });
 }
 // auto-reference: find the residual peak near `target` and shift δ so it lands exactly
-function calibrateSolvent(target){ const sp=A(); if(!sp||!sp.mag) return;
+function calibrateSolvent(target, name){ const sp=A();
+  if(!sp||!sp.mag){ toast(t('msgCalNone')); return; }
   const tol = nucKind(sp)==='13C' ? 2.5 : 0.6;            // ppm search half-window (¹³C peaks can be off more)
-  let refPpm=null, bd=tol;
-  (sp.peaks||[]).forEach(p=>{ const d=Math.abs(p.ppm-target); if(d<bd){ bd=d; refPpm=p.ppm; } });
+  let refPpm=null, bd=tol, fromPeak=false;
+  (sp.peaks||[]).forEach(p=>{ const d=Math.abs(p.ppm-target); if(d<bd){ bd=d; refPpm=p.ppm; fromPeak=true; } });
   if(refPpm==null){ // no detected peak nearby → take the tallest data point in the window
     const d=dispOf(sp);
     let ia=idxAtPpm(sp,target+tol), ib=idxAtPpm(sp,target-tol);
@@ -2915,8 +3044,10 @@ function calibrateSolvent(target){ const sp=A(); if(!sp||!sp.mag) return;
     let mx=-Infinity,mi=ia; for(let i=ia;i<=ib;i++){ if(d[i]>mx){mx=d[i];mi=i;} }
     if(isFinite(mx)) refPpm=ppmAt(sp,mi);
   }
-  if(refPpm==null) return;
+  if(refPpm==null){ toast(t('msgCalNone')); return; }
   pushUndo(sp); sp.sr=(sp.sr||0)+(target-refPpm); finalize(sp); saveAnnot(sp); draw(); renderResults();
+  const lbl=(name?name+' ':'')+target.toFixed(2)+' ppm';
+  toast((fromPeak?t('msgCalOk'):t('msgCalApprox'))+': '+lbl);
 }
 function resetCalibration(){ const sp=A(); if(!sp) return; if(!sp.sr) return;
   pushUndo(sp); sp.sr=0; finalize(sp); saveAnnot(sp); draw(); renderResults(); }
@@ -2952,6 +3083,10 @@ function eraseIntegRegion(sp,pA,pB){ const lo=Math.min(pA,pB), hi=Math.max(pA,pB
   const inR=(a,b)=>!(Math.max(a,b)<lo || Math.min(a,b)>hi);
   sp.integrals=(sp.integrals||[]).filter(g=>!inR(g.a,g.b));
   renormIntegrals(sp); S.selInteg=-1;
+}
+function eraseMultRegion(sp,pA,pB){ const lo=Math.min(pA,pB), hi=Math.max(pA,pB);
+  const inR=(a,b)=>!(Math.max(a,b)<lo || Math.min(a,b)>hi);
+  sp.multiplets=(sp.multiplets||[]).filter(m=>!inR(m.a,m.b)); S.selMults=[];
 }
 
 /* ===================== persistence (localStorage, guarded) ===================== */
@@ -3225,20 +3360,7 @@ function renderResults(){
 function renderImpPanel(){
   const host=document.getElementById('impPanel'); if(!host) return;
   const sp=A(), key=S.impSolvent, is13C=nucKind(sp)==='13C';
-  const tol = is13C ? (S.impTolC==null?0.3:S.impTolC) : S.impTol;
   const solvOpts=IMP_SOLV.map(s=>`<option value="${s[0]}"${s[0]===key?' selected':''}>${s[1]}</option>`).join('');
-  // peak → candidate matches (compact)
-  const peaks=sp?((sp.peaks||[]).slice().sort((a,b)=>b.ppm-a.ppm)):[];
-  let matchHtml;
-  if(!sp){ matchHtml=`<div class="impnone" style="padding:4px 6px">—</div>`; }
-  else if(!peaks.length){ matchHtml=`<div class="impnone" style="padding:4px 6px">${t('impNoPeaks')}</div>`; }
-  else {
-    matchHtml=peaks.map(p=>{ const ms=impMatch(p.ppm,key,tol);
-      const cand = ms.length? ms.map(m=>`<span class="mcand">${m.name} <i>${m.env}</i></span>`).join(', ')
-                            : `<span class="mnone">${t('impNoMatch')}</span>`;
-      return `<div class="mrow"><span class="mppm">${fmtPpm(p.ppm)}</span><span class="mcand">${cand}</span></div>`;
-    }).join('');
-  }
   // reference list (filterable)
   const flt=(S.impFilter||'').toLowerCase();
   const ref=impForSolvent(key).filter(e=>!flt || (e.name+' '+e.env).toLowerCase().includes(flt));
@@ -3247,17 +3369,13 @@ function renderImpPanel(){
       `<span class="impnm">${e.name}</span><span class="impenv">${e.env}</span><b class="imppm">${e.ppm.toFixed(2)}</b></div>`;
   }).join('');
   host.innerHTML=
-    `<div class="impctl2">
+    `<div class="impnote2">${is13C? t('impNote13C') : t('impNote')}</div>
+     <div class="impctl2">
        <label class="impfield2"><span data-i18n="impSolvent">Solvent</span><select id="impSolvSel">${solvOpts}</select></label>
-       <label class="impfield2"><span data-i18n="impTol">± ppm</span><input type="number" id="impTolIn" min="${is13C?0.05:0.005}" max="${is13C?3:0.3}" step="${is13C?0.05:0.005}" value="${tol}"></label>
        <button class="tmtog${S.showImpurities?' on':''}" id="impOverlayBtn" style="width:100%;margin:5px 0 0" data-i18n="impOverlay">Overlay on spectrum</button>
      </div>
-     <div class="tmhead" data-i18n="impMatchHd">Detected peaks → candidates</div>
-     <div class="impmini">${matchHtml}</div>
-     <div class="tmhead" data-i18n="impRefHd">Reference table</div>
      <input type="text" id="impFilterIn" class="impfilter" style="width:calc(100% - 12px);margin:0 4px 4px" placeholder="${t('impFilterPh')}" value="${S.impFilter||''}">
-     <div class="impreflist2">${refRows||'<div class="impnone" style="padding:4px 6px">—</div>'}</div>
-     <div class="impnote2">${is13C? t('impNote13C') : t('impNote')}</div>`;
+     <div class="impreflist2">${refRows||'<div class="impnone" style="padding:4px 6px">—</div>'}</div>`;
   host.querySelectorAll('[data-i18n]').forEach(el=>{ const v=t(el.getAttribute('data-i18n'));
     if(v.indexOf('<')>=0) el.innerHTML=v; else el.textContent=v; });
   // wiring (stopPropagation so the dropdown stays open while interacting)
@@ -3265,8 +3383,6 @@ function renderImpPanel(){
     el.addEventListener('pointerdown',e=>e.stopPropagation()); };
   const ss=host.querySelector('#impSolvSel'); stop(ss);
   if(ss) ss.onchange=e=>{ S.impSolvent=e.target.value; persistUI(); renderImpPanel(); draw(); };
-  const ti=host.querySelector('#impTolIn'); stop(ti);
-  if(ti) ti.onchange=e=>{ const v=parseFloat(e.target.value); if(isFinite(v)&&v>0){ if(is13C) S.impTolC=v; else S.impTol=v; persistUI(); renderImpPanel(); draw(); } };
   const ob=host.querySelector('#impOverlayBtn');
   if(ob) ob.onclick=e=>{ e.stopPropagation(); S.showImpurities=!S.showImpurities; ob.classList.toggle('on',S.showImpurities); persistUI(); draw(); };
   const fi=host.querySelector('#impFilterIn'); stop(fi);
@@ -3332,6 +3448,8 @@ function renderList(){
       `<input type="color" class="swatch" value="${sp.color}">`+
       `<input type="checkbox" class="vis" ${sp.visible?'checked':''} title="${t('ttVis')}">`+
       `<span class="nm" title="${sp.name}">${sp.name}</span>`+
+      `${(sp.origName&&sp.name!==sp.origName)?`<button class="nmrestore" title="${t('ttRestoreName')}"><svg class="svi" viewBox="0 0 16 16"><path d="M5 6H2.5V3.5"/><path d="M3 6.6A5 5 0 1 1 3 9.4"/></svg></button>`:''}`+
+      `<button class="vzt${sp.vzoom!==false?' on':''}" title="${t('ttVzoom')}"><svg class="svi" viewBox="0 0 16 16"><path d="M8 2.6v10.8"/><path d="M5.2 5.2 8 2.4l2.8 2.8"/><path d="M5.2 10.8 8 13.6l2.8-2.8"/></svg></button>`+
       `<button class="rm" title="${t('ttRemove')}">×</button>`;
     row.onclick=e=>{ if(e.target.closest('input,button'))return; S.active=k; refreshActive(); };
     row.querySelector('.up').onclick=()=>moveSpectrum(k,-1);
@@ -3341,6 +3459,10 @@ function renderList(){
     row.querySelector('.nm').ondblclick=e=>{ e.stopPropagation();
       const v=prompt(t('renameP'), sp.name); if(v===null) return;
       const nv=v.trim(); if(nv){ sp.name=nv; saveAnnot(sp); renderList(); draw(); } };
+    { const vzt=row.querySelector('.vzt'); if(vzt) vzt.onclick=e=>{ e.stopPropagation();
+        sp.vzoom=(sp.vzoom===false); renderList(); }; }
+    { const nr=row.querySelector('.nmrestore'); if(nr) nr.onclick=e=>{ e.stopPropagation();
+        if(sp.origName){ sp.name=sp.origName; saveAnnot(sp); renderList(); draw(); } }; }
     row.querySelector('.rm').onclick=()=>{ S.spectra.splice(k,1);
       if(S.active>=S.spectra.length) S.active=S.spectra.length-1;
       if(!S.spectra.length){ document.getElementById('hint').style.display=''; closeResults(); }
@@ -3348,6 +3470,7 @@ function renderList(){
       refreshActive(); };
     el.appendChild(row);
   });
+  refreshVzoomBtn();
 }
 function fmtAcqDate(ep){ if(ep==null||!isFinite(ep)) return '—';
   const d=new Date(ep*1000); if(isNaN(d.getTime())) return '—';
@@ -3431,6 +3554,8 @@ document.getElementById('textSize').oninput=e=>{ S.textSize=+e.target.value;
   document.getElementById('tsv').textContent=(S.textSize).toFixed(1); persistUI(); draw(); };
 document.getElementById('integDigits').oninput=e=>{ S.integDigits=+e.target.value;
   document.getElementById('idgv').textContent=String(S.integDigits); persistUI(); renderResults(); draw(); };
+document.getElementById('multDigits').oninput=e=>{ S.multDigits=+e.target.value;
+  document.getElementById('mdgv').textContent=String(S.multDigits); persistUI(); renderResults(); draw(); };
 segWire('segFont',v=>{ S.plotFont=v; persistUI(); draw(); });
 document.getElementById('btnResetSet').onclick=()=>{
   S.lineW=DEFAULTS.lineW; S.wheelSens=DEFAULTS.wheelSens;
@@ -3486,10 +3611,10 @@ document.addEventListener('paste',e=>{
     }
   }
 });
-document.getElementById('markColor').onclick=e=>{ e.stopPropagation(); openColorPopover(e.currentTarget, S.markColor, c=>{ S.markColor=c; setColorBtn('markColor',c); persistUI(); if(S.tool!=='tMark') setTool('tMark'); else draw(); }); };
-document.getElementById('shadeColor').onclick=e=>{ e.stopPropagation(); openColorPopover(e.currentTarget, S.shadeColor, c=>{ S.shadeColor=c; setColorBtn('shadeColor',c); persistUI(); if(S.tool!=='tShade') setTool('tShade'); else draw(); }); };
-document.getElementById('textColor').onclick=e=>{ e.stopPropagation(); openColorPopover(e.currentTarget, S.textColor||css('--mult'), c=>{ S.textColor=c; setColorBtn('textColor',c); persistUI(); if(S.tool!=='tAssign') setTool('tAssign'); else draw(); }); };
-document.getElementById('lineColor').onclick=e=>{ e.stopPropagation(); openColorPopover(e.currentTarget, S.lineColor||css('--axis'), c=>{ S.lineColor=c; setColorBtn('lineColor',c); persistUI(); if(S.tool!=='tLine') setTool('tLine'); else draw(); }); };
+document.getElementById('markColor').oninput=e=>{ S.markColor=e.target.value; persistUI(); if(S.tool!=='tMark') setTool('tMark'); else draw(); };
+document.getElementById('shadeColor').oninput=e=>{ S.shadeColor=e.target.value; persistUI(); if(S.tool!=='tShade') setTool('tShade'); else draw(); };
+document.getElementById('textColor').oninput=e=>{ S.textColor=e.target.value; persistUI(); if(S.tool!=='tAssign') setTool('tAssign'); else draw(); };
+document.getElementById('lineColor').oninput=e=>{ S.lineColor=e.target.value; persistUI(); if(S.tool!=='tLine') setTool('tLine'); else draw(); };
 /* assign/multiplet dropdowns: show/hide toggles */
 (function(){
   const map=[['tgMark','showMarks'],['tgText','showText'],['tgShade','showShades'],['tgMult','showMults'],['tgLine','showLines'],['tgPeaks','showPeaks'],['tgInteg','showIntegs'],['tgInsets','showInsets']];
@@ -3574,8 +3699,9 @@ function fillRangeInputs(){
 }
 document.querySelectorAll('.menu>.mbtn').forEach(b=>b.addEventListener('click',e=>{
   e.stopPropagation(); const m=b.parentElement, was=m.classList.contains('open');
-  closeMenus(); if(!was){ m.classList.add('open','sticky');
-    if(m.id==='menuViewBox') fillRangeInputs(); } }));
+  closeMenus(); closeToolMenus(); disarmTool(); if(!was){ m.classList.add('open','sticky');
+    if(m.id==='menuViewBox') fillRangeInputs();
+    { const mp=m.querySelector('.mpanel'); if(mp) clampDockedPanel(m, mp); } } }));
 document.getElementById('btnFileDirect').addEventListener('click',e=>{ e.stopPropagation(); closeMenus(); openDataset(); });
 document.getElementById('btnFileReopen').addEventListener('click',e=>{ e.stopPropagation(); closeMenus();
   reopenLast().then(ok=>{ if(!ok) openDataset(); }); });
@@ -3635,7 +3761,8 @@ document.addEventListener('keydown',e=>{
     case 'P': setTool('tErasePk'); break;
     case 'i': setTool('tInteg'); break;
     case 'I': setTool('tEraseInt'); break;
-    case 'm': case 'M': setTool('tMult'); break;
+    case 'm': setTool('tMult'); break;
+    case 'M': setTool('tEraseMult'); break;
     case 'a': case 'A': setTool('tAssign'); break;
     case 'd': case 'D': setTool('tMark'); break;
     case 'z': case 'Z': setTool('tZoom'); break;
@@ -3660,7 +3787,7 @@ segWire('segLang',v=>setLang(v));
 
 /* ===================== loading (multi) ===================== */
 function newSpectrum(name){ const c=PALETTE[S.nextColor++ % PALETTE.length];
-  return { name, color:c, visible:true, source:'fid', sr:0, mode:'mag', zf:1, wdw:'em', lb:0.3, gdc:true, ph0:0, ph1:0, yscale:1,
+  return { name, origName:name, color:c, visible:true, source:'fid', sr:0, mode:'mag', zf:1, wdw:'em', lb:0.3, gdc:true, ph0:0, ph1:0, yscale:1, vzoom:true,
     peaks:[], integrals:[], multiplets:[], shades:[], haveFid:false, haveProc:false, colorLocked:false }; }
 // assign palette colors to spectra in display order (skips manually-locked ones)
 function applyPalette(force){
@@ -3927,12 +4054,12 @@ document.getElementById('btnCopyImg').onclick=()=>{ closeMenus(); if(!visibleSpe
 };
 
 /* ---------- session (annotations + display state) as JSON ---------- */
-const SHOW_FLAGS=['showInsets','showNames','showPeaks','showIntegs','showShades','showMarks','showText','showMults','showLanes','showLines','showZooms','showMinimap','zoomLeaders','linkY'];
+const SHOW_FLAGS=['showInsets','showNames','showPeaks','showIntegs','showShades','showMarks','showText','showMults','showLanes','showLines','showZooms','showMinimap','zoomLeaders'];
 function uiState(){ const o={
     view:{pHi:S.view.pHi,pLo:S.view.pLo}, layout:S.layout, palette:S.palette, monoBase:S.monoBase,
     lineW:S.lineW, ppmDigits:S.ppmDigits, pkDigits:S.pkDigits, fontScale:S.fontScale, nameScale:S.nameScale, axisScale:S.axisScale, markSize:S.markSize, plotFont:S.plotFont,
     axisPad:S.axisPad, baseGap:S.baseGap,
-    peakColor:S.peakColor, integColor:S.integColor, markColor:S.markColor, shadeColor:S.shadeColor, textColor:S.textColor, textSize:S.textSize, lineColor:S.lineColor, integDigits:S.integDigits,
+    peakColor:S.peakColor, integColor:S.integColor, multColor:S.multColor, multDigits:S.multDigits, markColor:S.markColor, shadeColor:S.shadeColor, textColor:S.textColor, textSize:S.textSize, lineColor:S.lineColor, integDigits:S.integDigits,
     customPalette:S.customPalette||[],
     impSolvent:S.impSolvent, impTol:S.impTol, impTolC:S.impTolC, showImpurities:S.showImpurities, impPins:S.impPins||[],
     lines:S.lines||[], zooms:S.zooms||[], flags:{} };
@@ -3958,6 +4085,8 @@ function applyUIState(o, withView){
   if('textColor' in o) S.textColor=o.textColor;
   if(typeof o.textSize==='number') S.textSize=o.textSize;
   if(typeof o.integDigits==='number') S.integDigits=o.integDigits;
+  if(typeof o.multDigits==='number') S.multDigits=o.multDigits;
+  if('multColor' in o) S.multColor=o.multColor;
   if('lineColor' in o) S.lineColor=o.lineColor;
   if(o.palette) S.palette=o.palette;
   if(o.monoBase) S.monoBase=o.monoBase;
@@ -3975,7 +4104,7 @@ function exportSession(){
   const o=uiState();
   o.version=28; o.savedAt=new Date().toISOString();
   o.spectra=S.spectra.map(sp=>({ sig:sigKey(sp), name:sp.name, sr:sp.sr||0, mode:sp.mode, source:sp.source,
-    color:sp.color, colorLocked:!!sp.colorLocked, yscale:sp.yscale||1,
+    color:sp.color, colorLocked:!!sp.colorLocked, yscale:sp.yscale||1, vzoom:sp.vzoom!==false,
     peaks:sp.peaks||[], integrals:sp.integrals||[], multiplets:sp.multiplets||[], shades:sp.shades||[], images:sp.images||[] }));
   dlBlob(JSON.stringify(o,null,1),'nmr_session_'+new Date().toISOString().slice(0,10)+'.nmrsession.json','application/json');
 }
@@ -3995,6 +4124,7 @@ function importSession(obj){
     if(e.mode) sp.mode=e.mode;
     if(e.color){ sp.color=e.color; sp.colorLocked=!!e.colorLocked; }
     if(typeof e.yscale==='number') sp.yscale=e.yscale;
+    if(typeof e.vzoom==='boolean') sp.vzoom=e.vzoom;
     sp.peaks=e.peaks||[]; sp.integrals=e.integrals||[]; sp.multiplets=e.multiplets||[]; sp.shades=e.shades||[];
     if(e.images) sp.images=e.images;
     finalize(sp);
@@ -4037,6 +4167,7 @@ function syncUIControls(){
   const tss=document.getElementById('textSize'); if(tss){ tss.value=S.textSize; const v=document.getElementById('tsv'); if(v) v.textContent=(S.textSize||10.5).toFixed(1); }
   const tcb=document.getElementById('textColor'); if(tcb) setColorBtn('textColor', S.textColor||css('--mult'));
   const idg=document.getElementById('integDigits'); if(idg){ idg.value=S.integDigits; const v=document.getElementById('idgv'); if(v) v.textContent=String(S.integDigits??3); }
+  const mdg=document.getElementById('multDigits'); if(mdg){ mdg.value=S.multDigits??2; const v=document.getElementById('mdgv'); if(v) v.textContent=String(S.multDigits??2); }
   const lcb=document.getElementById('lineColor'); if(lcb) setColorBtn('lineColor', S.lineColor||css('--axis'));
   const ax=document.getElementById('axisPad'); if(ax){ ax.value=S.axisPad; const v=document.getElementById('axv'); if(v) v.textContent=String(S.axisPad); }
   const bg=document.getElementById('baseGap'); if(bg){ const pct=(S.baseGap==null?0.035:S.baseGap)*100; bg.value=String(pct); const v=document.getElementById('bgv'); if(v) v.textContent=pct.toFixed(1)+'%'; }
