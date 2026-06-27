@@ -474,6 +474,7 @@ html[data-theme=light] #drop{background:rgba(251,250,246,.94)}
             <div class="ctl" id="layoutRow" style="display:none">
               <label data-i18n="lblLayout">Layout</label>
               <div class="seg" id="segLayout"><button data-v="overlay" data-i18n="optOverlay">Overlay</button><button data-v="stack" class="on" data-i18n="optStacked">Stacked</button></div>
+              <button class="tbtn" id="btnOverflow" style="width:100%;margin-top:6px" data-i18n="lblOverflow">Allow peak overflow</button>
             </div>
             </div>
             <div class="vcol">
@@ -764,7 +765,7 @@ const I18N={
   tAssignGrp:"Assign", lblShowMarks:"Marks", lblShowText:"Text",
   lblAxisDigits:"δ-axis decimals", lblPeakDigits:"Label decimals",
   lblShowLines:"Connectors", lblShowZooms:"Zoom views", lblShowLanes:"Lane lines",
-  tZoomTxt:"Zoom view", tLineTxt:"Connector", ttZoom:"Drag a δ window → floating magnified view (× to remove)",
+  tZoomTxt:"Zoom view", tLineTxt:"Connector", ttZoom:"Drag a δ window → floating magnified view (× to remove)", ttZoomSingle:"Zoom view works with a single spectrum only",
   ttLine:"Drag two points → dashed connector; click a line to remove",
   hdAnnotate:"Annotate", hdVisibility:"Show / hide", lblVisToggle:"Show / hide", hdWheel:"Wheel / scroll", secKeyboard:"Keyboard", setGen:"General", setLook:"Appearance", setAxis:"δ-axis", secRegion:"Region",
   actCalManual:"Manual (click a peak)", hdSolvent:"Residual solvent → auto", actCalReset:"Reset calibration",
@@ -800,7 +801,7 @@ const I18N={
   actMultPick:"Select peaks (click) / drag range", actMultDefine:"From selected peaks", actMultClearSel:"Clear selection", lblMultColor:"Multiplet color", lblMultDigits:"J decimals", ttEraseMult:"Drag a region to remove multiplets there", msgMultSplit:"Excluded distant peaks; analyzed the largest cluster", msgMultBigJ:"Coupling looks too large — the range may span separate signals",
   lblPeakColor:"Peak color", lblIntegColor:"Integral color", lblIntegPos:"Height", lblIntegDigits:"Decimals", lineColorLbl:"Color",
   tErasePk:"⌫⋀ Reset peaks", tEraseInt:"⌫∫ Reset integrals", btnResetDef:"Reset to defaults",
-  optOverlay:"Overlay", optStacked:"Stacked", lblLayout:"Layout", lblModeHint:"Real = phased absorption (normal) · Magnitude = phase-independent, always positive", toolNeedOne:"No spectrum visible",
+  optOverlay:"Overlay", optStacked:"Stacked", lblLayout:"Layout", lblOverflow:"Allow peak overflow", lblModeHint:"Real = phased absorption (normal) · Magnitude = phase-independent, always positive", toolNeedOne:"No spectrum visible",
   ttErasePk:"Drag a region to remove peaks & multiplets there", ttEraseInt:"Drag a region to remove integrals there",
   ttVis:"Show / hide", ttRemove:"Remove", ttVzoom:"Responds to vertical zoom (on = scales)", ttRestoreName:"Restore original file name", ttVzAll:"Vertical-zoom: select / clear all",
   tbIntensity:"Spectrum intensity", tbAuto:"Auto", tbFull:"Full", lblLinkY:"Link all spectra",
@@ -857,7 +858,7 @@ const I18N={
   tAssignGrp:"帰属", lblShowMarks:"マーク", lblShowText:"テキスト",
   lblAxisDigits:"δ軸の小数桁", lblPeakDigits:"ラベルの小数桁",
   lblShowLines:"破線コネクタ", lblShowZooms:"拡大図", lblShowLanes:"レーン区切り線",
-  tZoomTxt:"拡大図", tLineTxt:"破線コネクタ", ttZoom:"δ範囲をドラッグ→拡大図をフロート配置（×で削除）",
+  tZoomTxt:"拡大図", tLineTxt:"破線コネクタ", ttZoom:"δ範囲をドラッグ→拡大図をフロート配置（×で削除）", ttZoomSingle:"拡大図は単一スペクトルのときのみ使えます",
   ttLine:"2点をドラッグ→破線で結ぶ／線をクリックで削除",
   hdAnnotate:"注釈", hdVisibility:"表示・非表示", lblVisToggle:"表示 / 非表示", hdWheel:"ホイール / スクロール", secKeyboard:"キーボード", setGen:"全般", setLook:"見た目", setAxis:"δ軸", secRegion:"領域",
   actCalManual:"手動（ピークをクリック）", hdSolvent:"残留溶媒 → 自動", actCalReset:"校正をリセット",
@@ -893,7 +894,7 @@ const I18N={
   actMultPick:"ピークを選択（クリック）／範囲ドラッグ", actMultDefine:"選択したピークから作成", actMultClearSel:"選択をクリア", lblMultColor:"多重線の色", lblMultDigits:"J小数桁", ttEraseMult:"範囲をドラッグして多重線を消去", msgMultSplit:"離れたピークを除外し、最も大きな一群で解析しました", msgMultBigJ:"結合定数が大きすぎます。別シグナルをまたいだ範囲かもしれません",
   lblPeakColor:"ピークの色", lblIntegColor:"積分の色", lblIntegPos:"高さ", lblIntegDigits:"小数桁", lineColorLbl:"色",
   tErasePk:"⌫⋀ ピーク消去", tEraseInt:"⌫∫ 積分消去", btnResetDef:"デフォルトに戻す",
-  optOverlay:"重ね", optStacked:"並べる", lblLayout:"レイアウト", lblModeHint:"実部＝位相補正した通常の表示／絶対値＝位相に依存せず常に正（線幅は広め）", toolNeedOne:"スペクトルが表示されていません",
+  optOverlay:"重ね", optStacked:"並べる", lblLayout:"レイアウト", lblOverflow:"ピークの貫通を許可", lblModeHint:"実部＝位相補正した通常の表示／絶対値＝位相に依存せず常に正（線幅は広め）", toolNeedOne:"スペクトルが表示されていません",
   ttErasePk:"範囲をドラッグしてピーク・多重線を消去", ttEraseInt:"範囲をドラッグして積分を消去",
   ttVis:"表示 / 非表示", ttRemove:"削除", ttVzoom:"縦ズーム対象（ONのスペクトルが動く）", ttRestoreName:"元のファイル名に戻す", ttVzAll:"縦ズーム対象を全て選択 / 全解除",
   tbIntensity:"スペクトル強度", tbAuto:"自動", tbFull:"全体", lblLinkY:"全スペクトル連動",
@@ -1072,7 +1073,7 @@ const S={ spectra:[], active:-1, view:{pHi:1,pLo:0}, yscale:1, tool:null,
   peakColor:null, integColor:null, multColor:null, multDigits:2,
   markColor:'#0E6E7E', shadeColor:'#D33A2C', markSize:4.6, textColor:null, textSize:10.5, lineColor:null, integDigits:3, showInsets:true, showNames:true, showPeaks:true, showIntegs:true, showShades:true, showMarks:true, showText:true,
   resTab:'peaks', asgSub:'text', docked:true, nextColor:0, layout:'stack', palette:'wbHC', monoBase:'#0E6E7E', ppmDigits:2,
-  pkDigits:2, showMults:true, showJTree:true, showLanes:false, showLines:true, showZooms:true, lines:[], zooms:[],
+  pkDigits:2, showMults:true, showJTree:true, showLanes:false, laneOverflow:false, showLines:true, showZooms:true, lines:[], zooms:[],
   fontScale:1, nameScale:1, axisScale:1, plotFont:'mono', showMinimap:false, zoomLeaders:true,
   customPalette:['#1f3a93','#9e2b25','#117a4d','#8a5a00','#6a1b8a'],
   impSolvent:'cdcl3', impTol:0.03, impTolC:0.3, showImpurities:false, impPins:[], impFilter:'' };
@@ -1980,7 +1981,7 @@ function renderContent(opts){
   for(const sp of vs){
     const d=dispOf(sp), g=geomFor(sp,li);
     const sy=v=>g.base-(v/sp.gmax)*g.full*ysc(sp);
-    const clampY=y=>Math.max(g.top-2,Math.min(g.base+2,y));
+    const clampY = S.laneOverflow ? (y=>Math.max(curTop()-2,Math.min(g.base+2,y))) : (y=>Math.max(g.top-2,Math.min(g.base+2,y)));
     let iL=idxAtPpm(sp,VW.pHi), iR=idxAtPpm(sp,VW.pLo);
     if(iL>iR){const t=iL;iL=iR;iR=t;}
     iL=Math.max(0,Math.min(sp.N-1,iL)); iR=Math.max(0,Math.min(sp.N-1,iR));
@@ -2194,7 +2195,7 @@ function draw(){
 /* ===================== interaction ===================== */
 const TOOLS=['tCalib','tPeaks','tInteg','tMult','tAssign','tMark','tErasePk','tEraseInt','tEraseMult','tDelPeak','tShade','tZoom','tLine','tDelLine'];
 function toolsEnabled(){ return visibleSpectra().length>=1; }
-function toolOk(id){ return visibleSpectra().length>=1; }
+function toolOk(id){ const n=visibleSpectra().length; return id==='tZoom' ? n===1 : n>=1; }
 /* lane → spectrum (stacked); overlay → active. Activates it for annotation. */
 function spAtY(y){ const li=laneInfo();
   if(li.mode==='stack'&&li.vs.length){
@@ -2211,12 +2212,13 @@ function activateAt(y){ const sp=spAtY(y); if(!sp) return null;
   return sp;
 }
 function updateToolAvail(){
-  const any=visibleSpectra().length>=1;
+  const n=visibleSpectra().length, any=n>=1;
   const KH={tCalib:'C',tPeaks:'P',tInteg:'I',tMult:'M',tAssign:'A',tMark:'D',tErasePk:'⇧P',tEraseInt:'⇧I',tEraseMult:'⇧M',tZoom:'Z',tLine:'G',tDelLine:'⇧G'};
   TOOLS.forEach(id=>{ const el=document.getElementById(id); if(!el)return;
-    el.classList.toggle('disabled',!any);
-    el.title=any?t('tt'+id.slice(1))+' ['+KH[id]+']':t('toolNeedOne'); });
-  if(S.tool && !any){ S.tool=null; TOOLS.forEach(x=>{ const el=document.getElementById(x); if(el) el.classList.remove('on'); }); syncToolMains(); }
+    const ok = id==='tZoom' ? n===1 : any;
+    el.classList.toggle('disabled',!ok);
+    el.title = ok ? t('tt'+id.slice(1))+' ['+KH[id]+']' : (id==='tZoom'&&n>1 ? t('ttZoomSingle') : t('toolNeedOne')); });
+  if(S.tool && (!any || (S.tool==='tZoom'&&n!==1))){ S.tool=null; TOOLS.forEach(x=>{ const el=document.getElementById(x); if(el) el.classList.remove('on'); }); syncToolMains(); }
   updateEraseVis(); syncToolMains();
   if(visibleSpectra().length===1){ const v=visibleSpectra()[0]; const k=S.spectra.indexOf(v); if(k>=0&&k!==S.active){ S.active=k; } }
 }
@@ -2267,7 +2269,8 @@ function clampWidePanel(tm){ clampDockedPanel(tm, tm&&tm.querySelector('.tmpanel
 TOOLS.forEach(id=>{ const el=document.getElementById(id); if(!el) return;
   el.onclick = HOVER_ONLY_TOOLS.has(id)
     ? ()=>{ const tm=el.closest('.toolmenu'); if(!tm||tm.classList.contains('floating')) return;   // click toggles a pinned (sticky) dropdown
-        const wasOpen=tm.classList.contains('open'); closeMenus(); closeToolMenus(); if(S.tool && toolGroup(S.tool)!==id) disarmTool();
+        const wasOpen=tm.classList.contains('open'), sameArmed=S.tool&&toolGroup(S.tool)===id; closeMenus(); closeToolMenus(); if(S.tool && toolGroup(S.tool)!==id) disarmTool();
+        if(sameArmed){ disarmTool(); return; }   // pressing this group's tab while its tool is armed → release it
         if(!wasOpen){ tm.classList.add('open','sticky'); if(tm.id==='tmAssign'){ if(typeof renderImpPanel==='function') renderImpPanel(); clampWidePanel(tm); } } }
     : ()=>setTool(id); });
 
@@ -3636,6 +3639,9 @@ document.getElementById('btnInvert').onclick=()=>{
 document.getElementById('btnHscroll').onclick=()=>{
   S.hscroll=!S.hscroll;
   document.getElementById('btnHscroll').classList.toggle('on',S.hscroll); };
+document.getElementById('btnOverflow').onclick=()=>{
+  S.laneOverflow=!S.laneOverflow;
+  document.getElementById('btnOverflow').classList.toggle('on',S.laneOverflow); persistUI(); draw(); };
 document.getElementById('btnInsets').onclick=()=>{
   S.showInsets=!S.showInsets;
   document.getElementById('btnInsets').classList.toggle('on',S.showInsets);
@@ -3751,7 +3757,8 @@ document.addEventListener('keydown',e=>{
   if(e.ctrlKey||e.metaKey||e.altKey) return;
   if((e.key==='Delete'||e.key==='Backspace') && S.selImg>=0){
     e.preventDefault(); removeImage(S.selImg); return; }
-  if(e.key==='Escape'){ closeMenus();
+  if(e.key==='Escape'){ closeMenus(); closeToolMenus();
+    if(ae&&ae.blur) ae.blur();   // drop focus so no keyboard focus-ring lingers on the tab button
     if(S.selImg>=0){ S.selImg=-1; draw(); }
     clearTool(); return; }
   if(!visibleSpectra().length) return;
@@ -4054,7 +4061,7 @@ document.getElementById('btnCopyImg').onclick=()=>{ closeMenus(); if(!visibleSpe
 };
 
 /* ---------- session (annotations + display state) as JSON ---------- */
-const SHOW_FLAGS=['showInsets','showNames','showPeaks','showIntegs','showShades','showMarks','showText','showMults','showLanes','showLines','showZooms','showMinimap','zoomLeaders'];
+const SHOW_FLAGS=['showInsets','showNames','showPeaks','showIntegs','showShades','showMarks','showText','showMults','showLanes','showLines','showZooms','showMinimap','zoomLeaders','laneOverflow'];
 function uiState(){ const o={
     view:{pHi:S.view.pHi,pLo:S.view.pLo}, layout:S.layout, palette:S.palette, monoBase:S.monoBase,
     lineW:S.lineW, ppmDigits:S.ppmDigits, pkDigits:S.pkDigits, fontScale:S.fontScale, nameScale:S.nameScale, axisScale:S.axisScale, markSize:S.markSize, plotFont:S.plotFont,
@@ -4156,7 +4163,7 @@ function syncUIControls(){
   set('btnInsets',S.showInsets); set('btnNames',S.showNames); set('btnShowPeaks',S.showPeaks);
   set('btnShowIntegs',S.showIntegs); set('btnShowShades',S.showShades); set('btnShowMults',S.showMults);
   set('btnShowLines',S.showLines); set('btnShowZooms',S.showZooms); set('btnShowLanes',S.showLanes);
-  set('btnMinimap',S.showMinimap); set('btnZoomLeaders',S.zoomLeaders);
+  set('btnMinimap',S.showMinimap); set('btnZoomLeaders',S.zoomLeaders); set('btnOverflow',S.laneOverflow);
   const lw=document.getElementById('lineW'); if(lw){ lw.value=S.lineW; const v=document.getElementById('lwv'); if(v) v.textContent=(+S.lineW).toFixed(1); }
   const pd=document.getElementById('ppmDigits'); if(pd){ pd.value=S.ppmDigits; const v=document.getElementById('digv'); if(v) v.textContent=String(S.ppmDigits); }
   const kd=document.getElementById('pkDigits'); if(kd){ kd.value=S.pkDigits; const v=document.getElementById('pkdigv'); if(v) v.textContent=String(S.pkDigits); }
