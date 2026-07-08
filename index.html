@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NMR Spectrum Viewer</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2040%2040%27%3E%3Crect%20width%3D%2740%27%20height%3D%2740%27%20rx%3D%279%27%20fill%3D%27%230E1419%27/%3E%3Ccircle%20cx%3D%2720%27%20cy%3D%2720%27%20r%3D%2717.2%27%20fill%3D%27rgba%2895%2C211%2C200%2C.08%29%27/%3E%3Cg%20fill%3D%27none%27%20stroke-linecap%3D%27round%27%3E%3Ccircle%20cx%3D%2720%27%20cy%3D%2720%27%20r%3D%2717.05%27%20stroke%3D%27%235FD3C8%27%20stroke-width%3D%272.2%27%20stroke-dasharray%3D%2752%2010%2026%209%2012%2012%27/%3E%3Ccircle%20cx%3D%2720%27%20cy%3D%2720%27%20r%3D%2712.9%27%20stroke%3D%27%238CB7FF%27%20stroke-width%3D%271.8%27%20stroke-dasharray%3D%2712%208%2013%2010%2016%2014%27%20stroke-dashoffset%3D%275%27/%3E%3Cpath%20d%3D%27M7.9%2027.1%20H32.1%27%20stroke%3D%27%236B7780%27%20stroke-width%3D%27.7%27%20opacity%3D%27.22%27/%3E%3Cpath%20d%3D%27M8.6%2027.1%20L14.7%2027.1%20L15.38%2022.2%20L16.05%2027.1%20L18.8%2027.1%20L19.58%2013.7%20L20.42%2027.1%20L24.3%2027.1%20L25.05%2023.4%20L25.8%2027.1%20L31.5%2027.1%27%20stroke%3D%27%235FD3C8%27%20stroke-width%3D%271.25%27%20stroke-linejoin%3D%27round%27/%3E%3C/g%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2040%2040%27%3E%3Cg%20fill%3D%27none%27%20stroke-linecap%3D%27round%27%3E%3Ccircle%20cx%3D%2720%27%20cy%3D%2720%27%20r%3D%2717.05%27%20stroke%3D%27%235FD3C8%27%20stroke-width%3D%272.2%27%20stroke-dasharray%3D%2752%2010%2026%209%2012%2012%27/%3E%3Ccircle%20cx%3D%2720%27%20cy%3D%2720%27%20r%3D%2712.9%27%20stroke%3D%27%238CB7FF%27%20stroke-width%3D%271.8%27%20stroke-dasharray%3D%2712%208%2013%2010%2016%2014%27%20stroke-dashoffset%3D%275%27/%3E%3Cpath%20d%3D%27M7.9%2027.1%20H32.1%27%20stroke%3D%27%236B7780%27%20stroke-width%3D%27.7%27%20opacity%3D%27.22%27/%3E%3Cpath%20d%3D%27M8.6%2027.1%20L14.7%2027.1%20L15.38%2022.2%20L16.05%2027.1%20L18.8%2027.1%20L19.58%2013.7%20L20.42%2027.1%20L24.3%2027.1%20L25.05%2023.4%20L25.8%2027.1%20L31.5%2027.1%27%20stroke%3D%27%235FD3C8%27%20stroke-width%3D%271.25%27%20stroke-linejoin%3D%27round%27/%3E%3C/g%3E%3C/svg%3E">
 <style>
 :root{
   --bg:#0E1419; --panel:#131C24; --panel2:#0F171E; --grid:#1E2A35; --gridw:#24333F;
@@ -172,7 +172,12 @@ tr.rowoff .reye{opacity:.4}
 
 /* main */
 main{grid-row:1;position:relative;display:flex;flex-direction:column;background:var(--bg);min-width:0}
-#toolbar{display:flex;align-items:center;gap:4px;padding:7px 12px;border-bottom:1px solid var(--line);background:var(--panel2);flex-wrap:wrap}
+#toolbar{display:flex;align-items:center;gap:4px;padding:7px 12px;border-bottom:1px solid var(--line);background:var(--panel2);flex-wrap:nowrap;overflow:hidden}
+/* progressive collapse: hide labels (icon-only) from the right when the toolbar runs out of room */
+#toolbar .tbc.iconly .tb-lbl{display:none}
+#toolbar .tbc.iconly.ic-btn,#toolbar .tbc.iconly.mbtn{gap:0;padding-left:8px;padding-right:8px}
+#toolbar .tbc.iconly.mbtn .mi{margin:0}
+.tglyph{display:inline-flex;align-items:center;justify-content:center;width:16px;font-size:15px;line-height:1}
 .tbtn{background:transparent;border:1px solid var(--line);color:var(--dim);padding:5px 10px;border-radius:6px;cursor:pointer;font-size:11.5px;transition:.12s;white-space:nowrap}
 #btnInertia,#btnInvert{white-space:normal;line-height:1.2;padding-left:6px;padding-right:6px;overflow:hidden;text-overflow:ellipsis}
 .tbtn:hover{color:var(--ink);border-color:var(--gridw)}
@@ -391,6 +396,48 @@ html[data-theme=light] .clogmodal{background:rgba(40,44,48,.34)}
 .clogentry li{font-size:11.5px;color:var(--ink);line-height:1.55;padding-left:14px;position:relative}
 .clogentry li::before{content:"›";position:absolute;left:2px;color:var(--dim)}
 
+/* ===== manual (help) ===== */
+.manbtn{margin-left:auto;align-self:center;border:1px solid var(--line);background:var(--panel2);color:var(--dim);
+  width:23px;height:23px;border-radius:6px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0;flex:none}
+.manbtn:hover{color:var(--trace);border-color:var(--trace)}
+.manbtn svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+.manmodal{position:fixed;inset:0;background:rgba(14,20,25,.6);z-index:210;display:none;align-items:center;justify-content:center;padding:24px}
+html[data-theme=light] .manmodal{background:rgba(40,44,48,.36)}
+.manmodal.show{display:flex}
+.mancard{background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:0 22px 60px rgba(0,0,0,.45);
+  width:920px;max-width:100%;height:min(640px,88vh);display:flex;flex-direction:column;overflow:hidden}
+.manhead{display:flex;align-items:center;gap:9px;padding:13px 18px;border-bottom:1px solid var(--line);font-size:14px;color:var(--ink);font-weight:600}
+.manhead .mh-ic{display:inline-flex;color:var(--trace)}
+.manhead .mh-ic svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.manhead .x{margin-left:auto;border:none;background:none;color:var(--faint);cursor:pointer;font-size:20px;line-height:1}
+.manhead .x:hover{color:var(--ink)}
+.manwrap{display:flex;min-height:0;flex:1}
+.mantabs{flex:0 0 210px;border-right:1px solid var(--line);padding:10px 8px;overflow-y:auto;display:flex;flex-direction:column;gap:2px;background:var(--panel2)}
+.mantabs button{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:none;background:none;color:var(--dim);
+  padding:8px 10px;border-radius:8px;cursor:pointer;font-size:12px;line-height:1.3}
+.mantabs button .ti{flex:0 0 16px;display:inline-flex;color:currentColor}
+.mantabs button .ti svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+.mantabs button:hover{background:var(--panel);color:var(--ink)}
+.mantabs button.active{background:color-mix(in srgb,var(--trace) 15%,transparent);color:var(--trace);font-weight:600}
+.mancontent{flex:1;min-width:0;padding:16px 24px 24px;overflow-y:auto}
+.mancontent h3{margin:0 0 12px;font-size:16px;color:var(--ink)}
+.mancontent h4{margin:18px 0 7px;font-size:12.5px;color:var(--trace);font-weight:600}
+.mancontent p{margin:0 0 9px;line-height:1.7;color:var(--ink);font-size:12.5px}
+.mancontent ul{margin:0 0 9px;padding-left:20px}
+.mancontent li{margin-bottom:6px;line-height:1.65;color:var(--ink);font-size:12.5px}
+.mancontent b{color:var(--ink);font-weight:600}
+.mancontent .kbd{font-family:var(--mono);font-size:10.5px;background:var(--panel2);border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:1px 6px;color:var(--ink);white-space:nowrap}
+.mancontent .iic{display:inline-flex;vertical-align:-3px;color:var(--trace);margin:0 1px}
+.mancontent .iic svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.man-changelog{margin-top:2px}
+.mancontent .clogentry{padding:12px 0;border-bottom:1px solid var(--grid)}
+.mancontent .clogentry:last-child{border-bottom:none}
+.mancontent .clogentry ul{margin:0;padding-left:0}
+.mancontent .clogentry li{margin-bottom:0;font-size:12px;padding-left:15px}
+.man-fig{margin:6px 0 16px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--panel2)}
+.man-fig svg{display:block;width:100%;height:auto;max-width:640px;margin:0 auto}
+.man-fig figcaption{margin-top:8px;text-align:center;font-size:10.5px;color:var(--faint)}
+@media (max-width:720px){.mantabs{flex-basis:54px}.mantabs button span:last-child{display:none}.mancard{height:92vh}}
 
 /* === Variant B: Button / menu motion === */
 .mbtn,.tbtn,.rsub,.seg button,.vistog,.tmitem,.mitem,.sprow,.cmp{
@@ -474,8 +521,8 @@ aside::-webkit-scrollbar-corner{
   text-shadow:0 0 10px color-mix(in srgb,var(--trace) 28%,transparent);
 }
 .brand-logo02 .nmr-logo{
-  width:38px;
-  height:38px;
+  width:30px;
+  height:30px;
   flex:0 0 auto;
   display:inline-flex;
   align-items:center;
@@ -690,7 +737,7 @@ html[data-theme="light"] .toolmenu.open .tmpanel{
             <path class="nmr-spectrum" d="M8.6 27.1 L14.7 27.1 L15.38 22.2 L16.05 27.1 L18.8 27.1 L19.58 13.7 L20.42 27.1 L24.3 27.1 L25.05 23.4 L25.8 27.1 L31.5 27.1"/>
           </svg>
         </span>
-        <span class="mark">NMR <b>Spectrum</b> Viewer</span><button class="verbadge" id="verBadge" data-i18n-title="verTitle">v1</button>
+        <span class="mark">NMR <b>Spectrum</b> Viewer</span>
       </div>
     </div>
     <div class="sect">
@@ -736,7 +783,7 @@ html[data-theme="light"] .toolmenu.open .tmpanel{
     <div id="toolbar">
       <nav class="menubar">
         <div class="menu" id="menuFileBox">
-          <button class="mbtn"><span class="mi"><svg class="svi" viewBox="0 0 16 16"><path d="M1.5 4.2c0-.6.4-1 1-1h3.3c.3 0 .6.1.8.4l.7.9h5c.6 0 1 .4 1 1v6.4c0 .6-.4 1-1 1H2.5c-.6 0-1-.4-1-1V4.2Z"/></svg></span><span data-i18n="menuFile">File</span></button>
+          <button class="mbtn tbc" data-i18n-title="menuFile"><span class="mi"><svg class="svi" viewBox="0 0 16 16"><path d="M1.5 4.2c0-.6.4-1 1-1h3.3c.3 0 .6.1.8.4l.7.9h5c.6 0 1 .4 1 1v6.4c0 .6-.4 1-1 1H2.5c-.6 0-1-.4-1-1V4.2Z"/></svg></span><span class="tb-lbl" data-i18n="menuFile">File</span></button>
           <div class="mpanel" style="min-width:215px">
             <button class="mitem" id="btnFileDirect"><span class="ic"><svg class="svi" viewBox="0 0 16 16"><path d="M1.5 4.2c0-.6.4-1 1-1h3.3c.3 0 .6.1.8.4l.7.9h5c.6 0 1 .4 1 1v6.4c0 .6-.4 1-1 1H2.5c-.6 0-1-.4-1-1V4.2Z"/></svg></span><span data-i18n="actOpenFolder">Open folder…</span></button>
             <button class="mitem" id="btnFileReopen"><span class="ic"><svg class="svi" viewBox="0 0 16 16"><path d="M3.2 8a4.8 4.8 0 1 0 1.5-3.5"/><path d="M2.4 2.8v2.6h2.6"/></svg></span><span data-i18n="actReopenLast">Reopen last folder</span></button>
@@ -746,7 +793,7 @@ html[data-theme="light"] .toolmenu.open .tmpanel{
           <input type="file" id="fileIn" multiple webkitdirectory>
         </div>
         <div class="menu">
-          <button class="mbtn"><span class="mi"><svg class="svi" viewBox="0 0 16 16"><path d="M8 2.4v7.2"/><path d="M5 6.8 8 9.8l3-3"/><path d="M2.6 12.4h10.8"/></svg></span><span data-i18n="menuExport">Export</span></button>
+          <button class="mbtn tbc" data-i18n-title="menuExport"><span class="mi"><svg class="svi" viewBox="0 0 16 16"><path d="M8 2.4v7.2"/><path d="M5 6.8 8 9.8l3-3"/><path d="M2.6 12.4h10.8"/></svg></span><span class="tb-lbl" data-i18n="menuExport">Export</span></button>
           <div class="mpanel">
             <button class="mitem" id="btnPng"><span class="ic"><svg class="svi" viewBox="0 0 16 16"><rect x="2" y="3" width="12" height="10" rx="1.2"/><circle cx="5.6" cy="6.4" r="1.1"/><path d="m3 12 3.4-3.3 2.2 2.1 2.3-2.5L14 11.4"/></svg></span><span data-i18n="expPng">Image (PNG)</span></button>
             <button class="mitem" id="btnCopyImg"><span class="ic"><svg class="svi" viewBox="0 0 16 16"><rect x="5" y="5" width="9" height="9" rx="1.2"/><path d="M11 5V3.2c0-.6-.4-1-1-1H3.2c-.6 0-1 .4-1 1V10c0 .6.4 1 1 1H5"/></svg></span><span data-i18n="expCopy">Copy image to clipboard</span></button>
@@ -759,7 +806,7 @@ html[data-theme="light"] .toolmenu.open .tmpanel{
           </div>
         </div>
         <div class="menu" id="menuViewBox">
-          <button class="mbtn"><span class="mi"><svg class="svi" viewBox="0 0 16 16"><path d="M1.2 8S3.6 3.6 8 3.6 14.8 8 14.8 8 12.4 12.4 8 12.4 1.2 8 1.2 8Z"/><circle cx="8" cy="8" r="2.1"/></svg></span><span data-i18n="menuView">View</span></button>
+          <button class="mbtn tbc" data-i18n-title="menuView"><span class="mi"><svg class="svi" viewBox="0 0 16 16"><path d="M1.2 8S3.6 3.6 8 3.6 14.8 8 14.8 8 12.4 12.4 8 12.4 1.2 8 1.2 8Z"/><circle cx="8" cy="8" r="2.1"/></svg></span><span class="tb-lbl" data-i18n="menuView">View</span></button>
           <div class="mpanel viewpanel">
             <div class="vcol">
             <div class="tmhead" data-i18n="secRegion">Region</div>
@@ -885,7 +932,7 @@ html[data-theme="light"] .toolmenu.open .tmpanel{
           </div>
         </div>
         <div class="menu">
-          <button class="mbtn"><span class="mi"><svg class="svi" viewBox="0 0 24 24"><path d="M10.3 2.6h3.4l.5 2.3 1.9.8 2-1.3 2.4 2.4-1.3 2 .8 1.9 2.3.5v3.4l-2.3.5-.8 1.9 1.3 2-2.4 2.4-2-1.3-1.9.8-.5 2.3h-3.4l-.5-2.3-1.9-.8-2 1.3-2.4-2.4 1.3-2-.8-1.9-2.3-.5v-3.4l2.3-.5.8-1.9-1.3-2 2.4-2.4 2 1.3 1.9-.8.5-2.3Z"/><circle cx="12" cy="12" r="3.1"/></svg></span><span data-i18n="menuSettings">Settings</span></button>
+          <button class="mbtn tbc" data-i18n-title="menuSettings"><span class="mi"><svg class="svi" viewBox="0 0 24 24"><path d="M10.3 2.6h3.4l.5 2.3 1.9.8 2-1.3 2.4 2.4-1.3 2 .8 1.9 2.3.5v3.4l-2.3.5-.8 1.9 1.3 2-2.4 2.4-2-1.3-1.9.8-.5 2.3h-3.4l-.5-2.3-1.9-.8-2 1.3-2.4-2.4 1.3-2-.8-1.9-2.3-.5v-3.4l2.3-.5.8-1.9-1.3-2 2.4-2.4 2 1.3 1.9-.8.5-2.3Z"/><circle cx="12" cy="12" r="3.1"/></svg></span><span class="tb-lbl" data-i18n="menuSettings">Settings</span></button>
           <div class="mpanel viewpanel" style="min-width:245px">
             <div class="vcol">
             <div class="tmhead" data-i18n="setGen">General</div>
@@ -930,7 +977,7 @@ html[data-theme="light"] .toolmenu.open .tmpanel{
         </div>
       </nav>
       <span class="toolmenu" id="tmCalib">
-        <button class="tbtn main ic-btn" id="tCalib" title=""><svg class="svi" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/></svg><span data-i18n="tCalibTxt">Calibrate</span></button>        <div class="tmpanel">
+        <button class="tbtn main ic-btn tbc" id="tCalib" title=""><svg class="svi" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/></svg><span class="tb-lbl" data-i18n="tCalibTxt">Calibrate</span></button>        <div class="tmpanel">
           <button class="tmitem" data-act="tCalib"><span class="tmic">⌖</span><span data-i18n="actCalManual">Manual (click a peak)</span></button>
           <div class="tmsep"></div>
           <div class="tmhead" data-i18n="hdSolvent">Residual solvent → auto</div>
@@ -941,7 +988,7 @@ html[data-theme="light"] .toolmenu.open .tmpanel{
       </span>
 
       <span class="toolmenu" id="tmShift">
-        <button class="tbtn main" id="tPeaks" data-i18n="tPeaksMain" title="">⋀ Peaks</button>        <div class="tmpanel">
+        <button class="tbtn main ic-btn tbc" id="tPeaks" title=""><span class="tglyph" aria-hidden="true">⋀</span><span class="tb-lbl" data-i18n="tPeaksTxt">Peaks</span></button>        <div class="tmpanel">
           <button class="tmitem" data-act="tPeaks"><span class="tmic">⋀</span><span data-i18n="actDetect">Detect (drag range)</span></button>
           <button class="tmitem" data-act="detectThr"><span class="tmic">⋀</span><span data-i18n="actDetectThr">Detect all ≥ threshold</span></button>
           <div class="tmrow indent"><span class="tmic">⌁</span><span data-i18n="actThreshold">Threshold</span><input type="range" id="thrSlider" min="1" max="50" step="1" value="5"><span class="thrval" id="thrVal">5%</span></div>
@@ -961,7 +1008,7 @@ html[data-theme="light"] .toolmenu.open .tmpanel{
       </span>
 
       <span class="toolmenu" id="tmInteg">
-        <button class="tbtn main" id="tInteg" data-i18n="tIntegMain" title="">∫ Integrals</button>        <div class="tmpanel">
+        <button class="tbtn main ic-btn tbc" id="tInteg" title=""><span class="tglyph" aria-hidden="true">∫</span><span class="tb-lbl" data-i18n="tIntegTxt">Integrals</span></button>        <div class="tmpanel">
           <button class="tmitem" data-act="tInteg"><span class="tmic">∫</span><span data-i18n="actIntegrate">Integrate (drag range)</span></button>
           <button class="tmitem erase" data-act="tEraseInt"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M2.5 4.5h11"/><path d="M6 4.5V3h4v1.5"/><path d="M4.1 4.5l.6 8.2a1 1 0 0 0 1 .9h4.6a1 1 0 0 0 1-.9l.6-8.2"/><path d="M6.6 7.2v3.8M9.4 7.2v3.8"/></svg></span><span data-i18n="actRemoveRange">Remove (drag range)</span></button>
           <button class="tmitem erase" data-act="delInteg"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M2.5 4.5h11"/><path d="M6 4.5V3h4v1.5"/><path d="M4.1 4.5l.6 8.2a1 1 0 0 0 1 .9h4.6a1 1 0 0 0 1-.9l.6-8.2"/><path d="M6.6 7.2v3.8M9.4 7.2v3.8"/></svg></span><span data-i18n="actDelSel">Delete selected</span></button>
@@ -979,7 +1026,7 @@ html[data-theme="light"] .toolmenu.open .tmpanel{
       </span>
 
       <span class="toolmenu" id="tmMult">
-        <button class="tbtn main ic-btn" id="tMult" title=""><svg class="svi" viewBox="0 0 24 24"><line x1="12" y1="3" x2="12" y2="10"/><line x1="12" y1="10" x2="6" y2="14"/><line x1="12" y1="10" x2="18" y2="14"/><line x1="6" y1="14" x2="6" y2="21"/><line x1="18" y1="14" x2="18" y2="21"/></svg><span data-i18n="tMultTxt">Multiplets</span></button>        <div class="tmpanel">
+        <button class="tbtn main ic-btn tbc" id="tMult" title=""><svg class="svi" viewBox="0 0 24 24"><line x1="12" y1="3" x2="12" y2="10"/><line x1="12" y1="10" x2="6" y2="14"/><line x1="12" y1="10" x2="18" y2="14"/><line x1="6" y1="14" x2="6" y2="21"/><line x1="18" y1="14" x2="18" y2="21"/></svg><span class="tb-lbl" data-i18n="tMultTxt">Multiplets</span></button>        <div class="tmpanel">
           <button class="tmitem" data-act="tMult"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M8 2.5v3"/><path d="M8 5.5 4 8.8"/><path d="M8 5.5l4 3.3"/><path d="M4 8.8v3.2"/><path d="M12 8.8v3.2"/></svg></span><span data-i18n="actMultPick">Select peaks (click) / drag range</span></button>
           <button class="tmitem" data-act="defineMult"><span class="tmic">✓</span><span data-i18n="actMultDefine">From selected peaks</span></button>
           <button class="tmitem erase" data-act="clearMultSel"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M2.5 4.5h11"/><path d="M6 4.5V3h4v1.5"/><path d="M4.1 4.5l.6 8.2a1 1 0 0 0 1 .9h4.6a1 1 0 0 0 1-.9l.6-8.2"/><path d="M6.6 7.2v3.8M9.4 7.2v3.8"/></svg></span><span data-i18n="actMultClearSel">Clear selection</span></button>
@@ -997,7 +1044,7 @@ html[data-theme="light"] .toolmenu.open .tmpanel{
       </span>
 
       <span class="toolmenu" id="tmAssign">
-        <button class="tbtn main ic-btn" id="tMark" title=""><svg class="svi" viewBox="0 0 24 24"><path d="M20.59 13.41 13.42 20.58a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><circle cx="7" cy="7" r="2.3"/></svg><span data-i18n="tAssignGrp">Assign</span></button>        <div class="tmpanel tmpanel2">
+        <button class="tbtn main ic-btn tbc" id="tMark" title=""><svg class="svi" viewBox="0 0 24 24"><path d="M20.59 13.41 13.42 20.58a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><circle cx="7" cy="7" r="2.3"/></svg><span class="tb-lbl" data-i18n="tAssignGrp">Assign</span></button>        <div class="tmpanel tmpanel2">
          <div class="tmcol">
           <button class="tmitem" data-act="tMark"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><circle cx="8" cy="8" r="4.5" fill="currentColor" stroke="none"/></svg></span><span data-i18n="actMark">Mark</span></button>
           <div class="tmrow indent"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><rect x="2.5" y="2.5" width="11" height="11" rx="2.2"/><path d="M2.5 10l3-3 2.5 2.5L11 6l2.5 2.5"/></svg></span><span data-i18n="markColorLbl">Mark color</span><input type="color" id="markColor" value="#0E6E7E"></div>
@@ -1035,7 +1082,7 @@ html[data-theme="light"] .toolmenu.open .tmpanel{
       </span>
 
       <span class="toolmenu" id="tmZoom">
-        <button class="tbtn main ic-btn" id="tZoom" title=""><svg class="svi" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><line x1="15.2" y1="15.2" x2="21" y2="21"/><line x1="10.5" y1="7.6" x2="10.5" y2="13.4"/><line x1="7.6" y1="10.5" x2="13.4" y2="10.5"/></svg><span data-i18n="tZoomTxt">Zoom view</span></button>        <div class="tmpanel">
+        <button class="tbtn main ic-btn tbc" id="tZoom" title=""><svg class="svi" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><line x1="15.2" y1="15.2" x2="21" y2="21"/><line x1="10.5" y1="7.6" x2="10.5" y2="13.4"/><line x1="7.6" y1="10.5" x2="13.4" y2="10.5"/></svg><span class="tb-lbl" data-i18n="tZoomTxt">Zoom view</span></button>        <div class="tmpanel">
           <button class="tmitem" data-act="tZoom"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><circle cx="7" cy="7" r="4.3"/><line x1="10.2" y1="10.2" x2="14" y2="14"/><line x1="7" y1="5.2" x2="7" y2="8.8"/><line x1="5.2" y1="7" x2="8.8" y2="7"/></svg></span><span data-i18n="actZoomDrag">Create (drag δ window)</span></button>
           <div class="tmsep"></div>
           <div class="tmrow indent"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><rect x="2.5" y="2.5" width="11" height="11" rx="2.2"/><path d="M2.5 10l3-3 2.5 2.5L11 6l2.5 2.5"/></svg></span><span data-i18n="lblZoomBorder">Frame color</span><input type="color" id="zoomBorderColor" value="#6B7780"></div>
@@ -1051,6 +1098,7 @@ html[data-theme="light"] .toolmenu.open .tmpanel{
           </div>
         </div>
       </span>
+      <button class="tbtn ic-btn tbc" id="btnManualBar" data-i18n-title="manualTitle"><svg class="svi" viewBox="0 0 16 16"><path d="M8 4.3C6.8 3.3 5.1 3 3.3 3.2V12c1.8-.2 3.5.1 4.7 1.1 1.2-1 2.9-1.3 4.7-1.1V3.2C10.9 3 9.2 3.3 8 4.3Z"/><path d="M8 4.3V13"/></svg><span class="tb-lbl" data-i18n="manual">Manual</span></button>
       <button class="tbtn" id="btnUndo" title="">↶</button>
       <button class="tbtn" id="btnRedo" title="">↷</button>
       <div id="readout"><span>δ <b id="roPpm">—</b></span><span class="ipk">I <b id="roInt">—</b></span></div>
@@ -1083,6 +1131,14 @@ html[data-theme="light"] .toolmenu.open .tmpanel{
   <div class="clogbody" id="clogBody"></div>
 </div></div>
 
+<div id="manModal" class="manmodal"><div class="mancard">
+  <div class="manhead"><span class="mh-ic"><svg viewBox="0 0 16 16"><path d="M8 4.3C6.8 3.3 5.1 3 3.3 3.2V12c1.8-.2 3.5.1 4.7 1.1 1.2-1 2.9-1.3 4.7-1.1V3.2C10.9 3 9.2 3.3 8 4.3Z"/><path d="M8 4.3V13"/></svg></span><span data-i18n="manual">Manual</span><button class="x" id="manClose">×</button></div>
+  <div class="manwrap">
+    <nav class="mantabs" id="manTabs"></nav>
+    <div class="mancontent" id="manContent"></div>
+  </div>
+</div></div>
+
 <script>
 "use strict";
 /* ===================== i18n ===================== */
@@ -1090,6 +1146,7 @@ const I18N={
  en:{
   menuFile:"File", menuView:"View", menuExport:"Export", menuSettings:"Settings",
   clogTitle:"Changelog", clogCurrent:"current", verTitle:"Version — click for changelog",
+  manual:"Manual", manualTitle:"Manual — how to use",
   actOpenFolder:"Open folder…", actReopenLast:"Reopen last folder", hintDropFolder:"Tip: drag several dataset folders (or one parent folder) onto the window to import them all at once — no prompt.",
   lblLang:"Language", lblTheme:"Theme", optDark:"Dark", optLight:"Light",
   lblZoom:"Zoom", mZoomIn:"⊕ In", mZoomOut:"⊖ Out", lblWheel:"Wheel sensitivity", lblAxisH:"δ-axis height", lblBaseGap:"δ-axis ↔ spectrum gap",
@@ -1136,7 +1193,7 @@ const I18N={
   lblLB:"Line broadening", lblZf:"Zero filling", lblGdc:"Group-delay correction", lblLineW:"Line width",
   lblBg:"Background",
   tCalib:"⌖ Calibrate", tCalibTxt:"Calibrate", tMultTxt:"Multiplets", tPeaks:"⋀ Pick Peaks", tInteg:"∫ Integrate", tMult:"⋔ Multiplets", tAssign:"✎ Assign",
-  tPeaksMain:"⋀ Peaks", tIntegMain:"∫ Integrals", lblResults:"Results list",
+  tPeaksMain:"⋀ Peaks", tIntegMain:"∫ Integrals", tPeaksTxt:"Peaks", tIntegTxt:"Integrals", lblResults:"Results list",
   actDetect:"Detect (drag range)", actThreshold:"Threshold", actDetectThr:"Detect all ≥ threshold", actRemoveRange:"Remove (drag range)", actClearAll:"Clear all",
   actDelSelPeak:"Select & delete (click a peak)",
   actIntegrate:"Integrate (drag range)", actDelSel:"Delete selected", actMark:"Mark", actText:"Text label",
@@ -1185,6 +1242,7 @@ const I18N={
  ja:{
   menuFile:"ファイル", menuView:"表示", menuExport:"出力", menuSettings:"設定",
   clogTitle:"更新履歴", clogCurrent:"現在", verTitle:"バージョン — クリックで更新履歴",
+  manual:"マニュアル", manualTitle:"マニュアル（使い方）",
   actOpenFolder:"フォルダを開く…", actReopenLast:"前のフォルダを再読み込み", hintDropFolder:"ヒント：複数のデータフォルダ（または親フォルダ）をまとめてウィンドウにドラッグ&ドロップすれば、確認なしで一度に読み込めます。",
   lblLang:"言語", lblTheme:"テーマ", optDark:"ダーク", optLight:"ライト",
   lblZoom:"ズーム", mZoomIn:"⊕ 拡大", mZoomOut:"⊖ 縮小", lblWheel:"ホイール感度", lblAxisH:"δ軸の高さ", lblBaseGap:"δ軸とスペクトルの間隔",
@@ -1231,7 +1289,7 @@ const I18N={
   lblLB:"線幅補正", lblZf:"ゼロ充填", lblGdc:"群遅延補正", lblLineW:"線の太さ",
   lblBg:"背景色",
   tCalib:"⌖ 校正", tCalibTxt:"校正", tMultTxt:"多重線", tPeaks:"⋀ ピーク検出", tInteg:"∫ 積分", tMult:"⋔ 多重線", tAssign:"✎ 帰属",
-  tPeaksMain:"⋀ ピーク検出", tIntegMain:"∫ 積分", lblResults:"結果一覧",
+  tPeaksMain:"⋀ ピーク検出", tIntegMain:"∫ 積分", tPeaksTxt:"ピーク検出", tIntegTxt:"積分", lblResults:"結果一覧",
   actDetect:"範囲選択で検出", actThreshold:"閾値", actDetectThr:"閾値以上を全検出", actRemoveRange:"範囲選択で削除", actClearAll:"全て削除",
   actDelSelPeak:"選択して削除（ピークをクリック）",
   actIntegrate:"範囲選択で積分", actDelSel:"選択した積分を削除", actMark:"マーク", actText:"テキストラベル",
@@ -1294,7 +1352,30 @@ function applyI18n(){
   renderResults(); renderList();
   if(typeof renderChangelog==='function'){ const m=document.getElementById('clogModal');
     if(m&&m.classList.contains('show')) renderChangelog(); }
+  if(typeof renderManual==='function'){ const m=document.getElementById('manModal');
+    if(m&&m.classList.contains('show')) renderManual(); }
+  if(typeof fitToolbar==='function') fitToolbar();
 }
+
+/* keep the toolbar on a single line: collapse buttons to icon-only from the right
+   (Manual first) until the row fits; expand again when there is room */
+function fitToolbar(){
+  const tb=document.getElementById('toolbar'); if(!tb) return;
+  const items=[...tb.querySelectorAll('.tbc')];
+  items.forEach(el=>el.classList.remove('iconly'));
+  for(let i=items.length-1; i>=0 && tb.scrollWidth-tb.clientWidth>1; i--){
+    items[i].classList.add('iconly');
+  }
+}
+(function setupToolbarFit(){
+  const run=()=>{ if(typeof fitToolbar==='function') fitToolbar(); };
+  window.addEventListener('resize', run, {passive:true});
+  const wire=()=>{ const tb=document.getElementById('toolbar');
+    if(tb && window.ResizeObserver){ new ResizeObserver(run).observe(tb); }
+    run(); };
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', wire);
+  else wire();
+})();
 
 /* ===================== validated core ===================== */
 function fft(re, im, inverse){
@@ -4655,6 +4736,430 @@ function closeChangelog(){ const m=document.getElementById('clogModal'); if(m) m
   document.addEventListener('keydown',e=>{ if(e.key==='Escape'){
     const mm=document.getElementById('clogModal');
     if(mm&&mm.classList.contains('show')){ e.stopPropagation(); closeChangelog(); }
+  } }, true);
+})();
+
+/* ===================== manual (help) ===================== */
+const MAN_IC = {
+  book:'<svg viewBox="0 0 16 16"><path d="M8 4.3C6.8 3.3 5.1 3 3.3 3.2V12c1.8-.2 3.5.1 4.7 1.1 1.2-1 2.9-1.3 4.7-1.1V3.2C10.9 3 9.2 3.3 8 4.3Z"/><path d="M8 4.3V13"/></svg>',
+  folder:'<svg viewBox="0 0 16 16"><path d="M1.5 4.2c0-.6.4-1 1-1h3.3c.3 0 .6.1.8.4l.7.9h5c.6 0 1 .4 1 1v6.4c0 .6-.4 1-1 1H2.5c-.6 0-1-.4-1-1V4.2Z"/></svg>',
+  drop:'<svg viewBox="0 0 16 16"><path d="M8 1.8v5.4"/><path d="M5.6 5 8 7.4 10.4 5"/><rect x="2.3" y="9.6" width="11.4" height="3.6" rx="1"/></svg>',
+  eye:'<svg viewBox="0 0 16 16"><path d="M1.5 8S4 3.8 8 3.8 14.5 8 14.5 8 12 12.2 8 12.2 1.5 8 1.5 8z"/><circle cx="8" cy="8" r="2"/></svg>',
+  trash:'<svg viewBox="0 0 16 16"><path d="M2.5 4.5h11"/><path d="M6 4.5V3h4v1.5"/><path d="M4.1 4.5l.6 8.2a1 1 0 0 0 1 .9h4.6a1 1 0 0 0 1-.9l.6-8.2"/><path d="M6.6 7.2v3.8M9.4 7.2v3.8"/></svg>',
+  reset:'<svg viewBox="0 0 16 16"><path d="M3.2 8a4.8 4.8 0 1 0 1.5-3.5"/><path d="M2.4 2.8v2.6h2.6"/></svg>',
+  image:'<svg viewBox="0 0 16 16"><rect x="2" y="3" width="12" height="10" rx="1.2"/><circle cx="5.6" cy="6.4" r="1.1"/><path d="m3 12 3.4-3.3 2.2 2.1 2.3-2.5L14 11.4"/></svg>',
+  png:'<svg viewBox="0 0 16 16"><rect x="2" y="3" width="12" height="10" rx="1.2"/><circle cx="5.6" cy="6.4" r="1.1"/><path d="m3 12 3.4-3.3 2.2 2.1 2.3-2.5L14 11.4"/></svg>',
+  csv:'<svg viewBox="0 0 16 16"><path d="M1.5 11.5V5M14.5 11.5V5"/><path d="M1.5 10c1.3 0 1.5-5.2 2.9-5.2S6 11 7.6 11s1.2-5.6 2.6-5.6 1.2 3.4 2.4 3.4c.7 0 1.1-.6 1.4-1.2"/></svg>',
+  report:'<svg viewBox="0 0 16 16"><rect x="3" y="2" width="10" height="12" rx="1"/><path d="M5.2 5.2h5.6M5.2 7.6h5.6M5.2 10h3.4"/></svg>',
+  session:'<svg viewBox="0 0 16 16"><path d="M2.5 3.5h11v9h-11z"/><path d="M5 3.5v3h6v-3M5 12.5V9h6v3.5"/></svg>',
+  load:'<svg viewBox="0 0 16 16"><path d="M2.5 11.5V4.2c0-.4.3-.7.7-.7h3l1.3 1.4h5.3c.4 0 .7.3.7.7v5.9c0 .4-.3.7-.7.7H3.2c-.4 0-.7-.3-.7-.7Z"/><path d="M8 10.5V6.5M6.3 8.2 8 6.5l1.7 1.7"/></svg>',
+  calib:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/></svg>',
+  peaks:'<svg viewBox="0 0 16 16"><path d="M2.5 13 6 3.5 8 9l1.6-4L13.5 13"/></svg>',
+  integ:'<svg viewBox="0 0 16 16"><path d="M10 3.1c-.2-.9-1.2-1.1-1.8-.4-.5.6-.5 1.7-.6 3.3-.1 2.7-.1 5.3-.7 6.1-.6.8-1.6.6-1.9-.3"/></svg>',
+  mult:'<svg viewBox="0 0 16 16"><path d="M8 2.5v3"/><path d="M8 5.5 4 8.8"/><path d="M8 5.5l4 3.3"/><path d="M4 8.8v3.2"/><path d="M12 8.8v3.2"/></svg>',
+  mark:'<svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="4.5" fill="currentColor" stroke="none"/></svg>',
+  text:'<svg viewBox="0 0 16 16"><path d="M2 13l1-3 7-7 2 2-7 7z"/><path d="M9.5 3.5l2 2"/></svg>',
+  shade:'<svg viewBox="0 0 16 16"><path d="M2 12c1.5 0 1.5-7 3-7s1.5 7 3 7 1.5-7 3-7 1.5 7 3 7"/><path d="M2 14h12"/></svg>',
+  connector:'<svg viewBox="0 0 16 16"><circle cx="3.5" cy="12.5" r="1.5"/><circle cx="12.5" cy="3.5" r="1.5"/><line x1="4.6" y1="11.4" x2="11.4" y2="4.6" stroke-dasharray="2.4 2"/></svg>',
+  zoom:'<svg viewBox="0 0 16 16"><circle cx="7" cy="7" r="4.3"/><line x1="10.2" y1="10.2" x2="14" y2="14"/><line x1="7" y1="5.2" x2="7" y2="8.8"/><line x1="5.2" y1="7" x2="8.8" y2="7"/></svg>',
+  gear:'<svg viewBox="0 0 24 24"><path d="M10.3 2.6h3.4l.5 2.3 1.9.8 2-1.3 2.4 2.4-1.3 2 .8 1.9 2.3.5v3.4l-2.3.5-.8 1.9 1.3 2-2.4 2.4-2-1.3-1.9.8-.5 2.3h-3.4l-.5-2.3-1.9-.8-2 1.3-2.4-2.4 1.3-2-.8-1.9-2.3-.5v-3.4l2.3-.5.8-1.9-1.3-2 2.4-2.4 2 1.3 1.9-.8.5-2.3Z"/><circle cx="12" cy="12" r="3.1"/></svg>',
+  layout:'<svg viewBox="0 0 16 16"><rect x="1.8" y="2.5" width="12.4" height="11" rx="1.5"/><path d="M6 2.5v11M6 6.5h8.2"/></svg>',
+  wave:'<svg viewBox="0 0 16 16"><path d="M1.5 8c1.3 0 1.5-5 2.9-5S6 11 7.6 11s1.2-5.6 2.6-5.6 1.2 3.4 2.4 3.4c.7 0 1.1-.6 1.4-1.2"/></svg>',
+  keyboard:'<svg viewBox="0 0 16 16"><rect x="1.5" y="4" width="13" height="8" rx="1.5"/><path d="M4 6.6h.01M6.5 6.6h.01M9 6.6h.01M11.5 6.6h.01M5 9.4h6"/></svg>',
+  export:'<svg viewBox="0 0 16 16"><path d="M8 2.4v7.2"/><path d="M5 6.8 8 9.8l3-3"/><path d="M2.6 12.4h10.8"/></svg>',
+  tools:'<svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="4.6"/><path d="M8 1.5v2M8 12.5v2M1.5 8h2M12.5 8h2"/></svg>',
+  phase:'<svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="5.5"/><path d="M8 2.5v11"/><path d="M8 8H2.5"/></svg>',
+  plus:'<svg viewBox="0 0 16 16"><path d="M8 3.5v9M3.5 8h9"/></svg>',
+  history:'<svg viewBox="0 0 16 16"><path d="M2.7 8a5.3 5.3 0 1 0 1.7-3.9"/><path d="M2 3.3V6h2.7"/><path d="M8 5.1V8l2.1 1.5"/></svg>',
+};
+function manIc(n){ return `<span class="iic">${MAN_IC[n]||''}</span>`; }
+
+/* --- SVG figures (bilingual via J flag) --- */
+const MANUAL_FIGS = {
+  load(J){ return `<svg viewBox="0 0 620 156" xmlns="http://www.w3.org/2000/svg" font-size="11" font-family="var(--sans)">
+    <rect x="16" y="30" width="196" height="96" rx="11" fill="var(--panel)" stroke="var(--line)"/>
+    <path d="M40 52c0-3 2-5 5-5h20c1.5 0 3 .7 4 2l4 4.5h28c3 0 5 2 5 5v3H40Z" fill="var(--trace)" opacity=".9"/>
+    <text x="52" y="76" fill="var(--dim)" font-family="var(--mono)" font-size="11">fid</text>
+    <text x="52" y="92" fill="var(--dim)" font-family="var(--mono)" font-size="11">acqus</text>
+    <text x="52" y="108" fill="var(--dim)" font-family="var(--mono)" font-size="11">pdata/1/</text>
+    <text x="114" y="146" text-anchor="middle" font-size="10.5" fill="var(--faint)">${J?'Bruker データフォルダ':'Bruker dataset folder'}</text>
+    <text x="264" y="64" text-anchor="middle" fill="var(--trace)" font-weight="600">${J?'ドロップ':'Drop'}</text>
+    <path d="M228 78 H300 M290 71 L304 78 L290 85" stroke="var(--trace)" fill="none" stroke-width="2"/>
+    <rect x="318" y="24" width="286" height="108" rx="11" fill="var(--bg)" stroke="var(--line)"/>
+    <path d="M332 106 H590" stroke="var(--faint)" stroke-width="1"/>
+    <path d="M336 106 L392 106 L399 58 L406 106 L470 106 L478 40 L487 106 L540 106 L548 78 L556 106 L588 106" fill="none" stroke="var(--trace)" stroke-width="1.6"/>
+    <text x="475" y="34" text-anchor="middle" fill="var(--peak)" font-size="10">7.26</text>
+    <text x="461" y="150" text-anchor="middle" font-size="10.5" fill="var(--faint)">${J?'すぐにスペクトルが表示されます':'The spectrum appears at once'}</text>
+  </svg>`; },
+
+  ui(J){ return `<svg viewBox="0 0 620 236" xmlns="http://www.w3.org/2000/svg" font-size="11" font-family="var(--sans)">
+    <rect x="14" y="14" width="120" height="208" rx="9" fill="var(--panel)" stroke="var(--line)"/>
+    <text x="26" y="34" fill="var(--trace)" font-weight="700" font-size="11" font-family="var(--mono)">NMR</text>
+    <rect x="26" y="46" width="96" height="7" rx="3.5" fill="var(--gridw)"/>
+    <rect x="26" y="60" width="72" height="7" rx="3.5" fill="var(--gridw)"/>
+    <rect x="26" y="80" width="96" height="7" rx="3.5" fill="var(--line)"/>
+    <rect x="26" y="94" width="84" height="7" rx="3.5" fill="var(--line)"/>
+    <rect x="26" y="120" width="96" height="14" rx="4" fill="var(--bg)" stroke="var(--line)"/>
+    <rect x="26" y="142" width="96" height="14" rx="4" fill="var(--bg)" stroke="var(--line)"/>
+    <text x="74" y="212" text-anchor="middle" fill="var(--faint)" font-size="9.5">1</text>
+    <rect x="146" y="14" width="460" height="30" rx="8" fill="var(--panel)" stroke="var(--line)"/>
+    <rect x="158" y="22" width="46" height="14" rx="4" fill="var(--bg)" stroke="var(--line)"/>
+    <rect x="212" y="22" width="46" height="14" rx="4" fill="var(--bg)" stroke="var(--line)"/>
+    <rect x="266" y="22" width="46" height="14" rx="4" fill="var(--bg)" stroke="var(--line)"/>
+    <rect x="470" y="22" width="60" height="14" rx="4" fill="color-mix(in srgb,var(--trace) 22%,transparent)"/>
+    <rect x="536" y="22" width="60" height="14" rx="4" fill="color-mix(in srgb,var(--peak) 22%,transparent)"/>
+    <text x="376" y="33" text-anchor="middle" fill="var(--faint)" font-size="9.5">2</text>
+    <rect x="146" y="52" width="300" height="170" rx="9" fill="var(--bg)" stroke="var(--line)"/>
+    <path d="M158 190 H436" stroke="var(--faint)" stroke-width="1"/>
+    <path d="M162 190 L226 190 L233 120 L240 190 L306 190 L314 86 L323 190 L372 190 L380 150 L389 190 L432 190" fill="none" stroke="var(--trace)" stroke-width="1.5"/>
+    <text x="296" y="212" text-anchor="middle" fill="var(--faint)" font-size="9.5">3</text>
+    <rect x="456" y="52" width="150" height="170" rx="9" fill="var(--panel)" stroke="var(--line)"/>
+    <rect x="468" y="64" width="126" height="16" rx="4" fill="var(--bg)" stroke="var(--line)"/>
+    <rect x="468" y="88" width="126" height="9" rx="3" fill="var(--gridw)"/>
+    <rect x="468" y="102" width="100" height="9" rx="3" fill="var(--gridw)"/>
+    <rect x="468" y="116" width="112" height="9" rx="3" fill="var(--gridw)"/>
+    <text x="531" y="212" text-anchor="middle" fill="var(--faint)" font-size="9.5">4</text>
+  </svg>
+  <figcaption>${J?'① スペクトル一覧・取得情報・処理 ／ ② メニュー・ツールバー ／ ③ プロット ／ ④ 結果リスト':'① Spectra list, acquisition &amp; processing ⁄ ② Menus &amp; toolbar ⁄ ③ Plot ⁄ ④ Results list'}</figcaption>`; },
+
+  process(J){ return `<svg viewBox="0 0 620 168" xmlns="http://www.w3.org/2000/svg" font-size="11" font-family="var(--sans)">
+    <rect x="14" y="22" width="150" height="118" rx="10" fill="var(--bg)" stroke="var(--line)"/>
+    <path d="M24 82 q10 -46 20 0 q10 40 20 0 q10 -30 20 0 q10 22 20 0 q10 -14 20 0 q10 10 20 0 q6 -5 12 0" fill="none" stroke="var(--dim)" stroke-width="1.3"/>
+    <text x="89" y="156" text-anchor="middle" fill="var(--faint)" font-size="10">${J?'生 FID（時間軸）':'Raw FID (time)'}</text>
+    <rect x="192" y="30" width="150" height="102" rx="10" fill="var(--panel)" stroke="var(--line)"/>
+    <text x="204" y="50" fill="var(--dim)" font-size="10">${J?'窓関数 EM / GM':'Window EM / GM'}</text>
+    <rect x="204" y="58" width="126" height="6" rx="3" fill="var(--gridw)"/>
+    <circle cx="250" cy="61" r="5" fill="var(--trace)"/>
+    <text x="204" y="82" fill="var(--dim)" font-size="10">PH0</text>
+    <rect x="240" y="79" width="90" height="6" rx="3" fill="var(--gridw)"/>
+    <circle cx="286" cy="82" r="5" fill="var(--peak)"/>
+    <text x="204" y="104" fill="var(--dim)" font-size="10">PH1</text>
+    <rect x="240" y="101" width="90" height="6" rx="3" fill="var(--gridw)"/>
+    <circle cx="266" cy="104" r="5" fill="var(--peak)"/>
+    <path d="M348 81 H392 M382 74 L396 81 L382 88" stroke="var(--trace)" fill="none" stroke-width="2"/>
+    <path d="M166 81 H188" stroke="var(--faint)" fill="none" stroke-width="1.6" stroke-dasharray="3 2"/>
+    <rect x="410" y="22" width="196" height="118" rx="10" fill="var(--bg)" stroke="var(--line)"/>
+    <path d="M420 116 H596" stroke="var(--faint)" stroke-width="1"/>
+    <path d="M424 116 L474 116 L481 62 L488 116 L536 116 L544 42 L552 116 L582 116 L588 92 L592 116" fill="none" stroke="var(--trace)" stroke-width="1.6"/>
+    <text x="508" y="156" text-anchor="middle" fill="var(--faint)" font-size="10">${J?'位相の合った吸収スペクトル':'Phased absorption spectrum'}</text>
+  </svg>`; },
+
+  tools(J){ return `<svg viewBox="0 0 620 210" xmlns="http://www.w3.org/2000/svg" font-size="11" font-family="var(--sans)">
+    <rect x="14" y="14" width="592" height="182" rx="10" fill="var(--bg)" stroke="var(--line)"/>
+    <path d="M40 150 H588" stroke="var(--faint)" stroke-width="1"/>
+    <rect x="196" y="40" width="150" height="110" fill="color-mix(in srgb,var(--err) 12%,transparent)"/>
+    <path d="M44 150 L150 150 L160 96 L170 150 L232 150 L237 150 L246 66 L250 150 L262 150 L266 78 L272 150 L286 150 L292 66 L300 150 L316 150 L330 118 L346 150 L470 150 L480 104 L490 150 L560 150 L568 128 L576 150 L586 150" fill="none" stroke="var(--trace)" stroke-width="1.6"/>
+    <line x1="165" y1="70" x2="165" y2="88" stroke="var(--peak)" stroke-width="1.2"/>
+    <text x="165" y="64" text-anchor="middle" fill="var(--peak)" font-size="10" font-family="var(--mono)">7.42</text>
+    <path d="M234 132 q7 -22 14 0" fill="none" stroke="var(--integ)" stroke-width="1.4"/>
+    <text x="241" y="176" text-anchor="middle" fill="var(--integ)" font-size="10" font-family="var(--mono)">2.00</text>
+    <path d="M258 44 h20 M262 44 v6 M270 44 v6 M274 44 v6" stroke="var(--mult)" stroke-width="1.2" fill="none"/>
+    <text x="268" y="40" text-anchor="middle" fill="var(--mult)" font-size="9.5">d, J=7.1</text>
+    <text x="271" y="176" text-anchor="middle" fill="var(--integ)" font-size="10" font-family="var(--mono)">1.00</text>
+    <circle cx="480" cy="100" r="3.4" fill="var(--trace)"/>
+    <path d="M456 40 l6 -6" stroke="none"/>
+    <text x="512" y="86" fill="var(--mult)" font-size="10">${J?'Ar-H':'Ar-H'}</text>
+    <text x="271" y="70" text-anchor="middle" fill="var(--faint)" font-size="9">${J?'シェード':'shade'}</text>
+  </svg>
+  <figcaption>${J?'ピーク δ・積分値・多重度と J・マーク／ラベル・シェードを 1 枚のプロットに重ねられます':'Peak δ, integrals, multiplicity &amp; J, marks/labels and shades — all on one plot'}</figcaption>`; },
+
+  display(J){ return `<svg viewBox="0 0 620 176" xmlns="http://www.w3.org/2000/svg" font-size="11" font-family="var(--sans)">
+    <rect x="14" y="18" width="180" height="140" rx="10" fill="var(--bg)" stroke="var(--line)"/>
+    <path d="M28 66 L70 66 L77 40 L84 66 L150 66 L158 48 L166 66 L180 66" fill="none" stroke="var(--trace)" stroke-width="1.4"/>
+    <path d="M28 104 L78 104 L85 82 L92 104 L150 104 L158 90 L166 104 L180 104" fill="none" stroke="var(--integ)" stroke-width="1.4"/>
+    <path d="M28 142 L64 142 L71 120 L78 142 L150 142 L158 126 L166 142 L180 142" fill="none" stroke="var(--mult)" stroke-width="1.4"/>
+    <text x="104" y="172" text-anchor="middle" fill="var(--faint)" font-size="10">${J?'並べる（Stacked）':'Stacked'}</text>
+    <rect x="222" y="18" width="180" height="140" rx="10" fill="var(--bg)" stroke="var(--line)"/>
+    <path d="M236 132 L286 132 L293 60 L300 132 L358 132 L366 92 L374 132 L388 132" fill="none" stroke="var(--trace)" stroke-width="1.4"/>
+    <path d="M236 132 L282 132 L289 78 L296 132 L358 132 L366 104 L374 132 L388 132" fill="none" stroke="var(--integ)" stroke-width="1.4"/>
+    <path d="M236 132 L278 132 L285 96 L292 132 L358 132 L366 116 L374 132 L388 132" fill="none" stroke="var(--mult)" stroke-width="1.4"/>
+    <text x="312" y="172" text-anchor="middle" fill="var(--faint)" font-size="10">${J?'重ねる（Overlay）':'Overlay'}</text>
+    <rect x="430" y="18" width="176" height="140" rx="10" fill="var(--bg)" stroke="var(--line)"/>
+    <path d="M444 128 L494 128 L501 70 L508 128 L560 128 L568 96 L576 128 L594 128" fill="none" stroke="var(--trace)" stroke-width="1.4"/>
+    <rect x="486" y="30" width="66" height="52" rx="6" fill="var(--panel)" stroke="var(--peak)" stroke-dasharray="3 2"/>
+    <path d="M492 74 L512 74 L518 44 L524 74 L546 74" fill="none" stroke="var(--trace)" stroke-width="1.2"/>
+    <line x1="504" y1="70" x2="500" y2="82" stroke="var(--peak)" stroke-width="1" stroke-dasharray="2 2"/>
+    <text x="518" y="172" text-anchor="middle" fill="var(--faint)" font-size="10">${J?'ズーム挿入図':'Zoom inset'}</text>
+  </svg>`; },
+
+  exportfig(J){ return `<svg viewBox="0 0 620 138" xmlns="http://www.w3.org/2000/svg" font-size="11" font-family="var(--sans)">
+    <rect x="14" y="30" width="150" height="78" rx="10" fill="var(--panel)" stroke="var(--line)"/>
+    <path d="M40 92 H138" stroke="var(--faint)" stroke-width="1"/>
+    <path d="M44 92 L86 92 L92 56 L98 92 L138 92" fill="none" stroke="var(--trace)" stroke-width="1.4"/>
+    <text x="89" y="126" text-anchor="middle" fill="var(--faint)" font-size="10">${J?'現在の表示':'Current view'}</text>
+    <path d="M172 69 H214 M204 62 L218 69 L204 76" stroke="var(--trace)" fill="none" stroke-width="2"/>
+    <g font-family="var(--mono)" font-size="11">
+      <rect x="236" y="20" width="168" height="26" rx="7" fill="var(--bg)" stroke="var(--line)"/>
+      <rect x="248" y="27" width="12" height="12" rx="2" fill="var(--peak)" opacity=".85"/>
+      <text x="272" y="37" fill="var(--ink)">PNG / ${J?'クリップボード':'clipboard'}</text>
+      <rect x="236" y="56" width="168" height="26" rx="7" fill="var(--bg)" stroke="var(--line)"/>
+      <rect x="248" y="63" width="12" height="12" rx="2" fill="var(--integ)" opacity=".85"/>
+      <text x="272" y="73" fill="var(--ink)">CSV</text>
+      <rect x="236" y="92" width="168" height="26" rx="7" fill="var(--bg)" stroke="var(--line)"/>
+      <rect x="248" y="99" width="12" height="12" rx="2" fill="var(--mult)" opacity=".85"/>
+      <text x="272" y="109" fill="var(--ink)">${J?'セッション JSON':'Session JSON'}</text>
+    </g>
+    <path d="M412 69 H454 M444 62 L458 69 L444 76" stroke="var(--trace)" fill="none" stroke-width="2"/>
+    <rect x="476" y="24" width="128" height="90" rx="10" fill="var(--panel)" stroke="var(--line)"/>
+    <text x="540" y="56" text-anchor="middle" fill="var(--ink)" font-size="11">${J?'図表・データ':'Figures &amp; data'}</text>
+    <text x="540" y="76" text-anchor="middle" fill="var(--faint)" font-size="10">${J?'論文・スライドへ':'for papers / slides'}</text>
+    <text x="540" y="96" text-anchor="middle" fill="var(--faint)" font-size="10">${J?'続きは JSON で再開':'resume via JSON'}</text>
+  </svg>`; },
+};
+
+/* --- manual content (bilingual) --- */
+const MANUAL = {
+  ja: [
+    { icon:'book', tab:'はじめに', h:'NMR Spectrum Viewer とは', blocks:[
+      {p:'Bruker の生データ（FID / 処理済みスペクトル）をブラウザ上で表示・解析し、論文やスライド用の図を書き出せる、インストール不要の単一 HTML ツールです。この <b>index.html</b> を Chrome / Edge で開くだけで動き、読み込んだデータや解析結果はすべてお使いのパソコンの中だけで処理されます（インターネットには送信されません）。'},
+      {fig:'load'},
+      {sub:'データを読み込む'},
+      {ul:[
+        `一番かんたんなのは<b>ドラッグ＆ドロップ</b> ${manIc('drop')} です。Bruker のデータフォルダ（<span class="kbd">fid</span> と <span class="kbd">acqus</span>、あれば <span class="kbd">pdata/1/</span> を含む）をウィンドウにドロップすると、そのまま読み込まれます。`,
+        '複数のデータフォルダ、あるいはそれらをまとめた親フォルダをドロップすれば、一度にまとめて読み込めます。',
+        `ダイアログから選びたいときは「ファイル」メニュー ${manIc('folder')} →「フォルダを開く」を使います。`,
+        '同時に表示できるスペクトルには上限があります。上限に達した場合は、いくつか削除してから追加してください。',
+      ]},
+      {sub:'処理済み or 生 FID'},
+      {ul:[
+        `<span class="kbd">pdata</span>（Bruker で処理済みのスペクトル）が含まれるデータでは、「設定」${manIc('gear')} の<b>データソース</b>で「処理済み」と「生 FID」を切り替えられます。生 FID を選ぶと、このツール自身が窓関数・FFT・位相補正を行って表示します。`,
+      ]},
+    ]},
+
+    { icon:'layout', tab:'画面の見方', h:'画面の構成', blocks:[
+      {p:'画面は大きく4つの領域に分かれています。'},
+      {fig:'ui'},
+      {ul:[
+        '<b>① 左サイドバー</b>：読み込んだスペクトルの一覧、取得情報（Acquisition）、処理（窓関数・グループディレイ補正）、位相の各パネル。スペクトル一覧では表示/非表示や色を切り替えられます。',
+        '<b>② メニュー＆ツールバー</b>：上段が「ファイル」「出力」「表示」「設定」メニュー、下段が校正・ピーク・積分などの<b>解析ツール</b>です。',
+        '<b>③ プロット</b>：スペクトル本体。マウスホイールでズーム、ドラッグでパンできます（詳細はショートカットの章）。',
+        `<b>④ 結果リスト</b>：検出したピーク・積分・多重度・帰属の一覧。表示メニューの ${manIc('eye')} で開閉できます。`,
+      ]},
+    ]},
+
+    { icon:'wave', tab:'処理と位相', h:'処理と位相', blocks:[
+      {p:'生 FID から表示する場合、または表示を調整したい場合に使うパネルです（処理済みスペクトルを読み込んだ場合は多くが自動で設定されます）。'},
+      {fig:'process'},
+      {sub:'処理（左サイドバー「Processing」）'},
+      {ul:[
+        '<b>窓関数（Window）</b>：なし / 指数（EM）/ ガウス（GM）。感度分解能のトレードオフを調整します。',
+        '<b>グループディレイ補正</b>：Bruker のデジタルフィルタによる遅延を補正します。通常は ON のままにしておきます。',
+      ]},
+      {sub:'位相（Phase）'},
+      {ul:[
+        `<b>PH0 / PH1</b> スライダーで 0 次・1 次の位相を手で調整します ${manIc('phase')}。ピークが上向きの純粋な吸収線になるように合わせます。`,
+        `<b>表示モード</b>（設定 ${manIc('gear')}）：「実部（Real）」＝位相補正した通常表示、「絶対値（Magnitude）」＝位相に依存せず常に正（線幅は広め）。`,
+      ]},
+    ]},
+
+    { icon:'tools', tab:'解析ツール', h:'解析ツール', blocks:[
+      {p:'ツールバーの各ツールは、ボタン本体をクリックすると起動、右側の ▼ から詳細（色・小数桁・削除・表示切替など）を開けます。ドラッグや「範囲を指定」系の操作は、プロット上でマウスをドラッグして範囲を選びます。'},
+      {fig:'tools'},
+      {ul:[
+        `<b>校正（Calibrate）</b> ${manIc('calib')}：基準ピークをクリックして δ を合わせます。残留溶媒ピークから自動で合わせることもできます。`,
+        `<b>ピーク（Peaks）</b> ${manIc('peaks')}：範囲をドラッグして検出、またはしきい値以上をまとめて検出。個別クリックで削除もできます。`,
+        `<b>積分（Integrals）</b> ${manIc('integ')}：範囲をドラッグして積分。高さ・小数桁・色を調整できます。`,
+        `<b>多重度（Multiplets）</b> ${manIc('mult')}：ピークをクリック（または範囲ドラッグ）で選び、多重度と結合定数 J を求めます。`,
+        `<b>帰属（Assign）</b>：<b>マーク</b> ${manIc('mark')}・<b>テキストラベル</b> ${manIc('text')}・<b>シェード</b>（塗り帯）${manIc('shade')}・<b>コネクタ</b>（2点を結ぶ線）${manIc('connector')}・<b>画像の追加</b> ${manIc('image')} をまとめたグループです。`,
+        `<b>不純物（Impurities）</b>：帰属ツールのパネル内から、溶媒・不純物の残留ピークを ± ppm の許容範囲で探し、スペクトルに重ねて確認できます。`,
+        `<b>ズーム表示（Zoom view）</b> ${manIc('zoom')}：δ 範囲をドラッグして<b>ズーム挿入図</b>を作ります。枠色・線種・リード線を調整できます。`,
+      ]},
+      {p:`各ツールの ${manIc('trash')} は削除系の操作、${manIc('reset')} は既定値に戻す操作です。取り消し／やり直しはいつでも ${manIc('undo')||''}<span class="kbd">Ctrl</span>+<span class="kbd">Z</span> / <span class="kbd">Ctrl</span>+<span class="kbd">Y</span> で行えます。`},
+    ]},
+
+    { icon:'eye', tab:'表示の調整', h:'表示の調整', blocks:[
+      {p:'「表示」メニューで、見た目に関わるほとんどの設定を変えられます。図の体裁を論文用に整えるときはここを使います。'},
+      {fig:'display'},
+      {ul:[
+        '<b>領域・ズーム</b>：δ の表示範囲を数値で指定、またはズームイン/アウト・全体表示。',
+        '<b>スペクトル強度</b>：×2 / ÷2 / 自動。複数スペクトルの強度を連動（Link）させることもできます。',
+        `<b>レイアウト</b>：複数スペクトルを<b>並べる（Stacked）</b>か<b>重ねる（Overlay）</b>か。`,
+        `<b>表示 / 非表示</b> ${manIc('eye')}：ファイル名・画像・ピーク・積分・多重度・シェード・コネクタ・レーン線・ズーム挿入図・ミニマップ・結果リストなどを、目のアイコンで個別に切り替えます。`,
+        '<b>体裁（Appearance）</b>：線幅、プロットのフォント（Mono / Sans / Serif）とサイズ、δ 軸の小数桁・文字サイズ・高さ・余白、背景色。',
+        '<b>カラーパレット</b>：スペクトルの配色をまとめて選び、全体に再適用できます。',
+      ]},
+    ]},
+
+    { icon:'export', tab:'出力と保存', h:'出力と保存', blocks:[
+      {p:'解析した図やデータは「出力」メニューから書き出せます。'},
+      {fig:'exportfig'},
+      {ul:[
+        `<b>画像（PNG）</b> ${manIc('png')} ／ <b>クリップボードにコピー</b> ${manIc('image')}：現在の表示をそのまま画像化します。スライドや文書に貼り付けられます。`,
+        `<b>スペクトル（CSV）</b> ${manIc('csv')}：δ と強度の数値データを書き出します。`,
+        `<b>解析レポート（CSV）</b> ${manIc('report')}：ピーク・積分・多重度などの解析結果を表形式で書き出します。`,
+        `<b>セッションの保存（JSON）</b> ${manIc('session')}：スペクトル・注釈・表示設定を丸ごと1ファイルに保存します。<b>セッションの読み込み</b> ${manIc('load')} で、その状態から作業を再開できます。`,
+      ]},
+    ]},
+
+    { icon:'keyboard', tab:'ショートカット', h:'ショートカットと操作のコツ', blocks:[
+      {p:'主なキーボードショートカット（設定メニューの「Keyboard」にも一覧があります）。'},
+      {ul:[
+        `<span class="kbd">C</span> 校正 ／ <span class="kbd">P</span> ピーク ／ <span class="kbd">I</span> 積分 ／ <span class="kbd">M</span> 多重度 ／ <span class="kbd">Z</span> ズーム表示`,
+        `<span class="kbd">A</span> テキスト ／ <span class="kbd">D</span> マーク ／ <span class="kbd">G</span> コネクタ ／ <span class="kbd">L</span> 結果リスト`,
+        `<span class="kbd">F</span> 全体表示 ／ <span class="kbd">0</span> 強度オート ／ <span class="kbd">↑</span><span class="kbd">↓</span> 強度 ／ <span class="kbd">←</span><span class="kbd">→</span> パン`,
+        `<span class="kbd">Ctrl</span>+<span class="kbd">Z</span> 取り消し ／ <span class="kbd">Ctrl</span>+<span class="kbd">Y</span> やり直し ／ <span class="kbd">Ctrl</span>+<span class="kbd">O</span> 開く ／ <span class="kbd">Esc</span> 解除`,
+      ]},
+      {sub:'操作のコツ'},
+      {ul:[
+        'マウスホイールでズーム、水平スクロール（またはドラッグ）でパンできます。感度や向きは設定メニューで調整できます。',
+        '更新履歴は、このマニュアルの一番下（「更新履歴」タブ）で確認できます。',
+        '言語（日本語 / English）とテーマ（ダーク / ライト）は設定メニューでいつでも切り替えられます。',
+      ]},
+    ]},
+
+    { icon:'history', tab:'更新履歴', h:'更新履歴', blocks:[
+      {p:'これまでの変更点の一覧です（最新が一番上）。'},
+      {changelog:true},
+    ]},
+  ],
+  en: [
+    { icon:'book', tab:'Getting started', h:'What is NMR Spectrum Viewer?', blocks:[
+      {p:'A single, install-free HTML tool that displays and analyses Bruker data (raw FID / processed spectra) in the browser and exports publication-ready figures. Just open this <b>index.html</b> in Chrome / Edge. Everything stays on your own computer — nothing is uploaded to the internet.'},
+      {fig:'load'},
+      {sub:'Loading data'},
+      {ul:[
+        `The easiest way is <b>drag &amp; drop</b> ${manIc('drop')}. Drop a Bruker dataset folder (containing <span class="kbd">fid</span> and <span class="kbd">acqus</span>, plus <span class="kbd">pdata/1/</span> if present) onto the window and it loads straight away.`,
+        'Drop several dataset folders, or one parent folder holding them, to import them all at once.',
+        `To pick from a dialog instead, use the File menu ${manIc('folder')} → “Open folder”.`,
+        'There is a limit on how many spectra can be shown at once. If you reach it, remove a few before adding more.',
+      ]},
+      {sub:'Processed or raw FID'},
+      {ul:[
+        `For data that includes <span class="kbd">pdata</span> (a spectrum already processed in Bruker), the <b>Data source</b> control in Settings ${manIc('gear')} lets you switch between “Processed” and “Raw FID”. With Raw FID, this tool applies the window, FFT and phase itself.`,
+      ]},
+    ]},
+
+    { icon:'layout', tab:'The interface', h:'The interface', blocks:[
+      {p:'The screen has four main regions.'},
+      {fig:'ui'},
+      {ul:[
+        '<b>① Left sidebar</b>: the list of loaded spectra, Acquisition info, Processing (window, group-delay correction) and Phase. In the spectra list you can toggle visibility and colour.',
+        '<b>② Menus &amp; toolbar</b>: the top row holds the File, Export, View and Settings menus; the lower row holds the <b>analysis tools</b> (calibrate, peaks, integrals, …).',
+        '<b>③ Plot</b>: the spectrum itself. Zoom with the mouse wheel and pan by dragging (see the Shortcuts section).',
+        `<b>④ Results list</b>: a table of detected peaks, integrals, multiplets and assignments. Toggle it with ${manIc('eye')} in the View menu.`,
+      ]},
+    ]},
+
+    { icon:'wave', tab:'Processing & phase', h:'Processing & phase', blocks:[
+      {p:'These panels are used when displaying from raw FID, or to fine-tune the display (most values are set automatically for already-processed spectra).'},
+      {fig:'process'},
+      {sub:'Processing (sidebar “Processing”)'},
+      {ul:[
+        '<b>Window</b>: None / Exponential (EM) / Gaussian (GM) — trade off sensitivity against resolution.',
+        '<b>Group-delay correction</b>: compensates the delay of the Bruker digital filter. Normally leave this on.',
+      ]},
+      {sub:'Phase'},
+      {ul:[
+        `<b>PH0 / PH1</b> sliders adjust the zero- and first-order phase by hand ${manIc('phase')}. Tune them until peaks are upright, pure-absorption lines.`,
+        `<b>Display mode</b> (Settings ${manIc('gear')}): “Real” = phased absorption (normal); “Magnitude” = phase-independent and always positive (broader lines).`,
+      ]},
+    ]},
+
+    { icon:'tools', tab:'Analysis tools', h:'Analysis tools', blocks:[
+      {p:'Click a tool’s main button to activate it; open the ▼ on its right for details (colour, decimals, delete, show/hide). Drag- and “select range” operations are done by dragging across the plot.'},
+      {fig:'tools'},
+      {ul:[
+        `<b>Calibrate</b> ${manIc('calib')}: click a reference peak to set δ, or auto-calibrate from a residual solvent peak.`,
+        `<b>Peaks</b> ${manIc('peaks')}: detect by dragging a range, or pick everything above a threshold; delete individual peaks by clicking.`,
+        `<b>Integrals</b> ${manIc('integ')}: drag a range to integrate; adjust height, decimals and colour.`,
+        `<b>Multiplets</b> ${manIc('mult')}: click peaks (or drag a range) to derive the multiplicity and coupling constant J.`,
+        `<b>Assign</b>: a group combining <b>Mark</b> ${manIc('mark')}, <b>Text label</b> ${manIc('text')}, <b>Shade</b> ${manIc('shade')}, <b>Connector</b> (a line between two points) ${manIc('connector')} and <b>Add image</b> ${manIc('image')}.`,
+        `<b>Impurities</b>: from inside the Assign panel, find residual solvent / impurity peaks within a ± ppm tolerance and overlay them on the spectrum.`,
+        `<b>Zoom view</b> ${manIc('zoom')}: drag a δ range to make a <b>zoom inset</b>; adjust frame colour, line style and leader lines.`,
+      ]},
+      {p:`In each tool, ${manIc('trash')} is a delete action and ${manIc('reset')} restores defaults. Undo / redo any time with <span class="kbd">Ctrl</span>+<span class="kbd">Z</span> / <span class="kbd">Ctrl</span>+<span class="kbd">Y</span>.`},
+    ]},
+
+    { icon:'eye', tab:'Display', h:'Display & appearance', blocks:[
+      {p:'The View menu controls almost everything about how the plot looks — use it to polish figures for publication.'},
+      {fig:'display'},
+      {ul:[
+        '<b>Region &amp; zoom</b>: set the δ range numerically, or zoom in/out and reset to full.',
+        '<b>Spectrum intensity</b>: ×2 / ÷2 / auto. You can also link the intensity of several spectra together.',
+        '<b>Layout</b>: show multiple spectra <b>Stacked</b> or <b>Overlaid</b>.',
+        `<b>Show / hide</b> ${manIc('eye')}: toggle file names, images, peaks, integrals, multiplets, shades, connectors, lane lines, zoom insets, minimap and the results list individually with the eye icons.`,
+        '<b>Appearance</b>: line width, plot font (Mono / Sans / Serif) and size, δ-axis decimals / text size / height / gap, and background colour.',
+        '<b>Colour palette</b>: choose a scheme for the spectra and re-apply it to all.',
+      ]},
+    ]},
+
+    { icon:'export', tab:'Export & save', h:'Export & save', blocks:[
+      {p:'Export the figure and data from the Export menu.'},
+      {fig:'exportfig'},
+      {ul:[
+        `<b>Image (PNG)</b> ${manIc('png')} / <b>Copy to clipboard</b> ${manIc('image')}: turn the current view into an image to paste into slides or documents.`,
+        `<b>Spectrum (CSV)</b> ${manIc('csv')}: export the δ vs intensity numbers.`,
+        `<b>Analysis report (CSV)</b> ${manIc('report')}: export peaks, integrals and multiplets as a table.`,
+        `<b>Save session (JSON)</b> ${manIc('session')}: save spectra, annotations and display settings in a single file. <b>Load session</b> ${manIc('load')} resumes from that state.`,
+      ]},
+    ]},
+
+    { icon:'keyboard', tab:'Shortcuts', h:'Shortcuts & tips', blocks:[
+      {p:'The main keyboard shortcuts (also listed under “Keyboard” in the Settings menu).'},
+      {ul:[
+        `<span class="kbd">C</span> Calibrate ⁄ <span class="kbd">P</span> Peaks ⁄ <span class="kbd">I</span> Integrals ⁄ <span class="kbd">M</span> Multiplets ⁄ <span class="kbd">Z</span> Zoom view`,
+        `<span class="kbd">A</span> Text ⁄ <span class="kbd">D</span> Mark ⁄ <span class="kbd">G</span> Connector ⁄ <span class="kbd">L</span> Results list`,
+        `<span class="kbd">F</span> Full view ⁄ <span class="kbd">0</span> Auto intensity ⁄ <span class="kbd">↑</span><span class="kbd">↓</span> Intensity ⁄ <span class="kbd">←</span><span class="kbd">→</span> Pan`,
+        `<span class="kbd">Ctrl</span>+<span class="kbd">Z</span> Undo ⁄ <span class="kbd">Ctrl</span>+<span class="kbd">Y</span> Redo ⁄ <span class="kbd">Ctrl</span>+<span class="kbd">O</span> Open ⁄ <span class="kbd">Esc</span> Cancel`,
+      ]},
+      {sub:'Tips'},
+      {ul:[
+        'Zoom with the mouse wheel; pan with horizontal scroll (or by dragging). Sensitivity and direction are adjustable in Settings.',
+        'The changelog is at the bottom of this manual (the “Changelog” tab).',
+        'Language (日本語 / English) and theme (Dark / Light) can be switched any time in the Settings menu.',
+      ]},
+    ]},
+
+    { icon:'history', tab:'Changelog', h:'Changelog', blocks:[
+      {p:'All changes so far (most recent first).'},
+      {changelog:true},
+    ]},
+  ],
+};
+
+function manChangelogHTML(J){
+  return (typeof CHANGELOG==='undefined'?[]:CHANGELOG).map((e,i)=>{
+    const items=(J?e.ja:e.en)||e.en||[];
+    const cur=i===0?`<span class="cur">${t('clogCurrent')}</span>`:'';
+    return `<div class="clogentry"><div class="clogv"><b>v${e.v}</b>${cur}`+
+      `<span class="cdate">${e.date||''}</span></div>`+
+      `<ul>${items.map(x=>`<li>${x}</li>`).join('')}</ul></div>`;
+  }).join('');
+}
+function manLang(){ return (typeof LANG!=='undefined' && LANG==='ja') ? 'ja' : 'en'; }
+function renderManual(){
+  const lg = manLang(), J = lg==='ja', secs = MANUAL[lg];
+  const tabs = document.getElementById('manTabs'), content = document.getElementById('manContent');
+  if(!tabs || !content) return;
+  const cur = Math.max(0, +(content.dataset.i||0));
+  tabs.innerHTML = secs.map((s,i)=>`<button data-mt="${i}" class="${i===cur?'active':''}"><span class="ti">${MAN_IC[s.icon]||MAN_IC.book}</span><span>${s.tab||s.h}</span></button>`).join('');
+  const show = (i)=>{
+    content.dataset.i = i;
+    tabs.querySelectorAll('button').forEach((b,j)=>b.classList.toggle('active', j===i));
+    const s = secs[i];
+    content.innerHTML = `<h3>${s.h}</h3>` + s.blocks.map(b=>
+      b.fig       ? `<figure class="man-fig">${MANUAL_FIGS[b.fig](J)}</figure>` :
+      b.changelog ? `<div class="man-changelog">${manChangelogHTML(J)}</div>` :
+      b.sub       ? `<h4>${b.sub}</h4>` :
+      b.p         ? `<p>${b.p}</p>` :
+                    `<ul>${b.ul.map(x=>`<li>${x}</li>`).join('')}</ul>`).join('');
+    content.scrollTop = 0;
+  };
+  tabs.querySelectorAll('button').forEach((b,i)=>b.addEventListener('click', ()=>show(i)));
+  show(cur);
+}
+function openManual(){ const c=document.getElementById('manContent'); if(c) c.dataset.i=0; renderManual();
+  const m=document.getElementById('manModal'); if(m) m.classList.add('show'); }
+function closeManual(){ const m=document.getElementById('manModal'); if(m) m.classList.remove('show'); }
+(function wireManual(){
+  const btn=document.getElementById('btnManual'); if(btn) btn.onclick=openManual;
+  const btnBar=document.getElementById('btnManualBar'); if(btnBar) btnBar.onclick=openManual;
+  const x=document.getElementById('manClose'); if(x) x.onclick=closeManual;
+  const m=document.getElementById('manModal');
+  if(m) m.addEventListener('pointerdown',e=>{ if(e.target===m) closeManual(); });
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape'){
+    const mm=document.getElementById('manModal');
+    if(mm&&mm.classList.contains('show')){ e.stopPropagation(); closeManual(); }
   } }, true);
 })();
 
