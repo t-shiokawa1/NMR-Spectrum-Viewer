@@ -172,7 +172,7 @@ tr.rowoff .reye{opacity:.4}
 
 /* main */
 main{grid-row:1;position:relative;display:flex;flex-direction:column;background:var(--bg);min-width:0}
-#toolbar{display:flex;align-items:center;gap:4px;padding:7px 12px;border-bottom:1px solid var(--line);background:var(--panel2);flex-wrap:nowrap;overflow:hidden}
+#toolbar{display:flex;align-items:center;gap:4px;padding:7px 12px;border-bottom:1px solid var(--line);background:var(--panel2);flex-wrap:nowrap;overflow:visible}
 /* progressive collapse: hide labels (icon-only) from the right when the toolbar runs out of room */
 #toolbar .tbc.iconly .tb-lbl{display:none}
 #toolbar .tbc.iconly.ic-btn,#toolbar .tbc.iconly.mbtn{gap:0;padding-left:8px;padding-right:8px}
@@ -1180,7 +1180,7 @@ const I18N={
   kbUndo:"Undo", kbRedo:"Redo", kbOpen:"Open files", kbEsc:"Clear tool / close",
   emptyText:"No text labels yet. Use ✎ to label a peak.",
   emptyMark:"No marks yet. Use ● to mark a peak.",
-  renameP:"Spectrum name:", ttDock:"Dock to sidebar", ttFloat:"Detach (float)",
+  renameP:"Spectrum name:", ttDock:"Dock to sidebar", ttFloat:"Detach (float)", ttClose:"Close", ttDockBack:"Return to sidebar",
   tMark:"● Mark", ttMark:"Click a peak = toggle a ● in the current color · drag = one ● for the range",
   ttUndo:"Undo (Ctrl+Z)", ttRedo:"Redo (Ctrl+Shift+Z / Ctrl+Y)",
   hintKeys:"Keys: <b>C</b> calibrate · <b>P</b> peaks (<b>⇧P</b> erase) · <b>I</b> integrate (<b>⇧I</b> erase) · <b>M</b> multiplets · <b>A</b> label · <b>D</b> mark · <b>L</b> list · <b>F</b> full · <b>0</b> auto · <b>↑↓</b> intensity · <b>←→</b> pan · <b>Esc</b> cancel · <b>Ctrl+Z/Y</b> undo/redo · <b>Ctrl+O</b> open",
@@ -1276,7 +1276,7 @@ const I18N={
   kbUndo:"元に戻す", kbRedo:"やり直し", kbOpen:"ファイルを開く", kbEsc:"ツール解除・閉じる",
   emptyText:"テキストラベルはまだありません。✎でピークにラベルを付けます。",
   emptyMark:"マークはまだありません。●でピークをマークします。",
-  renameP:"スペクトル名:", ttDock:"サイドバーに格納", ttFloat:"分離（フロート）",
+  renameP:"スペクトル名:", ttDock:"サイドバーに格納", ttFloat:"分離（フロート）", ttClose:"閉じる", ttDockBack:"サイドバーに戻す",
   tMark:"● マーク", ttMark:"ピーククリック=現在色の●を付け外し／ドラッグ=範囲を1つの●に",
   ttUndo:"元に戻す (Ctrl+Z)", ttRedo:"やり直す (Ctrl+Shift+Z / Ctrl+Y)",
   hintKeys:"キー: <b>C</b> 校正 ・ <b>P</b> ピーク（<b>⇧P</b> 消去）・ <b>I</b> 積分（<b>⇧I</b> 消去）・ <b>M</b> 多重線 ・ <b>A</b> ラベル ・ <b>D</b> マーク ・ <b>L</b> 一覧 ・ <b>F</b> 全体 ・ <b>0</b> 自動 ・ <b>↑↓</b> 強度 ・ <b>←→</b> 移動 ・ <b>Esc</b> 解除 ・ <b>Ctrl+Z/Y</b> 取消/やり直し ・ <b>Ctrl+O</b> 開く",
@@ -3650,6 +3650,7 @@ function applyDock(){
     panel.style.left=panel.style.top=panel.style.right=''; // clear any float offset
     document.getElementById('resDock').textContent='⤢';
     document.getElementById('resDock').title=t('ttFloat');
+    document.getElementById('resClose').title=t('ttClose');
   } else {
     panel.classList.remove('docked');
     const main=document.querySelector('main');
@@ -3657,6 +3658,8 @@ function applyDock(){
     dock.style.display='none';
     document.getElementById('resDock').textContent='⤡';
     document.getElementById('resDock').title=t('ttDock');
+    // while floating, × returns the panel to the sidebar instead of hiding it
+    document.getElementById('resClose').title=t('ttDockBack');
   }
 }
 function openResults(){ const panel=document.getElementById('results');
@@ -3678,7 +3681,12 @@ function closeResults(){ const panel=document.getElementById('results');
   const lb=document.getElementById('btnResultsView'); if(lb) lb.classList.remove('on');
   document.getElementById('resultsDock').style.display='none'; }
 function toggleResults(){ document.getElementById('results').classList.contains('open')?closeResults():openResults(); }
-document.getElementById('resClose').onclick=closeResults;
+document.getElementById('resClose').onclick=()=>{
+  // when floating, × un-floats (docks back to the sidebar) rather than hiding —
+  // otherwise a floated panel that gets closed is hard to find again
+  if(!S.docked){ S.docked=true; applyDock(); return; }
+  closeResults();
+};
 document.getElementById('resDock').onclick=()=>{ S.docked=!S.docked; applyDock(); };
 document.querySelectorAll('.rtab').forEach(b=>b.onclick=()=>{ S.resTab=b.dataset.tab;
   document.querySelectorAll('.rtab').forEach(x=>x.classList.toggle('on',x===b)); renderResults(); });
@@ -4771,8 +4779,55 @@ const MAN_IC = {
   phase:'<svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="5.5"/><path d="M8 2.5v11"/><path d="M8 8H2.5"/></svg>',
   plus:'<svg viewBox="0 0 16 16"><path d="M8 3.5v9M3.5 8h9"/></svg>',
   history:'<svg viewBox="0 0 16 16"><path d="M2.7 8a5.3 5.3 0 1 0 1.7-3.9"/><path d="M2 3.3V6h2.7"/><path d="M8 5.1V8l2.1 1.5"/></svg>',
+  impurity:'<svg viewBox="0 0 16 16"><path d="M8 2.2C10.6 5.6 12 7.8 12 9.6a4 4 0 0 1-8 0C4 7.8 5.4 5.6 8 2.2Z"/></svg>',
 };
 function manIc(n){ return `<span class="iic">${MAN_IC[n]||''}</span>`; }
+
+/* --- realistic spectrum-trace generators for the manual figures --- */
+/* Sum of Lorentzians on a flat baseline → sharp, real-looking ¹H-NMR peaks.
+   peaks: [{x, h, w?, n?, J?}]  x = SVG x of the multiplet centre, h = height (px),
+   w = half-width at half-max (px, default 1.7), n = # lines (multiplicity, default 1),
+   J = line spacing (px). Multiplet line intensities follow Pascal's triangle. */
+function nmrTrace(x0, x1, base, peaks, step){
+  step = step || 0.6;
+  const SHARP = 0.6;    // shrink half-widths → narrow, near-vertical real-NMR lines
+  const NOISE = 0.35;   // faint baseline texture so it reads as real data, not a vector
+  const lines = [];
+  (peaks||[]).forEach(pk=>{
+    const n = pk.n||1, J = pk.J||0, w = (pk.w||1.6)*SHARP;
+    const rel = []; let c = 1;
+    for(let k=0;k<n;k++){ rel.push(c); c = c*(n-1-k)/(k+1); }
+    const relMax = Math.max.apply(null, rel);
+    const span = (n-1)*J;
+    for(let k=0;k<n;k++) lines.push({ c: pk.x - span/2 + k*J, a: pk.h*rel[k]/relMax, w });
+  });
+  // Sample on a regular grid, but force extra samples exactly at each line centre
+  // so the sharp Lorentzian tips are captured cleanly at any step size.
+  const xs = [];
+  for(let x=x0; x<=x1+1e-3; x+=step) xs.push(x);
+  lines.forEach(l=>{ if(l.c>x0 && l.c<x1){ xs.push(l.c-0.35, l.c, l.c+0.35); } });
+  xs.sort((a,b)=>a-b);
+  const yAt = x=>{
+    let y = NOISE*(Math.sin(x*7.13)+Math.sin(x*3.1+1.7)+Math.sin(x*17.9))/3;
+    for(const l of lines){ const t=(x-l.c)/l.w; y += l.a/(1+t*t); }
+    return y;
+  };
+  let d = 'M' + x0.toFixed(1) + ' ' + base.toFixed(1);
+  for(const x of xs) d += ' ' + x.toFixed(2) + ' ' + (base-yAt(x)).toFixed(2);
+  d += ' ' + x1.toFixed(1) + ' ' + base.toFixed(1);
+  return d;
+}
+/* damped-cosine FID (time-domain) for the processing figure */
+function fidTrace(x0, x1, mid, amp, cycles, decay, step){
+  step = step || 1.3;
+  let d = '';
+  for(let x=x0; x<=x1+1e-3; x+=step){
+    const u = (x-x0)/(x1-x0);
+    const y = mid - amp*Math.exp(-decay*u)*Math.cos(2*Math.PI*cycles*u);
+    d += (d?' ':'M') + x.toFixed(1) + ' ' + y.toFixed(2);
+  }
+  return d;
+}
 
 /* --- SVG figures (bilingual via J flag) --- */
 const MANUAL_FIGS = {
@@ -4787,8 +4842,8 @@ const MANUAL_FIGS = {
     <path d="M228 78 H300 M290 71 L304 78 L290 85" stroke="var(--trace)" fill="none" stroke-width="2"/>
     <rect x="318" y="24" width="286" height="108" rx="11" fill="var(--bg)" stroke="var(--line)"/>
     <path d="M332 106 H590" stroke="var(--faint)" stroke-width="1"/>
-    <path d="M336 106 L392 106 L399 58 L406 106 L470 106 L478 40 L487 106 L540 106 L548 78 L556 106 L588 106" fill="none" stroke="var(--trace)" stroke-width="1.6"/>
-    <text x="475" y="34" text-anchor="middle" fill="var(--peak)" font-size="10">7.26</text>
+    <path d="${nmrTrace(336,588,106,[{x:399,h:48,n:2,J:5},{x:478,h:66,n:1,w:1.9},{x:548,h:26,n:3,J:4.5}])}" fill="none" stroke="var(--trace)" stroke-width="1.4" stroke-linejoin="round"/>
+    <text x="478" y="34" text-anchor="middle" fill="var(--peak)" font-size="10">7.26</text>
     <text x="461" y="150" text-anchor="middle" font-size="10.5" fill="var(--faint)">${J?'すぐにスペクトルが表示されます':'The spectrum appears at once'}</text>
   </svg>`; },
 
@@ -4799,9 +4854,15 @@ const MANUAL_FIGS = {
     <rect x="26" y="60" width="72" height="7" rx="3.5" fill="var(--gridw)"/>
     <rect x="26" y="80" width="96" height="7" rx="3.5" fill="var(--line)"/>
     <rect x="26" y="94" width="84" height="7" rx="3.5" fill="var(--line)"/>
-    <rect x="26" y="120" width="96" height="14" rx="4" fill="var(--bg)" stroke="var(--line)"/>
-    <rect x="26" y="142" width="96" height="14" rx="4" fill="var(--bg)" stroke="var(--line)"/>
-    <text x="74" y="212" text-anchor="middle" fill="var(--faint)" font-size="9.5">1</text>
+    <rect x="26" y="112" width="96" height="12" rx="4" fill="var(--bg)" stroke="var(--line)"/>
+    <text x="118" y="44" text-anchor="middle" fill="var(--faint)" font-size="9.5">1</text>
+    <!-- ④ results list: docked at the bottom of the left sidebar -->
+    <line x1="20" y1="140" x2="128" y2="140" stroke="var(--line)"/>
+    <rect x="26" y="150" width="96" height="13" rx="3.5" fill="var(--bg)" stroke="var(--line)"/>
+    <rect x="26" y="173" width="96" height="7" rx="3.5" fill="var(--gridw)"/>
+    <rect x="26" y="187" width="84" height="7" rx="3.5" fill="var(--gridw)"/>
+    <rect x="26" y="201" width="92" height="7" rx="3.5" fill="var(--gridw)"/>
+    <text x="118" y="161" text-anchor="middle" fill="var(--faint)" font-size="9.5">4</text>
     <rect x="146" y="14" width="460" height="30" rx="8" fill="var(--panel)" stroke="var(--line)"/>
     <rect x="158" y="22" width="46" height="14" rx="4" fill="var(--bg)" stroke="var(--line)"/>
     <rect x="212" y="22" width="46" height="14" rx="4" fill="var(--bg)" stroke="var(--line)"/>
@@ -4809,22 +4870,16 @@ const MANUAL_FIGS = {
     <rect x="470" y="22" width="60" height="14" rx="4" fill="color-mix(in srgb,var(--trace) 22%,transparent)"/>
     <rect x="536" y="22" width="60" height="14" rx="4" fill="color-mix(in srgb,var(--peak) 22%,transparent)"/>
     <text x="376" y="33" text-anchor="middle" fill="var(--faint)" font-size="9.5">2</text>
-    <rect x="146" y="52" width="300" height="170" rx="9" fill="var(--bg)" stroke="var(--line)"/>
-    <path d="M158 190 H436" stroke="var(--faint)" stroke-width="1"/>
-    <path d="M162 190 L226 190 L233 120 L240 190 L306 190 L314 86 L323 190 L372 190 L380 150 L389 190 L432 190" fill="none" stroke="var(--trace)" stroke-width="1.5"/>
-    <text x="296" y="212" text-anchor="middle" fill="var(--faint)" font-size="9.5">3</text>
-    <rect x="456" y="52" width="150" height="170" rx="9" fill="var(--panel)" stroke="var(--line)"/>
-    <rect x="468" y="64" width="126" height="16" rx="4" fill="var(--bg)" stroke="var(--line)"/>
-    <rect x="468" y="88" width="126" height="9" rx="3" fill="var(--gridw)"/>
-    <rect x="468" y="102" width="100" height="9" rx="3" fill="var(--gridw)"/>
-    <rect x="468" y="116" width="112" height="9" rx="3" fill="var(--gridw)"/>
-    <text x="531" y="212" text-anchor="middle" fill="var(--faint)" font-size="9.5">4</text>
+    <rect x="146" y="52" width="460" height="170" rx="9" fill="var(--bg)" stroke="var(--line)"/>
+    <path d="M158 190 H594" stroke="var(--faint)" stroke-width="1"/>
+    <path d="${nmrTrace(158,594,190,[{x:270,h:70,n:4,J:4.5},{x:400,h:104,n:1,w:2},{x:500,h:40,n:3,J:4.5}])}" fill="none" stroke="var(--trace)" stroke-width="1.4" stroke-linejoin="round"/>
+    <text x="376" y="212" text-anchor="middle" fill="var(--faint)" font-size="9.5">3</text>
   </svg>
-  <figcaption>${J?'① スペクトル一覧・取得情報・処理 ／ ② メニュー・ツールバー ／ ③ プロット ／ ④ 結果リスト':'① Spectra list, acquisition &amp; processing ⁄ ② Menus &amp; toolbar ⁄ ③ Plot ⁄ ④ Results list'}</figcaption>`; },
+  <figcaption>${J?'① スペクトル一覧・取得情報・処理 ／ ② メニュー・ツールバー ／ ③ プロット ／ ④ 結果リスト（左サイドバー下部）':'① Spectra list, acquisition &amp; processing ⁄ ② Menus &amp; toolbar ⁄ ③ Plot ⁄ ④ Results list (bottom of the left sidebar)'}</figcaption>`; },
 
   process(J){ return `<svg viewBox="0 0 620 168" xmlns="http://www.w3.org/2000/svg" font-size="11" font-family="var(--sans)">
     <rect x="14" y="22" width="150" height="118" rx="10" fill="var(--bg)" stroke="var(--line)"/>
-    <path d="M24 82 q10 -46 20 0 q10 40 20 0 q10 -30 20 0 q10 22 20 0 q10 -14 20 0 q10 10 20 0 q6 -5 12 0" fill="none" stroke="var(--dim)" stroke-width="1.3"/>
+    <path d="${fidTrace(24,150,80,34,4,2.4)}" fill="none" stroke="var(--dim)" stroke-width="1.3" stroke-linejoin="round"/>
     <text x="89" y="156" text-anchor="middle" fill="var(--faint)" font-size="10">${J?'生 FID（時間軸）':'Raw FID (time)'}</text>
     <rect x="192" y="30" width="150" height="102" rx="10" fill="var(--panel)" stroke="var(--line)"/>
     <text x="204" y="50" fill="var(--dim)" font-size="10">${J?'窓関数 EM / GM':'Window EM / GM'}</text>
@@ -4840,7 +4895,7 @@ const MANUAL_FIGS = {
     <path d="M166 81 H188" stroke="var(--faint)" fill="none" stroke-width="1.6" stroke-dasharray="3 2"/>
     <rect x="410" y="22" width="196" height="118" rx="10" fill="var(--bg)" stroke="var(--line)"/>
     <path d="M420 116 H596" stroke="var(--faint)" stroke-width="1"/>
-    <path d="M424 116 L474 116 L481 62 L488 116 L536 116 L544 42 L552 116 L582 116 L588 92 L592 116" fill="none" stroke="var(--trace)" stroke-width="1.6"/>
+    <path d="${nmrTrace(420,596,116,[{x:481,h:54,n:2,J:5},{x:544,h:74,n:1,w:1.9},{x:585,h:24,n:1,w:1.6}])}" fill="none" stroke="var(--trace)" stroke-width="1.4" stroke-linejoin="round"/>
     <text x="508" y="156" text-anchor="middle" fill="var(--faint)" font-size="10">${J?'位相の合った吸収スペクトル':'Phased absorption spectrum'}</text>
   </svg>`; },
 
@@ -4848,9 +4903,9 @@ const MANUAL_FIGS = {
     <rect x="14" y="14" width="592" height="182" rx="10" fill="var(--bg)" stroke="var(--line)"/>
     <path d="M40 150 H588" stroke="var(--faint)" stroke-width="1"/>
     <rect x="196" y="40" width="150" height="110" fill="color-mix(in srgb,var(--err) 12%,transparent)"/>
-    <path d="M44 150 L150 150 L160 96 L170 150 L232 150 L237 150 L246 66 L250 150 L262 150 L266 78 L272 150 L286 150 L292 66 L300 150 L316 150 L330 118 L346 150 L470 150 L480 104 L490 150 L560 150 L568 128 L576 150 L586 150" fill="none" stroke="var(--trace)" stroke-width="1.6"/>
-    <line x1="165" y1="70" x2="165" y2="88" stroke="var(--peak)" stroke-width="1.2"/>
-    <text x="165" y="64" text-anchor="middle" fill="var(--peak)" font-size="10" font-family="var(--mono)">7.42</text>
+    <path d="${nmrTrace(44,586,150,[{x:160,h:54,n:1,w:1.9},{x:246,h:82,n:3,J:5},{x:268,h:70,n:2,J:5},{x:326,h:34,n:1,w:1.7},{x:480,h:46,n:4,J:4.5},{x:568,h:22,n:3,J:4.5}])}" fill="none" stroke="var(--trace)" stroke-width="1.5" stroke-linejoin="round"/>
+    <line x1="160" y1="70" x2="160" y2="90" stroke="var(--peak)" stroke-width="1.2"/>
+    <text x="160" y="64" text-anchor="middle" fill="var(--peak)" font-size="10" font-family="var(--mono)">7.42</text>
     <path d="M234 132 q7 -22 14 0" fill="none" stroke="var(--integ)" stroke-width="1.4"/>
     <text x="241" y="176" text-anchor="middle" fill="var(--integ)" font-size="10" font-family="var(--mono)">2.00</text>
     <path d="M258 44 h20 M262 44 v6 M270 44 v6 M274 44 v6" stroke="var(--mult)" stroke-width="1.2" fill="none"/>
@@ -4863,21 +4918,134 @@ const MANUAL_FIGS = {
   </svg>
   <figcaption>${J?'ピーク δ・積分値・多重度と J・マーク／ラベル・シェードを 1 枚のプロットに重ねられます':'Peak δ, integrals, multiplicity &amp; J, marks/labels and shades — all on one plot'}</figcaption>`; },
 
+  calib(J){ return `<svg viewBox="0 0 620 162" xmlns="http://www.w3.org/2000/svg" font-size="11" font-family="var(--sans)">
+    <rect x="14" y="18" width="592" height="118" rx="10" fill="var(--bg)" stroke="var(--line)"/>
+    <path d="M40 122 H590" stroke="var(--faint)" stroke-width="1"/>
+    <path d="${nmrTrace(44,588,122,[{x:120,h:38,n:2,J:5},{x:300,h:82,n:1,w:1.9},{x:430,h:32,n:3,J:5},{x:520,h:24,n:1,w:1.6}])}" fill="none" stroke="var(--trace)" stroke-width="1.5" stroke-linejoin="round"/>
+    <path d="M300 42 V120" stroke="var(--peak)" stroke-width="1" stroke-dasharray="3 3" opacity=".5"/>
+    <g stroke="var(--peak)" stroke-width="1.4" fill="none">
+      <circle cx="300" cy="42" r="8"/>
+      <line x1="300" y1="29" x2="300" y2="35"/><line x1="300" y1="49" x2="300" y2="55"/>
+      <line x1="287" y1="42" x2="293" y2="42"/><line x1="307" y1="42" x2="313" y2="42"/>
+    </g>
+    <path d="M316 40 H386 M380 36 l6 4 -6 4" fill="none" stroke="var(--peak)" stroke-width="1.4"/>
+    <rect x="390" y="26" width="116" height="28" rx="7" fill="var(--panel)" stroke="var(--peak)"/>
+    <text x="448" y="44" text-anchor="middle" font-family="var(--mono)" font-size="12.5" fill="var(--ink)">δ = 7.26</text>
+    <text x="300" y="152" text-anchor="middle" font-size="10" fill="var(--faint)" font-family="var(--mono)">CDCl₃</text>
+    <rect x="26" y="26" width="152" height="20" rx="6" fill="var(--panel)" stroke="var(--line)"/>
+    <text x="36" y="40" font-size="9.5" fill="var(--dim)">${J?'残留溶媒 → 自動較正':'Residual solvent → auto'}</text>
+  </svg>
+  <figcaption>${J?'基準ピークをクリックし、正しい δ を入力（または残留溶媒から自動較正）':'Click a reference peak and enter the correct δ (or auto-calibrate from residual solvent)'}</figcaption>`; },
+
+  peaks(J){ return `<svg viewBox="0 0 620 176" xmlns="http://www.w3.org/2000/svg" font-size="11" font-family="var(--sans)">
+    <rect x="14" y="16" width="592" height="130" rx="10" fill="var(--bg)" stroke="var(--line)"/>
+    <path d="M40 140 H590" stroke="var(--faint)" stroke-width="1"/>
+    <rect x="306" y="34" width="72" height="106" rx="4" fill="color-mix(in srgb,var(--trace) 9%,transparent)" stroke="var(--trace)" stroke-width="1" stroke-dasharray="4 3"/>
+    <path d="${nmrTrace(44,588,140,[{x:90,h:24,n:1,w:1.6},{x:250,h:96,n:2,J:5},{x:341,h:66,n:3,J:5},{x:470,h:82,n:1,w:1.8},{x:545,h:18,n:2,J:4}])}" fill="none" stroke="var(--trace)" stroke-width="1.5" stroke-linejoin="round"/>
+    <line x1="40" y1="104" x2="590" y2="104" stroke="var(--err)" stroke-width="1.1" stroke-dasharray="5 4" opacity=".85"/>
+    <text x="586" y="100" text-anchor="end" font-size="9.5" fill="var(--err)">${J?'しきい値':'threshold'}</text>
+    <g fill="var(--peak)" font-family="var(--mono)" font-size="9.5" text-anchor="middle">
+      <line x1="250" y1="30" x2="250" y2="40" stroke="var(--peak)" stroke-width="1.1"/><text x="250" y="26">7.28</text>
+      <line x1="341" y1="60" x2="341" y2="70" stroke="var(--peak)" stroke-width="1.1"/><text x="341" y="56">7.10</text>
+      <line x1="470" y1="46" x2="470" y2="56" stroke="var(--peak)" stroke-width="1.1"/><text x="470" y="42">3.62</text>
+    </g>
+    <text x="342" y="158" text-anchor="middle" font-size="9.5" fill="var(--faint)">${J?'ドラッグで検出':'drag to detect'}</text>
+  </svg>
+  <figcaption>${J?'しきい値以上のピークを一括検出（範囲ドラッグで局所検出も可）。頂点に δ を表示':'Detect all peaks above a threshold (or drag a range); δ is labelled at each apex'}</figcaption>`; },
+
+  integ(J){ return `<svg viewBox="0 0 620 168" xmlns="http://www.w3.org/2000/svg" font-size="11" font-family="var(--sans)">
+    <rect x="14" y="16" width="592" height="128" rx="10" fill="var(--bg)" stroke="var(--line)"/>
+    <path d="M40 132 H590" stroke="var(--faint)" stroke-width="1"/>
+    <rect x="150" y="30" width="80" height="102" rx="4" fill="color-mix(in srgb,var(--integ) 9%,transparent)" stroke="var(--integ)" stroke-width="1" stroke-dasharray="4 3"/>
+    <path d="${nmrTrace(44,588,132,[{x:190,h:74,n:3,J:5},{x:430,h:98,n:2,J:5.5}])}" fill="none" stroke="var(--trace)" stroke-width="1.5" stroke-linejoin="round"/>
+    <path d="M120 74 H160 C176 74 176 46 192 46 C206 46 206 42 220 42 H262" fill="none" stroke="var(--integ)" stroke-width="1.6"/>
+    <path d="M360 78 H406 C420 78 420 40 434 40 H480" fill="none" stroke="var(--integ)" stroke-width="1.6"/>
+    <text x="190" y="160" text-anchor="middle" font-family="var(--mono)" font-size="11.5" fill="var(--integ)">2.00</text>
+    <text x="430" y="160" text-anchor="middle" font-family="var(--mono)" font-size="11.5" fill="var(--integ)">3.01</text>
+  </svg>
+  <figcaption>${J?'範囲をドラッグして面積を求め、プロトン数の比を読む（例 2.00 : 3.01）':'Drag a range to integrate and read the proton ratio (e.g. 2.00 : 3.01)'}</figcaption>`; },
+
+  mult(J){ return `<svg viewBox="0 0 620 182" xmlns="http://www.w3.org/2000/svg" font-size="11" font-family="var(--sans)">
+    <rect x="14" y="16" width="592" height="150" rx="10" fill="var(--bg)" stroke="var(--line)"/>
+    <path d="M40 150 H590" stroke="var(--faint)" stroke-width="1"/>
+    <path d="${nmrTrace(120,300,150,[{x:210,h:104,n:4,J:20,w:2.6}])}" fill="none" stroke="var(--trace)" stroke-width="1.6" stroke-linejoin="round"/>
+    <g stroke="var(--mult)" stroke-width="1.3" fill="none">
+      <path d="M180 44 H240"/>
+      <path d="M180 44 V52 M200 44 V52 M220 44 V52 M240 44 V52"/>
+    </g>
+    <g stroke="var(--mult)" stroke-width="1" fill="none"><path d="M200 34 V42 M220 34 V42 M200 34 H220"/></g>
+    <text x="210" y="30" text-anchor="middle" fill="var(--mult)" font-size="9" font-family="var(--mono)">J</text>
+    <text x="150" y="34" text-anchor="middle" fill="var(--mult)" font-weight="700" font-size="13">q</text>
+    <text x="210" y="164" text-anchor="middle" fill="var(--peak)" font-size="10" font-family="var(--mono)">${J?'q, J = 7.1 Hz':'q, J = 7.1 Hz'}</text>
+    <path d="${nmrTrace(360,560,150,[{x:460,h:90,n:2,J:22,w:2.6}])}" fill="none" stroke="var(--trace)" stroke-width="1.6" stroke-linejoin="round"/>
+    <g stroke="var(--mult)" stroke-width="1.3" fill="none"><path d="M449 52 H471"/><path d="M449 52 V60 M471 52 V60"/></g>
+    <text x="422" y="46" text-anchor="middle" fill="var(--mult)" font-weight="700" font-size="13">d</text>
+    <text x="460" y="164" text-anchor="middle" fill="var(--peak)" font-size="10" font-family="var(--mono)">${J?'d, J = 8.0 Hz':'d, J = 8.0 Hz'}</text>
+  </svg>
+  <figcaption>${J?'選んだピークから多重度（s・d・t・q・m …）と結合定数 J〔Hz〕を自動算出':'From the selected peaks, the multiplicity (s·d·t·q·m …) and coupling constant J (Hz) are derived'}</figcaption>`; },
+
+  assign(J){ return `<svg viewBox="0 0 620 186" xmlns="http://www.w3.org/2000/svg" font-size="11" font-family="var(--sans)">
+    <rect x="14" y="16" width="592" height="150" rx="10" fill="var(--bg)" stroke="var(--line)"/>
+    <path d="M40 140 H590" stroke="var(--faint)" stroke-width="1"/>
+    <rect x="278" y="30" width="62" height="110" fill="color-mix(in srgb,var(--err) 15%,transparent)"/>
+    <path d="${nmrTrace(44,440,140,[{x:118,h:42,n:2,J:5},{x:185,h:78,n:1,w:1.8},{x:308,h:56,n:3,J:5},{x:392,h:46,n:2,J:5}])}" fill="none" stroke="var(--trace)" stroke-width="1.5" stroke-linejoin="round"/>
+    <circle cx="185" cy="56" r="4.8" fill="#0E6E7E"/>
+    <text x="185" y="44" text-anchor="middle" fill="var(--mult)" font-size="11" font-weight="600">CHO</text>
+    <text x="309" y="156" text-anchor="middle" fill="var(--err)" font-size="9.5">${J?'シェード':'shade'}</text>
+    <path d="M392 94 C420 78 440 66 456 62" fill="none" stroke="var(--dim)" stroke-width="1.3" stroke-dasharray="4 3"/>
+    <circle cx="392" cy="94" r="2.4" fill="var(--dim)"/>
+    <rect x="456" y="30" width="140" height="86" rx="7" fill="var(--panel)" stroke="var(--line)"/>
+    <g transform="translate(526,68)" stroke="var(--ink)" stroke-width="1.4" fill="none">
+      <polygon points="0,-16 14,-8 14,8 0,16 -14,8 -14,-8"/><circle cx="0" cy="0" r="7"/>
+    </g>
+    <text x="526" y="130" text-anchor="middle" fill="var(--faint)" font-size="9.5">${J?'画像（構造式）':'image (structure)'}</text>
+  </svg>
+  <figcaption>${J?'マーク ● ・テキストラベル・シェード（塗り帯）・コネクタ（破線）・画像 を 1 枚に重ねられます':'Mark ● , text label, shade, connector (dashed) and image — combined on one plot'}</figcaption>`; },
+
+  impurity(J){ return `<svg viewBox="0 0 620 172" xmlns="http://www.w3.org/2000/svg" font-size="11" font-family="var(--sans)">
+    <rect x="14" y="16" width="592" height="128" rx="10" fill="var(--bg)" stroke="var(--line)"/>
+    <path d="M40 136 H590" stroke="var(--faint)" stroke-width="1"/>
+    <rect x="288" y="30" width="24" height="106" fill="color-mix(in srgb,var(--peak) 13%,transparent)"/>
+    <path d="${nmrTrace(44,588,136,[{x:120,h:64,n:2,J:5},{x:250,h:40,n:1,w:1.6},{x:300,h:22,n:1,w:1.5},{x:430,h:72,n:3,J:5},{x:500,h:24,n:1,w:1.5}])}" fill="none" stroke="var(--trace)" stroke-width="1.5" stroke-linejoin="round"/>
+    <g font-family="var(--mono)" font-size="9">
+      <line x1="300" y1="30" x2="300" y2="136" stroke="var(--peak)" stroke-width="1" stroke-dasharray="3 3"/>
+      <text x="300" y="26" text-anchor="middle" fill="var(--peak)">H₂O 1.56</text>
+      <line x1="500" y1="40" x2="500" y2="136" stroke="var(--peak)" stroke-width="1" stroke-dasharray="3 3"/>
+      <text x="500" y="36" text-anchor="middle" fill="var(--peak)">${J?'グリース 1.26':'grease 1.26'}</text>
+    </g>
+    <text x="300" y="158" text-anchor="middle" fill="var(--faint)" font-size="9.5">${J?'± ppm 許容範囲':'± ppm tolerance'}</text>
+  </svg>
+  <figcaption>${J?'水・溶媒・グリースなど残留ピークの文献位置を重ねて確認（許容範囲 ± ppm を指定）':'Overlay literature positions of residual solvent / water / grease peaks (within a ± ppm tolerance)'}</figcaption>`; },
+
+  zoomview(J){ return `<svg viewBox="0 0 620 190" xmlns="http://www.w3.org/2000/svg" font-size="11" font-family="var(--sans)">
+    <rect x="14" y="20" width="592" height="150" rx="10" fill="var(--bg)" stroke="var(--line)"/>
+    <path d="M40 150 H590" stroke="var(--faint)" stroke-width="1"/>
+    <path d="${nmrTrace(44,588,150,[{x:150,h:60,n:2,J:5},{x:250,h:98,n:1,w:1.9},{x:360,h:72,n:4,J:5},{x:470,h:40,n:2,J:5},{x:545,h:26,n:3,J:4.5}])}" fill="none" stroke="var(--trace)" stroke-width="1.5" stroke-linejoin="round"/>
+    <rect x="334" y="58" width="54" height="92" rx="3" fill="none" stroke="var(--peak)" stroke-width="1.2" stroke-dasharray="4 3"/>
+    <path d="M388 58 L430 40" fill="none" stroke="var(--peak)" stroke-width="1" stroke-dasharray="3 3"/>
+    <path d="M388 150 L430 116" fill="none" stroke="var(--peak)" stroke-width="1" stroke-dasharray="3 3"/>
+    <rect x="430" y="26" width="160" height="92" rx="7" fill="var(--panel)" stroke="var(--peak)"/>
+    <path d="M442 108 H578" stroke="var(--faint)" stroke-width="1"/>
+    <path d="${nmrTrace(444,576,108,[{x:510,h:72,n:4,J:20,w:2.6}])}" fill="none" stroke="var(--trace)" stroke-width="1.4" stroke-linejoin="round"/>
+    <text x="510" y="134" text-anchor="middle" fill="var(--faint)" font-size="9.5">${J?'ズーム挿入図':'zoom inset'}</text>
+  </svg>
+  <figcaption>${J?'δ 範囲をドラッグ → 拡大した挿入図を作成。枠色・リード線を調整できます':'Drag a δ range → a magnified inset is created; adjust frame colour and leader lines'}</figcaption>`; },
+
   display(J){ return `<svg viewBox="0 0 620 176" xmlns="http://www.w3.org/2000/svg" font-size="11" font-family="var(--sans)">
     <rect x="14" y="18" width="180" height="140" rx="10" fill="var(--bg)" stroke="var(--line)"/>
-    <path d="M28 66 L70 66 L77 40 L84 66 L150 66 L158 48 L166 66 L180 66" fill="none" stroke="var(--trace)" stroke-width="1.4"/>
-    <path d="M28 104 L78 104 L85 82 L92 104 L150 104 L158 90 L166 104 L180 104" fill="none" stroke="var(--integ)" stroke-width="1.4"/>
-    <path d="M28 142 L64 142 L71 120 L78 142 L150 142 L158 126 L166 142 L180 142" fill="none" stroke="var(--mult)" stroke-width="1.4"/>
+    <path d="${nmrTrace(28,180,66,[{x:77,h:26,n:2,J:4},{x:158,h:18,n:1,w:1.5}])}" fill="none" stroke="var(--trace)" stroke-width="1.3" stroke-linejoin="round"/>
+    <path d="${nmrTrace(28,180,104,[{x:85,h:22,n:1,w:1.6},{x:158,h:14,n:3,J:4}])}" fill="none" stroke="var(--integ)" stroke-width="1.3" stroke-linejoin="round"/>
+    <path d="${nmrTrace(28,180,142,[{x:71,h:22,n:1,w:1.6},{x:158,h:16,n:2,J:4}])}" fill="none" stroke="var(--mult)" stroke-width="1.3" stroke-linejoin="round"/>
     <text x="104" y="172" text-anchor="middle" fill="var(--faint)" font-size="10">${J?'並べる（Stacked）':'Stacked'}</text>
     <rect x="222" y="18" width="180" height="140" rx="10" fill="var(--bg)" stroke="var(--line)"/>
-    <path d="M236 132 L286 132 L293 60 L300 132 L358 132 L366 92 L374 132 L388 132" fill="none" stroke="var(--trace)" stroke-width="1.4"/>
-    <path d="M236 132 L282 132 L289 78 L296 132 L358 132 L366 104 L374 132 L388 132" fill="none" stroke="var(--integ)" stroke-width="1.4"/>
-    <path d="M236 132 L278 132 L285 96 L292 132 L358 132 L366 116 L374 132 L388 132" fill="none" stroke="var(--mult)" stroke-width="1.4"/>
+    <path d="${nmrTrace(236,388,132,[{x:293,h:72,n:1,w:1.9},{x:366,h:40,n:2,J:4}])}" fill="none" stroke="var(--trace)" stroke-width="1.3" stroke-linejoin="round"/>
+    <path d="${nmrTrace(236,388,132,[{x:289,h:54,n:2,J:4},{x:366,h:28,n:1,w:1.5}])}" fill="none" stroke="var(--integ)" stroke-width="1.3" stroke-linejoin="round"/>
+    <path d="${nmrTrace(236,388,132,[{x:285,h:36,n:3,J:4},{x:366,h:16,n:1,w:1.5}])}" fill="none" stroke="var(--mult)" stroke-width="1.3" stroke-linejoin="round"/>
     <text x="312" y="172" text-anchor="middle" fill="var(--faint)" font-size="10">${J?'重ねる（Overlay）':'Overlay'}</text>
     <rect x="430" y="18" width="176" height="140" rx="10" fill="var(--bg)" stroke="var(--line)"/>
-    <path d="M444 128 L494 128 L501 70 L508 128 L560 128 L568 96 L576 128 L594 128" fill="none" stroke="var(--trace)" stroke-width="1.4"/>
+    <path d="${nmrTrace(444,594,128,[{x:501,h:58,n:1,w:1.9},{x:568,h:32,n:2,J:4}])}" fill="none" stroke="var(--trace)" stroke-width="1.3" stroke-linejoin="round"/>
     <rect x="486" y="30" width="66" height="52" rx="6" fill="var(--panel)" stroke="var(--peak)" stroke-dasharray="3 2"/>
-    <path d="M492 74 L512 74 L518 44 L524 74 L546 74" fill="none" stroke="var(--trace)" stroke-width="1.2"/>
+    <path d="${nmrTrace(492,546,74,[{x:518,h:28,n:2,J:5,w:1.4}])}" fill="none" stroke="var(--trace)" stroke-width="1.2" stroke-linejoin="round"/>
     <line x1="504" y1="70" x2="500" y2="82" stroke="var(--peak)" stroke-width="1" stroke-dasharray="2 2"/>
     <text x="518" y="172" text-anchor="middle" fill="var(--faint)" font-size="10">${J?'ズーム挿入図':'Zoom inset'}</text>
   </svg>`; },
@@ -4885,7 +5053,7 @@ const MANUAL_FIGS = {
   exportfig(J){ return `<svg viewBox="0 0 620 138" xmlns="http://www.w3.org/2000/svg" font-size="11" font-family="var(--sans)">
     <rect x="14" y="30" width="150" height="78" rx="10" fill="var(--panel)" stroke="var(--line)"/>
     <path d="M40 92 H138" stroke="var(--faint)" stroke-width="1"/>
-    <path d="M44 92 L86 92 L92 56 L98 92 L138 92" fill="none" stroke="var(--trace)" stroke-width="1.4"/>
+    <path d="${nmrTrace(44,138,92,[{x:78,h:30,n:2,J:5},{x:104,h:22,n:1,w:1.5}])}" fill="none" stroke="var(--trace)" stroke-width="1.3" stroke-linejoin="round"/>
     <text x="89" y="126" text-anchor="middle" fill="var(--faint)" font-size="10">${J?'現在の表示':'Current view'}</text>
     <path d="M172 69 H214 M204 62 L218 69 L204 76" stroke="var(--trace)" fill="none" stroke-width="2"/>
     <g font-family="var(--mono)" font-size="11">
@@ -4933,7 +5101,7 @@ const MANUAL = {
         '<b>① 左サイドバー</b>：読み込んだスペクトルの一覧、取得情報（Acquisition）、処理（窓関数・グループディレイ補正）、位相の各パネル。スペクトル一覧では表示/非表示や色を切り替えられます。',
         '<b>② メニュー＆ツールバー</b>：上段が「ファイル」「出力」「表示」「設定」メニュー、下段が校正・ピーク・積分などの<b>解析ツール</b>です。',
         '<b>③ プロット</b>：スペクトル本体。マウスホイールでズーム、ドラッグでパンできます（詳細はショートカットの章）。',
-        `<b>④ 結果リスト</b>：検出したピーク・積分・多重度・帰属の一覧。表示メニューの ${manIc('eye')} で開閉できます。`,
+        `<b>④ 結果リスト</b>：検出したピーク・積分・多重度・帰属の一覧。ふだんは左サイドバーの下部にドッキングして表示されます。ヘッダーの ⤢ でプロット上にフロート（分離）でき、フロート中に × を押すとサイドバーに戻ります。表示メニューの ${manIc('eye')} で開閉できます。`,
       ]},
     ]},
 
@@ -4952,19 +5120,111 @@ const MANUAL = {
       ]},
     ]},
 
-    { icon:'tools', tab:'解析ツール', h:'解析ツール', blocks:[
-      {p:'ツールバーの各ツールは、ボタン本体をクリックすると起動、右側の ▼ から詳細（色・小数桁・削除・表示切替など）を開けます。ドラッグや「範囲を指定」系の操作は、プロット上でマウスをドラッグして範囲を選びます。'},
-      {fig:'tools'},
+    { icon:'calib', tab:'校正', h:'校正（Calibrate）', blocks:[
+      {p:'横軸（化学シフト δ）の基準を合わせるツールです。既知のピーク（残留溶媒・TMS など）を正しい δ に固定し、スペクトル全体を左右にずらして較正します。<b>最初に較正しておく</b>と、以降のピーク・積分・多重度の値がすべて正しい δ で得られます。'},
+      {fig:'calib'},
+      {sub:'解析ツールに共通の操作'},
       {ul:[
-        `<b>校正（Calibrate）</b> ${manIc('calib')}：基準ピークをクリックして δ を合わせます。残留溶媒ピークから自動で合わせることもできます。`,
-        `<b>ピーク（Peaks）</b> ${manIc('peaks')}：範囲をドラッグして検出、またはしきい値以上をまとめて検出。個別クリックで削除もできます。`,
-        `<b>積分（Integrals）</b> ${manIc('integ')}：範囲をドラッグして積分。高さ・小数桁・色を調整できます。`,
-        `<b>多重度（Multiplets）</b> ${manIc('mult')}：ピークをクリック（または範囲ドラッグ）で選び、多重度と結合定数 J を求めます。`,
-        `<b>帰属（Assign）</b>：<b>マーク</b> ${manIc('mark')}・<b>テキストラベル</b> ${manIc('text')}・<b>シェード</b>（塗り帯）${manIc('shade')}・<b>コネクタ</b>（2点を結ぶ線）${manIc('connector')}・<b>画像の追加</b> ${manIc('image')} をまとめたグループです。`,
-        `<b>不純物（Impurities）</b>：帰属ツールのパネル内から、溶媒・不純物の残留ピークを ± ppm の許容範囲で探し、スペクトルに重ねて確認できます。`,
-        `<b>ズーム表示（Zoom view）</b> ${manIc('zoom')}：δ 範囲をドラッグして<b>ズーム挿入図</b>を作ります。枠色・線種・リード線を調整できます。`,
+        'ツールバー下段の各ツールは、<b>ボタン本体をクリック</b>すると起動し、右側の <b>▼</b> から詳細パネル（色・小数桁・削除・表示切替）を開けます。',
+        '「範囲をドラッグ」と書かれた操作は、プロット上で<b>マウスを左右にドラッグ</b>して範囲を選びます。',
+        `いつでも <span class="kbd">Ctrl</span>+<span class="kbd">Z</span>（取り消し）／ <span class="kbd">Ctrl</span>+<span class="kbd">Y</span>（やり直し）。<span class="kbd">Esc</span> でツールを解除します。これらのツールはスペクトルを1つ以上読み込むと有効になります。`,
       ]},
-      {p:`各ツールの ${manIc('trash')} は削除系の操作、${manIc('reset')} は既定値に戻す操作です。取り消し／やり直しはいつでも ${manIc('undo')||''}<span class="kbd">Ctrl</span>+<span class="kbd">Z</span> / <span class="kbd">Ctrl</span>+<span class="kbd">Y</span> で行えます。`},
+      {sub:'使い方'},
+      {ul:[
+        `<b>手動で合わせる</b> ${manIc('calib')}：ツールを起動し、基準にしたいピークを<b>クリック</b>。表示された入力欄に正しい δ（CDCl₃ なら 7.26 など）を入れると、その位置に合わせて全体がシフトします。`,
+        '<b>残留溶媒から自動で</b>：▼ の「残留溶媒 → 自動」から溶媒を選ぶと、その残留ピークを近くから探して自動較正します。よく使う重溶媒（CDCl₃・DMSO-d₆・C₆D₆ など）が一覧に並びます。',
+        `<b>較正のリセット</b> ${manIc('reset')}：「Reset calibration」で未較正の軸に戻します。`,
+      ]},
+      {p:'ヒント：鋭く孤立したピークを基準に選ぶと精度が上がります。TMS を 0 ppm に合わせるのが最も確実です。'},
+    ]},
+
+    { icon:'peaks', tab:'ピーク検出', h:'ピーク検出（Peaks）', blocks:[
+      {p:'ピークの頂点を検出し、その δ をラベル表示します。検出結果は右下の結果リスト「Peaks」タブにも一覧されます。'},
+      {fig:'peaks'},
+      {sub:'検出する'},
+      {ul:[
+        `<b>範囲を指定して検出</b> ${manIc('peaks')}：ツールを起動し、拾いたい領域を<b>ドラッグ</b>すると、その範囲内の極大点をピークとして検出します。狙った多重線だけを拾いたいときに便利です。`,
+        '<b>しきい値以上をまとめて検出</b>：「Detect all ≥ threshold」。<b>Threshold</b> スライダー（最大強度に対する％）で拾う高さの下限を決め、それ以上のピークを一括検出します。ノイズを拾うときは値を上げてください。',
+      ]},
+      {sub:'消す・整える'},
+      {ul:[
+        `<b>クリックで削除</b> ${manIc('trash')}：「Select &amp; delete」で不要なピークを1つずつクリックして消せます。範囲ドラッグや「Clear all」でまとめて削除も可能です。`,
+        '<b>色</b>・<b>ラベルの小数桁</b>：δ ラベルの色と、小数点以下の桁数（1〜6）を変えられます。',
+        `<b>表示 / 非表示</b> ${manIc('eye')}：ピークのラベルを一時的に隠せます（データは残ります）。`,
+      ]},
+    ]},
+
+    { icon:'integ', tab:'積分', h:'積分（Integrals）', blocks:[
+      {p:'指定した範囲の面積を求め、プロトン数の比を見積もります。範囲ごとに積分曲線と数値が表示され、結果リスト「Integrals」タブにも並びます。'},
+      {fig:'integ'},
+      {sub:'積分する'},
+      {ul:[
+        `<b>範囲をドラッグして積分</b> ${manIc('integ')}：ツールを起動し、積分したいピーク（多重線全体）を<b>ドラッグ</b>で囲みます。面積が計算され、下に数値が表示されます。`,
+        '<b>基準を決める</b>：既知のプロトン数のピーク（例：3H のメチル）を基準にすると、他の積分値が相対比（例 2.00 : 3.01）で読めます。結果リストで基準の設定・数値の編集ができます。',
+      ]},
+      {sub:'調整する'},
+      {ul:[
+        '<b>高さ（Height）</b>：積分曲線の縦位置をずらし、ピークと重ならないようにできます。',
+        '<b>小数桁（Decimals）</b>：表示する数値の桁数（0〜4）。',
+        `<b>色</b>：積分曲線と数値の色。`,
+        `<b>削除</b> ${manIc('trash')} ／ <b>表示 / 非表示</b> ${manIc('eye')}：選択・範囲・全消去、および表示切替ができます。`,
+      ]},
+    ]},
+
+    { icon:'mult', tab:'多重度', h:'多重度と J（Multiplets）', blocks:[
+      {p:'多重線の形（s / d / t / q / m …）と結合定数 J を求めます。ピークの間隔から J〔Hz〕を自動計算し、δ・多重度・J・積分をまとめた帰属候補を作れます。'},
+      {fig:'mult'},
+      {sub:'解析する'},
+      {ul:[
+        `<b>ピークを選ぶ</b> ${manIc('mult')}：ツールを起動し、1本の多重線を構成するピークを<b>クリック</b>で選ぶか、多重線全体を<b>ドラッグ</b>で囲みます（先にピーク検出しておくと選びやすいです）。`,
+        '<b>多重度を確定</b>：「From selected peaks」で、選んだピークから多重度と J を計算して確定します。線の間隔が一定なら d / t / q… として、不規則なら m（多重線）として扱われます。',
+        '<b>選択の解除</b>：「Clear selection」で選び直せます。',
+      ]},
+      {sub:'調整する'},
+      {ul:[
+        '<b>J の小数桁</b>：J〔Hz〕の表示桁数（0〜3）。<b>色</b>：多重度ラベルの色。',
+        `<b>削除</b> ${manIc('trash')} ／ <b>表示 / 非表示</b> ${manIc('eye')}：範囲削除・全消去・表示切替ができます。`,
+      ]},
+      {p:'図の上部に出る「くし型（tree）」は各線の位置を表し、線の間隔が J に対応します。'},
+    ]},
+
+    { icon:'mark', tab:'帰属・注釈', h:'帰属・注釈（Assign）', blocks:[
+      {p:'図に説明を書き込むためのツール群です。「帰属」ボタンの ▼ に次の5種類がまとまっています。論文やスライドで構造や帰属を示すときに使います。'},
+      {fig:'assign'},
+      {ul:[
+        `<b>マーク</b> ${manIc('mark')}：ピークの上に点（●）を置きます。色とサイズを変更でき、同じ帰属のピークに同色マークを付けると対応を示せます。`,
+        `<b>テキストラベル</b> ${manIc('text')}：任意の位置に文字（CHO, Ar-H, a など）を書き込みます。色とフォントサイズを調整できます。`,
+        `<b>シェード</b> ${manIc('shade')}：範囲を<b>ドラッグ</b>して塗り帯を作り、着目領域を強調します。色を変更できます。`,
+        `<b>コネクタ</b> ${manIc('connector')}：2点を<b>ドラッグ</b>で結ぶ線。ピークと構造・ラベルを結び付けるのに使います。`,
+        `<b>画像の追加</b> ${manIc('image')}：構造式などの画像を貼り付けます（<span class="kbd">Ctrl</span>+<span class="kbd">V</span> でも可）。ドラッグで移動・リサイズできます。`,
+      ]},
+      {p:`各項目には <b>色</b>・<b>サイズ</b>・<b>既定値に戻す</b> ${manIc('reset')}・<b>表示 / 非表示</b> ${manIc('eye')} がそろっています。`},
+    ]},
+
+    { icon:'impurity', tab:'不純物の確認', h:'不純物・残留溶媒の確認（Impurities）', blocks:[
+      {p:'水・溶媒・グリースなどの残留ピークが、スペクトル中のどこに現れるかを重ねて確認できるツールです。「帰属」パネル内の「Find impurities」から使います。'},
+      {fig:'impurity'},
+      {ul:[
+        '<b>探す</b>：一覧から溶媒・不純物を選ぶと、その既知シフト（文献値）を現在のスペクトルに<b>目印として重ねて</b>表示します。実測ピークと一致すれば、その帰属の裏付けになります。',
+        '<b>許容範囲（± ppm）</b>：測定溶媒によってシフトがずれるため、一致とみなす許容幅を ppm で指定できます。',
+        '<b>使いどころ</b>：未知の小さなピークが不純物由来かどうかの切り分け、反応追跡での溶媒ピークの識別などに便利です。',
+      ]},
+      {p:'重ねた目印はあくまで参考値です。最終的な帰属は積分・多重度と合わせて判断してください。'},
+    ]},
+
+    { icon:'zoom', tab:'ズーム挿入図', h:'ズーム挿入図（Zoom view）', blocks:[
+      {p:'スペクトルの一部を拡大した<b>挿入図（inset）</b>を作るツールです。混み合った領域や微細な分裂を、全体図の中で拡大して見せられます。'},
+      {fig:'zoomview'},
+      {sub:'作る'},
+      {ul:[
+        `<b>δ 範囲をドラッグ</b> ${manIc('zoom')}：拡大したい δ の範囲を<b>ドラッグ</b>すると、その部分を拡大した挿入図が作られます。挿入図はドラッグで移動、ハンドルでリサイズできます。`,
+      ]},
+      {sub:'見た目を整える'},
+      {ul:[
+        '<b>枠の色 / 太さ</b>：挿入図の枠線を調整します。',
+        '<b>リード線（Leader）</b>：挿入図と元の範囲を結ぶ線の種類（実線 / 破線 / 点線）を選べます。',
+        `<b>既定値に戻す</b> ${manIc('reset')} ／ <b>表示 / 非表示</b> ${manIc('eye')}：設定を初期化、挿入図とリード線の表示を個別に切り替えます。`,
+      ]},
     ]},
 
     { icon:'eye', tab:'表示の調整', h:'表示の調整', blocks:[
@@ -5036,7 +5296,7 @@ const MANUAL = {
         '<b>① Left sidebar</b>: the list of loaded spectra, Acquisition info, Processing (window, group-delay correction) and Phase. In the spectra list you can toggle visibility and colour.',
         '<b>② Menus &amp; toolbar</b>: the top row holds the File, Export, View and Settings menus; the lower row holds the <b>analysis tools</b> (calibrate, peaks, integrals, …).',
         '<b>③ Plot</b>: the spectrum itself. Zoom with the mouse wheel and pan by dragging (see the Shortcuts section).',
-        `<b>④ Results list</b>: a table of detected peaks, integrals, multiplets and assignments. Toggle it with ${manIc('eye')} in the View menu.`,
+        `<b>④ Results list</b>: a table of detected peaks, integrals, multiplets and assignments. By default it is docked at the bottom of the left sidebar. Use ⤢ in its header to float it over the plot; pressing × while floating returns it to the sidebar. Toggle it with ${manIc('eye')} in the View menu.`,
       ]},
     ]},
 
@@ -5055,19 +5315,110 @@ const MANUAL = {
       ]},
     ]},
 
-    { icon:'tools', tab:'Analysis tools', h:'Analysis tools', blocks:[
-      {p:'Click a tool’s main button to activate it; open the ▼ on its right for details (colour, decimals, delete, show/hide). Drag- and “select range” operations are done by dragging across the plot.'},
-      {fig:'tools'},
+    { icon:'calib', tab:'Calibrate', h:'Calibrate', blocks:[
+      {p:'Sets the reference of the horizontal axis (chemical shift δ). Pin a known peak (residual solvent, TMS, …) to its correct δ and the whole spectrum shifts to match. <b>Calibrate first</b> so that every peak, integral and multiplet afterwards is reported at the correct δ.'},
+      {fig:'calib'},
+      {sub:'Common to all tools'},
       {ul:[
-        `<b>Calibrate</b> ${manIc('calib')}: click a reference peak to set δ, or auto-calibrate from a residual solvent peak.`,
-        `<b>Peaks</b> ${manIc('peaks')}: detect by dragging a range, or pick everything above a threshold; delete individual peaks by clicking.`,
-        `<b>Integrals</b> ${manIc('integ')}: drag a range to integrate; adjust height, decimals and colour.`,
-        `<b>Multiplets</b> ${manIc('mult')}: click peaks (or drag a range) to derive the multiplicity and coupling constant J.`,
-        `<b>Assign</b>: a group combining <b>Mark</b> ${manIc('mark')}, <b>Text label</b> ${manIc('text')}, <b>Shade</b> ${manIc('shade')}, <b>Connector</b> (a line between two points) ${manIc('connector')} and <b>Add image</b> ${manIc('image')}.`,
-        `<b>Impurities</b>: from inside the Assign panel, find residual solvent / impurity peaks within a ± ppm tolerance and overlay them on the spectrum.`,
-        `<b>Zoom view</b> ${manIc('zoom')}: drag a δ range to make a <b>zoom inset</b>; adjust frame colour, line style and leader lines.`,
+        'Each tool on the lower toolbar row is <b>activated by clicking its main button</b>; open the <b>▼</b> on its right for the details panel (colour, decimals, delete, show/hide).',
+        'A “drag a range” action means <b>dragging the mouse left–right</b> across the plot to select a region.',
+        `Undo / redo any time with <span class="kbd">Ctrl</span>+<span class="kbd">Z</span> / <span class="kbd">Ctrl</span>+<span class="kbd">Y</span>; press <span class="kbd">Esc</span> to cancel a tool. These tools become available once at least one spectrum is loaded.`,
       ]},
-      {p:`In each tool, ${manIc('trash')} is a delete action and ${manIc('reset')} restores defaults. Undo / redo any time with <span class="kbd">Ctrl</span>+<span class="kbd">Z</span> / <span class="kbd">Ctrl</span>+<span class="kbd">Y</span>.`},
+      {sub:'How to use'},
+      {ul:[
+        `<b>Manual</b> ${manIc('calib')}: activate the tool and <b>click</b> the reference peak. Enter the correct δ (e.g. 7.26 for CDCl₃) in the field and the whole spectrum shifts to place it there.`,
+        '<b>Auto from residual solvent</b>: pick a solvent under “Residual solvent → auto” and the tool finds that residual peak nearby and calibrates automatically. Common deuterated solvents (CDCl₃, DMSO-d₆, C₆D₆ …) are listed.',
+        `<b>Reset</b> ${manIc('reset')}: “Reset calibration” returns to the un-calibrated axis.`,
+      ]},
+      {p:'Tip: choose a sharp, isolated peak as the reference. Pinning TMS to 0 ppm is the most reliable.'},
+    ]},
+
+    { icon:'peaks', tab:'Peaks', h:'Peaks', blocks:[
+      {p:'Detects peak apices and labels their δ. Results are also listed in the “Peaks” tab of the results list.'},
+      {fig:'peaks'},
+      {sub:'Detecting'},
+      {ul:[
+        `<b>Detect within a range</b> ${manIc('peaks')}: activate the tool and <b>drag</b> across the region you want; local maxima inside it are picked as peaks. Handy for picking just one multiplet.`,
+        '<b>Detect all ≥ threshold</b>: the <b>Threshold</b> slider (as a % of the tallest peak) sets the minimum height, and everything above it is picked at once. Raise it if noise is being picked up.',
+      ]},
+      {sub:'Clean up'},
+      {ul:[
+        `<b>Click to delete</b> ${manIc('trash')}: “Select &amp; delete” removes unwanted peaks one click at a time; drag a range or “Clear all” to remove many at once.`,
+        '<b>Colour</b> / <b>label decimals</b>: change the δ-label colour and the number of decimals (1–6).',
+        `<b>Show / hide</b> ${manIc('eye')}: hide the peak labels temporarily (the data stays).`,
+      ]},
+    ]},
+
+    { icon:'integ', tab:'Integrals', h:'Integrals', blocks:[
+      {p:'Measures the area of a selected range to estimate proton ratios. Each range shows an integral curve and a value, also listed in the “Integrals” results tab.'},
+      {fig:'integ'},
+      {sub:'Integrating'},
+      {ul:[
+        `<b>Drag a range to integrate</b> ${manIc('integ')}: activate the tool and <b>drag</b> across a peak (the whole multiplet). The area is computed and the value shown below.`,
+        '<b>Set a reference</b>: make a peak of known proton count (e.g. a 3H methyl) the reference so the others read as a relative ratio (e.g. 2.00 : 3.01). Set the reference / edit values in the results list.',
+      ]},
+      {sub:'Adjusting'},
+      {ul:[
+        '<b>Height</b>: shift the integral curve vertically so it does not overlap the peaks.',
+        '<b>Decimals</b>: number of decimals shown (0–4). <b>Colour</b>: colour of the curve and value.',
+        `<b>Delete</b> ${manIc('trash')} / <b>Show / hide</b> ${manIc('eye')}: delete selected / range / all, and toggle visibility.`,
+      ]},
+    ]},
+
+    { icon:'mult', tab:'Multiplets', h:'Multiplets & J', blocks:[
+      {p:'Derives the multiplet pattern (s / d / t / q / m …) and the coupling constant J. Line spacings give J (Hz) automatically, building an assignment candidate with δ, multiplicity, J and integral.'},
+      {fig:'mult'},
+      {sub:'Analysing'},
+      {ul:[
+        `<b>Select peaks</b> ${manIc('mult')}: activate the tool and <b>click</b> the peaks of one multiplet, or <b>drag</b> across the whole multiplet (detecting peaks first makes this easier).`,
+        '<b>Define</b>: “From selected peaks” computes the multiplicity and J from your selection — even spacings give d / t / q…, irregular ones are treated as m (multiplet).',
+        '<b>Clear selection</b>: start over.',
+      ]},
+      {sub:'Adjusting'},
+      {ul:[
+        '<b>J decimals</b>: decimals shown for J (Hz) (0–3). <b>Colour</b>: multiplet-label colour.',
+        `<b>Delete</b> ${manIc('trash')} / <b>Show / hide</b> ${manIc('eye')}: remove by range, clear all, toggle visibility.`,
+      ]},
+      {p:'The “tree” comb above the peak marks the line positions; the spacing corresponds to J.'},
+    ]},
+
+    { icon:'mark', tab:'Assign', h:'Assign & annotate', blocks:[
+      {p:'A group of tools for annotating the figure. The ▼ on the “Assign” button holds five of them — use these to show structures and assignments in papers and slides.'},
+      {fig:'assign'},
+      {ul:[
+        `<b>Mark</b> ${manIc('mark')}: place a dot (●) above a peak. Colour and size are adjustable; same-colour marks on related peaks show correspondence.`,
+        `<b>Text label</b> ${manIc('text')}: write text (CHO, Ar-H, a …) anywhere; adjust colour and font size.`,
+        `<b>Shade</b> ${manIc('shade')}: <b>drag</b> a range to add a filled band that highlights a region; colour is adjustable.`,
+        `<b>Connector</b> ${manIc('connector')}: a line drawn between two points by <b>dragging</b> — links a peak to a structure or label.`,
+        `<b>Add image</b> ${manIc('image')}: paste a structure image (also with <span class="kbd">Ctrl</span>+<span class="kbd">V</span>); drag to move and resize.`,
+      ]},
+      {p:`Each item offers <b>colour</b>, <b>size</b>, <b>reset to defaults</b> ${manIc('reset')} and <b>show / hide</b> ${manIc('eye')}.`},
+    ]},
+
+    { icon:'impurity', tab:'Impurities', h:'Impurities & residual solvent', blocks:[
+      {p:'Overlays where residual peaks (water, solvent, grease, …) appear in your spectrum. Reached from “Find impurities” inside the Assign panel.'},
+      {fig:'impurity'},
+      {ul:[
+        '<b>Find</b>: pick a solvent / impurity from the list and its known (literature) shift is <b>overlaid as a marker</b> on the current spectrum. A match with a measured peak supports that assignment.',
+        '<b>Tolerance (± ppm)</b>: shifts move a little with the measurement solvent, so you can set how far apart still counts as a match.',
+        '<b>Where it helps</b>: deciding whether a small unknown peak is an impurity, or identifying solvent peaks while following a reaction.',
+      ]},
+      {p:'The overlaid markers are reference values only — confirm the final assignment together with integrals and multiplicities.'},
+    ]},
+
+    { icon:'zoom', tab:'Zoom view', h:'Zoom inset (Zoom view)', blocks:[
+      {p:'Creates a magnified <b>inset</b> of part of the spectrum, so a crowded region or fine splitting can be shown enlarged within the overall figure.'},
+      {fig:'zoomview'},
+      {sub:'Creating'},
+      {ul:[
+        `<b>Drag a δ range</b> ${manIc('zoom')}: drag across the δ range you want to enlarge and a magnified inset is created. Drag it to move, use the handles to resize.`,
+      ]},
+      {sub:'Styling'},
+      {ul:[
+        '<b>Frame colour / width</b>: adjust the inset’s border.',
+        '<b>Leader style</b>: choose the line joining the inset to its source range (solid / dashed / dotted).',
+        `<b>Reset to defaults</b> ${manIc('reset')} / <b>Show / hide</b> ${manIc('eye')}: reset the settings, or toggle insets and leader lines individually.`,
+      ]},
     ]},
 
     { icon:'eye', tab:'Display', h:'Display & appearance', blocks:[
