@@ -126,6 +126,10 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;heigh
 .seg button:last-child{border-right:none}
 .seg button.on{background:var(--trace);color:var(--bg);font-weight:600}
 .seg button:hover:not(.on){color:var(--ink)}
+.tmstyle{display:flex;align-items:center;gap:8px;padding:4px 9px;font-size:11px;color:var(--dim);white-space:nowrap}
+.tmstyle>span:first-child{min-width:74px}
+.tmstyle .seg{flex:1;min-width:142px}
+.tmstyle .seg button{padding:4px 7px;font-size:10.5px}
 select{width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:7px 9px;font-size:12px;cursor:pointer}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .muted{color:var(--faint);font-size:10.5px;line-height:1.6;margin-top:7px}
@@ -236,6 +240,50 @@ main{grid-row:1;position:relative;display:flex;flex-direction:column;background:
 .tmrow input[type=range]{flex:1;min-width:70px;margin-left:auto;accent-color:var(--peak)}
 .tmrow .thrval{font-family:var(--mono);font-size:11px;color:var(--dim);min-width:32px;text-align:right}
 .tmsep{height:1px;background:var(--line);margin:4px 2px}
+/* organized peak menu */
+#tmShift .tmpanel.peak-organized{min-width:min(334px,calc(100vw - 20px));max-width:calc(100vw - 20px);padding:7px;gap:4px}
+#tmInteg .tmpanel.integ-organized{min-width:min(360px,calc(100vw - 20px));max-width:calc(100vw - 20px);padding:7px;gap:4px}
+#tmMult .tmpanel.mult-organized{min-width:min(380px,calc(100vw - 20px));max-width:calc(100vw - 20px);padding:7px;gap:4px}
+.peak-organized .peak-work-heading{display:flex;align-items:center;gap:8px;padding:6px 5px 2px;font-size:12px;font-weight:650;color:var(--ink)}
+.peak-organized .peak-work-heading .tmic{width:17px;height:17px;color:var(--dim)}
+.peak-organized .peak-work-heading .svi{width:17px;height:17px}
+.peak-organized .peak-work-section{display:flex;flex-direction:column;gap:1px}
+.peak-organized .peak-work-section .tmitem{padding:2px 9px 2px 14px;gap:0}
+.peak-organized .peak-work-section .tmitem .tmic{display:none}
+.peak-organized .peak-work-section .tmitem::before{content:'•';flex:0 0 13px;margin-right:4px;color:var(--dim);font-size:14px;line-height:1}
+.peak-organized .peak-work-section .tmrow{padding-left:14px}
+.peak-organized .peak-work-section .tmrow .tmic{display:none}
+.peak-organized .peak-work-section .tmrow::before,.peak-organized .peak-work-section .tmstyle::before{content:'•';flex:0 0 13px;margin-right:4px;color:var(--dim);font-size:14px;line-height:1}
+.peak-organized .peak-work-section .tmstyle{padding-left:14px}
+.peak-organized .peak-work-section .tmtog{padding-left:14px}
+.peak-organized .peak-work-section .tmtog .eyeic{display:none}
+.peak-organized .peak-work-section .tmtoggles{padding:2px 0}
+.peak-organized .peak-work-section .tmtoggles .tmtog::before{content:'•';flex:0 0 13px;margin-right:4px;color:var(--dim);font-size:14px;line-height:1}
+.peak-organized .peak-settings-section .tmrow{display:grid;grid-template-columns:13px 150px minmax(0,1fr) auto;column-gap:4px;align-items:center;padding-left:14px}
+.peak-organized .peak-settings-section .tmrow::before{content:'•';grid-column:1;margin:0}
+.peak-organized .peak-settings-section .tmrow>span[data-i18n]{grid-column:2}
+.peak-organized .peak-settings-section .tmrow input[type=range]{grid-column:3;min-width:0;margin-left:0}
+.peak-organized .peak-settings-section .tmrow .thrval{grid-column:4}
+.peak-organized .peak-settings-section .tmrow input[type=color]{grid-column:4;margin-left:0}
+.peak-organized .peak-settings-section .tmrow select{grid-column:3/5;min-width:0}
+.peak-organized .peak-settings-section .tmstyle{display:grid;grid-template-columns:13px 150px minmax(0,1fr);column-gap:4px;align-items:center;padding-left:14px}
+.peak-organized .peak-settings-section .tmstyle::before{content:'•';grid-column:1;margin:0}
+.peak-organized .peak-settings-section .tmstyle>span:first-child{grid-column:2;min-width:0;color:var(--ink)}
+.peak-organized .peak-settings-section .tmstyle .seg{grid-column:3;min-width:0}
+.peak-organized .peak-settings-section .tmtoggles{padding:2px 0}
+.peak-organized .peak-settings-section .tmtoggles .tmtog{display:flex;align-items:center;justify-content:flex-start;flex:1 1 100%;width:100%;box-sizing:border-box;gap:0;padding:4px 9px 4px 14px;text-align:left}
+.peak-organized .peak-settings-section .tmtoggles .tmtog::before{content:'•';flex:0 0 13px;margin:0 4px 0 0}
+.peak-organized .peak-settings-section .tmtog .eyeic{display:inline-flex;order:3;margin-left:auto}
+.peak-organized .peak-settings-section .tmtog>span:last-child{order:2}
+.peak-organized .peak-settings-section .tmrow,.peak-organized .peak-settings-section .tmstyle,.peak-organized .peak-settings-section .tmtog{font-size:12px;color:var(--ink)}
+.peak-organized .peak-threshold{display:flex;flex-direction:column;gap:1px;padding:1px 0}
+.peak-organized .peak-threshold .tmrow{padding-left:45px}
+.peak-organized .peak-threshold .tmrow::before{content:none}
+.peak-organized .peak-threshold-toggle{padding-left:31px}
+.peak-organized .peak-threshold .tmtog{display:inline-flex;flex:none;padding:2px 6px;white-space:nowrap}
+.peak-organized .peak-threshold .tmtog .eyeic{display:inline-flex}
+.peak-organized .tmtog:focus{outline:none}
+.peak-organized .tmtog:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
 .tmpanel2{flex-direction:row;gap:8px;min-width:455px;padding-top:26px}
 .tmpanel2 .tmcol{display:flex;flex-direction:column;gap:1px;min-width:214px}
 .tmpanel2 .tmcol+.tmcol{border-left:1px solid var(--line);padding-left:8px}
@@ -988,58 +1036,88 @@ html[data-theme="light"] .toolmenu.open .tmpanel{
       </span>
 
       <span class="toolmenu" id="tmShift">
-        <button class="tbtn main ic-btn tbc" id="tPeaks" title=""><span class="tglyph" aria-hidden="true">⋀</span><span class="tb-lbl" data-i18n="tPeaksTxt">Peaks</span></button>        <div class="tmpanel">
-          <button class="tmitem" data-act="tPeaks"><span class="tmic">⋀</span><span data-i18n="actDetect">Detect (drag range)</span></button>
-          <button class="tmitem" data-act="detectThr"><span class="tmic">⋀</span><span data-i18n="actDetectThr">Detect all ≥ threshold</span></button>
-          <div class="tmrow indent"><span class="tmic">⌁</span><span data-i18n="actThreshold">Threshold</span><input type="range" id="thrSlider" min="1" max="50" step="1" value="5"><span class="thrval" id="thrVal">5%</span></div>
+        <button class="tbtn main ic-btn tbc" id="tPeaks" title=""><svg class="svi" viewBox="0 0 16 16"><path d="M2.5 13 6 3.5 8 9l1.6-4L13.5 13"/></svg><span class="tb-lbl" data-i18n="tPeaksTxt">Peaks</span></button>        <div class="tmpanel peak-organized">
+          <section class="peak-work-section">
+            <div class="peak-work-heading"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M2.5 13 6 3.5 8 9l1.6-4L13.5 13"/></svg></span><span data-i18n="peakGroupDetect">Detect peaks</span></div>
+            <button class="tmitem" data-act="tPeaks"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M2.5 13 6 3.5 8 9l1.6-4L13.5 13"/></svg></span><span data-i18n="actDetect">Detect (drag range)</span></button>
+            <button class="tmitem" data-act="detectThr"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M2.5 13 6 3.5 8 9l1.6-4L13.5 13"/></svg></span><span data-i18n="actDetectThr">Detect all ≥ threshold</span></button>
+            <div class="peak-threshold">
+              <div class="tmrow"><span class="tmic">⌁</span><span data-i18n="actThreshold">Threshold</span><input type="range" id="thrSlider" min="1" max="50" step="1" value="5"><span class="thrval" id="thrVal">5%</span></div>
+              <div class="peak-threshold-toggle"><button class="tmtog" id="tgThreshold"><span class="eyeic"><svg class="svi" viewBox="0 0 16 16"><path d="M1.5 8S4 3.8 8 3.8 14.5 8 14.5 8 12 12.2 8 12.2 1.5 8 1.5 8z"/><circle cx="8" cy="8" r="2"/><line class="eyeslash" x1="2.5" y1="13.5" x2="13.5" y2="2.5"/></svg></span><span data-i18n="lblShowThreshold">Threshold line</span></button></div>
+            </div>
+          </section>
           <div class="tmsep"></div>
-          <button class="tmitem erase" data-act="tDelPeak"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M2.5 4.5h11"/><path d="M6 4.5V3h4v1.5"/><path d="M4.1 4.5l.6 8.2a1 1 0 0 0 1 .9h4.6a1 1 0 0 0 1-.9l.6-8.2"/><path d="M6.6 7.2v3.8M9.4 7.2v3.8"/></svg></span><span data-i18n="actDelSelPeak">Select &amp; delete (click a peak)</span></button>
-          <button class="tmitem erase" data-act="tErasePk"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M2.5 4.5h11"/><path d="M6 4.5V3h4v1.5"/><path d="M4.1 4.5l.6 8.2a1 1 0 0 0 1 .9h4.6a1 1 0 0 0 1-.9l.6-8.2"/><path d="M6.6 7.2v3.8M9.4 7.2v3.8"/></svg></span><span data-i18n="actRemoveRange">Remove (drag range)</span></button>
-          <button class="tmitem erase" data-act="clearPk"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M2.5 4.5h11"/><path d="M6 4.5V3h4v1.5"/><path d="M4.1 4.5l.6 8.2a1 1 0 0 0 1 .9h4.6a1 1 0 0 0 1-.9l.6-8.2"/><path d="M6.6 7.2v3.8M9.4 7.2v3.8"/></svg></span><span data-i18n="actClearAll">Clear all</span></button>
+          <section class="peak-work-section">
+            <div class="peak-work-heading"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M2.5 4.5h11"/><path d="M6 4.5V3h4v1.5"/><path d="M4.1 4.5l.6 8.2a1 1 0 0 0 1 .9h4.6a1 1 0 0 0 1-.9l.6-8.2"/><path d="M6.6 7.2v3.8M9.4 7.2v3.8"/></svg></span><span data-i18n="peakGroupDelete">Delete peaks</span></div>
+            <button class="tmitem erase" data-act="tDelPeak"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M2.5 4.5h11"/><path d="M6 4.5V3h4v1.5"/><path d="M4.1 4.5l.6 8.2a1 1 0 0 0 1 .9h4.6a1 1 0 0 0 1-.9l.6-8.2"/><path d="M6.6 7.2v3.8M9.4 7.2v3.8"/></svg></span><span data-i18n="actDelSelPeak">Click a peak to delete</span></button>
+            <button class="tmitem erase" data-act="tErasePk"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M2.5 4.5h11"/><path d="M6 4.5V3h4v1.5"/><path d="M4.1 4.5l.6 8.2a1 1 0 0 0 1 .9h4.6a1 1 0 0 0 1-.9l.6-8.2"/><path d="M6.6 7.2v3.8M9.4 7.2v3.8"/></svg></span><span data-i18n="actRemoveRange">Remove (drag range)</span></button>
+            <button class="tmitem erase" data-act="clearPk"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M2.5 4.5h11"/><path d="M6 4.5V3h4v1.5"/><path d="M4.1 4.5l.6 8.2a1 1 0 0 0 1 .9h4.6a1 1 0 0 0 1-.9l.6-8.2"/><path d="M6.6 7.2v3.8M9.4 7.2v3.8"/></svg></span><span data-i18n="actClearAllPeaks">Delete all peaks</span></button>
+          </section>
           <div class="tmsep"></div>
-          <div class="tmrow indent"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><rect x="2.5" y="2.5" width="11" height="11" rx="2.2"/><path d="M2.5 10l3-3 2.5 2.5L11 6l2.5 2.5"/></svg></span><span data-i18n="lblPeakColor">Peak color</span><input type="color" id="peakColor" value="#B5562A"></div>
-          <div class="tmrow indent"><span class="tmic">.0</span><span data-i18n="lblPeakDigits">Label decimals</span><input type="range" id="pkDigits" min="1" max="6" step="1" value="2"><span class="thrval" id="pkdigv">2</span></div>
-          <div class="tmsep"></div>
-          <div class="tmhead" data-i18n="hdVisibility">Show / hide</div>
-          <div class="tmtoggles">
-            <button class="tmtog" id="tgPeaks"><span class="eyeic"><svg class="svi" viewBox="0 0 16 16"><path d="M1.5 8S4 3.8 8 3.8 14.5 8 14.5 8 12 12.2 8 12.2 1.5 8 1.5 8z"/><circle cx="8" cy="8" r="2"/><line class="eyeslash" x1="2.5" y1="13.5" x2="13.5" y2="2.5"/></svg></span><span data-i18n="lblShowPeaks">Peaks</span></button>
-          </div>
+          <section class="peak-work-section peak-settings-section">
+            <div class="peak-work-heading"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M3 4h10M3 8h10M3 12h10"/><circle cx="6" cy="4" r="1.3"/><circle cx="10" cy="8" r="1.3"/><circle cx="7.5" cy="12" r="1.3"/></svg></span><span data-i18n="peakGroupDisplay">Display settings</span></div>
+            <div class="tmtoggles"><button class="tmtog" id="tgPeaks"><span class="eyeic"><svg class="svi" viewBox="0 0 16 16"><path d="M1.5 8S4 3.8 8 3.8 14.5 8 14.5 8 12 12.2 8 12.2 1.5 8 1.5 8z"/><circle cx="8" cy="8" r="2"/><line class="eyeslash" x1="2.5" y1="13.5" x2="13.5" y2="2.5"/></svg></span><span data-i18n="lblShowPeaksMenu">Show peaks</span></button></div>
+            <div class="tmrow"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><rect x="2.5" y="2.5" width="11" height="11" rx="2.2"/><path d="M2.5 10l3-3 2.5 2.5L11 6l2.5 2.5"/></svg></span><span data-i18n="lblPeakColor">Peak color</span><input type="color" id="peakColor" value="#B5562A"></div>
+            <div class="tmrow"><span class="tmic">.0</span><span data-i18n="lblPeakDigits">Label decimals</span><input type="range" id="pkDigits" min="1" max="6" step="1" value="2"><span class="thrval" id="pkdigv">2</span></div>
+            <div class="tmstyle"><span data-i18n="lblDisplayStyle">Display style</span><div class="seg" id="segPeakStyle"><button class="on" data-v="style1" data-i18n="optStyle1">Style 1</button><button data-v="style2" data-i18n="optStyle2">Style 2</button></div></div>
+          </section>
         </div>
       </span>
 
       <span class="toolmenu" id="tmInteg">
-        <button class="tbtn main ic-btn tbc" id="tInteg" title=""><span class="tglyph" aria-hidden="true">∫</span><span class="tb-lbl" data-i18n="tIntegTxt">Integrals</span></button>        <div class="tmpanel">
-          <button class="tmitem" data-act="tInteg"><span class="tmic">∫</span><span data-i18n="actIntegrate">Integrate (drag range)</span></button>
-          <button class="tmitem erase" data-act="tEraseInt"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M2.5 4.5h11"/><path d="M6 4.5V3h4v1.5"/><path d="M4.1 4.5l.6 8.2a1 1 0 0 0 1 .9h4.6a1 1 0 0 0 1-.9l.6-8.2"/><path d="M6.6 7.2v3.8M9.4 7.2v3.8"/></svg></span><span data-i18n="actRemoveRange">Remove (drag range)</span></button>
-          <button class="tmitem erase" data-act="delInteg"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M2.5 4.5h11"/><path d="M6 4.5V3h4v1.5"/><path d="M4.1 4.5l.6 8.2a1 1 0 0 0 1 .9h4.6a1 1 0 0 0 1-.9l.6-8.2"/><path d="M6.6 7.2v3.8M9.4 7.2v3.8"/></svg></span><span data-i18n="actDelSel">Delete selected</span></button>
-          <button class="tmitem erase" data-act="clearInteg"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M2.5 4.5h11"/><path d="M6 4.5V3h4v1.5"/><path d="M4.1 4.5l.6 8.2a1 1 0 0 0 1 .9h4.6a1 1 0 0 0 1-.9l.6-8.2"/><path d="M6.6 7.2v3.8M9.4 7.2v3.8"/></svg></span><span data-i18n="actClearAll">Clear all</span></button>
+        <button class="tbtn main ic-btn tbc" id="tInteg" title=""><svg class="svi" viewBox="0 0 16 16"><path d="M10 3.1c-.2-.9-1.2-1.1-1.8-.4-.5.6-.5 1.7-.6 3.3-.1 2.7-.1 5.3-.7 6.1-.6.8-1.6.6-1.9-.3"/></svg><span class="tb-lbl" data-i18n="tIntegTxt">Integrals</span></button>        <div class="tmpanel peak-organized integ-organized">
+          <section class="peak-work-section">
+            <div class="peak-work-heading"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M10 3.1c-.2-.9-1.2-1.1-1.8-.4-.5.6-.5 1.7-.6 3.3-.1 2.7-.1 5.3-.7 6.1-.6.8-1.6.6-1.9-.3"/></svg></span><span data-i18n="integGroupCreate">Create integrals</span></div>
+            <button class="tmitem" data-act="tInteg"><span class="tmic"></span><span data-i18n="actIntegrate">Integrate (drag range)</span></button>
+          </section>
           <div class="tmsep"></div>
-          <div class="tmrow indent"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><rect x="2.5" y="2.5" width="11" height="11" rx="2.2"/><path d="M2.5 10l3-3 2.5 2.5L11 6l2.5 2.5"/></svg></span><span data-i18n="lblIntegColor">Integral color</span><input type="color" id="integColor" value="#2E6FA8"></div>
-          <div class="tmrow indent"><span class="tmic">↕</span><span data-i18n="lblIntegPos">Height</span><input type="range" id="integShift" min="-30" max="40" step="2" value="0"></div>
-          <div class="tmrow indent"><span class="tmic">#</span><span data-i18n="lblIntegDigits">Decimals</span><input type="range" id="integDigits" min="0" max="4" step="1" value="3"><span class="thrval" id="idgv">3</span></div>
+          <section class="peak-work-section">
+            <div class="peak-work-heading"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M2.5 4.5h11"/><path d="M6 4.5V3h4v1.5"/><path d="M4.1 4.5l.6 8.2a1 1 0 0 0 1 .9h4.6a1 1 0 0 0 1-.9l.6-8.2"/><path d="M6.6 7.2v3.8M9.4 7.2v3.8"/></svg></span><span data-i18n="integGroupDelete">Delete integrals</span></div>
+            <button class="tmitem erase" data-act="delInteg"><span class="tmic"></span><span data-i18n="actDelSel">Delete selected</span></button>
+            <button class="tmitem erase" data-act="tEraseInt"><span class="tmic"></span><span data-i18n="actRemoveRange">Remove (drag range)</span></button>
+            <button class="tmitem erase" data-act="clearInteg"><span class="tmic"></span><span data-i18n="actClearAllIntegs">Delete all integrals</span></button>
+          </section>
           <div class="tmsep"></div>
-          <div class="tmhead" data-i18n="hdVisibility">Show / hide</div>
-          <div class="tmtoggles">
-            <button class="tmtog" id="tgInteg"><span class="eyeic"><svg class="svi" viewBox="0 0 16 16"><path d="M1.5 8S4 3.8 8 3.8 14.5 8 14.5 8 12 12.2 8 12.2 1.5 8 1.5 8z"/><circle cx="8" cy="8" r="2"/><line class="eyeslash" x1="2.5" y1="13.5" x2="13.5" y2="2.5"/></svg></span><span data-i18n="lblShowIntegs">Integrals</span></button>
-          </div>
+          <section class="peak-work-section peak-settings-section">
+            <div class="peak-work-heading"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M3 4h10M3 8h10M3 12h10"/><circle cx="6" cy="4" r="1.3"/><circle cx="10" cy="8" r="1.3"/><circle cx="7.5" cy="12" r="1.3"/></svg></span><span data-i18n="peakGroupDisplay">Display settings</span></div>
+            <div class="tmtoggles">
+              <button class="tmtog" id="tgInteg"><span class="eyeic"><svg class="svi" viewBox="0 0 16 16"><path d="M1.5 8S4 3.8 8 3.8 14.5 8 14.5 8 12 12.2 8 12.2 1.5 8 1.5 8z"/><circle cx="8" cy="8" r="2"/><line class="eyeslash" x1="2.5" y1="13.5" x2="13.5" y2="2.5"/></svg></span><span data-i18n="lblShowIntegsMenu">Show integrals</span></button>
+              <button class="tmtog on" id="tgIntegCurve"><span class="eyeic"><svg class="svi" viewBox="0 0 16 16"><path d="M1.5 8S4 3.8 8 3.8 14.5 8 14.5 8 12 12.2 8 12.2 1.5 8 1.5 8z"/><circle cx="8" cy="8" r="2"/><line class="eyeslash" x1="2.5" y1="13.5" x2="13.5" y2="2.5"/></svg></span><span data-i18n="lblIntegCurveMenu">Show stair curve</span></button>
+            </div>
+            <div class="tmrow"><span class="tmic"></span><span data-i18n="lblIntegColor">Integral color</span><input type="color" id="integColor" value="#2E6FA8"></div>
+            <div class="tmrow"><span class="tmic"></span><span data-i18n="lblIntegPos">Height</span><input type="range" id="integShift" min="-30" max="40" step="2" value="0"></div>
+            <div class="tmrow"><span class="tmic"></span><span data-i18n="lblIntegDigits">Decimals</span><input type="range" id="integDigits" min="0" max="4" step="1" value="3"><span class="thrval" id="idgv">3</span></div>
+            <div class="tmstyle"><span data-i18n="lblDisplayStyle">Display style</span><div class="seg" id="segIntegStyle"><button class="on" data-v="style1" data-i18n="optStyle1">Style 1</button><button data-v="style2" data-i18n="optStyle2">Style 2</button><button data-v="style3" data-i18n="optStyle3">Style 3</button></div></div>
+          </section>
         </div>
       </span>
 
       <span class="toolmenu" id="tmMult">
-        <button class="tbtn main ic-btn tbc" id="tMult" title=""><svg class="svi" viewBox="0 0 24 24"><line x1="12" y1="3" x2="12" y2="10"/><line x1="12" y1="10" x2="6" y2="14"/><line x1="12" y1="10" x2="18" y2="14"/><line x1="6" y1="14" x2="6" y2="21"/><line x1="18" y1="14" x2="18" y2="21"/></svg><span class="tb-lbl" data-i18n="tMultTxt">Multiplets</span></button>        <div class="tmpanel">
+        <button class="tbtn main ic-btn tbc" id="tMult" title=""><svg class="svi" viewBox="0 0 24 24"><line x1="12" y1="3" x2="12" y2="10"/><line x1="12" y1="10" x2="6" y2="14"/><line x1="12" y1="10" x2="18" y2="14"/><line x1="6" y1="14" x2="6" y2="21"/><line x1="18" y1="14" x2="18" y2="21"/></svg><span class="tb-lbl" data-i18n="tMultTxt">Multiplets</span></button>        <div class="tmpanel peak-organized mult-organized">
+          <section class="peak-work-section">
+            <div class="peak-work-heading"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M8 2.5v3"/><path d="M8 5.5 4 8.8"/><path d="M8 5.5l4 3.3"/><path d="M4 8.8v3.2"/><path d="M12 8.8v3.2"/></svg></span><span data-i18n="multGroupCreate">Create multiplets</span></div>
           <button class="tmitem" data-act="tMult"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M8 2.5v3"/><path d="M8 5.5 4 8.8"/><path d="M8 5.5l4 3.3"/><path d="M4 8.8v3.2"/><path d="M12 8.8v3.2"/></svg></span><span data-i18n="actMultPick">Select peaks (click) / drag range</span></button>
           <button class="tmitem" data-act="defineMult"><span class="tmic">✓</span><span data-i18n="actMultDefine">From selected peaks</span></button>
           <button class="tmitem erase" data-act="clearMultSel"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M2.5 4.5h11"/><path d="M6 4.5V3h4v1.5"/><path d="M4.1 4.5l.6 8.2a1 1 0 0 0 1 .9h4.6a1 1 0 0 0 1-.9l.6-8.2"/><path d="M6.6 7.2v3.8M9.4 7.2v3.8"/></svg></span><span data-i18n="actMultClearSel">Clear selection</span></button>
-          <div class="tmrow indent"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><rect x="2.5" y="2.5" width="11" height="11" rx="2.2"/><path d="M2.5 10l3-3 2.5 2.5L11 6l2.5 2.5"/></svg></span><span data-i18n="lblMultColor">Multiplet color</span><input type="color" id="multColor" value="#7A4A98"></div>
-          <div class="tmrow indent"><span class="tmic">#</span><span data-i18n="lblMultDigits">J decimals</span><input type="range" id="multDigits" min="0" max="3" step="1" value="2"><span class="thrval" id="mdgv">2</span></div>
+          </section>
           <div class="tmsep"></div>
+          <section class="peak-work-section">
+            <div class="peak-work-heading"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M2.5 4.5h11"/><path d="M6 4.5V3h4v1.5"/><path d="M4.1 4.5l.6 8.2a1 1 0 0 0 1 .9h4.6a1 1 0 0 0 1-.9l.6-8.2"/><path d="M6.6 7.2v3.8M9.4 7.2v3.8"/></svg></span><span data-i18n="multGroupDelete">Delete multiplets</span></div>
           <button class="tmitem erase" data-act="tEraseMult"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M2.5 4.5h11"/><path d="M6 4.5V3h4v1.5"/><path d="M4.1 4.5l.6 8.2a1 1 0 0 0 1 .9h4.6a1 1 0 0 0 1-.9l.6-8.2"/><path d="M6.6 7.2v3.8M9.4 7.2v3.8"/></svg></span><span data-i18n="actRemoveRange">Remove (drag range)</span></button>
-          <button class="tmitem erase" data-act="clearMult"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M2.5 4.5h11"/><path d="M6 4.5V3h4v1.5"/><path d="M4.1 4.5l.6 8.2a1 1 0 0 0 1 .9h4.6a1 1 0 0 0 1-.9l.6-8.2"/><path d="M6.6 7.2v3.8M9.4 7.2v3.8"/></svg></span><span data-i18n="actClearAll">Clear all</span></button>
+          <button class="tmitem erase" data-act="clearMult"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M2.5 4.5h11"/><path d="M6 4.5V3h4v1.5"/><path d="M4.1 4.5l.6 8.2a1 1 0 0 0 1 .9h4.6a1 1 0 0 0 1-.9l.6-8.2"/><path d="M6.6 7.2v3.8M9.4 7.2v3.8"/></svg></span><span data-i18n="actClearAllMults">Delete all multiplets</span></button>
+          </section>
           <div class="tmsep"></div>
-          <div class="tmhead" data-i18n="hdVisibility">Show / hide</div>
+          <section class="peak-work-section peak-settings-section">
+          <div class="peak-work-heading"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M3 4h10M3 8h10M3 12h10"/><circle cx="6" cy="4" r="1.3"/><circle cx="10" cy="8" r="1.3"/><circle cx="7.5" cy="12" r="1.3"/></svg></span><span data-i18n="peakGroupDisplay">Display settings</span></div>
           <div class="tmtoggles">
-            <button class="tmtog" id="tgMult"><span class="eyeic"><svg class="svi" viewBox="0 0 16 16"><path d="M1.5 8S4 3.8 8 3.8 14.5 8 14.5 8 12 12.2 8 12.2 1.5 8 1.5 8z"/><circle cx="8" cy="8" r="2"/><line class="eyeslash" x1="2.5" y1="13.5" x2="13.5" y2="2.5"/></svg></span><span data-i18n="tabMult">Multiplets</span></button>
+            <button class="tmtog" id="tgMult"><span class="eyeic"><svg class="svi" viewBox="0 0 16 16"><path d="M1.5 8S4 3.8 8 3.8 14.5 8 14.5 8 12 12.2 8 12.2 1.5 8 1.5 8z"/><circle cx="8" cy="8" r="2"/><line class="eyeslash" x1="2.5" y1="13.5" x2="13.5" y2="2.5"/></svg></span><span data-i18n="lblShowMultsMenu">Show multiplets</span></button>
+            <button class="tmtog" id="tgMultSources"><span class="eyeic"><svg class="svi" viewBox="0 0 16 16"><path d="M1.5 8S4 3.8 8 3.8 14.5 8 14.5 8 12 12.2 8 12.2 1.5 8 1.5 8z"/><circle cx="8" cy="8" r="2"/><line class="eyeslash" x1="2.5" y1="13.5" x2="13.5" y2="2.5"/></svg></span><span data-i18n="lblMultSourcesMenu">Show source peak δ</span></button>
           </div>
+          <div class="tmrow"><span class="tmic"></span><span data-i18n="lblMultColor">Multiplet color</span><input type="color" id="multColor" value="#7A4A98"></div>
+          <div class="tmrow"><span class="tmic"></span><span data-i18n="lblMultDigits">J decimals</span><input type="range" id="multDigits" min="0" max="3" step="1" value="2"><span class="thrval" id="mdgv">2</span></div>
+          <div class="tmrow"><span class="tmic"></span><span data-i18n="lblMultJStyle">Label display</span><select id="multJStyle"><option value="full" data-i18n="optMultJFull">d + J = X Hz</option><option value="inline" data-i18n="optMultJInline">J = X Hz (d)</option><option value="jonly" data-i18n="optMultJOnly">J = X Hz</option><option value="value" data-i18n="optMultJValue">d + X (number only)</option></select></div>
+          <div class="tmstyle"><span data-i18n="lblTreeStyle">Tree style</span><div class="seg" id="segMultStyle"><button class="on" data-v="style1" data-i18n="optStyle1">Style 1</button><button data-v="style2" data-i18n="optStyle2">Style 2</button></div></div>
+          </section>
         </div>
       </span>
 
@@ -1194,11 +1272,14 @@ const I18N={
   lblBg:"Background",
   tCalib:"⌖ Calibrate", tCalibTxt:"Calibrate", tMultTxt:"Multiplets", tPeaks:"⋀ Pick Peaks", tInteg:"∫ Integrate", tMult:"⋔ Multiplets", tAssign:"✎ Assign",
   tPeaksMain:"⋀ Peaks", tIntegMain:"∫ Integrals", tPeaksTxt:"Peaks", tIntegTxt:"Integrals", lblResults:"Results list",
-  actDetect:"Detect (drag range)", actThreshold:"Threshold", actDetectThr:"Detect all ≥ threshold", actRemoveRange:"Remove (drag range)", actClearAll:"Clear all",
-  actDelSelPeak:"Select & delete (click a peak)",
+  actDetect:"Detect (drag range)", actThreshold:"Threshold", actDetectThr:"Detect all ≥ threshold", lblShowThreshold:"Show threshold on spectrum", actRemoveRange:"Remove (drag range)", actClearAll:"Clear all",
+  peakGroupDetect:"Detect peaks", peakGroupDelete:"Delete peaks", peakGroupDisplay:"Display settings", actDelSelPeak:"Click a peak to delete", actClearAllPeaks:"Delete all peaks", lblShowPeaksMenu:"Show peaks",
+  integGroupCreate:"Create integrals", integGroupDelete:"Delete integrals", actClearAllIntegs:"Delete all integrals", lblShowIntegsMenu:"Show integrals", lblIntegCurveMenu:"Show stair curve",
+  multGroupCreate:"Create multiplets", multGroupDelete:"Delete multiplets", actClearAllMults:"Delete all multiplets", lblShowMultsMenu:"Show multiplets", lblMultSourcesMenu:"Show source peak δ",
   actIntegrate:"Integrate (drag range)", actDelSel:"Delete selected", actMark:"Mark", actText:"Text label",
-  actMultPick:"Select peaks (click) / drag range", actMultDefine:"From selected peaks", actMultClearSel:"Clear selection", lblMultColor:"Multiplet color", lblMultDigits:"J decimals", ttEraseMult:"Drag a region to remove multiplets there", msgMultSplit:"Excluded distant peaks; analyzed the largest cluster", msgMultBigJ:"Coupling looks too large — the range may span separate signals",
+  actMultPick:"Select peaks (click) / drag range", actMultDefine:"From selected peaks", actMultClearSel:"Clear selection", lblMultColor:"Multiplet color", lblMultDigits:"J decimals", lblMultJStyle:"Label display", optMultJFull:"d + J = X Hz", optMultJInline:"J = X Hz (d)", optMultJOnly:"J = X Hz", optMultJValue:"d + X (number only)", lblTreeStyle:"Tree style", lblMultSources:"Source peak δ", ttEraseMult:"Drag a region to remove multiplets there", msgMultSplit:"Excluded distant peaks; analyzed the largest cluster", msgMultBigJ:"Coupling looks too large — the range may span separate signals",
   lblPeakColor:"Peak color", lblIntegColor:"Integral color", lblIntegPos:"Height", lblIntegDigits:"Decimals", lineColorLbl:"Color",
+  lblDisplayStyle:"Display style", optStyle1:"Style 1", optStyle2:"Style 2", optStyle3:"Style 3", lblIntegCurve:"Stair curve",
   tErasePk:"⌫⋀ Reset peaks", tEraseInt:"⌫∫ Reset integrals", btnResetDef:"Reset to defaults",
   optOverlay:"Overlay", optStacked:"Stacked", lblLayout:"Layout", lblOverflow:"Allow peak overflow", lblModeHint:"Real = phased absorption (normal) · Magnitude = phase-independent, always positive", toolNeedOne:"No spectrum visible",
   ttErasePk:"Drag a region to remove peaks & multiplets there", ttEraseInt:"Drag a region to remove integrals there",
@@ -1290,11 +1371,14 @@ const I18N={
   lblBg:"背景色",
   tCalib:"⌖ 校正", tCalibTxt:"校正", tMultTxt:"多重線", tPeaks:"⋀ ピーク検出", tInteg:"∫ 積分", tMult:"⋔ 多重線", tAssign:"✎ 帰属",
   tPeaksMain:"⋀ ピーク検出", tIntegMain:"∫ 積分", tPeaksTxt:"ピーク検出", tIntegTxt:"積分", lblResults:"結果一覧",
-  actDetect:"範囲選択で検出", actThreshold:"閾値", actDetectThr:"閾値以上を全検出", actRemoveRange:"範囲選択で削除", actClearAll:"全て削除",
-  actDelSelPeak:"選択して削除（ピークをクリック）",
+  actDetect:"範囲選択で検出", actThreshold:"閾値", actDetectThr:"閾値以上を全検出", lblShowThreshold:"スペクトルに閾値を表示", actRemoveRange:"範囲選択で削除", actClearAll:"全て削除",
+  peakGroupDetect:"ピークを検出する", peakGroupDelete:"ピークを削除する", peakGroupDisplay:"表示設定", actDelSelPeak:"ピークをクリックして削除", actClearAllPeaks:"すべてのピークを削除", lblShowPeaksMenu:"ピークを表示",
+  integGroupCreate:"積分する", integGroupDelete:"積分を削除する", actClearAllIntegs:"すべての積分を削除", lblShowIntegsMenu:"積分を表示", lblIntegCurveMenu:"階段カーブを表示",
+  multGroupCreate:"多重線を作成する", multGroupDelete:"多重線を削除する", actClearAllMults:"すべての多重線を削除", lblShowMultsMenu:"多重線を表示", lblMultSourcesMenu:"元ピークの δ を表示",
   actIntegrate:"範囲選択で積分", actDelSel:"選択した積分を削除", actMark:"マーク", actText:"テキストラベル",
-  actMultPick:"ピークを選択（クリック）／範囲ドラッグ", actMultDefine:"選択したピークから作成", actMultClearSel:"選択をクリア", lblMultColor:"多重線の色", lblMultDigits:"J小数桁", ttEraseMult:"範囲をドラッグして多重線を消去", msgMultSplit:"離れたピークを除外し、最も大きな一群で解析しました", msgMultBigJ:"結合定数が大きすぎます。別シグナルをまたいだ範囲かもしれません",
+  actMultPick:"ピークを選択（クリック）／範囲ドラッグ", actMultDefine:"選択したピークから作成", actMultClearSel:"選択をクリア", lblMultColor:"多重線の色", lblMultDigits:"J小数桁", lblMultJStyle:"ラベルの表示", optMultJFull:"d と J = X Hz", optMultJInline:"J = X Hz (d)", optMultJOnly:"J = X Hz", optMultJValue:"d と X（数値のみ）", lblTreeStyle:"ツリーの形状", lblMultSources:"元ピークの δ", ttEraseMult:"範囲をドラッグして多重線を消去", msgMultSplit:"離れたピークを除外し、最も大きな一群で解析しました", msgMultBigJ:"結合定数が大きすぎます。別シグナルをまたいだ範囲かもしれません",
   lblPeakColor:"ピークの色", lblIntegColor:"積分の色", lblIntegPos:"高さ", lblIntegDigits:"小数桁", lineColorLbl:"色",
+  lblDisplayStyle:"表示スタイル", optStyle1:"スタイル1", optStyle2:"スタイル2", optStyle3:"スタイル3", lblIntegCurve:"階段カーブ",
   tErasePk:"⌫⋀ ピーク消去", tEraseInt:"⌫∫ 積分消去", btnResetDef:"デフォルトに戻す",
   optOverlay:"重ね", optStacked:"並べる", lblLayout:"レイアウト", lblOverflow:"ピークの貫通を許可", lblModeHint:"実部＝位相補正した通常の表示／絶対値＝位相に依存せず常に正（線幅は広め）", toolNeedOne:"スペクトルが表示されていません",
   ttErasePk:"範囲をドラッグしてピーク・多重線を消去", ttEraseInt:"範囲をドラッグして積分を消去",
@@ -1493,15 +1577,15 @@ function paletteColors(name, n){
 // preview swatch strip (6 samples) for a palette name
 function paletteSwatch(name){ return paletteColors(name,6); }
 const DEFAULTS={lineW:1.1, wheelSens:1, wheelInertia:false, wheelInvert:false, hscroll:true, axisPad:56, baseGap:0.035,
-  fontScale:1, nameScale:1, axisScale:1, markSize:4.6, markColor:'#0E6E7E', shadeColor:'#D33A2C', textColor:null, textSize:10.5, lineColor:null, integDigits:3, multColor:null, multDigits:2, plotFont:'mono', ppmDigits:2, pkDigits:2,
-  zoomBorderColor:null, zoomBorderWidth:1, zoomLeaderStyle:'dashed'};
+  fontScale:1, nameScale:1, axisScale:1, markSize:4.6, markColor:'#0E6E7E', shadeColor:'#D33A2C', textColor:null, textSize:10.5, lineColor:null, integDigits:3, multColor:null, multDigits:2, multJStyle:'full', multStyle:'style1', plotFont:'mono', ppmDigits:2, pkDigits:2,
+  zoomBorderColor:null, zoomBorderWidth:1, zoomLeaderStyle:'dashed', peakStyle:'style1', integStyle:'style1', showIntegCurve:true};
 const S={ spectra:[], active:-1, view:{pHi:1,pLo:0}, yscale:1, tool:null,
   lineW:1.1, wheelSens:1, wheelInertia:false, wheelInvert:false, hscroll:true, selInteg:-1, selImg:-1, selZoom:-1,
   selPeak:-1, selPeaks:[], selMults:[], thr:0.05, axisPad:56, baseGap:0.035, integShift:0,
-  peakColor:null, integColor:null, multColor:null, multDigits:2,
+  peakColor:null, integColor:null, peakStyle:'style1', integStyle:'style1', showIntegCurve:true, multColor:null, multDigits:2, multJStyle:'full', multStyle:'style1', showMultSources:false,
   markColor:'#0E6E7E', shadeColor:'#D33A2C', markSize:4.6, textColor:null, textSize:10.5, lineColor:null, integDigits:3, showInsets:true, showNames:true, showPeaks:true, showIntegs:true, showShades:true, showMarks:true, showText:true,
   resTab:'peaks', asgSub:'text', docked:true, nextColor:0, layout:'stack', palette:'wbHC', monoBase:'#0E6E7E', ppmDigits:2,
-  pkDigits:2, showMults:true, showJTree:true, showLanes:false, laneOverflow:false, showLines:true, showZooms:true, lines:[], zooms:[],
+  pkDigits:2, showMults:true, showJTree:true, showThresholdLine:true, showLanes:false, laneOverflow:false, showLines:true, showZooms:true, lines:[], zooms:[],
   fontScale:1, nameScale:1, axisScale:1, plotFont:'mono', showMinimap:false, zoomLeaders:true,
   zoomBorderColor:null, zoomBorderWidth:1, zoomLeaderStyle:'dashed',
   customPalette:['#1f3a93','#9e2b25','#117a4d','#8a5a00','#6a1b8a'],
@@ -1837,6 +1921,7 @@ function loadImageFile(blob){
   rd.onload=()=>{
     const img=new Image();
     img.onload=()=>{
+      pushUndo();
       let w=img.width,h=img.height; const mx=Math.max(w,h);
       if(mx>800){ // downscale to be kind to localStorage
         const k=800/mx, c=document.createElement('canvas');
@@ -1880,6 +1965,7 @@ function keyOutBg(srcURL, tol){
 }
 async function toggleImgBg(sp,k){
   const rec=imgsOf(sp)[k]; if(!rec) return;
+  pushUndo();
   if(rec.bgRemoved){                                  // revert to the original
     if(rec.origSrc){ rec.src=rec.origSrc; delete rec.origSrc; }
     rec.bgRemoved=false; delete IMGCACHE[rec.id]; saveAnnot(sp); renderImgs(); draw(); return;
@@ -1997,7 +2083,8 @@ function renderImgs(){
 /* ===================== canvas ===================== */
 const cv=document.getElementById('cv'), ctx=cv.getContext('2d'), wrap=document.getElementById('cwrap');
 let W=0,H=0,DPR=1; const PADL=16,PADR=16,PADT=14, MINIMAP_H=40;
-function PADB(){ const axExtra=Math.max(0,((S.axisScale||1)-1))*30; return (S.axisPad||56) + axExtra + (S.showMinimap? MINIMAP_H : 0); }
+function PADB(){ const axExtra=Math.max(0,((S.axisScale||1)-1))*30;
+  return (S.axisPad||56) + axExtra + (S.showMinimap? MINIMAP_H : 0); }
 function resize(){ DPR=window.devicePixelRatio||1; W=wrap.clientWidth; H=wrap.clientHeight;
   cv.width=W*DPR; cv.height=H*DPR; ctx.setTransform(DPR,0,0,DPR,0,0); draw(); }
 window.addEventListener('resize',resize);
@@ -2060,12 +2147,33 @@ function laneInfo(){
 }
 function geomFor(sp, li){
   const top0=curTop();
-  if(li.mode==='stack'){ const k=li.vs.indexOf(sp); const top=top0+k*li.laneH;
-    return {top, base:top+li.laneH*0.90, full:li.laneH*0.78}; }
+  const style2Peak=!VP && S.showPeaks && S.peakStyle==='style2';
+  const style2Integ=!VP && S.showIntegs && S.integStyle==='style2';
+  const style3Integ=!VP && S.showIntegs && S.integStyle==='style3';
+  const bandInteg=style2Integ||style3Integ;
+  // style3 band: sized from the longest value label so the rotated number always
+  // has clear air below (tick + leader + text + pads + generous bottom margin,
+  // everything tracking fontScale so big labels don't look squeezed)
+  const integ3Band=laneH=>{
+    const digs=S.integDigits??3, k=(S.fontScale||1);
+    let mx=0; (sp.integrals||[]).forEach(ig=>{ if(!ig.hidden)
+      mx=Math.max(mx,(ig.rel.toFixed(digs)+(ig.norm>0?' *':'')).length); });
+    if(!mx) mx=digs+2;
+    return Math.min(Math.max(64, 8+(7+9+mx*6.3+6+26)*k), laneH*0.45); };
+  if(li.mode==='stack'){ const k=li.vs.indexOf(sp), laneH=li.laneH, top=top0+k*laneH, bottom=top+laneH;
+    const peakBand=style2Peak?Math.min(82,laneH*0.32):0;
+    const integBand=style2Integ?Math.min(56,laneH*0.20):style3Integ?integ3Band(laneH):0;
+    const base=bandInteg?bottom-integBand:top+laneH*0.90;
+    const full=(style2Peak||bandInteg)?Math.max(12,Math.min(laneH*0.78,base-top-peakBand-6)):laneH*0.78;
+    return {top, bottom, base, full, peakBand, integBand}; }
   // single spectrum (overlay): pull baseline up off the δ-axis so it isn't cramped
-  const gap = (S.baseGap==null?0.035:S.baseGap);
-  const baseF = (li.vs.length===1) ? (1-gap) : 1.0;
-  return {top:top0, base:top0+plotH()*baseF, full:plotH()*0.88};
+  const laneH=plotH(), bottom=top0+laneH, gap=(S.baseGap==null?0.035:S.baseGap);
+  const peakBand=style2Peak?Math.min(88,laneH*0.28):0;
+  const integBand=style2Integ?Math.min(58,laneH*0.16):style3Integ?integ3Band(laneH):0;
+  const baseF=(li.vs.length===1)?(1-gap):1.0;
+  const base=bandInteg?bottom-integBand:top0+laneH*baseF;
+  const full=(style2Peak||bandInteg)?Math.max(20,Math.min(laneH*0.88,base-top0-peakBand-8)):laneH*0.88;
+  return {top:top0, bottom, base, full, peakBand, integBand};
 }
 function ysc(sp){ const base=(sp&&sp.yscale)||1; return (VP&&VP.vmul)?base*VP.vmul:base; }
 function valueAtY(sp,y){ const g=geomFor(sp,laneInfo());
@@ -2134,6 +2242,7 @@ function drawJTrees(){
     if(m.center<VW.pLo || m.center>VW.pHi) return;
     const X = hz => ppmToX(sp.sr + hz/mhz);
     const cHz=(m.center - sp.sr)*mhz;
+    const st2 = S.multStyle==='style2';
     // build levels of node frequencies (Hz): largest J at top; a group of count c splits into (c+1) lines
     let levels=[[cHz]];
     groups.forEach(g=>{ const prev=levels[levels.length-1], nxt=[];
@@ -2158,16 +2267,26 @@ function drawJTrees(){
     // leaf x extent (for right-aligned J labels)
     let maxX=-1e9, minX=1e9;
     levels[levels.length-1].forEach(h=>{ const xx=X(h); if(xx>maxX)maxX=xx; if(xx<minX)minX=xx; });
-    // top stem + stacked labels (mult above the stem, centre δ above that — spaced by font size)
+    // top stem + stacked labels; a compact label style can hide the separate multiplet symbol
     const cX=X(cHz);
-    ctx.beginPath(); ctx.moveTo(cX, topY-6); ctx.lineTo(cX, topY); ctx.stroke();
+    // style2: one uniform vertical length used for the stem, each node's stub, and the leaf feet;
+    // the diagonals get the remaining ~half of the level, so they read ~50% shorter.
+    const vseg=levelH*0.5;
+    ctx.beginPath(); ctx.moveTo(cX, topY-(st2?vseg:6)); ctx.lineTo(cX, topY); ctx.stroke();
     const multBaseY = topY - 8;
     const centerBaseY = multBaseY - fpx*0.95 - 2;
-    ctx.fillStyle=inkF; ctx.textAlign='center'; ctx.font=plotFont(11,'600');
-    ctx.fillText(m.mult, cX, multBaseY);
-    ctx.font=plotFont(9.5); ctx.fillStyle=hexA(mcol,.7);
+    const labelStyle=['full','inline','jonly','value'].includes(S.multJStyle)?S.multJStyle:'full';
+    if(labelStyle==='full'||labelStyle==='value'){
+      ctx.fillStyle=inkF; ctx.textAlign='center'; ctx.font=plotFont(11,'600');
+      ctx.fillText(m.mult, cX, multBaseY);
+    }
+    // use the exact same font the peak-detection δ labels use (peak style2 shrinks to 8.5 when the
+    // lane is crowded: band<48 → 8.5 else 10; peak style1 / insets leave peakBand=0 → 10)
+    ctx.font=plotFont(Math.max(22, g.peakBand||64)<48 ? 8.5 : 10); ctx.fillStyle=S.peakColor||css('--peak');   // same color AND full opacity as the peak δ labels
     ctx.fillText(fmtPpm(m.center), cX, centerBaseY);
-    // brackets level by level (each group splits a parent into c+1 equally-spaced children)
+    // connectors level by level (each group splits a parent into c+1 equally-spaced children).
+    // style1: horizontal bracket + vertical prongs. style2: the same tree, but the horizontal
+    // bracket is replaced by straight diagonals running from the parent node to each child.
     let lastJY=-1e9;
     for(let i=0;i<k;i++){
       const yP=topY+i*levelH, yC=topY+(i+1)*levelH, ymid=yP+levelH*0.5;
@@ -2175,27 +2294,36 @@ function drawJTrees(){
       parents.forEach(h=>{
         const px=X(h);
         const childXs=[]; for(let q=0;q<=g.count;q++) childXs.push(X(h + J*(q - g.count/2)));
-        const minc=Math.min(...childXs), maxc=Math.max(...childXs);
         ctx.beginPath();
-        ctx.moveTo(px, yP); ctx.lineTo(px, ymid);                 // stub down from parent
-        ctx.moveTo(minc, ymid); ctx.lineTo(maxc, ymid);           // horizontal bracket over all children
-        childXs.forEach(cx=>{ ctx.moveTo(cx, ymid); ctx.lineTo(cx, yC); });  // a prong down to each child
+        if(st2){
+          ctx.moveTo(px, yP); ctx.lineTo(px, yP+vseg);                            // short uniform stub below the parent
+          childXs.forEach(cx=>{ ctx.moveTo(px, yP+vseg); ctx.lineTo(cx, yC); });   // shortened diagonal to each child
+        } else {
+          const minc=Math.min(...childXs), maxc=Math.max(...childXs);
+          ctx.moveTo(px, yP); ctx.lineTo(px, ymid);                 // stub down from parent
+          ctx.moveTo(minc, ymid); ctx.lineTo(maxc, ymid);           // horizontal bracket over all children
+          childXs.forEach(cx=>{ ctx.moveTo(cx, ymid); ctx.lineTo(cx, yC); });  // a prong down to each child
+        }
         ctx.stroke();
       });
       // J label for this level (right column; nudged down if it would collide with the previous one)
       let jy=ymid+jpx*0.35; if(jy < lastJY + jpx*1.15) jy=lastJY + jpx*1.15; lastJY=jy;
       ctx.fillStyle=inkF; ctx.textAlign='left'; ctx.font=plotFont(9.5);
-      ctx.fillText(J.toFixed(S.multDigits??2), maxX+8, jy);
+      const jValue=J.toFixed(S.multDigits??2);
+      const jText=labelStyle==='value' ? jValue : 'J = '+jValue+' Hz'+(labelStyle==='inline'&&i===0?' ('+m.mult+')':'');
+      ctx.fillText(jText, maxX+8, jy);
     }
-    // leaves: short feet + faint guide down to the peak tops
+    // leaves: short feet only — no dashed guide lines are drawn on the spectrum
     const leaves=levels[levels.length-1];
+    const footH=st2?vseg:11*fsc;
     ctx.strokeStyle=ink;
     leaves.forEach(h=>{ const xx=X(h);
-      ctx.beginPath(); ctx.moveTo(xx, topY+k*levelH); ctx.lineTo(xx, topY+k*levelH+5); ctx.stroke(); });
-    ctx.strokeStyle=hexA(mcol,.18); ctx.setLineDash([2,3]);
-    leaves.forEach(h=>{ const xx=X(h);
-      ctx.beginPath(); ctx.moveTo(xx, topY+k*levelH+5); ctx.lineTo(xx, pkTopY-2); ctx.stroke(); });
-    ctx.setLineDash([]);
+      ctx.beginPath(); ctx.moveTo(xx, topY+k*levelH); ctx.lineTo(xx, topY+k*levelH+footH); ctx.stroke(); });
+    if(S.showMultSources && Array.isArray(m.lines) && m.lines.length){
+      const sources='δ: '+m.lines.map(v=>fmtPpm(v)).join(', ');
+      ctx.fillStyle=hexA(S.peakColor||css('--peak'),.9); ctx.textAlign='left'; ctx.font=plotFont(8.5);
+      ctx.fillText(sources,maxX+8,lastJY+jpx*1.35);
+    }
     ctx.restore();
   });
   }
@@ -2229,7 +2357,10 @@ function drawZooms(){
   ZBOXES=[]; REGBOXES=[];
   if(!S.showZooms) return;
   if(S.selZoom>=(S.zooms||[]).length) S.selZoom=-1;
-  const vs=visibleSpectra(); if(!vs.length) return;
+  // Zoom insets are a single-spectrum feature. Keep the saved insets so they
+  // can reappear when the view returns to one spectrum, but neither draw nor
+  // expose hit targets while multiple spectra are visible.
+  const vs=visibleSpectra(); if(vs.length!==1) return;
   (S.zooms||[]).forEach((z,k)=>{
     const x=z.x, y=z.y, w=z.w, h=z.h;
     ZBOXES.push({k,x,y,w,h});
@@ -2482,7 +2613,46 @@ function renderContent(opts){
     if(!sp.mag) continue;
     const d=dispOf(sp), g=geomFor(sp,li), sy=v=>g.base-(v/sp.gmax)*g.full*ysc(sp);
     const lt=g.top, lb=g.base, lh=lb-lt;
+    // Project the same absolute threshold used by "Detect all ≥ threshold" onto
+    // the active spectrum. In stacked mode only the active lane is marked,
+    // matching the target of the menu action.
+    const peakPanel=document.getElementById('tmShift');
+    const peakContext = S.tool==='tPeaks' || (peakPanel && (peakPanel.classList.contains('open') || peakPanel.classList.contains('floating')));
+    if(sp===A() && S.showThresholdLine && peakContext){
+      let gmx=1e-9; for(let i=0;i<sp.N;i++) if(d[i]>gmx) gmx=d[i];
+      const ty=Math.max(lt+2,Math.min(lb-2,sy(gmx*S.thr)));
+      const tc=S.peakColor||css('--peak');
+      ctx.save(); ctx.strokeStyle=hexA(tc,.82); ctx.lineWidth=1.1; ctx.setLineDash([6,5]);
+      ctx.beginPath(); ctx.moveTo(XL,ty+.5); ctx.lineTo(XR,ty+.5); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle=tc; ctx.textAlign='right'; ctx.font=plotFont(9,'600');
+      ctx.fillText((LANG==='ja'?'閾値 ':'threshold ')+Math.round(S.thr*100)+'%',XR-4,Math.max(lt+11,ty-4));
+      ctx.restore();
+    }
     if(sp===A() && S.selInteg>=(sp.integrals||[]).length) S.selInteg=-1;
+    // Style 3: pre-compute the x-position of each value box so neighbours never
+    // overlap — boxes slide sideways off their region center and the leader
+    // curves absorb the offset (Delta-style fan-out).
+    let integ3Lay=null;
+    if(S.showIntegs && S.integStyle==='style3' && !VP){
+      // wall half-gap: half the rotated glyph height + a side margin, so the
+      // number sits clearly inside the box ( |  a  | , not |a| )
+      ctx.font=plotFont(10);
+      const gm=ctx.measureText('0.0');
+      const glyphH=(gm.actualBoundingBoxAscent||7)+(gm.actualBoundingBoxDescent||2);
+      const nH=glyphH/2+5*(S.fontScale||1), sep=2*nH+4, items=[];
+      (sp.integrals||[]).forEach((ig,i)=>{ if(ig.hidden) return;
+        const xa=ppmToX(ig.a), xb=ppmToX(ig.b);
+        const x1=Math.min(xa,xb), x2=Math.max(xa,xb);
+        if(x2<XL||x1>XR) return;
+        items.push({i, cx:(Math.max(XL,x1)+Math.min(XR,x2))/2}); });
+      items.sort((a,b)=>a.cx-b.cx);
+      items.forEach((o,j)=>{ o.lx = j? Math.max(o.cx, items[j-1].lx+sep) : o.cx; });
+      if(items.length){
+        items[items.length-1].lx=Math.min(items[items.length-1].lx, XR-nH-2);
+        for(let j=items.length-2;j>=0;j--) items[j].lx=Math.min(items[j].lx, items[j+1].lx-sep);
+      }
+      integ3Lay={}; items.forEach(o=>{ integ3Lay[o.i]=o.lx; });
+    }
     if(S.showIntegs) (sp.integrals||[]).forEach((ig,kIg)=>{
       if(ig.hidden) return;
       const igCol=S.integColor||css('--integ');
@@ -2497,17 +2667,61 @@ function renderContent(opts){
         ctx.fillRect(x1-2,lt,4,8); ctx.fillRect(x2-2,lt,4,8);
       }
       let ia=idxAtPpm(sp,ig.a),ib=idxAtPpm(sp,ig.b); if(ia>ib){const t=ia;ia=ib;ib=t;}
-      let acc=0,tot=0; for(let i=ia;i<=ib;i++) tot+=Math.max(0,d[i]);
       const shift=(S.integShift||0)*lh;
-      ctx.strokeStyle=igCol; ctx.lineWidth=1.3; ctx.beginPath();
-      const yA=lt+6+shift,yB=lt+lh*0.42+shift; let f=true;
-      for(let i=ia;i<=ib;i++){ acc+=Math.max(0,d[i]); const x=ppmToX(ppmAt(sp,i));
-        const yy=tot>0?yB-(yB-yA)*(acc/tot):yB; if(f){ctx.moveTo(x,yy);f=false;}else ctx.lineTo(x,yy); }
-      ctx.stroke();
-      ctx.fillStyle=igCol; ctx.textAlign='center'; ctx.font=plotFont(11);
-      ctx.fillText(ig.rel.toFixed(S.integDigits??3),(x1+x2)/2,lt+lh*0.46+shift);
-      if(ig.norm>0){ ctx.font=plotFont(9); ctx.fillStyle=hexA(igCol,.75);
-        ctx.fillText('('+t('refTag')+')',(x1+x2)/2,lt+lh*0.46+12+shift); }
+      if(S.showIntegCurve){
+        let acc=0,tot=0; for(let i=ia;i<=ib;i++) tot+=Math.max(0,d[i]);
+        ctx.strokeStyle=igCol; ctx.lineWidth=1.3; ctx.beginPath();
+        const yA=lt+6+shift,yB=lt+lh*0.42+shift; let f=true;
+        for(let i=ia;i<=ib;i++){ acc+=Math.max(0,d[i]); const x=ppmToX(ppmAt(sp,i));
+          const yy=tot>0?yB-(yB-yA)*(acc/tot):yB; if(f){ctx.moveTo(x,yy);f=false;}else ctx.lineTo(x,yy); }
+        ctx.stroke();
+      }
+      if(S.integStyle==='style2' && !VP){
+        const bx1=Math.max(XL,x1), bx2=Math.min(XR,x2), by=lb+8;
+        ctx.strokeStyle=igCol; ctx.lineWidth=1.3; ctx.beginPath();
+        // horizontal span with end ticks crossing the line on both sides (not just downward)
+        const tick=2.5;
+        ctx.moveTo(bx1,by); ctx.lineTo(bx2,by);
+        ctx.moveTo(bx1,by-tick); ctx.lineTo(bx1,by+tick);
+        ctx.moveTo(bx2,by-tick); ctx.lineTo(bx2,by+tick);
+        ctx.stroke();
+        ctx.save(); ctx.translate((bx1+bx2)/2,g.bottom-4); ctx.rotate(-Math.PI/2);
+        ctx.fillStyle=igCol; ctx.textAlign='left'; ctx.textBaseline='middle'; ctx.font=plotFont(10);
+        ctx.fillText(ig.rel.toFixed(S.integDigits??3)+(ig.norm>0?' *':''),0,0); ctx.restore();
+      } else if(S.integStyle==='style3' && !VP){
+        // Style 3 (Delta-like), drawn under the lane baseline: a vertical tick
+        // at each integration-region edge, a straight leader diagonal down to a
+        // narrow box of two vertical walls flanking the rotated (bottom→top) value.
+        const rx1=Math.max(XL,x1), rx2=Math.min(XR,x2);
+        const y0=lb+8;                            // just below the lane baseline
+        const str=ig.rel.toFixed(S.integDigits??3)+(ig.norm>0?' *':'');
+        const fnt=plotFont(10); ctx.font=fnt; const tw=ctx.measureText(str).width;
+        const gm=ctx.measureText('0.0');
+        const glyphH=(gm.actualBoundingBoxAscent||7)+(gm.actualBoundingBoxDescent||2);
+        const k=(S.fontScale||1), nH=glyphH/2+5*k, tick=7*k, eh=9*k, pad=3*k;
+        const lx=(integ3Lay && integ3Lay[kIg]!=null)?integ3Lay[kIg]:(rx1+rx2)/2;
+        const yA=y0+tick, yB=yA+eh, yC=yB+tw+pad*2;
+        ctx.strokeStyle=igCol; ctx.lineWidth=1.1; ctx.lineJoin='miter'; ctx.lineCap='butt';
+        for(const [xe,xw] of [[rx1,lx-nH],[rx2,lx+nH]]){
+          ctx.beginPath();
+          ctx.moveTo(xe,y0); ctx.lineTo(xe,yA);   // region-edge tick
+          ctx.lineTo(xw,yB);                      // straight leader to the box
+          ctx.lineTo(xw,yC);                      // wall beside the value
+          ctx.stroke();
+        }
+        // center the rotated value on lx by its actual ink box (not the font
+        // 'middle' baseline, which sits off-center for digits → looked lopsided)
+        const sm=ctx.measureText(str);
+        const perp=((sm.actualBoundingBoxAscent||7)-(sm.actualBoundingBoxDescent||2))/2;
+        ctx.save(); ctx.translate(lx,yC-pad); ctx.rotate(-Math.PI/2);
+        ctx.fillStyle=igCol; ctx.textAlign='left'; ctx.textBaseline='alphabetic'; ctx.font=fnt;
+        ctx.fillText(str,0,perp); ctx.restore();
+      } else {
+        ctx.fillStyle=igCol; ctx.textAlign='center'; ctx.font=plotFont(10);
+        ctx.fillText(ig.rel.toFixed(S.integDigits??3),(x1+x2)/2,lt+lh*0.46+shift);
+        if(ig.norm>0){ ctx.font=plotFont(9); ctx.fillStyle=hexA(igCol,.75);
+          ctx.fillText('('+t('refTag')+')',(x1+x2)/2,lt+lh*0.46+12+shift); }
+      }
     });
     if(S.showMults) (sp.multiplets||[]).forEach(m=>{
       if(m.hidden) return;
@@ -2531,31 +2745,71 @@ function renderContent(opts){
         if(inTree(pk.ppm)) return;   // covered by a coupling tree → don't double-label
         vis.push({pk,pk_i,x:ppmToX(pk.ppm)}); });
       vis.sort((a,b)=>a.x-b.x);
-      // assign a stagger tier when labels would overlap horizontally
-      const LBLW=38; let lastX=-1e9, lastTier=-1;
-      vis.forEach(o=>{
-        if(o.x-lastX < LBLW){ o.tier=(lastTier+1)%4; } else { o.tier=0; }
-        lastTier=o.tier; lastX=o.x;
-      });
-      vis.forEach(o=>{
-        const pk=o.pk, x=o.x;
-        const baseY=Math.max(lt+(pk.label?34:20),sy(pk.v));
-        const tierOff=o.tier*12; // px lift per tier
-        const selDel = (sp===A() && S.tool==='tDelPeak' && o.pk_i===S.selPeak);
-        const selMul = (sp===A() && S.tool==='tMult' && S.selPeaks.indexOf(pk.ppm)>=0);
-        const col=selDel?css('--err'):pkColor;
-        // tick from spectrum up to the (staggered) label
-        ctx.strokeStyle=selDel?css('--err'):hexA(pkColor,.55);
-        ctx.lineWidth=selDel?2:1; ctx.beginPath();
-        ctx.moveTo(x,baseY-4); ctx.lineTo(x,baseY-13-tierOff); ctx.stroke();
-        const ly=baseY-17-tierOff;
-        if(selMul){ ctx.beginPath(); ctx.arc(x,ly,4,0,7); ctx.fillStyle=css('--mult'); ctx.fill(); }
-        else if(selDel){ ctx.beginPath(); ctx.arc(x,ly,4,0,7); ctx.lineWidth=1.4; ctx.strokeStyle=css('--err'); ctx.stroke(); }
-        ctx.fillStyle=col; ctx.textAlign='center'; ctx.font=plotFont(10);
-        ctx.fillText(fmtPpm(pk.ppm),x,ly-(selMul||selDel?7:0));
-        if(pk.label && S.showText && !pk.labelHidden){ ctx.fillStyle=S.textColor||css('--mult'); ctx.font=plotFont(S.textSize||10.5,'600');
-          ctx.fillText(pk.label,x,ly-12); }
-      });
+      if(S.peakStyle==='style2' && !VP){
+        const groups=[]; let group=[];
+        vis.forEach(o=>{ if(group.length && o.x-group[group.length-1].x>=34){ groups.push(group); group=[]; } group.push(o); });
+        if(group.length) groups.push(group);
+        const band=Math.max(22,g.peakBand||64), railY=lt+band-10, signalY=lt+band+1;
+        groups.forEach(gr=>{
+          const pitch=14, center=gr.reduce((s,o)=>s+o.x,0)/gr.length;
+          let start=center-(gr.length-1)*pitch/2;
+          start=Math.max(XL+5,Math.min(start,XR-5-(gr.length-1)*pitch));
+          gr.forEach((o,j)=>{
+            o.labelX=start+j*pitch;
+            const selDel=(sp===A() && S.tool==='tDelPeak' && o.pk_i===S.selPeak);
+            const selMul=(sp===A() && S.tool==='tMult' && S.selPeaks.indexOf(o.pk.ppm)>=0);
+            const col=selDel?css('--err'):pkColor;
+            const suffix=(o.pk.label&&S.showText&&!o.pk.labelHidden)?('  '+o.pk.label):'';
+            const labelText=fmtPpm(o.pk.ppm)+suffix;
+            const labelFont=plotFont(band<48?8.5:10);
+            // Keep the original label size, but place it nearer the fan-out so
+            // the leader between each value and its actual peak is much shorter.
+            const labelY=lt+Math.min(26,band*0.28);
+            // The leader starts right where the value text ends, so text and line
+            // form one continuous annotation. (A previous trailing " —" left a gap
+            // between the number and the leader because the space + dash advance
+            // pushed the line start well past the visible glyphs.)
+            ctx.font=labelFont;
+            const labelEndY=labelY+ctx.measureText(labelText).width+2;
+            // Drop straight down from the value first, then kink diagonally toward
+            // the peak's x, then vertically onto the signal (|  /  | shape).
+            const knee=Math.min(labelEndY+6, railY+7);
+            ctx.strokeStyle=selDel?css('--err'):hexA(pkColor,.82); ctx.lineWidth=selDel?2:1.15;
+            ctx.beginPath(); ctx.moveTo(o.labelX,labelEndY); ctx.lineTo(o.labelX,knee); ctx.lineTo(o.x,railY+7); ctx.lineTo(o.x,signalY); ctx.stroke();
+            if(selMul||selDel){ ctx.beginPath(); ctx.arc(o.x,railY+7,3.2,0,7);
+              if(selMul){ ctx.fillStyle=css('--mult'); ctx.fill(); } else { ctx.strokeStyle=css('--err'); ctx.stroke(); } }
+            ctx.save(); ctx.translate(o.labelX,labelY); ctx.rotate(Math.PI/2);
+            ctx.fillStyle=col; ctx.textAlign='left'; ctx.textBaseline='middle'; ctx.font=labelFont;
+            ctx.fillText(labelText,0,0); ctx.restore();
+          });
+        });
+      } else {
+        // assign a stagger tier when labels would overlap horizontally
+        const LBLW=38; let lastX=-1e9, lastTier=-1;
+        vis.forEach(o=>{
+          if(o.x-lastX < LBLW){ o.tier=(lastTier+1)%4; } else { o.tier=0; }
+          lastTier=o.tier; lastX=o.x;
+        });
+        vis.forEach(o=>{
+          const pk=o.pk, x=o.x;
+          const baseY=Math.max(lt+(pk.label?34:20),sy(pk.v));
+          const tierOff=o.tier*12; // px lift per tier
+          const selDel = (sp===A() && S.tool==='tDelPeak' && o.pk_i===S.selPeak);
+          const selMul = (sp===A() && S.tool==='tMult' && S.selPeaks.indexOf(pk.ppm)>=0);
+          const col=selDel?css('--err'):pkColor;
+          // tick from spectrum up to the (staggered) label
+          ctx.strokeStyle=selDel?css('--err'):hexA(pkColor,.55);
+          ctx.lineWidth=selDel?2:1; ctx.beginPath();
+          ctx.moveTo(x,baseY-4); ctx.lineTo(x,baseY-13-tierOff); ctx.stroke();
+          const ly=baseY-17-tierOff;
+          if(selMul){ ctx.beginPath(); ctx.arc(x,ly,4,0,7); ctx.fillStyle=css('--mult'); ctx.fill(); }
+          else if(selDel){ ctx.beginPath(); ctx.arc(x,ly,4,0,7); ctx.lineWidth=1.4; ctx.strokeStyle=css('--err'); ctx.stroke(); }
+          ctx.fillStyle=col; ctx.textAlign='center'; ctx.font=plotFont(10);
+          ctx.fillText(fmtPpm(pk.ppm),x,ly-(selMul||selDel?7:0));
+          if(pk.label && S.showText && !pk.labelHidden){ ctx.fillStyle=S.textColor||css('--mult'); ctx.font=plotFont(S.textSize||10.5,'600');
+            ctx.fillText(pk.label,x,ly-12); }
+        });
+      }
     }
     // mark dots ●: consecutive peaks sharing the same color merge into one
     if(S.showMarks){
@@ -3167,7 +3421,7 @@ const thrS=document.getElementById('thrSlider');
 if(thrS){ thrS.value=Math.round(S.thr*100);
   document.getElementById('thrVal').textContent=Math.round(S.thr*100)+'%';
   thrS.oninput=e=>{ S.thr=(+e.target.value)/100;
-    document.getElementById('thrVal').textContent=(+e.target.value)+'%'; draw(); }; }
+    document.getElementById('thrVal').textContent=(+e.target.value)+'%'; persistUI(); draw(); }; }
 // peak / integral color pickers + integral vertical position
 (function(){
   const pc=document.getElementById('peakColor');
@@ -3586,35 +3840,88 @@ function sigKey(sp){ let h=2166136261>>>0;
   for(let i=0;i<n;i++){ h^=(src[i]|0); h=Math.imul(h,16777619); }
   const td=sp.par?sp.par.TD:0, nuc=sp.par?(sp.par.NUC1||''):'';
   return 'nmrviewer:annot:'+nuc+':'+td+':'+(h>>>0); }
-/* ===================== undo / redo (per-spectrum annotation snapshots) ===================== */
-function snapState(sp){
-  return JSON.stringify({sr:sp.sr||0, peaks:sp.peaks||[], integrals:sp.integrals||[],
-    multiplets:sp.multiplets||[], shades:sp.shades||[]});
+/* ===================== undo / redo (whole-workspace snapshots) =====================
+   Keep the loaded spectral arrays by reference, but snapshot all user-editable state.
+   This makes images, connectors, zoom insets, display settings and spectrum removal
+   undoable as well as the original calibration / peak / integral operations. */
+const APP_UNDO=[], APP_REDO=[];
+const HIST_SP_KEYS=['name','origName','color','colorLocked','visible','vzoom','source','mode','wdw','lb','zf','gdc','ph0','ph1','sr','yscale',
+  'peaks','integrals','multiplets','shades','images'];
+let _histId=0, _historyApplying=false;
+function histClone(v){
+  if(typeof structuredClone==='function') return structuredClone(v);
+  return JSON.parse(JSON.stringify(v));
 }
-function pushUndo(sp){
-  if(!sp) return;
-  sp.undoStack=sp.undoStack||[]; sp.redoStack=[];
-  sp.undoStack.push(snapState(sp));
-  if(sp.undoStack.length>50) sp.undoStack.shift();
-  refreshUndoUI();
+function snapState(){
+  const spectra=S.spectra.map(sp=>{
+    if(!sp._histId) sp._histId='h'+(++_histId);
+    const data={}; HIST_SP_KEYS.forEach(k=>data[k]=histClone(sp[k]));
+    return {id:sp._histId, ref:sp, data};
+  });
+  const ui=(typeof uiState==='function')?histClone(uiState()):{};
+  const extra={active:S.active, nextColor:S.nextColor, wheelSens:S.wheelSens,
+    wheelInertia:S.wheelInertia, wheelInvert:S.wheelInvert, hscroll:S.hscroll,
+    showJTree:S.showJTree, multJStyle:S.multJStyle, integShift:S.integShift, thr:S.thr,
+    bg:document.documentElement.style.getPropertyValue('--bg')||'',
+    theme:document.documentElement.getAttribute('data-theme')||'',
+    lang:(typeof LANG!=='undefined'?LANG:'en')};
+  const comparable={spectra:spectra.map(x=>({id:x.id,data:x.data})),ui,extra};
+  const key=JSON.stringify(comparable,(k,v)=>(k==='src'||k==='origSrc')?'[image-data]':v);
+  return {spectra,ui,extra,key};
 }
-function applyState(sp,json){
-  const d=JSON.parse(json);
-  sp.sr=d.sr; sp.peaks=d.peaks; sp.integrals=d.integrals; sp.multiplets=d.multiplets; sp.shades=d.shades||[];
-  finalize(sp); S.selInteg=-1;
-  saveAnnot(sp); refreshUndoUI(); renderResults(); draw();
+function recordUndo(s){
+  if(_historyApplying||!s) return;
+  const last=APP_UNDO[APP_UNDO.length-1];
+  if(last&&last.key===s.key) return;
+  APP_UNDO.push(s); if(APP_UNDO.length>50) APP_UNDO.shift();
+  APP_REDO.length=0; refreshUndoUI();
 }
-function doUndo(){ const sp=A(); if(!sp||!(sp.undoStack||[]).length) return;
-  sp.redoStack=sp.redoStack||[]; sp.redoStack.push(snapState(sp));
-  applyState(sp, sp.undoStack.pop()); }
-function doRedo(){ const sp=A(); if(!sp||!(sp.redoStack||[]).length) return;
-  sp.undoStack=sp.undoStack||[]; sp.undoStack.push(snapState(sp));
-  applyState(sp, sp.redoStack.pop()); }
-function refreshUndoUI(){ const sp=A();
+function pushUndo(){ recordUndo(snapState()); }
+function recordIfChanged(before){
+  if(_historyApplying||!before) return;
+  const after=snapState(); if(after.key!==before.key) recordUndo(before);
+}
+function applyState(s){
+  if(!s) return; _historyApplying=true;
+  try{
+    S.spectra=s.spectra.map(x=>x.ref);
+    s.spectra.forEach(x=>{ HIST_SP_KEYS.forEach(k=>x.ref[k]=histClone(x.data[k]));
+      try{ rebuildSpectrum(x.ref); }catch(_){ try{ finalize(x.ref); }catch(__){} }
+      saveAnnot(x.ref); });
+    applyUIState(histClone(s.ui),true);
+    Object.assign(S,{active:s.extra.active,nextColor:s.extra.nextColor,wheelSens:s.extra.wheelSens,
+      wheelInertia:s.extra.wheelInertia,wheelInvert:s.extra.wheelInvert,hscroll:s.extra.hscroll,
+      showJTree:s.extra.showJTree,multJStyle:s.extra.multJStyle||'full',integShift:s.extra.integShift,thr:s.extra.thr});
+    if(s.extra.bg) document.documentElement.style.setProperty('--bg',s.extra.bg);
+    else document.documentElement.style.removeProperty('--bg');
+    if(s.extra.theme) document.documentElement.setAttribute('data-theme',s.extra.theme);
+    else document.documentElement.removeAttribute('data-theme');
+    if(S.active>=S.spectra.length) S.active=S.spectra.length-1;
+    S.selInteg=-1; S.selImg=-1; S.selZoom=-1;
+    ['btnInertia','btnInvert','btnHscroll'].forEach((id,i)=>{
+      const el=document.getElementById(id), on=[S.wheelInertia,S.wheelInvert,S.hscroll][i];
+      if(el) el.classList.toggle('on',!!on); });
+    const ws=document.getElementById('wheelSens'); if(ws){ ws.value=S.wheelSens;
+      const wv=document.getElementById('wsv'); if(wv) wv.textContent=(+S.wheelSens).toFixed(1); }
+    const bg=document.getElementById('bgColor'); if(bg) bg.value=css('--bg');
+    if(!S.spectra.length){ const hint=document.getElementById('hint'); if(hint) hint.style.display=''; closeResults(); }
+    syncUIControls(); refreshActive(); resize(); persistUI();
+    if(typeof setLang==='function'&&s.extra.lang!==LANG) setLang(s.extra.lang);
+  }finally{ _historyApplying=false; refreshUndoUI(); }
+}
+function popDifferent(stack,current){
+  let s=null; while(stack.length){ s=stack.pop(); if(s.key!==current.key) return s; }
+  return null;
+}
+function doUndo(){ const cur=snapState(), prev=popDifferent(APP_UNDO,cur); if(!prev)return;
+  APP_REDO.push(cur); applyState(prev); }
+function doRedo(){ const cur=snapState(), next=popDifferent(APP_REDO,cur); if(!next)return;
+  APP_UNDO.push(cur); applyState(next); }
+function refreshUndoUI(){
   const u=document.getElementById('btnUndo'), r=document.getElementById('btnRedo');
   if(!u||!r) return;
-  u.disabled=!sp||!(sp.undoStack||[]).length;
-  r.disabled=!sp||!(sp.redoStack||[]).length;
+  u.disabled=!APP_UNDO.length;
+  r.disabled=!APP_REDO.length;
 }
 
 function saveAnnot(sp){ try{ const k=sigKey(sp);
@@ -4022,6 +4329,9 @@ segWire('segSrc',v=>{ const sp=A(); if(!sp)return; if(v==='fid'&&!sp.haveFid)ret
 segWire('segMode',v=>{ const sp=A(); if(!sp)return; sp.mode=v; finalize(sp); saveAnnot(sp); syncControls(); draw(); });
 segWire('segZf',v=>{ const sp=A(); if(!sp)return; sp.zf=+v; rebuildSpectrum(sp); draw(); });
 segWire('segLayout',v=>{ S.layout=v; draw(); });
+segWire('segPeakStyle',v=>{ S.peakStyle=v; persistUI(); draw(); });
+segWire('segIntegStyle',v=>{ S.integStyle=v; persistUI(); draw(); });
+segWire('segMultStyle',v=>{ S.multStyle=v; persistUI(); draw(); });
 document.getElementById('wdw').onchange=e=>{ const sp=A(); if(!sp)return; sp.wdw=e.target.value;
   document.getElementById('lbBox').style.display=sp.wdw==='none'?'none':'block'; rebuildSpectrum(sp); draw(); };
 document.getElementById('lb').oninput=e=>{ const sp=A(); if(!sp)return; sp.lb=+e.target.value;
@@ -4054,6 +4364,7 @@ document.getElementById('integDigits').oninput=e=>{ S.integDigits=+e.target.valu
   document.getElementById('idgv').textContent=String(S.integDigits); persistUI(); renderResults(); draw(); };
 document.getElementById('multDigits').oninput=e=>{ S.multDigits=+e.target.value;
   document.getElementById('mdgv').textContent=String(S.multDigits); persistUI(); renderResults(); draw(); };
+document.getElementById('multJStyle').onchange=e=>{ S.multJStyle=e.target.value; persistUI(); draw(); };
 segWire('segFont',v=>{ S.plotFont=v; persistUI(); draw(); });
 document.getElementById('btnResetSet').onclick=()=>{
   S.lineW=DEFAULTS.lineW; S.wheelSens=DEFAULTS.wheelSens;
@@ -4089,13 +4400,14 @@ document.getElementById('btnResetSet').onclick=()=>{
   persistUI(); resize(); draw(); };
 document.getElementById('btnResetView').onclick=()=>{
   S.ppmDigits=DEFAULTS.ppmDigits; S.pkDigits=DEFAULTS.pkDigits; S.lineW=DEFAULTS.lineW;
+  S.peakStyle=DEFAULTS.peakStyle; S.integStyle=DEFAULTS.integStyle; S.showIntegCurve=DEFAULTS.showIntegCurve; S.multStyle=DEFAULTS.multStyle;
   const set=(id,val,txt)=>{ const el=document.getElementById(id); if(el) el.value=val;
     const v=document.getElementById(txt); if(v) v.textContent=String(val); };
   set('ppmDigits',DEFAULTS.ppmDigits,'digv');
   set('pkDigits',DEFAULTS.pkDigits,'pkdigv');
   { const l1=document.getElementById('lineW'); if(l1) l1.value=DEFAULTS.lineW;
     const v1=document.getElementById('lwv'); if(v1) v1.textContent=DEFAULTS.lineW.toFixed(1); }
-  persistUI(); renderResults(); draw(); };
+  syncUIControls(); persistUI(); renderResults(); draw(); };
 document.getElementById('btnAddImg').onclick=()=>document.getElementById('imgIn').click();
 document.getElementById('imgIn').onchange=e=>{
   [...e.target.files].forEach(f=>{ if(f.type.startsWith('image/')) loadImageFile(f); });
@@ -4115,14 +4427,14 @@ document.getElementById('textColor').oninput=e=>{ S.textColor=e.target.value; pe
 document.getElementById('lineColor').oninput=e=>{ S.lineColor=e.target.value; persistUI(); if(S.tool!=='tLine') setTool('tLine'); else draw(); };
 /* assign/multiplet dropdowns: show/hide toggles */
 (function(){
-  const map=[['tgMark','showMarks'],['tgText','showText'],['tgShade','showShades'],['tgMult','showMults'],['tgLine','showLines'],['tgPeaks','showPeaks'],['tgInteg','showIntegs'],['tgInsets','showInsets']];
+  const map=[['tgMark','showMarks'],['tgText','showText'],['tgShade','showShades'],['tgMult','showMults'],['tgMultSources','showMultSources'],['tgLine','showLines'],['tgPeaks','showPeaks'],['tgThreshold','showThresholdLine'],['tgInteg','showIntegs'],['tgIntegCurve','showIntegCurve'],['tgInsets','showInsets']];
   const vmMap={showShades:'btnShowShades', showMults:'btnShowMults', showLines:'btnShowLines', showPeaks:'btnShowPeaks', showIntegs:'btnShowIntegs', showInsets:'btnInsets'};
   function sync(){ map.forEach(([id,key])=>{ const el=document.getElementById(id); if(el) el.classList.toggle('on',S[key]); }); }
   map.forEach(([id,key])=>{ const el=document.getElementById(id); if(el) el.onclick=e=>{ e.stopPropagation();
     S[key]=!S[key]; sync();
     // keep the matching View-menu toggle in sync if present
     const vm=vmMap[key]; if(vm){ const vb=document.getElementById(vm); if(vb) vb.classList.toggle('on',S[key]); }
-    draw(); }; });
+    persistUI(); draw(); }; });
   sync();
 })();
 document.getElementById('btnInertia').onclick=()=>{
@@ -4192,6 +4504,28 @@ document.getElementById('btnMinimap').onclick=()=>{
 document.getElementById('btnZoomLeaders').onclick=()=>{ S.zoomLeaders=!S.zoomLeaders; syncZoomToggles(); persistUI(); draw(); };
 document.getElementById('btnUndo').onclick=()=>doUndo();
 document.getElementById('btnRedo').onclick=()=>doRedo();
+/* Capture the state before UI gestures that may mutate the workspace. Existing
+   analysis actions also call pushUndo(); duplicate snapshots are de-duplicated. */
+(function wireWorkspaceHistory(){
+  const cv=document.getElementById('cv');
+  let gestureBefore=null;
+  if(cv){
+    cv.addEventListener('pointerdown',()=>{ if(visibleSpectra().length) gestureBefore=snapState(); },true);
+    cv.addEventListener('wheel',()=>{ const before=snapState(); queueMicrotask(()=>recordIfChanged(before)); },{capture:true,passive:true});
+  }
+  window.addEventListener('pointerup',()=>{ if(gestureBefore){ const before=gestureBefore; gestureBefore=null; queueMicrotask(()=>recordIfChanged(before)); } });
+  window.addEventListener('pointercancel',()=>{ gestureBefore=null; });
+  const afterEvent=e=>{ if(e.target.closest&&e.target.closest('#btnUndo,#btnRedo')) return;
+    const before=snapState(); queueMicrotask(()=>recordIfChanged(before)); };
+  document.addEventListener('click',afterEvent,true);
+  document.addEventListener('input',afterEvent,true);
+  document.addEventListener('change',afterEvent,true);
+  document.addEventListener('keydown',e=>{
+    if(e.ctrlKey||e.metaKey){ if(['z','y'].includes(e.key.toLowerCase())) return; }
+    if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','0','Home','Delete','Backspace'].includes(e.key)){
+      const before=snapState(); queueMicrotask(()=>recordIfChanged(before)); }
+  },true);
+})();
 document.getElementById('btnRangeApply').onclick=()=>{
   const hi=parseFloat(document.getElementById('rangeHi').value);
   const lo=parseFloat(document.getElementById('rangeLo').value);
@@ -4361,6 +4695,7 @@ async function handleFiles(files){
   if(room<=0){ alert(t('warnMaxFull').replace(/\{cap\}/g, MAX_SPECTRA)); return; }
   const loadKeys=dsKeys.slice(0, room);
   const skipped=dsKeys.length - loadKeys.length;
+  const historyBefore=snapState();
   // nuclei already present before this load
   const nucOf=sp=>((sp.par&&sp.par.NUC1)||'').trim();
   const existing=new Set(S.spectra.map(nucOf).filter(Boolean));
@@ -4368,6 +4703,7 @@ async function handleFiles(files){
   for(const key of loadKeys){ const sp=await buildSpectrumFromGroup(key, groups[key]);
     if(sp){ S.spectra.push(sp); newSps.push(sp); added++; } }
   if(!added){ alert(t('errNoData')); return; }
+  recordUndo(historyBefore);
   // over-the-limit warning: more datasets were offered than the 10-spectrum cap allows
   if(skipped>0){ alert(t('warnTooMany').replace(/\{cap\}/g,MAX_SPECTRA).replace('{loaded}',added).replace('{total}',dsKeys.length)); }
   // mixed-nucleus warning: a newly loaded spectrum differs from what's already shown
@@ -4564,13 +4900,14 @@ document.getElementById('btnCopyImg').onclick=()=>{ closeMenus(); if(!visibleSpe
 };
 
 /* ---------- session (annotations + display state) as JSON ---------- */
-const SHOW_FLAGS=['showInsets','showNames','showPeaks','showIntegs','showShades','showMarks','showText','showMults','showLanes','showLines','showZooms','showMinimap','zoomLeaders','laneOverflow'];
+const SHOW_FLAGS=['showInsets','showNames','showPeaks','showIntegs','showShades','showMarks','showText','showMults','showMultSources','showThresholdLine','showLanes','showLines','showZooms','showMinimap','zoomLeaders','laneOverflow'];
 function uiState(){ const o={
     view:{pHi:S.view.pHi,pLo:S.view.pLo}, layout:S.layout, palette:S.palette, monoBase:S.monoBase,
     lineW:S.lineW, ppmDigits:S.ppmDigits, pkDigits:S.pkDigits, fontScale:S.fontScale, nameScale:S.nameScale, axisScale:S.axisScale, markSize:S.markSize, plotFont:S.plotFont,
-    axisPad:S.axisPad, baseGap:S.baseGap,
+    axisPad:S.axisPad, baseGap:S.baseGap, thr:S.thr,
     zoomBorderColor:S.zoomBorderColor, zoomBorderWidth:S.zoomBorderWidth, zoomLeaderStyle:S.zoomLeaderStyle,
-    peakColor:S.peakColor, integColor:S.integColor, multColor:S.multColor, multDigits:S.multDigits, markColor:S.markColor, shadeColor:S.shadeColor, textColor:S.textColor, textSize:S.textSize, lineColor:S.lineColor, integDigits:S.integDigits,
+    peakColor:S.peakColor, integColor:S.integColor, peakStyle:S.peakStyle, integStyle:S.integStyle, showIntegCurve:S.showIntegCurve,
+    multColor:S.multColor, multDigits:S.multDigits, multJStyle:S.multJStyle, multStyle:S.multStyle, markColor:S.markColor, shadeColor:S.shadeColor, textColor:S.textColor, textSize:S.textSize, lineColor:S.lineColor, integDigits:S.integDigits,
     customPalette:S.customPalette||[],
     impSolvent:S.impSolvent, impTol:S.impTol, impTolC:S.impTolC, showImpurities:S.showImpurities, impPins:S.impPins||[],
     lines:S.lines||[], zooms:S.zooms||[], flags:{} };
@@ -4588,18 +4925,24 @@ function applyUIState(o, withView){
   if(typeof o.markSize==='number') S.markSize=o.markSize;
   if(typeof o.axisPad==='number') S.axisPad=o.axisPad;
   if(typeof o.baseGap==='number') S.baseGap=o.baseGap;
+  if(typeof o.thr==='number') S.thr=o.thr;
   if('zoomBorderColor' in o) S.zoomBorderColor=o.zoomBorderColor;
   if(typeof o.zoomBorderWidth==='number') S.zoomBorderWidth=o.zoomBorderWidth;
   if(o.zoomLeaderStyle) S.zoomLeaderStyle=o.zoomLeaderStyle;
   if(o.plotFont) S.plotFont=o.plotFont;
   if('peakColor' in o) S.peakColor=o.peakColor;
   if('integColor' in o) S.integColor=o.integColor;
+  if(o.peakStyle==='style1'||o.peakStyle==='style2') S.peakStyle=o.peakStyle;
+  if(o.integStyle==='style1'||o.integStyle==='style2'||o.integStyle==='style3') S.integStyle=o.integStyle;
+  if(o.multStyle==='style1'||o.multStyle==='style2') S.multStyle=o.multStyle;
+  if(typeof o.showIntegCurve==='boolean') S.showIntegCurve=o.showIntegCurve;
   if(o.markColor) S.markColor=o.markColor;
   if(o.shadeColor) S.shadeColor=o.shadeColor;
   if('textColor' in o) S.textColor=o.textColor;
   if(typeof o.textSize==='number') S.textSize=o.textSize;
   if(typeof o.integDigits==='number') S.integDigits=o.integDigits;
   if(typeof o.multDigits==='number') S.multDigits=o.multDigits;
+  if(['full','inline','jonly','value'].includes(o.multJStyle)) S.multJStyle=o.multJStyle;
   if('multColor' in o) S.multColor=o.multColor;
   if('lineColor' in o) S.lineColor=o.lineColor;
   if(o.palette) S.palette=o.palette;
@@ -4616,7 +4959,7 @@ function applyUIState(o, withView){
 }
 function exportSession(){
   const o=uiState();
-  o.version=28; o.savedAt=new Date().toISOString();
+  o.version=29; o.savedAt=new Date().toISOString();
   o.spectra=S.spectra.map(sp=>({ sig:sigKey(sp), name:sp.name, sr:sp.sr||0, mode:sp.mode, source:sp.source,
     color:sp.color, colorLocked:!!sp.colorLocked, yscale:sp.yscale||1, vzoom:sp.vzoom!==false,
     peaks:sp.peaks||[], integrals:sp.integrals||[], multiplets:sp.multiplets||[], shades:sp.shades||[], images:sp.images||[] }));
@@ -4652,7 +4995,7 @@ function importSession(obj){
 document.getElementById('btnSession').onclick=()=>{ closeMenus(); exportSession(); };
 document.getElementById('btnLoadSession').onclick=()=>{ closeMenus(); document.getElementById('sessionIn').click(); };
 document.getElementById('sessionIn').onchange=e=>{ const f=e.target.files&&e.target.files[0]; if(!f) return;
-  const r=new FileReader(); r.onload=()=>{ try{ importSession(JSON.parse(r.result)); }catch(_){ toast(t('msgBadSession')); } };
+  const r=new FileReader(); r.onload=()=>{ try{ pushUndo(); importSession(JSON.parse(r.result)); }catch(_){ toast(t('msgBadSession')); } };
   r.readAsText(f); e.target.value=''; };
 
 /* ---------- lightweight global-UI persistence (localStorage) ---------- */
@@ -4671,6 +5014,8 @@ function syncUIControls(){
   set('btnShowIntegs',S.showIntegs); set('btnShowShades',S.showShades); set('btnShowMults',S.showMults);
   set('btnShowLines',S.showLines); set('btnShowZooms',S.showZooms); set('btnShowLanes',S.showLanes);
   set('btnMinimap',S.showMinimap); set('btnZoomLeaders',S.zoomLeaders); set('btnOverflow',S.laneOverflow);
+  set('tgThreshold',S.showThresholdLine);
+  const th=document.getElementById('thrSlider'); if(th){ th.value=Math.round(S.thr*100); const v=document.getElementById('thrVal'); if(v) v.textContent=Math.round(S.thr*100)+'%'; }
   const lw=document.getElementById('lineW'); if(lw){ lw.value=S.lineW; const v=document.getElementById('lwv'); if(v) v.textContent=(+S.lineW).toFixed(1); }
   const pd=document.getElementById('ppmDigits'); if(pd){ pd.value=S.ppmDigits; const v=document.getElementById('digv'); if(v) v.textContent=String(S.ppmDigits); }
   const kd=document.getElementById('pkDigits'); if(kd){ kd.value=S.pkDigits; const v=document.getElementById('pkdigv'); if(v) v.textContent=String(S.pkDigits); }
@@ -4682,12 +5027,17 @@ function syncUIControls(){
   const tcb=document.getElementById('textColor'); if(tcb) setColorBtn('textColor', S.textColor||css('--mult'));
   const idg=document.getElementById('integDigits'); if(idg){ idg.value=S.integDigits; const v=document.getElementById('idgv'); if(v) v.textContent=String(S.integDigits??3); }
   const mdg=document.getElementById('multDigits'); if(mdg){ mdg.value=S.multDigits??2; const v=document.getElementById('mdgv'); if(v) v.textContent=String(S.multDigits??2); }
+  const mjs=document.getElementById('multJStyle'); if(mjs) mjs.value=S.multJStyle||'full';
   const lcb=document.getElementById('lineColor'); if(lcb) setColorBtn('lineColor', S.lineColor||css('--axis'));
   const ax=document.getElementById('axisPad'); if(ax){ ax.value=S.axisPad; const v=document.getElementById('axv'); if(v) v.textContent=String(S.axisPad); }
   const bg=document.getElementById('baseGap'); if(bg){ const pct=(S.baseGap==null?0.035:S.baseGap)*100; bg.value=String(pct); const v=document.getElementById('bgv'); if(v) v.textContent=pct.toFixed(1)+'%'; }
   const ff=document.getElementById('segFont'); if(ff) ff.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===S.plotFont));
   if(typeof syncColorPickers==='function') syncColorPickers();
   const lay=document.getElementById('segLayout'); if(lay) lay.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===S.layout));
+  const ps=document.getElementById('segPeakStyle'); if(ps) ps.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===S.peakStyle));
+  const is=document.getElementById('segIntegStyle'); if(is) is.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===S.integStyle));
+  const mss=document.getElementById('segMultStyle'); if(mss) mss.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===S.multStyle));
+  set('tgIntegCurve',S.showIntegCurve);
   const zbc=document.getElementById('zoomBorderColor'); if(zbc) zbc.value=S.zoomBorderColor||css('--axis')||'#6B7780';
   const zbw=document.getElementById('zoomBorderW'); if(zbw){ zbw.value=(S.zoomBorderWidth!=null?S.zoomBorderWidth:1); const v=document.getElementById('zbwv'); if(v) v.textContent=String(S.zoomBorderWidth!=null?S.zoomBorderWidth:1); }
   const zls=document.getElementById('segLeaderStyle'); if(zls) zls.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===(S.zoomLeaderStyle||'dashed')));
@@ -4709,6 +5059,48 @@ function toast(msg){ let el=document.getElementById('toast');
    a large rework bumps the major (→ 2.0). Badge shows v + CHANGELOG[0].v.
    Fields: v (version string), date (YYYY-MM-DD), en[] / ja[] bullet lists. */
 const CHANGELOG=[
+  { v:'1.7', date:'2026-07-11',
+    en:['Added independent Style 1 / Style 2 display selectors for peak labels and integrals.',
+        'Style 2 groups peak labels above each spectrum lane and places bracketed integral values below it.',
+        'Added an independent switch for showing or hiding integral stair curves.'],
+    ja:['ピークラベルと積分に、それぞれ独立した「スタイル1／スタイル2」の表示切り替えを追加しました。',
+        'スタイル2ではピークラベルを各スペクトルレーン上部に集約し、積分値を範囲ブラケット付きで下部に表示します。',
+        '積分の階段カーブを独立して表示・非表示にできるようにしました。'] },
+  { v:'1.6', date:'2026-07-11',
+    en:['Added multiplet label styles: separate symbol + J, “J = X Hz (d)”, J only, and the legacy number-only J display.',
+        'Added an optional, off-by-default list of the source peak chemical shifts used to define each multiplet.',
+        'Removed dashed coupling-tree guides from both the plot and manual, and rebuilt the manual figure around the real default doublet display.'],
+    ja:['多重線ラベルに「記号＋J」「J = X Hz (d)」「Jのみ」「従来の数値のみ」を追加しました。',
+        '各多重線を定義した元ピークの化学シフトを、初期状態は非表示で任意に表示できるようにしました。',
+        '実画面・マニュアルの多重線ツリーから点線の補助線をなくし、マニュアル図を標準のダブレット表示に作り直しました。'] },
+  { v:'1.5', date:'2026-07-11',
+    en:['Improved the Integrals manual figure so its curves and values remain clear of the spectral traces.',
+        'Renamed the Japanese manual section to “Multiplets”, matching the toolbar; its figure now mirrors the on-plot coupling tree.',
+        'Multiplet trees now distinguish chemical shifts (peak colour) from couplings (purple), with a switch between “J = X Hz” and the previous number-only J display.'],
+    ja:['積分マニュアル図で、積分曲線と積分値がスペクトルの線に重ならないよう配置を改善しました。',
+        '日本語マニュアルの項目名をツールバーに合わせて「多重線」へ変更し、図も実画面の結合ツリー表示に合わせました。',
+        '多重線ツリーで化学シフトをピーク色、Jを紫に分離し、「J = X Hz」と従来の数値のみのJ表示を切り替えられるようにしました。'] },
+  { v:'1.4', date:'2026-07-11',
+    en:['Limited the peak threshold guide line to the Peaks context so it disappears when another tool or tab is active.',
+        'Updated the Integrals manual figure and text to match the real plot: selected ranges use the pale-blue highlight, values appear above the spectrum, and the top handles are documented.'],
+    ja:['ピーク検出の閾値ラインを、ピーク検出の文脈がアクティブな時だけ表示するようにしました。',
+        '積分マニュアルの図と説明を実画面に合わせ、淡い青の選択領域、スペクトル上側の積分値、上端ハンドルによる範囲調整を明示しました。'] },
+  { v:'1.3', date:'2026-07-11',
+    en:['Added an optional threshold line that projects the peak-detection slider value onto the active spectrum at the exact intensity used by batch detection.',
+        'Corrected the Peaks manual figure: doublets and triplets are labelled line-by-line, and range picking now uses the same red X–Y rectangle as the real plot.',
+        'Unified the Peaks, Integrals and Assign icons between the toolbar, dropdown actions and manual.'],
+    ja:['ピーク検出スライダーの値を、一括検出で使う実際の強度位置へ投影する閾値ライン表示を追加しました。',
+        'ピーク検出のマニュアル図を修正し、ダブレット／トリプレットを1本ずつ表示するとともに、範囲検出を実画面と同じ赤いX–Y矩形に統一しました。',
+        'ピーク、積分、帰属のアイコンをツールバー・詳細メニュー・マニュアル間で統一しました。'] },
+  { v:'1.2', date:'2026-07-11',
+    en:['Corrected the manual’s wheel, zoom, drag and pan instructions so they match the actual plot and δ-axis controls.',
+        'Undo / redo now covers the whole workspace, including images, connectors, zoom insets, display settings, processing controls, and adding or removing spectra.',
+        'Clarified which spectrum is targeted in multi-spectrum work and export, and documented that a session JSON restores state onto separately loaded source data.',
+        'Rewrote the impurity workflow and made manual shortcut labels use ⌘ on Mac and Ctrl on Windows / Linux.'],
+    ja:['マニュアルのホイール・ズーム・ドラッグ・パンの説明を、実際のプロット／δ軸操作に合わせて修正しました。',
+        '取り消し／やり直しを画面全体の履歴に拡張し、画像、コネクタ、ズーム挿入図、表示設定、処理設定、スペクトルの追加・削除にも対応しました。',
+        '複数スペクトル時と出力時の対象を明記し、セッションJSONは別途読み込んだ元データへ状態を復元するものだと明確化しました。',
+        '不純物確認の手順を実際のUIに合わせ、マニュアルの修飾キー表記をMacでは⌘、Windows／LinuxではCtrlにしました。'] },
   { v:'1.1', date:'2026-07-03',
     en:['Zoom insets now render multiplet coupling trees. Previously the splitting diagram was drawn only on the main plot, so multiplets were missing inside a magnified zoom view; the inset now shows the full tree (with J values) using the inset geometry.',
         'Tools now work inside zoom insets. Dragging Peaks / Integrate / Multiplets / Erase / Mark / Shade / Calibrate inside an inset now maps to the inset’s magnified δ and intensity, so it behaves exactly like the same gesture on the main spectrum (the δ readout also follows the inset under the cursor).',
@@ -4765,6 +5157,7 @@ const MAN_IC = {
   peaks:'<svg viewBox="0 0 16 16"><path d="M2.5 13 6 3.5 8 9l1.6-4L13.5 13"/></svg>',
   integ:'<svg viewBox="0 0 16 16"><path d="M10 3.1c-.2-.9-1.2-1.1-1.8-.4-.5.6-.5 1.7-.6 3.3-.1 2.7-.1 5.3-.7 6.1-.6.8-1.6.6-1.9-.3"/></svg>',
   mult:'<svg viewBox="0 0 16 16"><path d="M8 2.5v3"/><path d="M8 5.5 4 8.8"/><path d="M8 5.5l4 3.3"/><path d="M4 8.8v3.2"/><path d="M12 8.8v3.2"/></svg>',
+  assign:'<svg viewBox="0 0 24 24"><path d="M20.59 13.41 13.42 20.58a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><circle cx="7" cy="7" r="2.3"/></svg>',
   mark:'<svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="4.5" fill="currentColor" stroke="none"/></svg>',
   text:'<svg viewBox="0 0 16 16"><path d="M2 13l1-3 7-7 2 2-7 7z"/><path d="M9.5 3.5l2 2"/></svg>',
   shade:'<svg viewBox="0 0 16 16"><path d="M2 12c1.5 0 1.5-7 3-7s1.5 7 3 7 1.5-7 3-7 1.5 7 3 7"/><path d="M2 14h12"/></svg>',
@@ -4940,49 +5333,48 @@ const MANUAL_FIGS = {
   peaks(J){ return `<svg viewBox="0 0 620 176" xmlns="http://www.w3.org/2000/svg" font-size="11" font-family="var(--sans)">
     <rect x="14" y="16" width="592" height="130" rx="10" fill="var(--bg)" stroke="var(--line)"/>
     <path d="M40 140 H590" stroke="var(--faint)" stroke-width="1"/>
-    <rect x="306" y="34" width="72" height="106" rx="4" fill="color-mix(in srgb,var(--trace) 9%,transparent)" stroke="var(--trace)" stroke-width="1" stroke-dasharray="4 3"/>
+    <rect x="326" y="64" width="30" height="58" fill="color-mix(in srgb,var(--peak) 14%,transparent)" stroke="var(--peak)" stroke-width="1"/>
     <path d="${nmrTrace(44,588,140,[{x:90,h:24,n:1,w:1.6},{x:250,h:96,n:2,J:5},{x:341,h:66,n:3,J:5},{x:470,h:82,n:1,w:1.8},{x:545,h:18,n:2,J:4}])}" fill="none" stroke="var(--trace)" stroke-width="1.5" stroke-linejoin="round"/>
     <line x1="40" y1="104" x2="590" y2="104" stroke="var(--err)" stroke-width="1.1" stroke-dasharray="5 4" opacity=".85"/>
-    <text x="586" y="100" text-anchor="end" font-size="9.5" fill="var(--err)">${J?'しきい値':'threshold'}</text>
+    <text x="586" y="100" text-anchor="end" font-size="9.5" fill="var(--err)">${J?'閾値 5%':'threshold 5%'}</text>
     <g fill="var(--peak)" font-family="var(--mono)" font-size="9.5" text-anchor="middle">
-      <line x1="250" y1="30" x2="250" y2="40" stroke="var(--peak)" stroke-width="1.1"/><text x="250" y="26">7.28</text>
-      <line x1="341" y1="60" x2="341" y2="70" stroke="var(--peak)" stroke-width="1.1"/><text x="341" y="56">7.10</text>
+      <line x1="247.5" y1="30" x2="247.5" y2="40" stroke="var(--peak)" stroke-width="1.1"/><text x="238" y="26">7.29</text>
+      <line x1="252.5" y1="42" x2="252.5" y2="52" stroke="var(--peak)" stroke-width="1.1"/><text x="263" y="39">7.27</text>
+      <line x1="336" y1="92" x2="336" y2="102" stroke="var(--peak)" stroke-width="1.1"/><text x="326" y="89">7.11</text>
+      <line x1="341" y1="62" x2="341" y2="72" stroke="var(--peak)" stroke-width="1.1"/><text x="341" y="58">7.10</text>
+      <line x1="346" y1="92" x2="346" y2="102" stroke="var(--peak)" stroke-width="1.1"/><text x="356" y="89">7.09</text>
       <line x1="470" y1="46" x2="470" y2="56" stroke="var(--peak)" stroke-width="1.1"/><text x="470" y="42">3.62</text>
     </g>
-    <text x="342" y="158" text-anchor="middle" font-size="9.5" fill="var(--faint)">${J?'ドラッグで検出':'drag to detect'}</text>
+    <text x="341" y="158" text-anchor="middle" font-size="9.5" fill="var(--peak)">${J?'赤い矩形内の3ピークを検出':'three peaks inside the red box'}</text>
   </svg>
-  <figcaption>${J?'しきい値以上のピークを一括検出（範囲ドラッグで局所検出も可）。頂点に δ を表示':'Detect all peaks above a threshold (or drag a range); δ is labelled at each apex'}</figcaption>`; },
+  <figcaption>${J?'閾値ラインを実スペクトルへ投影できます。ドラッグ中は赤いX–Y矩形を表示し、その内側の各極大点に δ を付けます':'Project the threshold line onto the spectrum. Dragging shows a red X–Y box and labels every local maximum inside it'}</figcaption>`; },
 
   integ(J){ return `<svg viewBox="0 0 620 168" xmlns="http://www.w3.org/2000/svg" font-size="11" font-family="var(--sans)">
     <rect x="14" y="16" width="592" height="128" rx="10" fill="var(--bg)" stroke="var(--line)"/>
     <path d="M40 132 H590" stroke="var(--faint)" stroke-width="1"/>
-    <rect x="150" y="30" width="80" height="102" rx="4" fill="color-mix(in srgb,var(--integ) 9%,transparent)" stroke="var(--integ)" stroke-width="1" stroke-dasharray="4 3"/>
+    <rect x="150" y="16" width="80" height="116" fill="color-mix(in srgb,var(--integ) 10%,transparent)"/>
+    <path d="M150 16 V132 M230 16 V132" stroke="color-mix(in srgb,var(--integ) 58%,transparent)" stroke-width="1"/>
+    <rect x="146" y="16" width="8" height="8" rx="1.2" fill="var(--integ)"/>
+    <rect x="226" y="16" width="8" height="8" rx="1.2" fill="var(--integ)"/>
     <path d="${nmrTrace(44,588,132,[{x:190,h:74,n:3,J:5},{x:430,h:98,n:2,J:5.5}])}" fill="none" stroke="var(--trace)" stroke-width="1.5" stroke-linejoin="round"/>
-    <path d="M120 74 H160 C176 74 176 46 192 46 C206 46 206 42 220 42 H262" fill="none" stroke="var(--integ)" stroke-width="1.6"/>
-    <path d="M360 78 H406 C420 78 420 40 434 40 H480" fill="none" stroke="var(--integ)" stroke-width="1.6"/>
-    <text x="190" y="160" text-anchor="middle" font-family="var(--mono)" font-size="11.5" fill="var(--integ)">2.00</text>
-    <text x="430" y="160" text-anchor="middle" font-family="var(--mono)" font-size="11.5" fill="var(--integ)">3.01</text>
+    <path d="M120 70 H160 C176 70 176 38 192 38 C206 38 206 34 220 34 H262" fill="none" stroke="var(--integ)" stroke-width="1.6"/>
+    <path d="M360 70 H406 C420 70 420 30 434 30 H480" fill="none" stroke="var(--integ)" stroke-width="1.6"/>
+    <text x="250" y="58" text-anchor="middle" font-family="var(--mono)" font-size="11.5" fill="var(--integ)">2.00</text>
+    <text x="500" y="54" text-anchor="middle" font-family="var(--mono)" font-size="11.5" fill="var(--integ)">3.01</text>
+    <text x="190" y="156" text-anchor="middle" font-size="9.5" fill="var(--faint)">${J?'選択範囲（上の四角をドラッグ）':'selected range (drag the top squares)'}</text>
   </svg>
-  <figcaption>${J?'範囲をドラッグして面積を求め、プロトン数の比を読む（例 2.00 : 3.01）':'Drag a range to integrate and read the proton ratio (e.g. 2.00 : 3.01)'}</figcaption>`; },
+  <figcaption>${J?'実画面と同じ選択ハイライトを表示。積分値はスペクトル上側に出て、上端の青い四角で範囲端を調整できます':'Uses the same selected-range highlight as the plot. Values appear above the spectrum, and the top blue squares adjust the range edges'}</figcaption>`; },
 
   mult(J){ return `<svg viewBox="0 0 620 182" xmlns="http://www.w3.org/2000/svg" font-size="11" font-family="var(--sans)">
     <rect x="14" y="16" width="592" height="150" rx="10" fill="var(--bg)" stroke="var(--line)"/>
     <path d="M40 150 H590" stroke="var(--faint)" stroke-width="1"/>
-    <path d="${nmrTrace(120,300,150,[{x:210,h:104,n:4,J:20,w:2.6}])}" fill="none" stroke="var(--trace)" stroke-width="1.6" stroke-linejoin="round"/>
-    <g stroke="var(--mult)" stroke-width="1.3" fill="none">
-      <path d="M180 44 H240"/>
-      <path d="M180 44 V52 M200 44 V52 M220 44 V52 M240 44 V52"/>
-    </g>
-    <g stroke="var(--mult)" stroke-width="1" fill="none"><path d="M200 34 V42 M220 34 V42 M200 34 H220"/></g>
-    <text x="210" y="30" text-anchor="middle" fill="var(--mult)" font-size="9" font-family="var(--mono)">J</text>
-    <text x="150" y="34" text-anchor="middle" fill="var(--mult)" font-weight="700" font-size="13">q</text>
-    <text x="210" y="164" text-anchor="middle" fill="var(--peak)" font-size="10" font-family="var(--mono)">${J?'q, J = 7.1 Hz':'q, J = 7.1 Hz'}</text>
-    <path d="${nmrTrace(360,560,150,[{x:460,h:90,n:2,J:22,w:2.6}])}" fill="none" stroke="var(--trace)" stroke-width="1.6" stroke-linejoin="round"/>
-    <g stroke="var(--mult)" stroke-width="1.3" fill="none"><path d="M449 52 H471"/><path d="M449 52 V60 M471 52 V60"/></g>
-    <text x="422" y="46" text-anchor="middle" fill="var(--mult)" font-weight="700" font-size="13">d</text>
-    <text x="460" y="164" text-anchor="middle" fill="var(--peak)" font-size="10" font-family="var(--mono)">${J?'d, J = 8.0 Hz':'d, J = 8.0 Hz'}</text>
+    <path d="${nmrTrace(80,500,150,[{x:250,h:70,n:2,J:70,w:2.6},{x:350,h:24,n:1,w:2.2},{x:420,h:5,n:1,w:2}])}" fill="none" stroke="var(--trace)" stroke-width="1.6" stroke-linejoin="round"/>
+    <g stroke="var(--mult)" stroke-width="1.3" fill="none"><path d="M250 50 V58 M215 58 H285 M215 58 V70 M285 58 V70"/></g>
+    <text x="250" y="28" text-anchor="middle" fill="var(--peak)" font-size="10" font-family="var(--mono)">6.91</text>
+    <text x="250" y="44" text-anchor="middle" fill="var(--mult)" font-weight="700" font-size="13">d</text>
+    <text x="300" y="64" fill="var(--mult)" font-size="10" font-family="var(--mono)">J = 5.19 Hz</text>
   </svg>
-  <figcaption>${J?'選んだピークから多重度（s・d・t・q・m …）と結合定数 J〔Hz〕を自動算出':'From the selected peaks, the multiplicity (s·d·t·q·m …) and coupling constant J (Hz) are derived'}</figcaption>`; },
+  <figcaption>${J?'実画面の標準表示に合わせた多重線ツリー。点線の補助線は表示せず、δ はピーク色、J は紫で示します':'Multiplet tree in the plot’s default style: no dashed guides; δ uses the peak colour and J is purple'}</figcaption>`; },
 
   assign(J){ return `<svg viewBox="0 0 620 186" xmlns="http://www.w3.org/2000/svg" font-size="11" font-family="var(--sans)">
     <rect x="14" y="16" width="592" height="150" rx="10" fill="var(--bg)" stroke="var(--line)"/>
@@ -5071,7 +5463,7 @@ const MANUAL_FIGS = {
     <rect x="476" y="24" width="128" height="90" rx="10" fill="var(--panel)" stroke="var(--line)"/>
     <text x="540" y="56" text-anchor="middle" fill="var(--ink)" font-size="11">${J?'図表・データ':'Figures &amp; data'}</text>
     <text x="540" y="76" text-anchor="middle" fill="var(--faint)" font-size="10">${J?'論文・スライドへ':'for papers / slides'}</text>
-    <text x="540" y="96" text-anchor="middle" fill="var(--faint)" font-size="10">${J?'続きは JSON で再開':'resume via JSON'}</text>
+    <text x="540" y="96" text-anchor="middle" fill="var(--faint)" font-size="10">${J?'元データ＋JSONで再開':'resume with data + JSON'}</text>
   </svg>`; },
 };
 
@@ -5100,7 +5492,7 @@ const MANUAL = {
       {ul:[
         '<b>① 左サイドバー</b>：読み込んだスペクトルの一覧、取得情報（Acquisition）、処理（窓関数・グループディレイ補正）、位相の各パネル。スペクトル一覧では表示/非表示や色を切り替えられます。',
         '<b>② メニュー＆ツールバー</b>：上段が「ファイル」「出力」「表示」「設定」メニュー、下段が校正・ピーク・積分などの<b>解析ツール</b>です。',
-        '<b>③ プロット</b>：スペクトル本体。マウスホイールでズーム、ドラッグでパンできます（詳細はショートカットの章）。',
+        '<b>③ プロット</b>：スペクトル本体。スペクトル上のホイールは縦強度、δ 軸上のホイールは横軸ズームです。通常ドラッグは範囲ズーム、δ 軸ドラッグ（または右ドラッグ／Shift＋ドラッグ）はパンです。',
         `<b>④ 結果リスト</b>：検出したピーク・積分・多重度・帰属の一覧。ふだんは左サイドバーの下部にドッキングして表示されます。ヘッダーの ⤢ でプロット上にフロート（分離）でき、フロート中に × を押すとサイドバーに戻ります。表示メニューの ${manIc('eye')} で開閉できます。`,
       ]},
     ]},
@@ -5127,7 +5519,8 @@ const MANUAL = {
       {ul:[
         'ツールバー下段の各ツールは、<b>ボタン本体をクリック</b>すると起動し、右側の <b>▼</b> から詳細パネル（色・小数桁・削除・表示切替）を開けます。',
         '「範囲をドラッグ」と書かれた操作は、プロット上で<b>マウスを左右にドラッグ</b>して範囲を選びます。',
-        `いつでも <span class="kbd">Ctrl</span>+<span class="kbd">Z</span>（取り消し）／ <span class="kbd">Ctrl</span>+<span class="kbd">Y</span>（やり直し）。<span class="kbd">Esc</span> でツールを解除します。これらのツールはスペクトルを1つ以上読み込むと有効になります。`,
+        `解析・注釈・画像・コネクタ・ズーム挿入図・表示設定・スペクトルの追加／削除は、<span class="kbd">${MODKEY}</span>+<span class="kbd">Z</span>（取り消し）／ <span class="kbd">${MODKEY}</span>+<span class="kbd">Y</span>（やり直し）で戻せます。<span class="kbd">Esc</span> でツールを解除します。`,
+        '<b>複数スペクトル時の対象</b>：左の一覧で枠が付いたものが選択中です。Stacked表示でプロットを操作した場合は、操作を始めたレーンが対象になります。Overlay表示やメニューからの一括操作は、原則として選択中の1本が対象です。',
       ]},
       {sub:'使い方'},
       {ul:[
@@ -5139,12 +5532,12 @@ const MANUAL = {
     ]},
 
     { icon:'peaks', tab:'ピーク検出', h:'ピーク検出（Peaks）', blocks:[
-      {p:'ピークの頂点を検出し、その δ をラベル表示します。検出結果は右下の結果リスト「Peaks」タブにも一覧されます。'},
+      {p:'ピークの頂点を検出し、その δ をラベル表示します。検出結果は左サイドバー下部の結果リスト「Peaks」タブにも一覧されます。'},
       {fig:'peaks'},
       {sub:'検出する'},
       {ul:[
-        `<b>範囲を指定して検出</b> ${manIc('peaks')}：ツールを起動し、拾いたい領域を<b>ドラッグ</b>すると、その範囲内の極大点をピークとして検出します。狙った多重線だけを拾いたいときに便利です。`,
-        '<b>しきい値以上をまとめて検出</b>：「Detect all ≥ threshold」。<b>Threshold</b> スライダー（最大強度に対する％）で拾う高さの下限を決め、それ以上のピークを一括検出します。ノイズを拾うときは値を上げてください。',
+        `<b>範囲を指定して検出</b> ${manIc('peaks')}：ツールを起動して斜めにドラッグすると、実画面と同じ<b>赤いX–Y矩形</b>が現れます。横方向の δ 範囲だけでなく、縦方向の強度範囲にも入る<b>各極大点</b>を1ピークずつ検出します。図の三重線なら3本とも検出されます。横に細くドラッグした場合だけ、その δ 範囲の最大点1本を検出します。`,
+        '<b>しきい値以上をまとめて検出</b>：「Detect all ≥ threshold」。<b>Threshold</b> スライダー（最大強度に対する％）で拾う高さの下限を決め、それ以上のピークを一括検出します。「スペクトルに閾値を表示」をONにすると、同じ高さを選択中スペクトルへ破線で投影できます。ノイズを拾うときは値を上げてください。',
       ]},
       {sub:'消す・整える'},
       {ul:[
@@ -5159,36 +5552,38 @@ const MANUAL = {
       {fig:'integ'},
       {sub:'積分する'},
       {ul:[
-        `<b>範囲をドラッグして積分</b> ${manIc('integ')}：ツールを起動し、積分したいピーク（多重線全体）を<b>ドラッグ</b>で囲みます。面積が計算され、下に数値が表示されます。`,
+        `<b>範囲をドラッグして積分</b> ${manIc('integ')}：ツールを起動し、積分したいピーク（多重線全体）を<b>ドラッグ</b>で囲みます。面積が計算され、実際のプロットと同じようにスペクトル上側へ数値が表示されます。`,
         '<b>基準を決める</b>：既知のプロトン数のピーク（例：3H のメチル）を基準にすると、他の積分値が相対比（例 2.00 : 3.01）で読めます。結果リストで基準の設定・数値の編集ができます。',
       ]},
       {sub:'調整する'},
       {ul:[
-        '<b>高さ（Height）</b>：積分曲線の縦位置をずらし、ピークと重ならないようにできます。',
+        '<b>選択範囲の調整</b>：∫モードで積分をクリックすると、淡い青の選択領域と上端の青い四角が表示されます。左右の四角をドラッグすると、積分範囲の端を後から微調整できます。',
+        '<b>高さ（Height）</b>：積分曲線と数値の縦位置をずらし、ピークと重ならないようにできます。',
         '<b>小数桁（Decimals）</b>：表示する数値の桁数（0〜4）。',
         `<b>色</b>：積分曲線と数値の色。`,
         `<b>削除</b> ${manIc('trash')} ／ <b>表示 / 非表示</b> ${manIc('eye')}：選択・範囲・全消去、および表示切替ができます。`,
       ]},
     ]},
 
-    { icon:'mult', tab:'多重度', h:'多重度と J（Multiplets）', blocks:[
+    { icon:'mult', tab:'多重線', h:'多重線と J（Multiplets）', blocks:[
       {p:'多重線の形（s / d / t / q / m …）と結合定数 J を求めます。ピークの間隔から J〔Hz〕を自動計算し、δ・多重度・J・積分をまとめた帰属候補を作れます。'},
       {fig:'mult'},
       {sub:'解析する'},
       {ul:[
         `<b>ピークを選ぶ</b> ${manIc('mult')}：ツールを起動し、1本の多重線を構成するピークを<b>クリック</b>で選ぶか、多重線全体を<b>ドラッグ</b>で囲みます（先にピーク検出しておくと選びやすいです）。`,
-        '<b>多重度を確定</b>：「From selected peaks」で、選んだピークから多重度と J を計算して確定します。線の間隔が一定なら d / t / q… として、不規則なら m（多重線）として扱われます。',
+        '<b>多重線を確定</b>：「From selected peaks」で、選んだピークから多重線パターンと J を計算して確定します。線の間隔が一定なら d / t / q… として、不規則なら m（多重線）として扱われます。',
         '<b>選択の解除</b>：「Clear selection」で選び直せます。',
       ]},
       {sub:'調整する'},
       {ul:[
-        '<b>J の小数桁</b>：J〔Hz〕の表示桁数（0〜3）。<b>色</b>：多重度ラベルの色。',
+        '<b>ラベルの表示</b>：「d と J = X Hz」（標準）、「J = X Hz (d)」、「J = X Hz」（d を非表示）、「d と数値のみ」（従来）を切り替えられます。化学シフト δ はピーク検出と同じ色、J は紫で表示されます。',
+        '<b>元ピークの δ</b>：表示をオンにすると、多重線を定義した各検出ピークの化学シフトをツリー右側に表示します。初期状態では非表示です。<b>J の小数桁</b>：J〔Hz〕の表示桁数（0〜3）。<b>色</b>：多重線ラベルの色。',
         `<b>削除</b> ${manIc('trash')} ／ <b>表示 / 非表示</b> ${manIc('eye')}：範囲削除・全消去・表示切替ができます。`,
       ]},
       {p:'図の上部に出る「くし型（tree）」は各線の位置を表し、線の間隔が J に対応します。'},
     ]},
 
-    { icon:'mark', tab:'帰属・注釈', h:'帰属・注釈（Assign）', blocks:[
+    { icon:'assign', tab:'帰属・注釈', h:'帰属・注釈（Assign）', blocks:[
       {p:'図に説明を書き込むためのツール群です。「帰属」ボタンの ▼ に次の5種類がまとまっています。論文やスライドで構造や帰属を示すときに使います。'},
       {fig:'assign'},
       {ul:[
@@ -5196,17 +5591,18 @@ const MANUAL = {
         `<b>テキストラベル</b> ${manIc('text')}：任意の位置に文字（CHO, Ar-H, a など）を書き込みます。色とフォントサイズを調整できます。`,
         `<b>シェード</b> ${manIc('shade')}：範囲を<b>ドラッグ</b>して塗り帯を作り、着目領域を強調します。色を変更できます。`,
         `<b>コネクタ</b> ${manIc('connector')}：2点を<b>ドラッグ</b>で結ぶ線。ピークと構造・ラベルを結び付けるのに使います。`,
-        `<b>画像の追加</b> ${manIc('image')}：構造式などの画像を貼り付けます（<span class="kbd">Ctrl</span>+<span class="kbd">V</span> でも可）。ドラッグで移動・リサイズできます。`,
+        `<b>画像の追加</b> ${manIc('image')}：構造式などの画像を選択中スペクトルへ貼り付けます（<span class="kbd">${MODKEY}</span>+<span class="kbd">V</span> でも可）。画像本体をドラッグして移動し、選択時に右下へ出るハンドルでリサイズします。`,
       ]},
       {p:`各項目には <b>色</b>・<b>サイズ</b>・<b>既定値に戻す</b> ${manIc('reset')}・<b>表示 / 非表示</b> ${manIc('eye')} がそろっています。`},
     ]},
 
     { icon:'impurity', tab:'不純物の確認', h:'不純物・残留溶媒の確認（Impurities）', blocks:[
-      {p:'水・溶媒・グリースなどの残留ピークが、スペクトル中のどこに現れるかを重ねて確認できるツールです。「帰属」パネル内の「Find impurities」から使います。'},
+      {p:'選択中スペクトルの検出ピークを、水・溶媒・グリースなどの文献値と照合するツールです。「帰属」パネル内の「不純物を調べる」から使います。先にピーク検出を行ってください。'},
       {fig:'impurity'},
       {ul:[
-        '<b>探す</b>：一覧から溶媒・不純物を選ぶと、その既知シフト（文献値）を現在のスペクトルに<b>目印として重ねて</b>表示します。実測ピークと一致すれば、その帰属の裏付けになります。',
-        '<b>許容範囲（± ppm）</b>：測定溶媒によってシフトがずれるため、一致とみなす許容幅を ppm で指定できます。',
+        '<b>測定溶媒を選ぶ</b>：最初に、スペクトルを測定した重溶媒を「溶媒」欄で選びます。下の参照テーブルには、その溶媒中で報告された不純物のシフトが表示されます。',
+        '<b>候補を確認する</b>：検出済みピークの近くに文献値があると「検出ピーク → 候補」に表示されます。☆を押すと任意の参照値をピン留めできます。「スペクトルに重ねて表示」をONにすると候補とピンをプロット上で確認できます。',
+        '<b>許容範囲（± ppm）</b>：実測値と文献値を一致とみなす幅です。値を広げるほど候補が増えるため、必要以上に広げないでください。',
         '<b>使いどころ</b>：未知の小さなピークが不純物由来かどうかの切り分け、反応追跡での溶媒ピークの識別などに便利です。',
       ]},
       {p:'重ねた目印はあくまで参考値です。最終的な帰属は積分・多重度と合わせて判断してください。'},
@@ -5245,9 +5641,9 @@ const MANUAL = {
       {fig:'exportfig'},
       {ul:[
         `<b>画像（PNG）</b> ${manIc('png')} ／ <b>クリップボードにコピー</b> ${manIc('image')}：現在の表示をそのまま画像化します。スライドや文書に貼り付けられます。`,
-        `<b>スペクトル（CSV）</b> ${manIc('csv')}：δ と強度の数値データを書き出します。`,
-        `<b>解析レポート（CSV）</b> ${manIc('report')}：ピーク・積分・多重度などの解析結果を表形式で書き出します。`,
-        `<b>セッションの保存（JSON）</b> ${manIc('session')}：スペクトル・注釈・表示設定を丸ごと1ファイルに保存します。<b>セッションの読み込み</b> ${manIc('load')} で、その状態から作業を再開できます。`,
+        `<b>スペクトル（CSV）</b> ${manIc('csv')}：選択中スペクトル1本の δ と強度を書き出します。`,
+        `<b>解析レポート（CSV）</b> ${manIc('report')}：選択中スペクトル1本のピーク・積分・多重度などを書き出します。PNG／クリップボードは、画面に見えている全スペクトルを含みます。`,
+        `<b>セッションの保存（JSON）</b> ${manIc('session')}：各スペクトルを識別する情報、注釈、表示設定を保存します。スペクトルの数値配列や元のBrukerファイル自体はJSONに含まれません。再開時は元データを読み込んだうえで<b>セッションの読み込み</b> ${manIc('load')} を実行すると、一致するスペクトルへ状態が復元されます。`,
       ]},
     ]},
 
@@ -5257,11 +5653,11 @@ const MANUAL = {
         `<span class="kbd">C</span> 校正 ／ <span class="kbd">P</span> ピーク ／ <span class="kbd">I</span> 積分 ／ <span class="kbd">M</span> 多重度 ／ <span class="kbd">Z</span> ズーム表示`,
         `<span class="kbd">A</span> テキスト ／ <span class="kbd">D</span> マーク ／ <span class="kbd">G</span> コネクタ ／ <span class="kbd">L</span> 結果リスト`,
         `<span class="kbd">F</span> 全体表示 ／ <span class="kbd">0</span> 強度オート ／ <span class="kbd">↑</span><span class="kbd">↓</span> 強度 ／ <span class="kbd">←</span><span class="kbd">→</span> パン`,
-        `<span class="kbd">Ctrl</span>+<span class="kbd">Z</span> 取り消し ／ <span class="kbd">Ctrl</span>+<span class="kbd">Y</span> やり直し ／ <span class="kbd">Ctrl</span>+<span class="kbd">O</span> 開く ／ <span class="kbd">Esc</span> 解除`,
+        `<span class="kbd">${MODKEY}</span>+<span class="kbd">Z</span> 取り消し ／ <span class="kbd">${MODKEY}</span>+<span class="kbd">Y</span> やり直し ／ <span class="kbd">${MODKEY}</span>+<span class="kbd">O</span> 開く ／ <span class="kbd">Esc</span> 解除`,
       ]},
       {sub:'操作のコツ'},
       {ul:[
-        'マウスホイールでズーム、水平スクロール（またはドラッグ）でパンできます。感度や向きは設定メニューで調整できます。',
+        `スペクトル上のホイール＝縦強度、δ 軸上または <span class="kbd">${MODKEY}</span>＋ホイール＝横軸ズーム、通常ドラッグ＝範囲ズーム、δ 軸ドラッグ／右ドラッグ／Shift＋ドラッグ＝パンです。水平スクロールでもパンできます。`,
         '更新履歴は、このマニュアルの一番下（「更新履歴」タブ）で確認できます。',
         '言語（日本語 / English）とテーマ（ダーク / ライト）は設定メニューでいつでも切り替えられます。',
       ]},
@@ -5295,7 +5691,7 @@ const MANUAL = {
       {ul:[
         '<b>① Left sidebar</b>: the list of loaded spectra, Acquisition info, Processing (window, group-delay correction) and Phase. In the spectra list you can toggle visibility and colour.',
         '<b>② Menus &amp; toolbar</b>: the top row holds the File, Export, View and Settings menus; the lower row holds the <b>analysis tools</b> (calibrate, peaks, integrals, …).',
-        '<b>③ Plot</b>: the spectrum itself. Zoom with the mouse wheel and pan by dragging (see the Shortcuts section).',
+        '<b>③ Plot</b>: over the spectrum, the wheel changes vertical intensity; over the δ-axis, it zooms the horizontal range. A normal drag zooms to a range; drag the δ-axis (or right-drag / Shift-drag) to pan.',
         `<b>④ Results list</b>: a table of detected peaks, integrals, multiplets and assignments. By default it is docked at the bottom of the left sidebar. Use ⤢ in its header to float it over the plot; pressing × while floating returns it to the sidebar. Toggle it with ${manIc('eye')} in the View menu.`,
       ]},
     ]},
@@ -5322,7 +5718,8 @@ const MANUAL = {
       {ul:[
         'Each tool on the lower toolbar row is <b>activated by clicking its main button</b>; open the <b>▼</b> on its right for the details panel (colour, decimals, delete, show/hide).',
         'A “drag a range” action means <b>dragging the mouse left–right</b> across the plot to select a region.',
-        `Undo / redo any time with <span class="kbd">Ctrl</span>+<span class="kbd">Z</span> / <span class="kbd">Ctrl</span>+<span class="kbd">Y</span>; press <span class="kbd">Esc</span> to cancel a tool. These tools become available once at least one spectrum is loaded.`,
+        `Analysis, annotations, images, connectors, zoom insets, display settings, and adding/removing spectra can be undone with <span class="kbd">${MODKEY}</span>+<span class="kbd">Z</span> and redone with <span class="kbd">${MODKEY}</span>+<span class="kbd">Y</span>. Press <span class="kbd">Esc</span> to cancel a tool.`,
+        '<b>Target with multiple spectra</b>: the outlined row in the left list is active. In Stacked layout, a plot gesture targets the lane where it begins. In Overlay layout, and for commands run from menus, the active spectrum is generally the target.',
       ]},
       {sub:'How to use'},
       {ul:[
@@ -5338,8 +5735,8 @@ const MANUAL = {
       {fig:'peaks'},
       {sub:'Detecting'},
       {ul:[
-        `<b>Detect within a range</b> ${manIc('peaks')}: activate the tool and <b>drag</b> across the region you want; local maxima inside it are picked as peaks. Handy for picking just one multiplet.`,
-        '<b>Detect all ≥ threshold</b>: the <b>Threshold</b> slider (as a % of the tallest peak) sets the minimum height, and everything above it is picked at once. Raise it if noise is being picked up.',
+        `<b>Detect within a range</b> ${manIc('peaks')}: drag diagonally to draw the same <b>red X–Y box</b> used in the plot. Every local maximum inside both its δ and intensity bounds is picked separately (all three lines in the illustrated triplet). A horizontally thin drag picks only the tallest point in that δ range.`,
+        '<b>Detect all ≥ threshold</b>: the <b>Threshold</b> slider (as a % of the tallest peak) sets the minimum height, and everything above it is picked at once. Turn on “Show threshold on spectrum” to project that exact height as a dashed line on the active spectrum. Raise it if noise is being picked up.',
       ]},
       {sub:'Clean up'},
       {ul:[
@@ -5354,12 +5751,13 @@ const MANUAL = {
       {fig:'integ'},
       {sub:'Integrating'},
       {ul:[
-        `<b>Drag a range to integrate</b> ${manIc('integ')}: activate the tool and <b>drag</b> across a peak (the whole multiplet). The area is computed and the value shown below.`,
+        `<b>Drag a range to integrate</b> ${manIc('integ')}: activate the tool and <b>drag</b> across a peak (the whole multiplet). The area is computed and the value appears above the spectrum, matching the plot.`,
         '<b>Set a reference</b>: make a peak of known proton count (e.g. a 3H methyl) the reference so the others read as a relative ratio (e.g. 2.00 : 3.01). Set the reference / edit values in the results list.',
       ]},
       {sub:'Adjusting'},
       {ul:[
-        '<b>Height</b>: shift the integral curve vertically so it does not overlap the peaks.',
+        '<b>Adjust the selected range</b>: in ∫ mode, click an integral to show the pale-blue selected region and blue squares at the top. Drag either square to fine-tune that range edge.',
+        '<b>Height</b>: shift the integral curve and value vertically so they do not overlap the peaks.',
         '<b>Decimals</b>: number of decimals shown (0–4). <b>Colour</b>: colour of the curve and value.',
         `<b>Delete</b> ${manIc('trash')} / <b>Show / hide</b> ${manIc('eye')}: delete selected / range / all, and toggle visibility.`,
       ]},
@@ -5376,13 +5774,14 @@ const MANUAL = {
       ]},
       {sub:'Adjusting'},
       {ul:[
-        '<b>J decimals</b>: decimals shown for J (Hz) (0–3). <b>Colour</b>: multiplet-label colour.',
+        '<b>Label display</b>: switch among the separate multiplet symbol and J (default), “J = X Hz (d)”, J only, and the previous number-only J style. Chemical shift δ uses the peak colour; J is purple.',
+        '<b>Source peak δ</b>: when enabled, shows the chemical shifts of the detected peaks used to define the multiplet at the right of its tree. It is off by default. <b>J decimals</b>: decimals shown for J (Hz) (0–3). <b>Colour</b>: multiplet-label colour.',
         `<b>Delete</b> ${manIc('trash')} / <b>Show / hide</b> ${manIc('eye')}: remove by range, clear all, toggle visibility.`,
       ]},
       {p:'The “tree” comb above the peak marks the line positions; the spacing corresponds to J.'},
     ]},
 
-    { icon:'mark', tab:'Assign', h:'Assign & annotate', blocks:[
+    { icon:'assign', tab:'Assign', h:'Assign & annotate', blocks:[
       {p:'A group of tools for annotating the figure. The ▼ on the “Assign” button holds five of them — use these to show structures and assignments in papers and slides.'},
       {fig:'assign'},
       {ul:[
@@ -5390,17 +5789,18 @@ const MANUAL = {
         `<b>Text label</b> ${manIc('text')}: write text (CHO, Ar-H, a …) anywhere; adjust colour and font size.`,
         `<b>Shade</b> ${manIc('shade')}: <b>drag</b> a range to add a filled band that highlights a region; colour is adjustable.`,
         `<b>Connector</b> ${manIc('connector')}: a line drawn between two points by <b>dragging</b> — links a peak to a structure or label.`,
-        `<b>Add image</b> ${manIc('image')}: paste a structure image (also with <span class="kbd">Ctrl</span>+<span class="kbd">V</span>); drag to move and resize.`,
+        `<b>Add image</b> ${manIc('image')}: add a structure image to the active spectrum (also with <span class="kbd">${MODKEY}</span>+<span class="kbd">V</span>). Drag the image body to move it; select it and drag the lower-right handle to resize.`,
       ]},
       {p:`Each item offers <b>colour</b>, <b>size</b>, <b>reset to defaults</b> ${manIc('reset')} and <b>show / hide</b> ${manIc('eye')}.`},
     ]},
 
     { icon:'impurity', tab:'Impurities', h:'Impurities & residual solvent', blocks:[
-      {p:'Overlays where residual peaks (water, solvent, grease, …) appear in your spectrum. Reached from “Find impurities” inside the Assign panel.'},
+      {p:'Compares detected peaks in the active spectrum with literature values for water, solvents, grease and other impurities. Open “Find impurities” in the Assign panel, after detecting peaks.'},
       {fig:'impurity'},
       {ul:[
-        '<b>Find</b>: pick a solvent / impurity from the list and its known (literature) shift is <b>overlaid as a marker</b> on the current spectrum. A match with a measured peak supports that assignment.',
-        '<b>Tolerance (± ppm)</b>: shifts move a little with the measurement solvent, so you can set how far apart still counts as a match.',
+        '<b>Choose the measurement solvent</b>: select the deuterated solvent used for the spectrum. The reference table then shows impurity shifts reported in that solvent.',
+        '<b>Review candidates</b>: literature values near detected peaks appear under “Detected peaks → candidates”. Use ☆ to pin any reference row; turn on “Overlay on spectrum” to display matches and pins on the plot.',
+        '<b>Tolerance (± ppm)</b>: the maximum difference counted as a match. A wider value produces more candidates, so keep it as narrow as practical.',
         '<b>Where it helps</b>: deciding whether a small unknown peak is an impurity, or identifying solvent peaks while following a reaction.',
       ]},
       {p:'The overlaid markers are reference values only — confirm the final assignment together with integrals and multiplicities.'},
@@ -5439,9 +5839,9 @@ const MANUAL = {
       {fig:'exportfig'},
       {ul:[
         `<b>Image (PNG)</b> ${manIc('png')} / <b>Copy to clipboard</b> ${manIc('image')}: turn the current view into an image to paste into slides or documents.`,
-        `<b>Spectrum (CSV)</b> ${manIc('csv')}: export the δ vs intensity numbers.`,
-        `<b>Analysis report (CSV)</b> ${manIc('report')}: export peaks, integrals and multiplets as a table.`,
-        `<b>Save session (JSON)</b> ${manIc('session')}: save spectra, annotations and display settings in a single file. <b>Load session</b> ${manIc('load')} resumes from that state.`,
+        `<b>Spectrum (CSV)</b> ${manIc('csv')}: export δ and intensity for the one active spectrum.`,
+        `<b>Analysis report (CSV)</b> ${manIc('report')}: export peaks, integrals and multiplets for the one active spectrum. PNG and clipboard output include every spectrum currently visible on screen.`,
+        `<b>Save session (JSON)</b> ${manIc('session')}: save spectrum identifiers, annotations and display settings. The spectral arrays and original Bruker files are not embedded. To resume, load the original data first, then use <b>Load session</b> ${manIc('load')} to restore state onto matching spectra.`,
       ]},
     ]},
 
@@ -5451,11 +5851,11 @@ const MANUAL = {
         `<span class="kbd">C</span> Calibrate ⁄ <span class="kbd">P</span> Peaks ⁄ <span class="kbd">I</span> Integrals ⁄ <span class="kbd">M</span> Multiplets ⁄ <span class="kbd">Z</span> Zoom view`,
         `<span class="kbd">A</span> Text ⁄ <span class="kbd">D</span> Mark ⁄ <span class="kbd">G</span> Connector ⁄ <span class="kbd">L</span> Results list`,
         `<span class="kbd">F</span> Full view ⁄ <span class="kbd">0</span> Auto intensity ⁄ <span class="kbd">↑</span><span class="kbd">↓</span> Intensity ⁄ <span class="kbd">←</span><span class="kbd">→</span> Pan`,
-        `<span class="kbd">Ctrl</span>+<span class="kbd">Z</span> Undo ⁄ <span class="kbd">Ctrl</span>+<span class="kbd">Y</span> Redo ⁄ <span class="kbd">Ctrl</span>+<span class="kbd">O</span> Open ⁄ <span class="kbd">Esc</span> Cancel`,
+        `<span class="kbd">${MODKEY}</span>+<span class="kbd">Z</span> Undo ⁄ <span class="kbd">${MODKEY}</span>+<span class="kbd">Y</span> Redo ⁄ <span class="kbd">${MODKEY}</span>+<span class="kbd">O</span> Open ⁄ <span class="kbd">Esc</span> Cancel`,
       ]},
       {sub:'Tips'},
       {ul:[
-        'Zoom with the mouse wheel; pan with horizontal scroll (or by dragging). Sensitivity and direction are adjustable in Settings.',
+        `Wheel over spectrum = intensity; wheel over the δ-axis or ${MODKEY}+wheel = horizontal zoom; normal drag = range zoom; δ-axis drag / right-drag / Shift-drag = pan. Horizontal scroll also pans.`,
         'The changelog is at the bottom of this manual (the “Changelog” tab).',
         'Language (日本語 / English) and theme (Dark / Light) can be switched any time in the Settings menu.',
       ]},
