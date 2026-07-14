@@ -284,6 +284,32 @@ main{grid-row:1;position:relative;display:flex;flex-direction:column;background:
 .peak-organized .peak-threshold .tmtog .eyeic{display:inline-flex}
 .peak-organized .tmtog:focus{outline:none}
 .peak-organized .tmtog:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+/* Match the Integrals item indentation to the Assignment card layout. */
+#tmInteg .integ-organized .peak-work-section .tmitem,
+#tmInteg .integ-organized .peak-work-section .tmrow,
+#tmInteg .integ-organized .peak-work-section .tmstyle,
+#tmInteg .integ-organized .peak-work-section .tmtog{padding-left:22px}
+#tmInteg .integ-organized .peak-work-section .tmitem::before,
+#tmInteg .integ-organized .peak-work-section .tmtog::before{flex-basis:11px;margin-right:3px}
+#tmInteg .integ-organized .peak-settings-section .tmrow{grid-template-columns:11px 150px minmax(0,1fr) auto;column-gap:3px}
+#tmInteg .integ-organized .peak-settings-section .tmstyle{grid-template-columns:11px 150px minmax(0,1fr);column-gap:3px}
+/* Apply the same Assignment-card indentation to Peaks and Multiplets. */
+#tmShift .peak-organized .peak-work-section>.tmitem,
+#tmMult .mult-organized .peak-work-section>.tmitem,
+#tmShift .peak-organized .peak-settings-section>.tmrow,
+#tmMult .mult-organized .peak-settings-section>.tmrow,
+#tmShift .peak-organized .peak-settings-section>.tmstyle,
+#tmMult .mult-organized .peak-settings-section>.tmstyle,
+#tmShift .peak-organized .peak-settings-section>.tmtoggles>.tmtog,
+#tmMult .mult-organized .peak-settings-section>.tmtoggles>.tmtog{padding-left:22px}
+#tmShift .peak-organized .peak-work-section>.tmitem::before,
+#tmMult .mult-organized .peak-work-section>.tmitem::before,
+#tmShift .peak-organized .peak-settings-section>.tmtoggles>.tmtog::before,
+#tmMult .mult-organized .peak-settings-section>.tmtoggles>.tmtog::before{flex-basis:11px;margin-right:3px}
+#tmShift .peak-organized .peak-settings-section>.tmrow,
+#tmMult .mult-organized .peak-settings-section>.tmrow{grid-template-columns:11px 150px minmax(0,1fr) auto;column-gap:3px}
+#tmShift .peak-organized .peak-settings-section>.tmstyle,
+#tmMult .mult-organized .peak-settings-section>.tmstyle{grid-template-columns:11px 150px minmax(0,1fr);column-gap:3px}
 .tmpanel2{flex-direction:row;gap:8px;min-width:455px;padding-top:26px}
 .tmpanel2 .tmcol{display:flex;flex-direction:column;gap:1px;min-width:214px}
 .tmpanel2 .tmcol+.tmcol{border-left:1px solid var(--line);padding-left:8px}
@@ -302,6 +328,53 @@ main{grid-row:1;position:relative;display:flex;flex-direction:column;background:
 .impmini .mcand i{color:var(--dim);font-style:normal;font-size:10px}
 .impmini .mnone{color:var(--faint)}
 .impreflist2{flex:1 1 auto;min-height:120px;overflow-y:auto;padding:0 2px}
+.tmpanel2.assign-organized{flex-direction:column;gap:4px;min-width:min(400px,calc(100vw - 20px));width:400px;max-width:calc(100vw - 20px);padding:27px 7px 7px}
+.assign-organized .assign-tabs{display:grid;grid-template-columns:1fr 1fr;margin:0 3px 3px}
+.assign-organized .assign-tabs button{padding:5px 12px;font-size:11.5px}
+.assign-pane{display:flex;flex-direction:column;gap:3px;min-height:0}
+.assign-pane[hidden]{display:none}
+.assign-work-section{display:flex;flex-direction:column;gap:1px}
+.assign-work-heading{display:flex;align-items:center;gap:8px;padding:6px 5px 2px;font-size:12px;font-weight:650;color:var(--ink)}
+.assign-work-heading .tmic{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;color:var(--dim)}
+.assign-work-heading .svi{width:17px;height:17px}
+.assign-action-list .tmitem,.assign-delete-list .tmitem{padding:3px 9px 3px 14px;gap:0}
+.assign-action-list .tmitem .tmic,.assign-delete-list .tmitem .tmic{display:none}
+.assign-action-list .tmitem::before,.assign-delete-list .tmitem::before{content:'•';flex:0 0 13px;margin-right:4px;color:var(--dim);font-size:14px;line-height:1}
+.assign-display-list{padding:1px 0}
+.assign-display-list .tmtog{display:flex;align-items:center;justify-content:flex-start;width:100%;box-sizing:border-box;gap:0;padding:4px 9px 4px 14px;color:var(--ink);font-size:12px;text-align:left}
+.assign-display-list .tmtog::before{content:'•';flex:0 0 13px;margin-right:4px;color:var(--dim);font-size:14px;line-height:1}
+.assign-display-list .tmtog .eyeic{order:3;margin-left:auto}
+.assign-display-list .tmtog>span:last-child{order:2}
+.assign-style-details,.imp-note-details{margin:2px 4px 3px;border-top:1px solid var(--line)}
+.assign-style-details summary,.imp-note-details summary{list-style:none;cursor:pointer;padding:7px 4px 4px;color:var(--dim);font-size:11.5px;font-weight:600}
+.assign-style-details summary::-webkit-details-marker,.imp-note-details summary::-webkit-details-marker{display:none}
+.assign-style-details summary::before,.imp-note-details summary::before{content:'›';display:inline-block;width:14px;color:var(--faint);transition:transform .12s}
+.assign-style-details[open] summary::before,.imp-note-details[open] summary::before{transform:rotate(90deg)}
+.assign-style-body{display:flex;flex-direction:column;gap:5px;padding:2px 0 5px}
+.assign-style-group{padding:2px 4px 4px;border-radius:6px;background:color-mix(in srgb,var(--panel2) 45%,transparent)}
+.assign-style-subhead{padding:3px 8px 1px;font-size:10px;font-weight:650;color:var(--dim)}
+.assign-style-group .tmrow{display:grid;grid-template-columns:125px minmax(0,1fr) auto;column-gap:6px;padding:3px 8px;font-size:11.5px}
+.assign-style-group .tmrow .tmic{display:none}
+.assign-style-group .tmrow>span[data-i18n]{grid-column:1}
+.assign-style-group .tmrow input[type=range]{grid-column:2;min-width:0;margin-left:0}
+.assign-style-group .tmrow input[type=color]{grid-column:3;margin-left:0}
+.assign-style-group .tmrow .thrval{grid-column:3}
+.assign-style-group .tmitem{padding:3px 8px 3px 139px;font-size:11px;color:var(--dim)}
+.assign-style-group .tmitem .tmic{display:none}
+.assign-imp-pane{min-height:360px}
+.assign-imp-pane #impPanel{display:flex;flex-direction:column;gap:3px;min-height:0}
+.assign-imp-pane .impctl2{padding:1px 9px 3px 31px}
+.assign-imp-pane .impfield2{padding:3px 0;font-size:11.5px;color:var(--ink)}
+.assign-imp-pane .impfield2 select{max-width:210px}
+.assign-imp-pane .impfield2 input[type=number]{width:78px;text-align:right}
+.assign-imp-pane #impOverlayBtn{display:flex;align-items:center;justify-content:flex-start;width:100%;box-sizing:border-box;margin:2px 0 0;padding:4px 0;color:var(--ink);font-size:11.5px}
+.assign-imp-pane #impOverlayBtn .eyeic{order:2;margin-left:auto}
+.assign-imp-pane .impmini{max-height:120px;margin:0 4px 2px;padding:2px 7px 3px 31px}
+.assign-imp-pane .impmini .mrow{padding:3px 0}
+.assign-imp-pane .impfilter{width:calc(100% - 48px);margin:2px 9px 5px 39px;box-sizing:border-box}
+.assign-imp-pane .impreflist2{min-height:110px;max-height:210px;margin-left:31px;padding-right:5px}
+.assign-imp-pane .impnote2{padding:3px 6px 6px 18px}
+.assign-imp-pane .impnone{color:var(--faint);font-size:11px}
 .tmhead{font-size:9.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--faint);font-weight:600;padding:4px 9px 1px}
 .solvitem .solvppm{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--trace)}
 #toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%) translateY(8px);background:var(--ink);color:var(--bg);
@@ -1292,6 +1365,11 @@ const I18N={
     "<b>zoom inset</b>: click to select · <b>drag source box</b> = move / resize δ · <b>drag its top edge</b> = vertical magnify (reveals weak peaks) · <b>scroll</b> = δ-width",
   dropTitle:"Drop Bruker folder(s)", dropSub:"reads fid + acqus, and pdata/ if present",
   tabPeaks:"Peaks", tabInteg:"Integrals", tabMult:"Multiplets", tabAssign:"Assignments", tabShade:"Shade", markColorLbl:"Color", textColorLbl:"Color", lblTextSize:"Size",
+  assignTabAnnot:"Annotations", assignTabImp:"Impurities", assignGroupAdd:"Add / edit annotations", assignGroupDelete:"Delete annotations", assignGroupDisplay:"Display settings", assignStyleSettings:"Style settings",
+  assignMarkAction:"Mark a peak", assignTextAction:"Add a text label", assignShadeAction:"Shade a range", assignLineAction:"Draw a connector", assignImageAction:"Add an image",
+  assignShowMark:"Show marks", assignShowText:"Show text labels", assignShowShade:"Show shaded regions", assignShowLine:"Show connectors", assignShowImage:"Show images",
+  assignStyleMark:"Marks", assignStyleText:"Text labels", assignStyleShade:"Shaded regions", assignStyleLine:"Connectors", impSetupHd:"Find impurities", impRefsNote:"References and notes",
+  ttDelMark:"Click a marked peak to remove its mark", ttDelText:"Click a labeled peak to remove its label", ttDelImg:"Click an image to delete it",
   tabImp:"Impurities", impInvestigate:"Find impurities", impSolvent:"Solvent", impTol:"± ppm", impOverlay:"Overlay on spectrum",
   impNote:"¹H residual-impurity shifts (<a href='https://doi.org/10.1021/om100106e' target='_blank' rel='noopener'>Fulmer 2010</a>; <a href='https://doi.org/10.1021/acs.oprd.5b00417' target='_blank' rel='noopener'>Babij 2016</a>). Reference your spectrum to the solvent residual first.", impNote13C:"¹³C impurity & solvent shifts (<a href='https://doi.org/10.1021/om100106e' target='_blank' rel='noopener'>Fulmer 2010</a>); most complete for CDCl₃. Reference to the solvent signal first.",
   impMatchHd:"Detected peaks → candidates", impRefHd:"Reference table", impFilterPh:"Filter by name…",
@@ -1391,6 +1469,11 @@ const I18N={
     "<b>拡大図</b>：クリックで選択 ・ <b>元範囲の枠をドラッグ</b>＝移動/δ幅・<b>上辺をドラッグ</b>＝縦拡大（弱いピークを拡大）・ <b>スクロール</b>＝δ幅",
   dropTitle:"Bruker フォルダをドロップ", dropSub:"fid + acqus、あれば pdata/ も読みます",
   tabPeaks:"ピーク", tabInteg:"積分", tabMult:"多重線", tabAssign:"帰属", tabShade:"塗りつぶし", markColorLbl:"色", textColorLbl:"色", lblTextSize:"大きさ",
+  assignTabAnnot:"注釈", assignTabImp:"不純物", assignGroupAdd:"注釈を追加・編集する", assignGroupDelete:"注釈を削除する", assignGroupDisplay:"表示設定", assignStyleSettings:"スタイル設定",
+  assignMarkAction:"ピークにマークを付ける", assignTextAction:"テキストラベルを付ける", assignShadeAction:"範囲を塗りつぶす", assignLineAction:"コネクタを引く", assignImageAction:"画像を追加する",
+  assignShowMark:"マークを表示", assignShowText:"テキストラベルを表示", assignShowShade:"塗りつぶしを表示", assignShowLine:"コネクタを表示", assignShowImage:"画像を表示",
+  assignStyleMark:"マーク", assignStyleText:"テキストラベル", assignStyleShade:"塗りつぶし", assignStyleLine:"コネクタ", impSetupHd:"不純物を調べる", impRefsNote:"参考文献・注意事項",
+  ttDelMark:"マーク付きピークをクリックして削除", ttDelText:"ラベル付きピークをクリックして削除", ttDelImg:"画像をクリックして削除",
   tabImp:"不純物", impInvestigate:"不純物を調べる", impSolvent:"溶媒", impTol:"± ppm", impOverlay:"スペクトルに重ねて表示",
   impNote:"¹H 残留不純物シフト（<a href='https://doi.org/10.1021/om100106e' target='_blank' rel='noopener'>Fulmer 2010</a>; <a href='https://doi.org/10.1021/acs.oprd.5b00417' target='_blank' rel='noopener'>Babij 2016</a>）。先に溶媒残留ピークで基準合わせを。", impNote13C:"¹³C 不純物・溶媒シフト（<a href='https://doi.org/10.1021/om100106e' target='_blank' rel='noopener'>Fulmer 2010</a>）。CDCl₃が最も充実。先に溶媒シグナルで基準合わせを。",
   impMatchHd:"検出ピーク → 候補", impRefHd:"参照テーブル", impFilterPh:"名前で絞り込み…",
@@ -1577,13 +1660,13 @@ function paletteColors(name, n){
 // preview swatch strip (6 samples) for a palette name
 function paletteSwatch(name){ return paletteColors(name,6); }
 const DEFAULTS={lineW:1.1, wheelSens:1, wheelInertia:false, wheelInvert:false, hscroll:true, axisPad:56, baseGap:0.035,
-  fontScale:1, nameScale:1, axisScale:1, markSize:4.6, markColor:'#0E6E7E', shadeColor:'#D33A2C', textColor:null, textSize:10.5, lineColor:null, integDigits:3, multColor:null, multDigits:2, multJStyle:'full', multStyle:'style1', plotFont:'mono', ppmDigits:2, pkDigits:2,
+  fontScale:1, nameScale:1, axisScale:1, markSize:4.6, markColor:'#0E6E7E', shadeColor:'#D33A2C', textColor:null, textSize:10.5, lineColor:null, lineStyle:'dashed', imageBorder:false, imageBorderColor:'#3A4750', imageBorderWidth:1, imageBorderStyle:'solid', integDigits:3, multColor:null, multDigits:2, multJStyle:'full', multStyle:'style1', plotFont:'mono', ppmDigits:2, pkDigits:2,
   zoomBorderColor:null, zoomBorderWidth:1, zoomLeaderStyle:'dashed', peakStyle:'style1', integStyle:'style1', showIntegCurve:true};
 const S={ spectra:[], active:-1, view:{pHi:1,pLo:0}, yscale:1, tool:null,
   lineW:1.1, wheelSens:1, wheelInertia:false, wheelInvert:false, hscroll:true, selInteg:-1, selImg:-1, selZoom:-1,
   selPeak:-1, selPeaks:[], selMults:[], thr:0.05, axisPad:56, baseGap:0.035, integShift:0,
   peakColor:null, integColor:null, peakStyle:'style1', integStyle:'style1', showIntegCurve:true, multColor:null, multDigits:2, multJStyle:'full', multStyle:'style1', showMultSources:false,
-  markColor:'#0E6E7E', shadeColor:'#D33A2C', markSize:4.6, textColor:null, textSize:10.5, lineColor:null, integDigits:3, showInsets:true, showNames:true, showPeaks:true, showIntegs:true, showShades:true, showMarks:true, showText:true,
+  markColor:'#0E6E7E', shadeColor:'#D33A2C', markSize:4.6, textColor:null, textSize:10.5, lineColor:null, lineStyle:'dashed', imageBorder:false, imageBorderColor:'#3A4750', imageBorderWidth:1, imageBorderStyle:'solid', integDigits:3, showInsets:true, showNames:true, showPeaks:true, showIntegs:true, showShades:true, showMarks:true, showText:true,
   resTab:'peaks', asgSub:'text', docked:true, nextColor:0, layout:'stack', palette:'wbHC', monoBase:'#0E6E7E', ppmDigits:2,
   pkDigits:2, showMults:true, showJTree:true, showThresholdLine:true, showLanes:false, laneOverflow:false, showLines:true, showZooms:true, lines:[], zooms:[],
   fontScale:1, nameScale:1, axisScale:1, plotFont:'mono', showMinimap:false, zoomLeaders:true,
@@ -1990,6 +2073,15 @@ function drawInsets(){
       rec.x=Math.max(PADL, Math.min(W-PADR-w, rec.x));
       rec.y=Math.max(PADT, Math.min(Math.max(PADT,PADT+plotH()-h), rec.y));
       ctx.drawImage(img, rec.x, rec.y, w, h);
+      if(S.imageBorder){
+        ctx.save();
+        ctx.strokeStyle=S.imageBorderColor||css('--axis');
+        ctx.lineWidth=Math.max(.5,S.imageBorderWidth||1);
+        ctx.setLineDash(strokeDash(S.imageBorderStyle));
+        const inset=ctx.lineWidth/2;
+        ctx.strokeRect(rec.x+inset, rec.y+inset, Math.max(0,w-ctx.lineWidth), Math.max(0,h-ctx.lineWidth));
+        ctx.restore();
+      }
       const box={sp, rec, ki, x:rec.x, y:rec.y, w, h, hx:rec.x+w, hy:rec.y+h};
       if(sp===act && ki===S.selImg && !S.tool){
         ctx.save(); ctx.setLineDash([4,3]); ctx.lineWidth=1.2;
@@ -2179,8 +2271,14 @@ function ysc(sp){ const base=(sp&&sp.yscale)||1; return (VP&&VP.vmul)?base*VP.vm
 function valueAtY(sp,y){ const g=geomFor(sp,laneInfo());
   return (g.base-y)/(g.full*ysc(sp))*sp.gmax; }
 
-/* ===== connector lines (2-point dashed): stored ppm + plot-height fraction,
+/* ===== connector lines: stored ppm + plot-height fraction,
    so they keep their position relative to the spectrum across zoom/pan ===== */
+function strokeDash(style){
+  if(style==='dotted') return [1.5,3.5];
+  if(style==='dashdot') return [7,3,1.5,3];
+  if(style==='dashed') return [6,4];
+  return [];
+}
 function lineXY(l, which){
   const p=which===0?l.p0:l.p1, yf=which===0?l.y0:l.y1;
   return [ppmToX(p), curTop() + yf*plotH()];
@@ -2191,7 +2289,7 @@ function drawLines(){
     if(l.hidden) return;
     const [x0,y0]=lineXY(l,0), [x1,y1]=lineXY(l,1);
     ctx.save();
-    ctx.strokeStyle=hexA(S.lineColor||css('--axis'),.9); ctx.lineWidth=1.3; ctx.setLineDash([5,4]);
+    ctx.strokeStyle=hexA(S.lineColor||css('--axis'),.9); ctx.lineWidth=1.3; ctx.setLineDash(strokeDash(S.lineStyle));
     ctx.beginPath(); ctx.moveTo(x0,y0); ctx.lineTo(x1,y1); ctx.stroke();
     ctx.setLineDash([]);
     // endpoint handles when a connector tool is armed
@@ -2836,7 +2934,7 @@ function renderContent(opts){
         ctx.beginPath(); ctx.arc(cx,yD,mR,0,7);
         ctx.fillStyle=r.key; ctx.fill();
         ctx.lineWidth=1; ctx.strokeStyle=hexA(css('--bg'),.9); ctx.stroke();
-        if(!VP) MARKBOXES.push({sp, mkey, cx, yD, lt, lh});
+        if(!VP) MARKBOXES.push({sp, mkey, pks:r.pks, cx, yD, lt, lh});
       });
     }
   }
@@ -2860,6 +2958,7 @@ function drawDragPreview(topY, botY){
   }
 }
 function draw(){
+  if(typeof window.syncAssignHeaderState==='function') window.syncAssignHeaderState();
   ctx.clearRect(0,0,W,H);
   MARKBOXES=[];
   if(!visibleSpectra().length) return;
@@ -2869,10 +2968,10 @@ function draw(){
   // drag rect (peak tool: true X–Y box; connector: dashed preview line; others: full plot height)
   if(dragRect){
     if(dragRect.tool==='tLine'){
-      ctx.strokeStyle=hexA(S.lineColor||css('--axis'),.9); ctx.lineWidth=1.3; ctx.setLineDash([5,4]);
+      ctx.strokeStyle=hexA(S.lineColor||css('--axis'),.9); ctx.lineWidth=1.3; ctx.setLineDash(strokeDash(S.lineStyle));
       ctx.beginPath(); ctx.moveTo(dragRect.x0,dragRect.y0); ctx.lineTo(dragRect.x1,dragRect.y1); ctx.stroke();
       ctx.setLineDash([]);
-    } else if(dragRect.tool==='tDelLine'){
+    } else if(['tDelLine','tDelMark','tDelText','tDelImg'].includes(dragRect.tool)){
       /* click-to-delete: no drag rectangle */
     } else if(!dragRect.zVP){
       // main-plot gesture: preview under the insets (inset gestures are drawn after drawZooms)
@@ -2885,7 +2984,7 @@ function draw(){
   drawZooms();
   // a gesture that began inside a zoom inset: draw its preview on TOP of the inset (drawZooms
   // repaints the inset background, which would otherwise hide a preview drawn earlier), clipped to it
-  if(dragRect && dragRect.zVP && dragRect.tool!=='tLine' && dragRect.tool!=='tDelLine'){
+  if(dragRect && dragRect.zVP && dragRect.tool!=='tLine' && !['tDelLine','tDelMark','tDelText','tDelImg'].includes(dragRect.tool)){
     const v=dragRect.zVP; ctx.save();
     ctx.beginPath(); ctx.rect(v.x0,v.top,v.w,v.ph); ctx.clip();
     drawDragPreview(v.top, v.top+v.ph); ctx.restore();
@@ -2897,7 +2996,7 @@ function draw(){
 }
 
 /* ===================== interaction ===================== */
-const TOOLS=['tCalib','tPeaks','tInteg','tMult','tAssign','tMark','tErasePk','tEraseInt','tEraseMult','tDelPeak','tShade','tZoom','tLine','tDelLine'];
+const TOOLS=['tCalib','tPeaks','tInteg','tMult','tAssign','tMark','tDelMark','tDelText','tDelImg','tErasePk','tEraseInt','tEraseMult','tDelPeak','tShade','tZoom','tLine','tDelLine'];
 function toolsEnabled(){ return visibleSpectra().length>=1; }
 function toolOk(id){ const n=visibleSpectra().length; return id==='tZoom' ? n===1 : n>=1; }
 /* lane → spectrum (stacked); overlay → active. Activates it for annotation. */
@@ -2921,7 +3020,8 @@ function updateToolAvail(){
   TOOLS.forEach(id=>{ const el=document.getElementById(id); if(!el)return;
     const ok = id==='tZoom' ? n===1 : any;
     el.classList.toggle('disabled',!ok);
-    el.title = ok ? t('tt'+id.slice(1))+' ['+KH[id]+']' : (id==='tZoom'&&n>1 ? t('ttZoomSingle') : t('toolNeedOne')); });
+    const kh=KH[id]?' ['+KH[id]+']':'';
+    el.title = ok ? t('tt'+id.slice(1))+kh : (id==='tZoom'&&n>1 ? t('ttZoomSingle') : t('toolNeedOne')); });
   if(S.tool && (!any || (S.tool==='tZoom'&&n!==1))){ S.tool=null; TOOLS.forEach(x=>{ const el=document.getElementById(x); if(el) el.classList.remove('on'); }); syncToolMains(); }
   updateEraseVis(); syncToolMains();
   if(visibleSpectra().length===1){ const v=visibleSpectra()[0]; const k=S.spectra.indexOf(v); if(k>=0&&k!==S.active){ S.active=k; } }
@@ -2942,14 +3042,14 @@ function syncToolMains(){
   setOn('tPeaks', armed('tPeaks')||armed('tErasePk')||armed('tDelPeak'));
   setOn('tInteg', armed('tInteg')||armed('tEraseInt'));
   setOn('tMult', armed('tMult')||armed('tEraseMult'));
-  setOn('tMark', armed('tMark')||armed('tAssign')||armed('tShade')||armed('tDelShade')||armed('tLine')||armed('tDelLine'));
+  setOn('tMark', armed('tMark')||armed('tAssign')||armed('tDelMark')||armed('tDelText')||armed('tDelImg')||armed('tShade')||armed('tDelShade')||armed('tLine')||armed('tDelLine'));
 }
 /* which main-button group a tool belongs to (for releasing the tool when another tab/menu opens) */
 function toolGroup(t){
   if(t==='tPeaks'||t==='tErasePk'||t==='tDelPeak') return 'tPeaks';
   if(t==='tInteg'||t==='tEraseInt') return 'tInteg';
   if(t==='tMult'||t==='tEraseMult') return 'tMult';
-  if(t==='tMark'||t==='tAssign'||t==='tShade'||t==='tDelShade'||t==='tLine'||t==='tDelLine') return 'tMark';
+  if(t==='tMark'||t==='tAssign'||t==='tDelMark'||t==='tDelText'||t==='tDelImg'||t==='tShade'||t==='tDelShade'||t==='tLine'||t==='tDelLine') return 'tMark';
   return t;
 }
 function disarmTool(){ if(!S.tool && !(S.selPeaks&&S.selPeaks.length)) return;
@@ -3085,6 +3185,10 @@ cv.addEventListener('pointerdown',e=>{
     if(!S.tool){ const mb=markAt(x,y);
       if(mb){ cv.setPointerCapture(e.pointerId);
         markDrag={mb}; cv.style.cursor='grabbing'; return; } }
+    const idel=S.tool==='tDelImg'?insetAt(x,y):null;
+    if(idel&&idel.sp===A()){
+      pushUndo(idel.sp); removeImage(idel.ki); S.resTab='assign'; renderResults(); return;
+    }
     const hb=insetHandleAt(x,y);
     if(hb){
       const rec=hb.rec;
@@ -3165,6 +3269,20 @@ cv.addEventListener('pointerup',e=>{
   if(S.tool==='tDelLine'){
     const k=lineHit(x,y); if(k>=0){ S.lines.splice(k,1);
       S.resTab='assign'; S.asgSub='conn'; openResults(); renderResults(); }
+    dragRect=null; draw(); return;
+  }
+  if(S.tool==='tDelMark'){
+    const mb=markAt(x,y), tsp=(mb&&mb.sp)||sp; let targets=mb&&mb.pks?mb.pks.filter(p=>p.mark):[];
+    if(!targets.length&&tsp){ VP=dragRect.zVP||null; const k=peakAtX(tsp,x,12); VP=null;
+      if(k>=0&&tsp.peaks[k].mark) targets=[tsp.peaks[k]]; }
+    if(targets.length){ pushUndo(tsp); targets.forEach(p=>{ delete p.mark; delete p.markHidden; });
+      if(mb&&tsp.markPos) delete tsp.markPos[mb.mkey]; saveAnnot(tsp); S.resTab='assign'; S.asgSub='mark'; openResults(); renderResults(); }
+    dragRect=null; draw(); return;
+  }
+  if(S.tool==='tDelText'){
+    VP=dragRect.zVP||null; const k=sp?peakAtX(sp,x,12):-1; VP=null;
+    if(k>=0&&sp.peaks[k].label){ pushUndo(sp); delete sp.peaks[k].label; delete sp.peaks[k].labelHidden;
+      saveAnnot(sp); S.resTab='assign'; S.asgSub='text'; openResults(); renderResults(); }
     dragRect=null; draw(); return;
   }
   // gesture that began inside a zoom inset → map δ/intensity through the inset for the whole
@@ -3464,8 +3582,18 @@ function delSelectedInteg(){ const sp=A(); if(!sp)return;
     return;
   }
   pushUndo(sp); sp.integrals.splice(k,1); S.selInteg=-1; renormIntegrals(sp); saveAnnot(sp); renderResults(); draw(); }
+function clearMarks(){ const sp=A(); if(!sp)return; const rows=(sp.peaks||[]).filter(p=>p.mark); if(!rows.length)return;
+  pushUndo(sp); rows.forEach(p=>{ delete p.mark; delete p.markHidden; }); sp.markPos={};
+  saveAnnot(sp); S.resTab='assign'; S.asgSub='mark'; openResults(); renderResults(); draw(); }
+function clearTextLabels(){ const sp=A(); if(!sp)return; const rows=(sp.peaks||[]).filter(p=>p.label); if(!rows.length)return;
+  pushUndo(sp); rows.forEach(p=>{ delete p.label; delete p.labelHidden; });
+  saveAnnot(sp); S.resTab='assign'; S.asgSub='text'; openResults(); renderResults(); draw(); }
+function clearImages(){ const sp=A(); if(!sp)return; const rows=imgsOf(sp); if(!rows.length)return;
+  pushUndo(sp); rows.forEach(im=>{ delete IMGCACHE[im.id]; }); sp.images=[]; S.selImg=-1;
+  saveAnnot(sp); renderImgs(); draw(); }
 /* dropdown action dispatcher: tool ids arm a tool, others run a one-shot action */
 function doToolAction(act){
+  if(typeof window.closeAssignSettings==='function') window.closeAssignSettings();
   closeToolMenus();
   if(act==='clearPk') return clearPeaks();
   if(act==='clearInteg') return clearIntegrals();
@@ -3476,6 +3604,9 @@ function doToolAction(act){
   if(act==='clearMult'){ const sp=A(); if(sp){ pushUndo(sp); sp.multiplets=[]; saveAnnot(sp); } S.selMults=[]; S.resTab='mult'; openResults(); renderResults(); draw(); return; }
   if(act==='clearShade') return clearShades();
   if(act==='clearLines'){ S.lines=[]; persistUI(); draw(); return; }
+  if(act==='clearMarks') return clearMarks();
+  if(act==='clearTextLabels') return clearTextLabels();
+  if(act==='clearImages') return clearImages();
   if(act==='calReset') return resetCalibration();
   if(act==='resetMark') return resetMarkStyle();
   if(act==='resetText') return resetTextStyle();
@@ -4209,6 +4340,67 @@ function renderImpPanel(){
   wirePins();
 }
 
+/* Organized impurity pane used by the assignment-layout preview. */
+function renderImpPanelOrganized(){
+  const host=document.getElementById('impPanel'); if(!host) return;
+  const sp=A(), key=S.impSolvent, is13C=nucKind(sp)==='13C';
+  const tol=is13C?(S.impTolC==null?0.3:S.impTolC):(S.impTol==null?0.03:S.impTol);
+  const step=is13C?0.1:0.01;
+  const solvOpts=IMP_SOLV.map(s=>`<option value="${s[0]}"${s[0]===key?' selected':''}>${s[1]}</option>`).join('');
+  const peaks=(sp&&sp.peaks)||[];
+  const matchRows=peaks.slice(0,16).map(p=>{
+    const hits=impMatch(p.ppm,key,tol).slice(0,3);
+    const c=hits.length?hits.map(e=>`${e.name} <i>${e.env}${e.mult?' · '+e.mult:''} · Δ${e.d.toFixed(is13C?2:3)}</i>`).join('<br>'):`<span class="mnone">${t('impNoMatch')}</span>`;
+    return `<div class="mrow"><span class="mppm">${p.ppm.toFixed(2)}</span><span class="mcand">${c}</span></div>`;
+  }).join('');
+  const flt=(S.impFilter||'').toLowerCase();
+  const ref=impForSolvent(key).filter(e=>!flt || (e.name+' '+e.env).toLowerCase().includes(flt));
+  const refHtml=rows=>rows.map(e=>{ const pinned=(S.impPins||[]).includes(e.idx);
+    return `<div class="improw${pinned?' pin':''}" data-idx="${e.idx}"><button class="imppin" data-idx="${e.idx}" title="${t('impPin')}">${pinned?'★':'☆'}</button>`+
+      `<span class="impnm">${e.name}</span><span class="impenv">${e.env}</span><b class="imppm">${e.ppm.toFixed(2)}</b></div>`;
+  }).join('')||'<div class="impnone" style="padding:4px 6px">—</div>';
+  const eye=`<span class="eyeic"><svg class="svi" viewBox="0 0 16 16"><path d="M1.5 8S4 3.8 8 3.8 14.5 8 14.5 8 12 12.2 8 12.2 1.5 8 1.5 8z"/><circle cx="8" cy="8" r="2"/><line class="eyeslash" x1="2.5" y1="13.5" x2="13.5" y2="2.5"/></svg></span>`;
+  host.innerHTML=
+    `<section class="assign-work-section">
+       <div class="assign-work-heading"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M5 2.5v3l-2.7 5.2A1.8 1.8 0 0 0 3.9 13h8.2a1.8 1.8 0 0 0 1.6-2.3L11 5.5v-3"/><path d="M4 8.5h8"/><path d="M4.5 2.5h7"/></svg></span><span data-i18n="impSetupHd">Find impurities</span></div>
+       <div class="impctl2">
+         <label class="impfield2"><span data-i18n="impSolvent">Solvent</span><select id="impSolvSel">${solvOpts}</select></label>
+         <label class="impfield2"><span data-i18n="impTol">± ppm</span><input id="impTolIn" type="number" min="${step}" step="${step}" value="${tol}"></label>
+         <button class="tmtog${S.showImpurities?' on':''}" id="impOverlayBtn">${eye}<span data-i18n="impOverlay">Overlay on spectrum</span></button>
+       </div>
+     </section>
+     <div class="tmsep"></div>
+     <section class="assign-work-section">
+       <div class="assign-work-heading"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><circle cx="6.5" cy="6.5" r="3.8"/><path d="m9.3 9.3 3.5 3.5"/><path d="M4.5 6.5h4M6.5 4.5v4"/></svg></span><span data-i18n="impMatchHd">Detected peaks → candidates</span></div>
+       <div class="impmini">${peaks.length?matchRows:`<div class="mnone">${t('impNoPeaks')}</div>`}</div>
+     </section>
+     <div class="tmsep"></div>
+     <section class="assign-work-section">
+       <div class="assign-work-heading"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M3 3h10v10H3z"/><path d="M5.5 6h5M5.5 8.5h5M5.5 11h3"/></svg></span><span data-i18n="impRefHd">Reference table</span></div>
+       <input type="text" id="impFilterIn" class="impfilter" placeholder="${t('impFilterPh')}" value="${S.impFilter||''}">
+       <div class="impreflist2">${refHtml(ref)}</div>
+     </section>
+     <details class="imp-note-details"><summary data-i18n="impRefsNote">References and notes</summary><div class="impnote2">${is13C?t('impNote13C'):t('impNote')}</div></details>`;
+  host.querySelectorAll('[data-i18n]').forEach(el=>{ const v=t(el.getAttribute('data-i18n')); if(v.indexOf('<')>=0) el.innerHTML=v; else el.textContent=v; });
+  const stop=el=>{ if(!el)return; el.addEventListener('click',e=>e.stopPropagation()); el.addEventListener('pointerdown',e=>e.stopPropagation()); };
+  const ss=host.querySelector('#impSolvSel'); stop(ss);
+  if(ss) ss.onchange=e=>{ S.impSolvent=e.target.value; persistUI(); renderImpPanelOrganized(); draw(); };
+  const ti=host.querySelector('#impTolIn'); stop(ti);
+  if(ti) ti.onchange=e=>{ const v=Math.max(step,+e.target.value||tol); if(is13C) S.impTolC=v; else S.impTol=v; persistUI(); renderImpPanelOrganized(); draw(); };
+  const ob=host.querySelector('#impOverlayBtn');
+  if(ob) ob.onclick=e=>{ e.stopPropagation(); S.showImpurities=!S.showImpurities; ob.classList.toggle('on',S.showImpurities); persistUI(); draw(); };
+  const fi=host.querySelector('#impFilterIn'); stop(fi);
+  function wirePins(){ host.querySelectorAll('.imppin').forEach(b=>b.onclick=ev=>{ ev.stopPropagation();
+    const idx=+b.dataset.idx; S.impPins=S.impPins||[]; const i=S.impPins.indexOf(idx);
+    if(i>=0) S.impPins.splice(i,1); else S.impPins.push(idx);
+    b.textContent=S.impPins.includes(idx)?'★':'☆'; b.parentElement.classList.toggle('pin',S.impPins.includes(idx)); persistUI(); draw(); }); }
+  if(fi) fi.oninput=e=>{ S.impFilter=e.target.value; const cur=e.target.value.toLowerCase();
+    const rows=impForSolvent(S.impSolvent).filter(x=>!cur||(x.name+' '+x.env).toLowerCase().includes(cur));
+    const list=host.querySelector('.impreflist2'); if(list){ list.innerHTML=refHtml(rows); wirePins(); } };
+  wirePins();
+}
+renderImpPanel=renderImpPanelOrganized;
+
 /* overlay reference markers for pinned + peak-matched impurities */
 function drawImpurities(){
   if(!S.showImpurities) return;
@@ -4321,6 +4513,79 @@ function refreshActive(){
   buildSolventList(); if(typeof renderImpPanel==='function') renderImpPanel();
   draw();
 }
+function organizeAssignPanel(){
+  const panel=document.querySelector('#tmAssign>.tmpanel'); if(!panel) return;
+  panel.classList.add('assign-organized');
+  const eye=`<span class="eyeic"><svg class="svi" viewBox="0 0 16 16"><path d="M1.5 8S4 3.8 8 3.8 14.5 8 14.5 8 12 12.2 8 12.2 1.5 8 1.5 8z"/><circle cx="8" cy="8" r="2"/><line class="eyeslash" x1="2.5" y1="13.5" x2="13.5" y2="2.5"/></svg></span>`;
+  const trash=`<span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M2.5 4.5h11"/><path d="M6 4.5V3h4v1.5"/><path d="M4.1 4.5l.6 8.2a1 1 0 0 0 1 .9h4.6a1 1 0 0 0 1-.9l.6-8.2"/><path d="M6.6 7.2v3.8M9.4 7.2v3.8"/></svg></span>`;
+  panel.innerHTML=
+    `<div class="assign-tabs seg" id="segAssignMode"><button class="on" data-assign-tab="annot" data-i18n="assignTabAnnot">Annotations</button><button data-assign-tab="imp" data-i18n="assignTabImp">Impurities</button></div>
+     <div class="assign-pane" data-assign-pane="annot">
+       <section class="assign-work-section">
+         <div class="assign-work-heading"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M2 13l1-3 7-7 2 2-7 7z"/><path d="M9.5 3.5l2 2"/></svg></span><span data-i18n="assignGroupAdd">Add / edit annotations</span></div>
+         <div class="assign-action-list">
+           <button class="tmitem" data-act="tMark"><span class="tmic"></span><span data-i18n="assignMarkAction">Mark a peak</span></button>
+           <button class="tmitem" data-act="tAssign"><span class="tmic"></span><span data-i18n="assignTextAction">Add a text label</span></button>
+           <button class="tmitem" data-act="tShade"><span class="tmic"></span><span data-i18n="assignShadeAction">Shade a range</span></button>
+           <button class="tmitem" data-act="tLine"><span class="tmic"></span><span data-i18n="assignLineAction">Draw a connector</span></button>
+           <button class="tmitem" id="btnAddImg"><span class="tmic"></span><span data-i18n="assignImageAction">Add an image</span></button>
+           <input type="file" id="imgIn" accept="image/*" multiple style="display:none">
+         </div>
+       </section>
+       <div class="tmsep"></div>
+       <section class="assign-work-section">
+         <div class="assign-work-heading">${trash}<span data-i18n="assignGroupDelete">Delete annotations</span></div>
+         <div class="assign-delete-list">
+           <button class="tmitem erase" data-act="tDelShade"><span class="tmic"></span><span data-i18n="actDelShade">Delete shade</span></button>
+           <button class="tmitem erase" data-act="clearShade"><span class="tmic"></span><span data-i18n="actClearShade">Clear all shades</span></button>
+           <button class="tmitem erase" data-act="tDelLine"><span class="tmic"></span><span data-i18n="actDelLine">Delete connector</span></button>
+           <button class="tmitem erase" data-act="clearLines"><span class="tmic"></span><span data-i18n="actClearLines">Clear all connectors</span></button>
+         </div>
+       </section>
+       <div class="tmsep"></div>
+       <section class="assign-work-section">
+         <div class="assign-work-heading"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M3 4h10M3 8h10M3 12h10"/><circle cx="6" cy="4" r="1.3"/><circle cx="10" cy="8" r="1.3"/><circle cx="7.5" cy="12" r="1.3"/></svg></span><span data-i18n="assignGroupDisplay">Display settings</span></div>
+         <div class="assign-display-list">
+           <button class="tmtog" id="tgMark">${eye}<span data-i18n="assignShowMark">Show marks</span></button>
+           <button class="tmtog" id="tgText">${eye}<span data-i18n="assignShowText">Show text labels</span></button>
+           <button class="tmtog" id="tgShade">${eye}<span data-i18n="assignShowShade">Show shaded regions</span></button>
+           <button class="tmtog" id="tgLine">${eye}<span data-i18n="assignShowLine">Show connectors</span></button>
+           <button class="tmtog" id="tgInsets">${eye}<span data-i18n="assignShowImage">Show images</span></button>
+         </div>
+       </section>
+       <details class="assign-style-details"><summary data-i18n="assignStyleSettings">Style settings</summary>
+         <div class="assign-style-body">
+           <div class="assign-style-group"><div class="assign-style-subhead" data-i18n="assignStyleMark">Marks</div>
+             <div class="tmrow"><span class="tmic"></span><span data-i18n="markColorLbl">Color</span><input type="color" id="markColor" value="#0E6E7E"></div>
+             <div class="tmrow"><span class="tmic"></span><span data-i18n="lblMarkSize">Size</span><input type="range" id="markSize" min="2" max="12" step="0.5" value="4.6"><span class="thrval" id="mkv">4.6</span></div>
+             <button class="tmitem" data-act="resetMark"><span class="tmic"></span><span data-i18n="btnResetDef">Reset to defaults</span></button>
+           </div>
+           <div class="assign-style-group"><div class="assign-style-subhead" data-i18n="assignStyleText">Text labels</div>
+             <div class="tmrow"><span class="tmic"></span><span data-i18n="textColorLbl">Color</span><input type="color" id="textColor" value="#7A4A98"></div>
+             <div class="tmrow"><span class="tmic"></span><span data-i18n="lblTextSize">Font size</span><input type="range" id="textSize" min="7" max="20" step="0.5" value="10.5"><span class="thrval" id="tsv">10.5</span></div>
+             <button class="tmitem" data-act="resetText"><span class="tmic"></span><span data-i18n="btnResetDef">Reset to defaults</span></button>
+           </div>
+           <div class="assign-style-group"><div class="assign-style-subhead" data-i18n="assignStyleShade">Shaded regions</div>
+             <div class="tmrow"><span class="tmic"></span><span data-i18n="shadeColorLbl">Color</span><input type="color" id="shadeColor" value="#D33A2C"></div>
+           </div>
+           <div class="assign-style-group"><div class="assign-style-subhead" data-i18n="assignStyleLine">Connectors</div>
+             <div class="tmrow"><span class="tmic"></span><span data-i18n="lineColorLbl">Color</span><input type="color" id="lineColor" value="#3A4750"></div>
+           </div>
+         </div>
+       </details>
+     </div>
+     <div class="assign-pane assign-imp-pane" data-assign-pane="imp" hidden><div id="impPanel"></div></div>`;
+  panel.querySelectorAll('[data-i18n]').forEach(el=>{ const v=t(el.getAttribute('data-i18n')); if(v.indexOf('<')>=0) el.innerHTML=v; else el.textContent=v; });
+  panel.querySelectorAll('.tmitem[data-act]').forEach(it=>it.addEventListener('click',e=>{ e.stopPropagation(); doToolAction(it.dataset.act); }));
+  panel.querySelectorAll('.tmrow input').forEach(inp=>{ inp.addEventListener('click',e=>e.stopPropagation()); inp.addEventListener('pointerdown',e=>e.stopPropagation()); });
+  panel.querySelectorAll('[data-assign-tab]').forEach(b=>b.onclick=e=>{ e.stopPropagation();
+    panel.querySelectorAll('[data-assign-tab]').forEach(x=>x.classList.toggle('on',x===b));
+    panel.querySelectorAll('[data-assign-pane]').forEach(p=>p.hidden=p.dataset.assignPane!==b.dataset.assignTab);
+    if(b.dataset.assignTab==='imp') renderImpPanelOrganized();
+  });
+  renderImpPanelOrganized();
+}
+organizeAssignPanel();
 function segWire(id,fn){ const el=document.getElementById(id);
   el.querySelectorAll('button').forEach(b=>b.onclick=()=>{ el.querySelectorAll('button').forEach(x=>x.classList.remove('on'));
     b.classList.add('on'); fn(b.dataset.v); }); }
@@ -4907,7 +5172,8 @@ function uiState(){ const o={
     axisPad:S.axisPad, baseGap:S.baseGap, thr:S.thr,
     zoomBorderColor:S.zoomBorderColor, zoomBorderWidth:S.zoomBorderWidth, zoomLeaderStyle:S.zoomLeaderStyle,
     peakColor:S.peakColor, integColor:S.integColor, peakStyle:S.peakStyle, integStyle:S.integStyle, showIntegCurve:S.showIntegCurve,
-    multColor:S.multColor, multDigits:S.multDigits, multJStyle:S.multJStyle, multStyle:S.multStyle, markColor:S.markColor, shadeColor:S.shadeColor, textColor:S.textColor, textSize:S.textSize, lineColor:S.lineColor, integDigits:S.integDigits,
+    multColor:S.multColor, multDigits:S.multDigits, multJStyle:S.multJStyle, multStyle:S.multStyle, markColor:S.markColor, shadeColor:S.shadeColor, textColor:S.textColor, textSize:S.textSize, lineColor:S.lineColor, lineStyle:S.lineStyle,
+    imageBorder:S.imageBorder, imageBorderColor:S.imageBorderColor, imageBorderWidth:S.imageBorderWidth, imageBorderStyle:S.imageBorderStyle, integDigits:S.integDigits,
     customPalette:S.customPalette||[],
     impSolvent:S.impSolvent, impTol:S.impTol, impTolC:S.impTolC, showImpurities:S.showImpurities, impPins:S.impPins||[],
     lines:S.lines||[], zooms:S.zooms||[], flags:{} };
@@ -4945,6 +5211,11 @@ function applyUIState(o, withView){
   if(['full','inline','jonly','value'].includes(o.multJStyle)) S.multJStyle=o.multJStyle;
   if('multColor' in o) S.multColor=o.multColor;
   if('lineColor' in o) S.lineColor=o.lineColor;
+  if(['solid','dashed','dotted','dashdot'].includes(o.lineStyle)) S.lineStyle=o.lineStyle;
+  if(typeof o.imageBorder==='boolean') S.imageBorder=o.imageBorder;
+  if(o.imageBorderColor) S.imageBorderColor=o.imageBorderColor;
+  if(typeof o.imageBorderWidth==='number') S.imageBorderWidth=Math.max(.5,Math.min(8,o.imageBorderWidth));
+  if(['solid','dashed','dotted','dashdot'].includes(o.imageBorderStyle)) S.imageBorderStyle=o.imageBorderStyle;
   if(o.palette) S.palette=o.palette;
   if(o.monoBase) S.monoBase=o.monoBase;
   if(Array.isArray(o.customPalette)&&o.customPalette.length) S.customPalette=o.customPalette;
@@ -5059,6 +5330,17 @@ function toast(msg){ let el=document.getElementById('toast');
    a large rework bumps the major (→ 2.0). Badge shows v + CHANGELOG[0].v.
    Fields: v (version string), date (YYYY-MM-DD), en[] / ja[] bullet lists. */
 const CHANGELOG=[
+  { v:'1.8', date:'2026-07-14',
+    en:['Reorganized the Peaks, Integrals and Multiplets dropdowns into task-based Create / Delete / Display sections, with consistent icons, wording and Assignment-aligned indentation.',
+        'Rebuilt Assignment as Annotation / Impurity tabs with per-type cards for marks, text labels, fills, connectors and images; each card now provides visibility, clear-all and a settings popover.',
+        'Added collision-aware integral Style 3, using Delta-style leaders and vertical values below each spectrum lane.',
+        'Added connector line-style controls and configurable image borders (show / hide, colour, width and line style), with the new settings persisted in workspace history and session JSON.',
+        'Changed the manual changelog from version-based entries to date-grouped entries and refreshed the corresponding tool-panel guidance.'],
+    ja:['ピーク検出・積分・多重線のドロップダウンを「作成／削除／表示設定」の作業別セクションに再編し、アイコン・表記・インデントを帰属パネルと統一しました。',
+        '帰属パネルを「注釈／不純物」タブと、マーク・テキストラベル・塗りつぶし・コネクタ・画像の種類別カードに再構成し、各カードに表示切り替え・一括削除・設定ポップオーバーを追加しました。',
+        '積分値の重なりを避けて配置する、デルタ型の引き出し線と縦書き値を用いた「スタイル3」を追加しました。',
+        'コネクタの線種と画像の枠線（表示・色・太さ・線種）を設定できるようにし、新しい設定をワークスペース履歴とセッションJSONへ保存するようにしました。',
+        'マニュアルの更新履歴をバージョン別から日付別の項目表示へ変更し、関連するツールパネルの説明も更新しました。'] },
   { v:'1.7', date:'2026-07-11',
     en:['Added independent Style 1 / Style 2 display selectors for peak labels and integrals.',
         'Style 2 groups peak labels above each spectrum lane and places bracketed integral values below it.',
@@ -5869,12 +6151,17 @@ const MANUAL = {
 };
 
 function manChangelogHTML(J){
-  return (typeof CHANGELOG==='undefined'?[]:CHANGELOG).map((e,i)=>{
-    const items=(J?e.ja:e.en)||e.en||[];
+  const byDate=[];
+  (typeof CHANGELOG==='undefined'?[]:CHANGELOG).forEach(e=>{
+    const date=e.date||'';
+    let group=byDate.find(g=>g.date===date);
+    if(!group){ group={date,items:[]}; byDate.push(group); }
+    group.items.push(...((J?e.ja:e.en)||e.en||[]));
+  });
+  return byDate.map((group,i)=>{
     const cur=i===0?`<span class="cur">${t('clogCurrent')}</span>`:'';
-    return `<div class="clogentry"><div class="clogv"><b>v${e.v}</b>${cur}`+
-      `<span class="cdate">${e.date||''}</span></div>`+
-      `<ul>${items.map(x=>`<li>${x}</li>`).join('')}</ul></div>`;
+    return `<div class="clogentry"><div class="clogv"><b>${group.date}</b>${cur}</div>`+
+      `<ul>${group.items.map(x=>`<li>${x}</li>`).join('')}</ul></div>`;
   }).join('');
 }
 function manLang(){ return (typeof LANG!=='undefined' && LANG==='ja') ? 'ja' : 'en'; }
@@ -5930,8 +6217,8 @@ function renderShortcuts(){
   ).join('');
 }
 function applyModKeyLabels(){
-  const ai=document.querySelector('#btnAddImg [data-i18n="btnAddImg"]')||document.querySelector('#btnAddImg span');
-  if(ai) ai.textContent = t('btnAddImg')+'  ('+modCombo('V')+')';
+  const ai=document.querySelector('#btnAddImg [data-i18n="btnAddImg"],#btnAddImg [data-i18n="assignImageAction"]')||document.querySelector('#btnAddImg span');
+  if(ai){ const key=ai.getAttribute('data-i18n')||'btnAddImg'; ai.textContent = t(key)+'  ('+modCombo('V')+')'; }
   // home-screen key hint and undo/redo tooltips: swap literal "Ctrl" for the platform key
   const hk=document.querySelector('[data-i18n="hintKeys"]');
   if(hk && MODKEY!=='Ctrl') hk.innerHTML=hk.innerHTML.replace(/Ctrl/g,MODKEY);
@@ -6057,6 +6344,266 @@ html[data-theme="light"] #toolbar .menu .mbtn:hover{
   }
 }
 </style>
+
+<!-- Assignment annotation D-layout -->
+<style id="assign-item-layout-d">
+#tmAssign .tmpanel.assign-organized.assign-item-d{width:420px;min-width:min(420px,calc(100vw - 20px))}
+.asg-layout-stage{display:flex;flex-direction:column;gap:3px;padding-top:3px}
+.asg-item-card{display:flex;flex-direction:column;gap:1px}
+.asg-item-card+.asg-item-card{border-top:1px solid var(--line);padding-top:3px}
+.asg-item-heading{display:flex;align-items:center;gap:8px;padding:6px 5px 2px;font-size:12px;font-weight:650;color:var(--ink)}
+.asg-item-heading .tmic{display:inline-flex;align-items:center;justify-content:center;flex:none;width:17px;height:17px;color:var(--dim)}
+.asg-item-heading .svi{width:17px;height:17px}
+.asg-item-body{display:flex;flex-direction:column;gap:1px;padding:1px 0 4px}
+.asg-item-body .tmitem{padding:3px 9px 3px 31px;gap:0}
+.asg-item-body .tmitem .tmic{display:none}
+.asg-item-body .tmitem::before{content:'•';flex:0 0 13px;margin-right:4px;color:var(--dim);font-size:14px;line-height:1}
+.asg-item-body .tmrow{display:grid;grid-template-columns:13px 130px minmax(0,1fr) auto;column-gap:4px;align-items:center;padding:3px 9px 3px 31px;font-size:11.5px;color:var(--ink)}
+.asg-item-body .tmrow::before{content:'•';grid-column:1;color:var(--dim);font-size:14px;line-height:1}
+.asg-item-body .tmrow .tmic{display:none}
+.asg-item-body .tmrow>span[data-i18n]{grid-column:2}
+.asg-item-body .tmrow input[type=range]{grid-column:3;min-width:0;margin-left:0}
+.asg-item-body .tmrow input[type=color]{grid-column:4;margin-left:0}
+.asg-item-body .tmrow .thrval{grid-column:4}
+.asg-item-body .tmtog{display:flex;align-items:center;justify-content:flex-start;width:100%;box-sizing:border-box;gap:0;padding:4px 9px 4px 31px;color:var(--ink);font-size:11.5px;text-align:left}
+.asg-item-body .tmtog::before{content:'•';flex:0 0 13px;margin-right:4px;color:var(--dim);font-size:14px;line-height:1}
+.asg-item-body .tmtog .eyeic{order:3;margin-left:auto}
+.asg-item-body .tmtog>span:last-child{order:2}
+.asg-layout-d .asg-item-card+.asg-item-card{border-top:0;padding-top:0}
+.asg-gear-card{border-bottom:1px solid var(--line);padding:1px 0 3px}
+.asg-gear-card:last-child{border-bottom:0}
+.asg-gear-card .asg-item-heading{min-height:24px;padding:4px 6px 2px}
+.asg-gear-card .asg-item-heading>.tmic{width:16px;height:16px;color:var(--dim);opacity:.88}
+.asg-gear-card .asg-item-heading>.tmic .svi{width:16px;height:16px}
+.asg-header-actions{display:inline-flex;align-items:center;gap:0;margin-left:auto}
+.asg-header-actions .asg-header-eye{margin-left:0!important}
+.asg-header-actions .asg-header-clear,.asg-header-actions .asg-gear-btn{margin-left:-1px}
+.asg-gear-btn{display:inline-flex;align-items:center;justify-content:center;width:23px;height:23px;margin-left:auto;padding:4px;border:0;border-radius:6px;background:transparent;color:var(--dim);cursor:pointer;transition:color .16s,background .16s,transform .22s}
+.asg-gear-btn:hover{background:var(--panel2);color:var(--ink)}
+.asg-gear-btn.on{color:var(--trace);background:transparent;transform:rotate(60deg)}
+.asg-gear-btn.on:hover{background:transparent}
+.asg-gear-btn .svi{width:15px;height:15px}
+.asg-gear-settings{position:fixed;z-index:110;width:270px;max-width:calc(100vw - 16px);box-sizing:border-box;margin:0;padding:7px 6px 8px;border:1px solid var(--line);border-top-color:color-mix(in srgb,var(--trace) 48%,var(--line));border-radius:9px;background:var(--panel);box-shadow:0 10px 30px rgba(0,0,0,.26)}
+.asg-gear-settings[hidden]{display:none}
+.asg-gear-settings::before{content:attr(data-title);display:block;margin:0 3px 5px;padding:1px 5px 5px;border-bottom:1px solid var(--line);font-size:12px;font-weight:650;color:var(--dim);letter-spacing:.02em}
+.asg-gear-settings .asg-item-body{padding:0}
+.asg-gear-settings .asg-item-body .tmrow{grid-template-columns:13px 112px minmax(0,1fr) auto;padding:4px 7px;font-size:12px}
+.asg-gear-settings .asg-item-body .tmrow>label{grid-column:2;color:var(--ink)}
+.asg-gear-settings .asg-item-body .tmrow>select{grid-column:3/5;min-width:0;padding:5px 7px;font-size:12px}
+.asg-gear-settings .asg-item-body .tmrow.asg-check-row>input{grid-column:4;width:15px;height:15px;margin:0;accent-color:var(--trace);cursor:pointer}
+.asg-gear-settings .asg-item-body .tmrow.is-disabled{opacity:.45}
+.asg-gear-settings .asg-item-body .tmitem{padding:4px 7px}
+.asg-layout-d .asg-gear-card>.asg-item-body{padding:0 0 3px}
+.asg-layout-d .asg-item-body .tmitem{padding:2px 8px 2px 22px}
+.asg-layout-d .asg-item-body .tmitem::before{flex-basis:11px;margin-right:3px}
+.asg-layout-d .asg-item-body .asg-delete-all{margin-top:4px;padding-top:2px;color:var(--ink)}
+.asg-header-eye{position:relative;display:inline-flex!important;flex:0 0 auto!important;width:23px!important;height:23px!important;margin-left:auto!important;padding:3px!important;justify-content:center!important;border-radius:6px!important}
+.asg-header-eye::before{display:none!important}
+.asg-header-eye .eyeic{margin:0!important;order:0!important}
+.asg-header-eye>span:last-child{display:none!important}
+.asg-header-eye.on{color:var(--trace)!important;background:color-mix(in srgb,var(--trace) 10%,transparent)!important}
+.asg-header-eye.is-empty{opacity:.42;background:transparent!important;color:var(--faint)!important}
+.asg-header-eye::after{content:attr(data-tooltip);position:absolute;top:calc(100% + 5px);right:0;z-index:40;padding:5px 7px;border-radius:5px;background:var(--ink);color:var(--panel);box-shadow:0 3px 10px rgba(0,0,0,.2);font:500 10px/1 var(--sans);letter-spacing:0;white-space:nowrap;pointer-events:none;opacity:0;visibility:hidden;transform:translateY(-2px);transition:opacity .12s,transform .12s,visibility .12s}
+.asg-header-eye:hover,.asg-header-eye:focus-visible{z-index:30}
+.asg-header-eye:hover::after,.asg-header-eye:focus-visible::after{opacity:1;visibility:visible;transform:translateY(0)}
+.asg-header-clear{position:relative;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;width:23px;height:23px;margin-left:1px;padding:4px;border:0;border-radius:6px;background:transparent;color:var(--faint);cursor:pointer;transition:color .12s,background .12s}
+.asg-header-clear:hover,.asg-header-clear:focus-visible{z-index:30;background:var(--panel2);color:var(--ink)}
+.asg-header-clear.is-empty{opacity:.42;color:var(--faint);cursor:default}
+.asg-header-clear.is-empty:hover,.asg-header-clear.is-empty:focus-visible{background:transparent;color:var(--faint)}
+.asg-header-clear::before{display:none!important}
+.asg-header-clear::after{content:attr(data-tooltip);position:absolute;top:calc(100% + 5px);right:0;z-index:40;padding:5px 7px;border-radius:5px;background:var(--ink);color:var(--panel);box-shadow:0 3px 10px rgba(0,0,0,.2);font:500 10px/1 var(--sans);letter-spacing:0;white-space:nowrap;pointer-events:none;opacity:0;visibility:hidden;transform:translateY(-2px);transition:opacity .12s,transform .12s,visibility .12s}
+.asg-header-clear:hover::after,.asg-header-clear:focus-visible::after{opacity:1;visibility:visible;transform:translateY(0)}
+.asg-header-clear .tmic{display:inline-flex!important;width:15px!important;height:15px!important;margin:0!important;color:currentColor!important}
+.asg-header-clear .tmic .svi{width:15px;height:15px}
+.asg-header-clear>span:last-child{display:none!important}
+.asg-header-clear+.asg-gear-btn{margin-left:1px}
+@media (max-width:540px){#tmAssign .tmpanel.assign-organized.assign-item-d{width:calc(100vw - 20px);min-width:0}.asg-item-body .tmrow{grid-template-columns:13px 112px minmax(0,1fr) auto}}
+</style>
+<script>
+(()=>{
+  const panel=document.querySelector('#tmAssign>.tmpanel');
+  const pane=panel&&panel.querySelector('[data-assign-pane="annot"]');
+  if(!panel||!pane) return;
+  panel.classList.add('assign-item-d');
+  const q=s=>panel.querySelector(s);
+  const deleteButton=(id,act,label)=>{const b=document.createElement('button');b.type='button';b.className='tmitem erase';if(id)b.id=id;b.dataset.act=act;
+    b.innerHTML='<span class="tmic"></span><span>'+label+'</span>';b.addEventListener('click',e=>{e.stopPropagation();doToolAction(act);});return b;};
+  const delMark=deleteButton('tDelMark','tDelMark','クリックして削除');
+  const clearMark=deleteButton('','clearMarks','すべて削除');
+  const delText=deleteButton('tDelText','tDelText','クリックして削除');
+  const clearText=deleteButton('','clearTextLabels','すべて削除');
+  const delImage=deleteButton('tDelImg','tDelImg','クリックして削除');
+  const clearImage=deleteButton('','clearImages','すべて削除');
+  const controls={
+    mark:{action:q('[data-act="tMark"]'),del:delMark,clear:clearMark,color:q('#markColor')?.closest('.tmrow'),size:q('#markSize')?.closest('.tmrow'),reset:q('[data-act="resetMark"]'),toggle:q('#tgMark')},
+    text:{action:q('[data-act="tAssign"]'),del:delText,clear:clearText,color:q('#textColor')?.closest('.tmrow'),size:q('#textSize')?.closest('.tmrow'),reset:q('[data-act="resetText"]'),toggle:q('#tgText')},
+    shade:{action:q('[data-act="tShade"]'),color:q('#shadeColor')?.closest('.tmrow'),del:q('[data-act="tDelShade"]'),clear:q('[data-act="clearShade"]'),toggle:q('#tgShade')},
+    line:{action:q('[data-act="tLine"]'),color:q('#lineColor')?.closest('.tmrow'),del:q('[data-act="tDelLine"]'),clear:q('[data-act="clearLines"]'),toggle:q('#tgLine')},
+    image:{action:q('#btnAddImg'),input:q('#imgIn'),del:delImage,clear:clearImage,toggle:q('#tgInsets')}
+  };
+  if(Object.values(controls).some(g=>Object.values(g).some(x=>!x))) return;
+  const meta={
+    mark:{label:'マーク',icon:'<svg class="svi" viewBox="0 0 16 16"><circle cx="8" cy="8" r="5.4" opacity=".28"/><circle cx="8" cy="8" r="3.1" fill="currentColor" stroke="none"/></svg>'},
+    text:{label:'テキストラベル',icon:'<svg class="svi" viewBox="0 0 16 16"><path d="M2 13l1-3 7-7 2 2-7 7z"/><path d="M9.5 3.5l2 2"/></svg>'},
+    shade:{label:'塗りつぶし',icon:'<svg class="svi" viewBox="0 0 16 16"><path d="M2 12c1.5 0 1.5-7 3-7s1.5 7 3 7 1.5-7 3-7 1.5 7 3 7"/><path d="M2 14h12"/></svg>'},
+    line:{label:'コネクタ',icon:'<svg class="svi" viewBox="0 0 16 16"><circle cx="3.5" cy="12.5" r="1.5"/><circle cx="12.5" cy="3.5" r="1.5"/><line x1="4.6" y1="11.4" x2="11.4" y2="4.6" stroke-dasharray="2.4 2"/></svg>'},
+    image:{label:'画像',icon:'<svg class="svi" viewBox="0 0 16 16"><rect x="2" y="3" width="12" height="10" rx="1.2"/><circle cx="5.6" cy="6.4" r="1.1"/><path d="m3 12 3.4-3.3 2.2 2.1 2.3-2.5L14 11.4"/></svg>'}
+  };
+  const setLabel=(el,text)=>{const s=el&&el.querySelector('span:last-child');if(s){s.removeAttribute('data-i18n');s.textContent=text;}};
+  setLabel(controls.mark.action,'ピークをクリックしてマークを付け外し'); setLabel(controls.mark.toggle,'マークを表示');
+  setLabel(controls.text.action,'ピークをクリックしてラベルを追加・編集'); setLabel(controls.text.toggle,'テキストラベルを表示');
+  setLabel(controls.shade.action,'範囲をドラッグして塗りつぶし'); setLabel(controls.shade.del,'クリックして削除'); setLabel(controls.shade.clear,'すべて削除'); setLabel(controls.shade.toggle,'塗りつぶしを表示');
+  setLabel(controls.line.action,'2点をドラッグしてコネクタを作成'); setLabel(controls.line.del,'クリックして削除'); setLabel(controls.line.clear,'すべて削除'); setLabel(controls.line.toggle,'コネクタを表示');
+  setLabel(controls.image.action,'画像を追加'); setLabel(controls.image.toggle,'画像を表示');
+  controls.mark.clear.classList.add('asg-delete-all');controls.text.clear.classList.add('asg-delete-all');controls.shade.clear.classList.add('asg-delete-all');controls.line.clear.classList.add('asg-delete-all');controls.image.clear.classList.add('asg-delete-all');
+  const order=['mark','text','shade','line','image'];
+  const makeSelectRow=(label,value,options,onchange)=>{
+    const row=document.createElement('div');row.className='tmrow asg-setting-row';
+    const lab=document.createElement('label');lab.textContent=label;
+    const sel=document.createElement('select');
+    options.forEach(([v,t])=>{const o=document.createElement('option');o.value=v;o.textContent=t;sel.appendChild(o);});
+    sel.value=value;sel.addEventListener('change',()=>onchange(sel.value));row.append(lab,sel);return {row,input:sel};
+  };
+  const makeCheckRow=(label,checked,onchange)=>{
+    const row=document.createElement('div');row.className='tmrow asg-setting-row asg-check-row';
+    const lab=document.createElement('label');lab.textContent=label;
+    const inp=document.createElement('input');inp.type='checkbox';inp.checked=checked;inp.setAttribute('aria-label',label);
+    inp.addEventListener('change',()=>onchange(inp.checked));row.append(lab,inp);return {row,input:inp};
+  };
+  const makeColorRow=(label,value,oninput)=>{
+    const row=document.createElement('div');row.className='tmrow asg-setting-row';
+    const lab=document.createElement('label');lab.textContent=label;
+    const inp=document.createElement('input');inp.type='color';inp.value=value;inp.setAttribute('aria-label',label);
+    inp.addEventListener('input',()=>oninput(inp.value));row.append(lab,inp);return {row,input:inp};
+  };
+  const makeRangeRow=(label,value,min,max,step,oninput)=>{
+    const row=document.createElement('div');row.className='tmrow asg-setting-row';
+    const lab=document.createElement('label');lab.textContent=label;
+    const inp=document.createElement('input');inp.type='range';inp.min=min;inp.max=max;inp.step=step;inp.value=value;inp.setAttribute('aria-label',label);
+    const out=document.createElement('span');out.className='thrval';out.textContent=String(value);
+    inp.addEventListener('input',()=>{out.textContent=String(inp.value);oninput(Number(inp.value));});row.append(lab,inp,out);return {row,input:inp};
+  };
+  const lineStyles=[['solid','実線'],['dashed','破線'],['dotted','点線'],['dashdot','一点鎖線']];
+  const lineStyleSetting=makeSelectRow('線の種類',S.lineStyle||'dashed',lineStyles,v=>{S.lineStyle=v;persistUI();draw();});
+  const imageBorderSetting=makeCheckRow('枠線を表示',!!S.imageBorder,v=>{S.imageBorder=v;syncImageBorderRows();persistUI();draw();});
+  const imageBorderColorSetting=makeColorRow('枠線の色',S.imageBorderColor||'#3A4750',v=>{S.imageBorderColor=v;persistUI();draw();});
+  const imageBorderWidthSetting=makeRangeRow('枠線の太さ',S.imageBorderWidth||1,.5,6,.5,v=>{S.imageBorderWidth=v;persistUI();draw();});
+  const imageBorderStyleSetting=makeSelectRow('線の種類',S.imageBorderStyle||'solid',lineStyles,v=>{S.imageBorderStyle=v;persistUI();draw();});
+  const imageDependentSettings=[imageBorderColorSetting,imageBorderWidthSetting,imageBorderStyleSetting];
+  function syncImageBorderRows(){
+    imageDependentSettings.forEach(s=>{s.input.disabled=!S.imageBorder;s.row.classList.toggle('is-disabled',!S.imageBorder);});
+  }
+  syncImageBorderRows();
+  const displaySettings={
+    mark:[controls.mark.color,controls.mark.size,controls.mark.reset],
+    text:[controls.text.color,controls.text.size,controls.text.reset],
+    shade:[controls.shade.color],
+    line:[controls.line.color,lineStyleSetting.row],
+    image:[imageBorderSetting.row,imageBorderColorSetting.row,imageBorderWidthSetting.row,imageBorderStyleSetting.row]
+  };
+  const stage=document.createElement('div');stage.className='asg-layout-stage';
+  pane.replaceChildren(stage);
+  const heading=key=>{const h=document.createElement('div');h.className='asg-item-heading';h.innerHTML='<span class="tmic">'+meta[key].icon+'</span><span>'+meta[key].label+'</span>';return h;};
+  const gearIcon='<svg class="svi" viewBox="0 0 24 24"><path d="M10.3 2.6h3.4l.5 2.3 1.9.8 2-1.3 2.4 2.4-1.3 2 .8 1.9 2.3.5v3.4l-2.3.5-.8 1.9 1.3 2-2.4 2.4-2-1.3-1.9.8-.5 2.3h-3.4l-.5-2.3-1.9-.8-2 1.3-2.4-2.4 1.3-2-.8-1.9-2.3-.5v-3.4l2.3-.5.8-1.9-1.3-2 2.4-2.4 2 1.3 1.9-.8.5-2.3Z"/><circle cx="12" cy="12" r="3.1"/></svg>';
+  const trashIcon='<svg class="svi" viewBox="0 0 16 16"><path d="M2.5 4.5h11"/><path d="M6 4.5V3h4v1.5"/><path d="M4.1 4.5l.6 8.2a1 1 0 0 0 1 .9h4.6a1 1 0 0 0 1-.9l.6-8.2"/><path d="M6.6 7.2v3.8M9.4 7.2v3.8"/></svg>';
+  const visibilityKey={mark:'showMarks',text:'showText',shade:'showShades',line:'showLines',image:'showInsets'};
+  const syncAssignHeaderState=()=>{
+    const sp=typeof A==='function'?A():null;
+    const has={
+      mark:!!(sp&&(sp.peaks||[]).some(p=>p.mark)),
+      text:!!(sp&&(sp.peaks||[]).some(p=>p.label)),
+      shade:!!(sp&&(sp.shades||[]).length),
+      line:!!((S.lines||[]).length),
+      image:!!(sp&&imgsOf(sp).length)
+    };
+    order.forEach(key=>{
+      const eye=controls[key].toggle, clear=controls[key].clear, visible=!!S[visibilityKey[key]], used=has[key];
+      eye.classList.toggle('on',used&&visible);
+      eye.classList.toggle('has-content',used);
+      eye.classList.toggle('is-empty',!used);
+      eye.dataset.tooltip=used?(meta[key].label+(visible?'を非表示にする':'を表示する')):(meta[key].label+'はありません');
+      eye.setAttribute('aria-pressed',String(used&&visible));
+      eye.setAttribute('aria-disabled',String(!used));
+      clear.classList.toggle('is-empty',!used);
+      clear.dataset.tooltip=used?'すべて削除':'削除する項目はありません';
+      clear.setAttribute('aria-disabled',String(!used));
+    });
+    lineStyleSetting.input.value=S.lineStyle||'dashed';
+    imageBorderSetting.input.checked=!!S.imageBorder;
+    imageBorderColorSetting.input.value=S.imageBorderColor||'#3A4750';
+    imageBorderWidthSetting.input.value=String(S.imageBorderWidth||1);
+    imageBorderWidthSetting.row.querySelector('.thrval').textContent=String(S.imageBorderWidth||1);
+    imageBorderStyleSetting.input.value=S.imageBorderStyle||'solid';
+    syncImageBorderRows();
+  };
+  window.syncAssignHeaderState=syncAssignHeaderState;
+  let openSettings=null;
+  const closeSettings=()=>{
+    if(!openSettings)return;
+    openSettings.box.hidden=true;
+    openSettings.button.classList.remove('on');
+    openSettings.button.setAttribute('aria-expanded','false');
+    openSettings=null;
+  };
+  window.closeAssignSettings=closeSettings;
+  const placeSettings=(button,box)=>{
+    box.hidden=false;box.style.visibility='hidden';
+    const r=button.getBoundingClientRect(),w=box.offsetWidth,h=box.offsetHeight;
+    let left=Math.max(8,Math.min(window.innerWidth-w-8,r.right-w));
+    let top=r.bottom+6;
+    if(top+h>window.innerHeight-8)top=Math.max(8,r.top-h-6);
+    box.style.left=Math.round(left)+'px';box.style.top=Math.round(top)+'px';box.style.visibility='';
+  };
+  const removeSettingsPopovers=()=>{
+    closeSettings();document.querySelectorAll('.asg-gear-popover').forEach(box=>box.remove());
+  };
+  document.addEventListener('pointerdown',e=>{
+    if(!openSettings)return;
+    if(openSettings.box.contains(e.target)||openSettings.button.contains(e.target)||(e.target.closest&&e.target.closest('.colorpop')))return;
+    closeSettings();
+  },true);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSettings();},true);
+  window.addEventListener('resize',closeSettings);
+  const resetHeaderActions=()=>order.forEach(key=>{
+    controls[key].toggle.classList.remove('asg-header-eye');
+    controls[key].clear.classList.remove('asg-header-clear');
+  });
+  const gearCard=key=>{
+    const s=document.createElement('section');s.className='asg-item-card asg-gear-card';
+    const h=heading(key);
+    const headerActions=document.createElement('div');headerActions.className='asg-header-actions';
+    const op=document.createElement('div');op.className='asg-item-body';op.appendChild(controls[key].action);if(key==='image')op.appendChild(controls.image.input);
+    op.appendChild(controls[key].del);
+    const eye=controls[key].toggle;eye.classList.add('asg-header-eye');eye.removeAttribute('title');eye.setAttribute('aria-label',meta[key].label+'を表示／非表示');
+    if(!eye.dataset.asgEmptyGuardBound){eye.dataset.asgEmptyGuardBound='1';eye.addEventListener('click',e=>{if(eye.classList.contains('is-empty')){e.preventDefault();e.stopImmediatePropagation();}},true);}
+    headerActions.appendChild(eye);
+    const clear=controls[key].clear;clear.classList.add('asg-header-clear');clear.removeAttribute('title');clear.dataset.tooltip='すべて削除';clear.setAttribute('aria-label',meta[key].label+'をすべて削除');
+    const clearIcon=clear.querySelector('.tmic');if(clearIcon)clearIcon.innerHTML=trashIcon;
+    if(!clear.dataset.asgConfirmBound){
+      clear.dataset.asgConfirmBound='1';
+      clear.addEventListener('click',e=>{
+        if(clear.classList.contains('is-empty')){e.preventDefault();e.stopImmediatePropagation();return;}
+        if(!window.confirm('「'+meta[key].label+'」をすべて削除します。\n本当に削除してもよろしいですか？')){e.preventDefault();e.stopImmediatePropagation();}
+      },true);
+    }
+    headerActions.appendChild(clear);
+    const g=document.createElement('button');g.type='button';g.className='asg-gear-btn';g.title='表示設定';g.setAttribute('aria-label',meta[key].label+'の表示設定');g.setAttribute('aria-expanded','false');g.innerHTML=gearIcon;
+    headerActions.appendChild(g);h.appendChild(headerActions);
+    const box=document.createElement('div');box.className='asg-gear-settings asg-gear-popover';box.hidden=true;box.dataset.title=meta[key].label+'の表示設定';const sb=document.createElement('div');sb.className='asg-item-body';displaySettings[key].forEach(el=>sb.appendChild(el));box.appendChild(sb);document.body.appendChild(box);
+    box.addEventListener('pointerdown',e=>e.stopPropagation());box.addEventListener('click',e=>e.stopPropagation());
+    g.onclick=e=>{e.stopPropagation();if(openSettings&&openSettings.button===g){closeSettings();return;}closeSettings();openSettings={button:g,box};g.classList.add('on');g.setAttribute('aria-expanded','true');placeSettings(g,box);};
+    s.append(h,op);return s;
+  };
+  function render(){
+    removeSettingsPopovers();
+    resetHeaderActions();
+    stage.className='asg-layout-stage asg-layout-d';stage.replaceChildren();
+    order.forEach(k=>stage.appendChild(gearCard(k)));
+    panel.scrollTop=0;
+  }
+  render(); updateToolAvail(); syncAssignHeaderState();
+})();
+</script>
 
 </body>
 </html>
