@@ -2649,7 +2649,9 @@ function renderContent(opts){
   for(const sp of vs){
     const d=dispOf(sp), g=geomFor(sp,li);
     const sy=v=>g.base-(v/sp.gmax)*g.full*ysc(sp);
-    const clampY = S.laneOverflow ? (y=>Math.max(curTop()-2,Math.min(g.base+2,y))) : (y=>Math.max(g.top-2,Math.min(g.base+2,y)));
+    // Keep the existing positive-peak scale, but let real negative values use
+    // the space below the baseline instead of flattening them at base + 2 px.
+    const clampY = S.laneOverflow ? (y=>Math.max(curTop()-2,Math.min(g.bottom-2,y))) : (y=>Math.max(g.top-2,Math.min(g.bottom-2,y)));
     let iL=idxAtPpm(sp,VW.pHi), iR=idxAtPpm(sp,VW.pLo);
     if(iL>iR){const t=iL;iL=iR;iR=t;}
     iL=Math.max(0,Math.min(sp.N-1,iL)); iR=Math.max(0,Math.min(sp.N-1,iR));
