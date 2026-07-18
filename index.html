@@ -12,7 +12,7 @@
   --trace:#5FD3C8; --accent:#E8B04B; --integ:#6FA8DC; --peak:#E8B04B; --mult:#C98BE0; --err:#E06C5A; --axis:#6B7780;
   --mono:ui-monospace,"SF Mono","JetBrains Mono",Menlo,Consolas,monospace;
   --sans:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-  --lw:1.1px;
+  --lw:1px;
 }
 html[data-theme="light"]{
   --bg:#FFFFFF; --panel:#F4F1E9; --panel2:#FEFDFA; --grid:#E8E3D6; --gridw:#DDD6C4;
@@ -571,16 +571,9 @@ html[data-theme=light] .manmodal{background:rgba(40,44,48,.36)}
     0 8px 18px rgba(0,0,0,.16);
 }
 .mbtn:active,.tbtn:active,.rsub:active{ transform: translateY(0); }
-.mitem:hover,.tmitem:hover,.vistog:hover{
-  background:
-    linear-gradient(90deg, color-mix(in srgb,var(--trace) 10%,transparent), var(--panel2) 58%);
-  transform: translateX(2px);
-}
+/* (menu rows and their icons intentionally have no hover motion — the muted
+   #toolbar/.asg-gear-popover rules below provide the flat-tint hover look) */
 .svi{ transition: transform .16s ease, filter .16s ease; }
-.mbtn:hover .svi,.tbtn:hover .svi,.mitem:hover .svi,.tmitem:hover .svi{
-  transform: scale(1.08);
-  filter: drop-shadow(0 0 5px color-mix(in srgb,var(--trace) 32%,transparent));
-}
 @media (prefers-reduced-motion: reduce){
   .mbtn,.tbtn,.rsub,.seg button,.vistog,.tmitem,.mitem,.sprow,.cmp,.svi{ transition:none; }
   .mbtn:hover,.tbtn:hover,.rsub:hover,.mitem:hover,.tmitem:hover,.vistog:hover,.mbtn:hover .svi,.tbtn:hover .svi,.mitem:hover .svi,.tmitem:hover .svi{ transform:none; }
@@ -1001,16 +994,16 @@ html[data-theme="light"] .toolmenu.open .tmpanel{
             <div class="vcol">
             <div class="tmhead" data-i18n="setLook">Appearance</div>
             <div class="ctl">
-              <label><span data-i18n="lblLineW">Line width</span> <span class="val" id="lwv">1.1</span></label>
-              <input type="range" id="lineW" min="0.5" max="3" step="0.1" value="1.1">
+              <label><span data-i18n="lblLineW">Line width</span> <span class="val" id="lwv">1.0</span></label>
+              <input type="range" id="lineW" min="0.5" max="3" step="0.1" value="1">
             </div>
             <div class="ctl">
-              <label><span data-i18n="lblFontScale">Plot font size</span> <span class="val" id="fsv">100%</span></label>
-              <input type="range" id="fontScale" min="0.7" max="1.8" step="0.05" value="1">
+              <label><span data-i18n="lblFontScale">Annotation text size</span> <span class="val" id="fsv">11pt</span></label>
+              <input type="range" id="fontScale" min="8" max="26" step="0.5" value="11">
             </div>
             <div class="ctl">
-              <label><span data-i18n="lblNameScale">File-name size</span> <span class="val" id="nsv">100%</span></label>
-              <input type="range" id="nameScale" min="0.7" max="2.4" step="0.05" value="1">
+              <label><span data-i18n="lblNameScale">File-name size</span> <span class="val" id="nsv">11pt</span></label>
+              <input type="range" id="nameScale" min="8" max="26" step="0.5" value="11">
             </div>
             <div class="ctl">
               <label data-i18n="lblFontFamily">Plot font</label>
@@ -1021,12 +1014,12 @@ html[data-theme="light"] .toolmenu.open .tmpanel{
               <input type="range" id="ppmDigits" min="1" max="6" step="1" value="2">
             </div>
             <div class="ctl">
-              <label><span data-i18n="lblAxisScale">δ-axis text size</span> <span class="val" id="asv">100%</span></label>
-              <input type="range" id="axisScale" min="0.7" max="2.4" step="0.05" value="1">
+              <label><span data-i18n="lblAxisScale">δ-axis text size</span> <span class="val" id="asv">11pt</span></label>
+              <input type="range" id="axisScale" min="8" max="26" step="0.5" value="11">
             </div>
             <div class="ctl">
               <label><span data-i18n="lblAxisH">δ-axis height</span> <span class="val" id="axv">56</span></label>
-              <input type="range" id="axisPad" min="28" max="160" step="2" value="56">
+              <input type="range" id="axisPad" min="28" max="600" step="2" value="56">
             </div>
             <div class="ctl">
               <label><span data-i18n="lblBaseGap">δ-axis ↔ spectrum gap</span> <span class="val" id="bgv">3.5%</span></label>
@@ -1303,7 +1296,7 @@ const I18N={
   lblZoom:"Zoom", mZoomIn:"⊕ In", mZoomOut:"⊖ Out", lblWheel:"Wheel sensitivity", lblAxisH:"δ-axis height", lblBaseGap:"δ-axis ↔ spectrum gap",
   lblInertia:"Inertia", lblInvert:"Invert", lblHscroll:"H-scroll = pan δ",
   lblRange:"δ range", btnApply:"Apply", hdViewVis:"Show / hide",
-  secImages:"Images", btnAddImg:"＋ Add image", imgItem:"Image",
+  secImages:"Images", btnAddImg:"＋ Add image from file", imgItem:"Image",
   imgHint:"Paste a screenshot (Ctrl+V) or add a PNG. Click to select · drag corner to resize · Del to remove (when no tool is active).",
   ttImgEye:"Show this image on the spectrum", ttImgBg:"Make background transparent (toggle)", secDisplay:"Display", secData:"Data", ttShowHide:"Show / hide", cpCustom:"Custom", cpOk:"OK", cpCancel:"Cancel",
   lblInsets:"Images", lblNames:"File names", lblShowPeaks:"Peaks", lblShowIntegs:"Integrals", lblShowShades:"Shades", lblJTree:"Coupling tree",
@@ -1320,7 +1313,7 @@ const I18N={
   hdAnnotate:"Annotate", hdVisibility:"Show / hide", lblVisToggle:"Show / hide", hdWheel:"Wheel / scroll", secKeyboard:"Keyboard", setGen:"General", setLook:"Appearance", setAxis:"δ-axis", secRegion:"Region",
   actCalManual:"Manual (click a peak)", hdSolvent:"Residual solvent → auto", actCalReset:"Reset calibration",
   expCopy:"Copy image to clipboard", expSession:"Save session (JSON)", expLoadSession:"Load session…",
-  lblMinimap:"Minimap", lblZoomLeaders:"Zoom leaders", lblFontScale:"Font size", lblNameScale:"File-name size", lblAxisScale:"δ-axis text size", lblMarkSize:"Size", lblFontFamily:"Font",
+  lblMinimap:"Minimap", lblZoomLeaders:"Zoom leaders", lblFontScale:"Annotation size (peaks, ∫, …)", lblNameScale:"File-name size", lblAxisScale:"δ-axis text size", lblMarkSize:"Size", lblFontFamily:"Font",
   optMono:"Mono", optSans:"Sans", optSerif:"Serif",
   msgCopied:"Image copied to clipboard", msgCopyFail:"Copy failed — try PNG export", msgBgFail:"Could not process image background", msgCalOk:"Calibrated", msgCalNone:"No peak found near that position to calibrate", msgCalApprox:"No picked peak nearby — calibrated to the strongest point", msgSessionLoaded:"Session loaded", msgBadSession:"Could not read session file",
   actLine:"Connector (2-pt drag)", actDelLine:"Delete connector", actClearLines:"Clear all connectors",
@@ -1332,7 +1325,7 @@ const I18N={
   emptyText:"No text labels yet. Use ✎ to label a peak.",
   emptyMark:"No marks yet. Use ● to mark a peak.",
   renameP:"Spectrum name:", ttDock:"Dock to sidebar", ttFloat:"Detach (float)", ttClose:"Close", ttDockBack:"Return to sidebar",
-  tMark:"● Mark", ttMark:"Click a peak = toggle a ● in the current color · drag = one ● for the range",
+  tMark:"● Mark", ttMark:"Click a peak = toggle a ● in the current color · click empty space = place a free ● · drag = one ● for the range",
   ttUndo:"Undo (Ctrl+Z)", ttRedo:"Redo (Ctrl+Shift+Z / Ctrl+Y)",
   hintKeys:"Keys: <b>C</b> calibrate · <b>P</b> peaks (<b>⇧P</b> erase) · <b>I</b> integrate (<b>⇧I</b> erase) · <b>M</b> multiplets · <b>A</b> label · <b>D</b> mark · <b>L</b> list · <b>F</b> full · <b>0</b> auto · <b>↑↓</b> intensity · <b>←→</b> pan · <b>Esc</b> cancel · <b>Ctrl+Z/Y</b> undo/redo · <b>Ctrl+O</b> open",
   expPng:"Image (PNG)", expCsv:"Spectrum (CSV)", expReport:"Analysis report (CSV)",
@@ -1366,7 +1359,7 @@ const I18N={
   dropTitle:"Drop Bruker folder(s)", dropSub:"reads fid + acqus, and pdata/ if present",
   tabPeaks:"Peaks", tabInteg:"Integrals", tabMult:"Multiplets", tabAssign:"Assignments", tabShade:"Shade", markColorLbl:"Color", textColorLbl:"Color", lblTextSize:"Size",
   assignTabAnnot:"Annotations", assignTabImp:"Impurities", assignGroupAdd:"Add / edit annotations", assignGroupDelete:"Delete annotations", assignGroupDisplay:"Display settings", assignStyleSettings:"Style settings",
-  assignMarkAction:"Mark a peak", assignTextAction:"Add a text label", assignShadeAction:"Shade a range", assignLineAction:"Draw a connector", assignImageAction:"Add an image",
+  assignMarkAction:"Mark a peak", assignTextAction:"Add a text label", assignShadeAction:"Shade a range", assignLineAction:"Draw a connector", assignImageAction:"Add an image from file",
   assignShowMark:"Show marks", assignShowText:"Show text labels", assignShowShade:"Show shaded regions", assignShowLine:"Show connectors", assignShowImage:"Show images",
   assignStyleMark:"Marks", assignStyleText:"Text labels", assignStyleShade:"Shaded regions", assignStyleLine:"Connectors", impSetupHd:"Find impurities", impRefsNote:"References and notes",
   ttDelMark:"Click a marked peak to remove its mark", ttDelText:"Click a labeled peak to remove its label", ttDelImg:"Click an image to delete it",
@@ -1390,7 +1383,7 @@ const I18N={
   mNucleus:"Nucleus", mSolvent:"Solvent", mPulse:"Pulse", mProbe:"Probe", mSWppm:"SW (ppm)", mSWhz:"SW (Hz)", mDate:"Date/time",
   ttCalib:"Click a known peak, then enter its ppm", ttPeaks:"Drag an X–Y box; all local maxima inside are picked",
   ttInteg:"Drag to integrate; click an integral (∫ mode) to select & edit its edges", ttMult:"Drag across already-picked peaks to get J",
-  ttAssign:"Click a picked peak to attach a text label",
+  ttAssign:"Click a picked peak to attach a text label · click empty space to place one anywhere",
   ttIntDown:"Halve intensity", ttIntUp:"Double intensity", ttAuto:"Fit intensity to view",
   ttZoomIn:"Zoom in", ttZoomOut:"Zoom out", ttFull:"Show full spectrum", ttFiles:"Pick individual files",
   errNoData:"No NMR data found in the dropped items.\nEach dataset folder needs fid+acqus, and/or pdata/1/ with 1r+procs.",
@@ -1407,7 +1400,7 @@ const I18N={
   lblZoom:"ズーム", mZoomIn:"⊕ 拡大", mZoomOut:"⊖ 縮小", lblWheel:"ホイール感度", lblAxisH:"δ軸の高さ", lblBaseGap:"δ軸とスペクトルの間隔",
   lblInertia:"ホイール慣性", lblInvert:"向きを反転", lblHscroll:"横スクロールでδ移動",
   lblRange:"δ 表示範囲", btnApply:"適用", hdViewVis:"表示・非表示",
-  secImages:"画像", btnAddImg:"＋ 画像を追加", imgItem:"画像",
+  secImages:"画像", btnAddImg:"＋ 画像をファイルから追加", imgItem:"画像",
   imgHint:"スクリーンショットを貼り付け（Ctrl+V）またはPNGを追加。クリックで選択・角ドラッグで拡縮・Delで削除（ツール未選択時）。",
   ttImgEye:"この画像をスペクトル上に表示", ttImgBg:"背景を透過（クリックで切替）", secDisplay:"表示", secData:"データ", ttShowHide:"表示 / 非表示", cpCustom:"カスタム", cpOk:"OK", cpCancel:"キャンセル",
   lblInsets:"画像を表示", lblNames:"ファイル名", lblShowPeaks:"ピーク", lblShowIntegs:"積分", lblShowShades:"塗りつぶし", lblJTree:"カップリングツリー",
@@ -1424,7 +1417,7 @@ const I18N={
   hdAnnotate:"注釈", hdVisibility:"表示・非表示", lblVisToggle:"表示 / 非表示", hdWheel:"ホイール / スクロール", secKeyboard:"キーボード", setGen:"全般", setLook:"見た目", setAxis:"δ軸", secRegion:"領域",
   actCalManual:"手動（ピークをクリック）", hdSolvent:"残留溶媒 → 自動", actCalReset:"校正をリセット",
   expCopy:"画像をクリップボードにコピー", expSession:"セッションを保存（JSON）", expLoadSession:"セッションを読み込み…",
-  lblMinimap:"ミニマップ", lblZoomLeaders:"拡大引き出し線", lblFontScale:"フォントサイズ", lblNameScale:"ファイル名のサイズ", lblAxisScale:"δ軸テキストのサイズ", lblMarkSize:"大きさ", lblFontFamily:"フォント",
+  lblMinimap:"ミニマップ", lblZoomLeaders:"拡大引き出し線", lblFontScale:"注釈のサイズ（ピーク・積分など）", lblNameScale:"ファイル名のサイズ", lblAxisScale:"δ軸テキストのサイズ", lblMarkSize:"大きさ", lblFontFamily:"フォント",
   optMono:"等幅", optSans:"ゴシック", optSerif:"明朝",
   msgCopied:"画像をコピーしました", msgCopyFail:"コピー失敗 — PNG出力をお試しください", msgBgFail:"画像の背景を処理できませんでした", msgCalOk:"校正しました", msgCalNone:"近くに校正できるピークが見つかりませんでした", msgCalApprox:"近くにピーク未検出のため最大強度点で校正しました", msgSessionLoaded:"セッションを読み込みました", msgBadSession:"セッションファイルを読み込めません",
   actLine:"コネクタ（2点をドラッグ）", actDelLine:"コネクタを削除", actClearLines:"コネクタを全て削除",
@@ -1436,7 +1429,7 @@ const I18N={
   emptyText:"テキストラベルはまだありません。✎でピークにラベルを付けます。",
   emptyMark:"マークはまだありません。●でピークをマークします。",
   renameP:"スペクトル名:", ttDock:"サイドバーに格納", ttFloat:"分離（フロート）", ttClose:"閉じる", ttDockBack:"サイドバーに戻す",
-  tMark:"● マーク", ttMark:"ピーククリック=現在色の●を付け外し／ドラッグ=範囲を1つの●に",
+  tMark:"● マーク", ttMark:"ピーククリック=現在色の●を付け外し／空きスペースをクリック=その位置に●を配置／ドラッグ=範囲を1つの●に",
   ttUndo:"元に戻す (Ctrl+Z)", ttRedo:"やり直す (Ctrl+Shift+Z / Ctrl+Y)",
   hintKeys:"キー: <b>C</b> 校正 ・ <b>P</b> ピーク（<b>⇧P</b> 消去）・ <b>I</b> 積分（<b>⇧I</b> 消去）・ <b>M</b> 多重線 ・ <b>A</b> ラベル ・ <b>D</b> マーク ・ <b>L</b> 一覧 ・ <b>F</b> 全体 ・ <b>0</b> 自動 ・ <b>↑↓</b> 強度 ・ <b>←→</b> 移動 ・ <b>Esc</b> 解除 ・ <b>Ctrl+Z/Y</b> 取消/やり直し ・ <b>Ctrl+O</b> 開く",
   expPng:"画像 (PNG)", expCsv:"スペクトル (CSV)", expReport:"解析レポート (CSV)",
@@ -1447,8 +1440,8 @@ const I18N={
   lblWindow:"窓関数", optNone:"なし", optEm:"指数 (EM)", optGm:"ガウス (GM)",
   lblLB:"線幅補正", lblZf:"ゼロ充填", lblGdc:"群遅延補正", lblLineW:"線の太さ",
   lblBg:"背景色",
-  tCalib:"⌖ 校正", tCalibTxt:"校正", tMultTxt:"多重線", tPeaks:"⋀ ピーク検出", tInteg:"∫ 積分", tMult:"⋔ 多重線", tAssign:"✎ 帰属",
-  tPeaksMain:"⋀ ピーク検出", tIntegMain:"∫ 積分", tPeaksTxt:"ピーク検出", tIntegTxt:"積分", lblResults:"結果一覧",
+  tCalib:"⌖ 校正", tCalibTxt:"校正", tMultTxt:"多重線", tPeaks:"⋀ ピーク", tInteg:"∫ 積分", tMult:"⋔ 多重線", tAssign:"✎ 帰属",
+  tPeaksMain:"⋀ ピーク", tIntegMain:"∫ 積分", tPeaksTxt:"ピーク", tIntegTxt:"積分", lblResults:"結果一覧",
   actDetect:"範囲選択で検出", actThreshold:"閾値", actDetectThr:"閾値以上を全検出", lblShowThreshold:"スペクトルに閾値を表示", actRemoveRange:"範囲選択で削除", actClearAll:"全て削除",
   peakGroupDetect:"ピークを検出する", peakGroupDelete:"ピークを削除する", peakGroupDisplay:"表示設定", actDelSelPeak:"ピークをクリックして削除", actClearAllPeaks:"すべてのピークを削除", lblShowPeaksMenu:"ピークを表示",
   integGroupCreate:"積分する", integGroupDelete:"積分を削除する", actClearAllIntegs:"すべての積分を削除", lblShowIntegsMenu:"積分を表示", lblIntegCurveMenu:"階段カーブを表示",
@@ -1470,7 +1463,7 @@ const I18N={
   dropTitle:"Bruker フォルダをドロップ", dropSub:"fid + acqus、あれば pdata/ も読みます",
   tabPeaks:"ピーク", tabInteg:"積分", tabMult:"多重線", tabAssign:"帰属", tabShade:"塗りつぶし", markColorLbl:"色", textColorLbl:"色", lblTextSize:"大きさ",
   assignTabAnnot:"注釈", assignTabImp:"不純物", assignGroupAdd:"注釈を追加・編集する", assignGroupDelete:"注釈を削除する", assignGroupDisplay:"表示設定", assignStyleSettings:"スタイル設定",
-  assignMarkAction:"ピークにマークを付ける", assignTextAction:"テキストラベルを付ける", assignShadeAction:"範囲を塗りつぶす", assignLineAction:"コネクタを引く", assignImageAction:"画像を追加する",
+  assignMarkAction:"ピークにマークを付ける", assignTextAction:"テキストラベルを付ける", assignShadeAction:"範囲を塗りつぶす", assignLineAction:"コネクタを引く", assignImageAction:"画像をファイルから追加する",
   assignShowMark:"マークを表示", assignShowText:"テキストラベルを表示", assignShowShade:"塗りつぶしを表示", assignShowLine:"コネクタを表示", assignShowImage:"画像を表示",
   assignStyleMark:"マーク", assignStyleText:"テキストラベル", assignStyleShade:"塗りつぶし", assignStyleLine:"コネクタ", impSetupHd:"不純物を調べる", impRefsNote:"参考文献・注意事項",
   ttDelMark:"マーク付きピークをクリックして削除", ttDelText:"ラベル付きピークをクリックして削除", ttDelImg:"画像をクリックして削除",
@@ -1482,7 +1475,7 @@ const I18N={
   thPpm:"δ / ppm", thHz:"Hz", thInt:"強度", thRel:"相対", thLabel:"ラベル",
   thRange:"範囲", thRel2:"相対", thCenter:"中心", lblJedit:"J (Hz)", thN:"本数",
   btnCombine:"結合 → 多重線", combineHint:"サブ多重線を2つ以上選択（例: d 2つ → dd）", msgPickTwo:"結合する多重線を2つ以上選択してください",
-  emptyPeaks:"⋀ピーク検出: X–Y矩形をドラッグすると範囲内の極大点をすべて検出します（細いドラッグは最大点1点）。",
+  emptyPeaks:"⋀ピーク: X–Y矩形をドラッグすると範囲内の極大点をすべて検出します（細いドラッグは最大点1点）。",
   emptyInteg:"∫積分: 範囲をドラッグして積分（後で端をドラッグして調整可）。",
   normPrompt:"この積分の基準値（例: CH₃なら3）。空欄で解除:",
   normHint:"相対値をクリックすると基準に設定され、他はそれに合わせて再計算されます。スペクトル上の積分を右クリックでも設定できます。",
@@ -1494,7 +1487,7 @@ const I18N={
   mNucleus:"核種", mSolvent:"溶媒", mPulse:"パルス", mProbe:"プローブ", mSWppm:"SW (ppm)", mSWhz:"SW (Hz)", mDate:"測定日時",
   ttCalib:"既知ピークをクリックしてppm値を入力", ttPeaks:"X–Y矩形をドラッグ→範囲内の極大点をすべて検出",
   ttInteg:"ドラッグで積分／∫モード中に積分をクリックで選択して端を調整", ttMult:"検出済みピークをまたぐ範囲をドラッグしてJ解析",
-  ttAssign:"検出済みピークをクリックしてラベルを付与",
+  ttAssign:"ピーククリック=ラベルを付与／空きスペースをクリック=その位置にラベルを配置",
   ttIntDown:"強度を半分に", ttIntUp:"強度を2倍に", ttAuto:"表示に合わせて強度調整",
   ttZoomIn:"ズームイン", ttZoomOut:"ズームアウト", ttFull:"全体表示", ttFiles:"個別ファイルを選択",
   errNoData:"ドロップした項目にNMRデータが見つかりません。\n各フォルダに fid+acqus、または pdata/1/ の 1r+procs が必要です。",
@@ -1659,11 +1652,11 @@ function paletteColors(name, n){
 }
 // preview swatch strip (6 samples) for a palette name
 function paletteSwatch(name){ return paletteColors(name,6); }
-const DEFAULTS={lineW:1.1, wheelSens:1, wheelInertia:false, wheelInvert:false, hscroll:true, axisPad:56, baseGap:0.035,
+const DEFAULTS={lineW:1, wheelSens:1, wheelInertia:false, wheelInvert:false, hscroll:true, axisPad:56, baseGap:0.035,
   fontScale:1, nameScale:1, axisScale:1, markSize:4.6, markColor:'#0E6E7E', shadeColor:'#D33A2C', textColor:null, textSize:10.5, lineColor:null, lineStyle:'dashed', imageBorder:false, imageBorderColor:'#3A4750', imageBorderWidth:1, imageBorderStyle:'solid', integDigits:3, multColor:null, multDigits:2, multJStyle:'full', multStyle:'style1', plotFont:'mono', ppmDigits:2, pkDigits:2,
   zoomBorderColor:null, zoomBorderWidth:1, zoomLeaderStyle:'dashed', peakStyle:'style1', integStyle:'style1', showIntegCurve:true};
 const S={ spectra:[], active:-1, view:{pHi:1,pLo:0}, yscale:1, tool:null,
-  lineW:1.1, wheelSens:1, wheelInertia:false, wheelInvert:false, hscroll:true, selInteg:-1, selImg:-1, selZoom:-1,
+  lineW:1, wheelSens:1, wheelInertia:false, wheelInvert:false, hscroll:true, selInteg:-1, selImg:-1, selZoom:-1,
   selPeak:-1, selPeaks:[], selMults:[], thr:0.05, axisPad:56, baseGap:0.035, integShift:0,
   peakColor:null, integColor:null, peakStyle:'style1', integStyle:'style1', showIntegCurve:true, multColor:null, multDigits:2, multJStyle:'full', multStyle:'style1', showMultSources:false,
   markColor:'#0E6E7E', shadeColor:'#D33A2C', markSize:4.6, textColor:null, textSize:10.5, lineColor:null, lineStyle:'dashed', imageBorder:false, imageBorderColor:'#3A4750', imageBorderWidth:1, imageBorderStyle:'solid', integDigits:3, showInsets:true, showNames:true, showPeaks:true, showIntegs:true, showShades:true, showMarks:true, showText:true,
@@ -1986,8 +1979,10 @@ function analyzeMultiplet(sp,pA,pB){
 /* ===================== image insets (pasted pictures on the canvas) ===================== */
 let IMGCACHE={};      // image id → HTMLImage
 let IMGBOXES=[];      // rebuilt each draw: {ki,x,y,w,h}
-let MARKBOXES=[];     // rebuilt each draw: {sp,mkey,cx,yD,lt,lh}
+let MARKBOXES=[];     // rebuilt each draw: {sp,mkey,cx,yD,lt,lh} (free ● entries carry .free instead of mkey/pks)
+let TEXTBOXES=[];     // rebuilt each draw: free text labels {sp,ti,cx,yD,w,lt,lh}
 let markDrag=null;
+let textDrag=null;
 let insetDrag=null;
 function imgsOf(sp){ if(!sp) return []; if(!sp.images) sp.images=[]; return sp.images; }
 function newImgId(){ return 'i'+Date.now().toString(36)+Math.floor(Math.random()*1e4).toString(36); }
@@ -2176,7 +2171,9 @@ function renderImgs(){
 const cv=document.getElementById('cv'), ctx=cv.getContext('2d'), wrap=document.getElementById('cwrap');
 let W=0,H=0,DPR=1; const PADL=16,PADR=16,PADT=14, MINIMAP_H=40;
 function PADB(){ const axExtra=Math.max(0,((S.axisScale||1)-1))*30;
-  return (S.axisPad||56) + axExtra + (S.showMinimap? MINIMAP_H : 0); }
+  const want=(S.axisPad||56) + axExtra + (S.showMinimap? MINIMAP_H : 0);
+  // never let a tall δ-axis squeeze the plot below ~60px (H=0 during early init)
+  return H>0 ? Math.min(want, Math.max(28, H-PADT-60)) : want; }
 function resize(){ DPR=window.devicePixelRatio||1; W=wrap.clientWidth; H=wrap.clientHeight;
   cv.width=W*DPR; cv.height=H*DPR; ctx.setTransform(DPR,0,0,DPR,0,0); draw(); }
 window.addEventListener('resize',resize);
@@ -2938,11 +2935,32 @@ function renderContent(opts){
         ctx.lineWidth=1; ctx.strokeStyle=hexA(css('--bg'),.9); ctx.stroke();
         if(!VP) MARKBOXES.push({sp, mkey, pks:r.pks, cx, yD, lt, lh});
       });
+      // free-standing ● marks (placed anywhere with the ● tool)
+      (sp.freeMarks||[]).forEach((fm,fi)=>{
+        if(fm.hidden||fm.ppm<VW.pLo||fm.ppm>VW.pHi) return;
+        const cx=ppmToX(fm.ppm), yD=lt+fm.yf*lh, mR=S.markSize||4.6;
+        ctx.beginPath(); ctx.arc(cx,yD,mR,0,7);
+        ctx.fillStyle=fm.color; ctx.fill();
+        ctx.lineWidth=1; ctx.strokeStyle=hexA(css('--bg'),.9); ctx.stroke();
+        if(!VP) MARKBOXES.push({sp, free:fi, cx, yD, lt, lh});
+      });
+    }
+    // free-standing text labels (placed anywhere with the ✎ tool)
+    if(S.showText){
+      (sp.freeTexts||[]).forEach((ft,fi)=>{
+        if(ft.hidden||ft.ppm<VW.pLo||ft.ppm>VW.pHi) return;
+        const cx=ppmToX(ft.ppm), yD=lt+ft.yf*lh;
+        ctx.fillStyle=S.textColor||css('--mult'); ctx.font=plotFont(S.textSize||10.5,'600');
+        ctx.textAlign='center'; ctx.fillText(ft.text,cx,yD);
+        if(!VP) TEXTBOXES.push({sp, ti:fi, cx, yD, w:ctx.measureText(ft.text).width, lt, lh});
+      });
     }
   }
 }
 function markAt(x,y){ for(let i=MARKBOXES.length-1;i>=0;i--){ const b=MARKBOXES[i];
   if(Math.hypot(x-b.cx,y-b.yD)<=Math.max(7,(S.markSize||4.6)+3)) return b; } return null; }
+function textAt(x,y){ for(let i=TEXTBOXES.length-1;i>=0;i--){ const b=TEXTBOXES[i];
+  if(Math.abs(x-b.cx)<=Math.max(12,b.w/2+4) && y>=b.yD-12 && y<=b.yD+5) return b; } return null; }
 // drag preview rect within a vertical band [topY,botY] (used for both main plot and zoom insets)
 function drawDragPreview(topY, botY){
   const dr=dragRect; if(!dr) return;
@@ -2963,7 +2981,7 @@ function draw(){
   if(typeof window.syncVisibilityControls==='function') window.syncVisibilityControls();
   if(typeof window.syncAssignHeaderState==='function') window.syncAssignHeaderState();
   ctx.clearRect(0,0,W,H);
-  MARKBOXES=[];
+  MARKBOXES=[]; TEXTBOXES=[];
   if(!visibleSpectra().length) return;
   VP=null;
   renderContent({names:true, caption:true});
@@ -3118,9 +3136,13 @@ cv.addEventListener('pointermove',e=>{
       if(lineDrag.which===0){ l.p0=p; l.y0=yf; } else { l.p1=p; l.y1=yf; } draw(); }
     return; }
   if(markDrag){ const b=markDrag.mb, sp=b.sp; const yy=e.clientY-r.top;
-    sp.markPos=sp.markPos||{};
     const yf=Math.max(0,Math.min(1,(yy-b.lt)/b.lh));
-    sp.markPos[b.mkey]={ppm:xToPpm(x), yf};
+    if(b.free!=null){ const fm=(sp.freeMarks||[])[b.free]; if(fm){ fm.ppm=xToPpm(x); fm.yf=yf; } }
+    else { sp.markPos=sp.markPos||{}; sp.markPos[b.mkey]={ppm:xToPpm(x), yf}; }
+    draw(); return; }
+  if(textDrag){ const b=textDrag.tb, sp=b.sp; const yy=e.clientY-r.top;
+    const ft=(sp.freeTexts||[])[b.ti];
+    if(ft){ ft.ppm=xToPpm(x); ft.yf=Math.max(0,Math.min(1,(yy-b.lt)/b.lh)); }
     draw(); return; }
   if(insetDrag){ const rec=insetDrag.rec;
     if(rec){
@@ -3139,7 +3161,7 @@ cv.addEventListener('pointermove',e=>{
   else { // cursor feedback: images / δ-axis grab / selected-integral edges
     const yy=e.clientY-r.top, overAxis = yy>=PADT+plotH();
     const re=regionEdgeAt(x,yy);
-    cv.style.cursor = (!S.tool&&markAt(x,yy)) ? 'grab'
+    cv.style.cursor = (!S.tool&&(markAt(x,yy)||textAt(x,yy))) ? 'grab'
       : zoomCloseAt(x,yy) ? 'pointer'
       : minimapAt(x,yy) ? 'ew-resize'
       : zoomHandleAt(x,yy) ? 'nwse-resize'
@@ -3187,7 +3209,10 @@ cv.addEventListener('pointerdown',e=>{
     // drag an assignment mark dot (●) to reposition it (no tool active)
     if(!S.tool){ const mb=markAt(x,y);
       if(mb){ cv.setPointerCapture(e.pointerId);
-        markDrag={mb}; cv.style.cursor='grabbing'; return; } }
+        markDrag={mb}; cv.style.cursor='grabbing'; return; }
+      const tb=textAt(x,y);
+      if(tb){ cv.setPointerCapture(e.pointerId);
+        textDrag={tb}; cv.style.cursor='grabbing'; return; } }
     const idel=S.tool==='tDelImg'?insetAt(x,y):null;
     if(idel&&idel.sp===A()){
       pushUndo(idel.sp); removeImage(idel.ki); S.resTab='assign'; renderResults(); return;
@@ -3235,6 +3260,8 @@ cv.addEventListener('pointerup',e=>{
   if(mmDrag){ mmDrag=false; persistUI(); return; }
   if(markDrag){ const sp=markDrag.mb.sp; markDrag=null; cv.style.cursor='';
     if(sp) saveAnnot(sp); return; }
+  if(textDrag){ const sp=textDrag.tb.sp; textDrag=null; cv.style.cursor='';
+    if(sp) saveAnnot(sp); return; }
   if(insetDrag){ const sp=insetDrag.sp||A(); cv.style.cursor='';
     if(sp) saveAnnot(sp); insetDrag=null; return; }
   if(edgeDrag){ const sp=A(); if(sp){ renormIntegrals(sp); saveAnnot(sp); } edgeDrag=null; renderResults(); draw(); return; }
@@ -3275,7 +3302,11 @@ cv.addEventListener('pointerup',e=>{
     dragRect=null; draw(); return;
   }
   if(S.tool==='tDelMark'){
-    const mb=markAt(x,y), tsp=(mb&&mb.sp)||sp; let targets=mb&&mb.pks?mb.pks.filter(p=>p.mark):[];
+    const mb=markAt(x,y), tsp=(mb&&mb.sp)||sp;
+    if(mb&&mb.free!=null){ pushUndo(tsp); (tsp.freeMarks||[]).splice(mb.free,1);
+      saveAnnot(tsp); S.resTab='assign'; S.asgSub='mark'; openResults(); renderResults();
+      dragRect=null; draw(); return; }
+    let targets=mb&&mb.pks?mb.pks.filter(p=>p.mark):[];
     if(!targets.length&&tsp){ VP=dragRect.zVP||null; const k=peakAtX(tsp,x,12); VP=null;
       if(k>=0&&tsp.peaks[k].mark) targets=[tsp.peaks[k]]; }
     if(targets.length){ pushUndo(tsp); targets.forEach(p=>{ delete p.mark; delete p.markHidden; });
@@ -3283,6 +3314,10 @@ cv.addEventListener('pointerup',e=>{
     dragRect=null; draw(); return;
   }
   if(S.tool==='tDelText'){
+    const tb=textAt(x,y);
+    if(tb){ pushUndo(tb.sp); (tb.sp.freeTexts||[]).splice(tb.ti,1);
+      saveAnnot(tb.sp); S.resTab='assign'; S.asgSub='text'; openResults(); renderResults();
+      dragRect=null; draw(); return; }
     VP=dragRect.zVP||null; const k=sp?peakAtX(sp,x,12):-1; VP=null;
     if(k>=0&&sp.peaks[k].label){ pushUndo(sp); delete sp.peaks[k].label; delete sp.peaks[k].labelHidden;
       saveAnnot(sp); S.resTab='assign'; S.asgSub='text'; openResults(); renderResults(); }
@@ -3331,10 +3366,10 @@ cv.addEventListener('pointerup',e=>{
       if(pos>=0) S.selPeaks.splice(pos,1); else S.selPeaks.push(pk.ppm);
       S.resTab='mult'; openResults();
     }
-  } else if(S.tool==='tAssign'&&sp){ // click in ✎ mode → text label
-    doAssign(dragRect.x0);
-  } else if(S.tool==='tMark'&&sp){ // click in ● mode → toggle colored mark
-    doMark(dragRect.x0);
+  } else if(S.tool==='tAssign'&&sp){ // click in ✎ mode → text label (near a peak: attach; elsewhere: free)
+    doAssign(dragRect.x0, dragRect.y0);
+  } else if(S.tool==='tMark'&&sp){ // click in ● mode → toggle colored mark (near a peak: attach; elsewhere: free)
+    doMark(dragRect.x0, dragRect.y0);
   } else if(S.tool==='tDelShade'&&sp){ // click inside a shaded region → delete it
     const ppm=xToPpm(x); const arr=sp.shades||[];
     const k=arr.findIndex(sh=>ppm<=Math.max(sh.a,sh.b)&&ppm>=Math.min(sh.a,sh.b));
@@ -3585,11 +3620,13 @@ function delSelectedInteg(){ const sp=A(); if(!sp)return;
     return;
   }
   pushUndo(sp); sp.integrals.splice(k,1); S.selInteg=-1; renormIntegrals(sp); saveAnnot(sp); renderResults(); draw(); }
-function clearMarks(){ const sp=A(); if(!sp)return; const rows=(sp.peaks||[]).filter(p=>p.mark); if(!rows.length)return;
-  pushUndo(sp); rows.forEach(p=>{ delete p.mark; delete p.markHidden; }); sp.markPos={};
+function clearMarks(){ const sp=A(); if(!sp)return; const rows=(sp.peaks||[]).filter(p=>p.mark);
+  if(!rows.length && !(sp.freeMarks||[]).length)return;
+  pushUndo(sp); rows.forEach(p=>{ delete p.mark; delete p.markHidden; }); sp.markPos={}; sp.freeMarks=[];
   saveAnnot(sp); S.resTab='assign'; S.asgSub='mark'; openResults(); renderResults(); draw(); }
-function clearTextLabels(){ const sp=A(); if(!sp)return; const rows=(sp.peaks||[]).filter(p=>p.label); if(!rows.length)return;
-  pushUndo(sp); rows.forEach(p=>{ delete p.label; delete p.labelHidden; });
+function clearTextLabels(){ const sp=A(); if(!sp)return; const rows=(sp.peaks||[]).filter(p=>p.label);
+  if(!rows.length && !(sp.freeTexts||[]).length)return;
+  pushUndo(sp); rows.forEach(p=>{ delete p.label; delete p.labelHidden; }); sp.freeTexts=[];
   saveAnnot(sp); S.resTab='assign'; S.asgSub='text'; openResults(); renderResults(); draw(); }
 function clearImages(){ const sp=A(); if(!sp)return; const rows=imgsOf(sp); if(!rows.length)return;
   pushUndo(sp); rows.forEach(im=>{ delete IMGCACHE[im.id]; }); sp.images=[]; S.selImg=-1;
@@ -3682,7 +3719,13 @@ function closeToolMenus(){ document.querySelectorAll('.toolmenu.open').forEach(m
 document.querySelectorAll('.toolmenu .tmitem').forEach(it=>it.addEventListener('click',e=>{
   if(!it.dataset.act) return;   // e.g. Add-image button has its own handler
   e.stopPropagation(); doToolAction(it.dataset.act); }));
-document.addEventListener('click',e=>{ if(!e.target.closest('.toolmenu') && !e.target.closest('.colorpop')) closeToolMenus(); });
+/* outside-click detection must use the event's original propagation path:
+   a click handler inside a panel may re-render the clicked element out of the
+   DOM before this runs, making e.target.closest() report "outside" and wrongly
+   close the panel (e.g. the settings "reset to defaults" buttons) */
+function clickPathHas(e,cls){ const p=e.composedPath?e.composedPath():[];
+  return p.some(n=>n&&n.classList&&n.classList.contains(cls)) || !!(e.target.closest&&e.target.closest('.'+cls)); }
+document.addEventListener('click',e=>{ if(!clickPathHas(e,'toolmenu') && !clickPathHas(e,'colorpop')) closeToolMenus(); });
 // keep dropdown open while adjusting sliders / color pickers inside a row
 document.querySelectorAll('.toolmenu .tmrow input').forEach(inp=>{
   inp.addEventListener('click',e=>e.stopPropagation());
@@ -3930,25 +3973,47 @@ function calibrateSolvent(target, name){ const sp=A();
 function resetCalibration(){ const sp=A(); if(!sp) return; if(!sp.sr) return;
   pushUndo(sp); sp.sr=0; finalize(sp); saveAnnot(sp); draw(); renderResults(); }
 
-/* attach a text label to the nearest picked peak (active spectrum) */
-function doAssign(x){ const sp=A(); if(!sp)return;
-  if(!(sp.peaks||[]).length){ S.resTab='assign'; openResults(); return; }
+/* attach a text label to the nearest picked peak; clicking away from any peak
+   places (or edits) a free-standing label at the click point */
+function doAssign(x,y){ const sp=A(); if(!sp)return;
   let best=null, bd=14;
-  sp.peaks.forEach(p=>{ const d=Math.abs(ppmToX(p.ppm)-x); if(d<bd){ bd=d; best=p; } });
-  if(!best) return;
-  const v=prompt(t('asgPrompt'), best.label||''); if(v===null) return;
+  (sp.peaks||[]).forEach(p=>{ const d=Math.abs(ppmToX(p.ppm)-x); if(d<bd){ bd=d; best=p; } });
+  if(best){
+    const v=prompt(t('asgPrompt'), best.label||''); if(v===null) return;
+    pushUndo(sp);
+    const s=v.trim(); if(s) best.label=s; else delete best.label;
+    saveAnnot(sp); S.resTab='assign'; S.asgSub='text'; openResults(); renderResults(); draw(); return; }
+  const g=geomFor(sp,laneInfo()), lt=g.top, lh=Math.max(1,g.base-g.top);
+  sp.freeTexts=sp.freeTexts||[];
+  let fk=-1, fd=16;   // clicking an existing free label edits it (empty input deletes)
+  sp.freeTexts.forEach((ft,k)=>{ const d=Math.hypot(ppmToX(ft.ppm)-x,(lt+ft.yf*lh)-y);
+    if(d<fd){ fd=d; fk=k; } });
+  const v=prompt(t('asgPrompt'), fk>=0?sp.freeTexts[fk].text:''); if(v===null) return;
+  const s=v.trim();
+  if(fk<0 && !s) return;
   pushUndo(sp);
-  const s=v.trim(); if(s) best.label=s; else delete best.label;
+  if(fk>=0){ if(s) sp.freeTexts[fk].text=s; else sp.freeTexts.splice(fk,1); }
+  else sp.freeTexts.push({ppm:xToPpm(x), yf:Math.max(0,Math.min(1,(y-lt)/lh)), text:s});
   saveAnnot(sp); S.resTab='assign'; S.asgSub='text'; openResults(); renderResults(); draw(); }
-/* toggle a colored ● mark on the nearest picked peak */
-function doMark(x){ const sp=A(); if(!sp)return;
-  if(!(sp.peaks||[]).length){ S.resTab='assign'; openResults(); return; }
+/* toggle a colored ● mark on the nearest picked peak; clicking away from any
+   peak places a free-standing ● at the click point (same color click removes) */
+function doMark(x,y){ const sp=A(); if(!sp)return;
   let best=null, bd=14;
-  sp.peaks.forEach(p=>{ const d=Math.abs(ppmToX(p.ppm)-x); if(d<bd){ bd=d; best=p; } });
-  if(!best) return;
+  (sp.peaks||[]).forEach(p=>{ const d=Math.abs(ppmToX(p.ppm)-x); if(d<bd){ bd=d; best=p; } });
+  if(best){
+    pushUndo(sp);
+    if(best.mark===S.markColor) delete best.mark;  // same color → remove
+    else best.mark=S.markColor;                    // new/other color → set
+    saveAnnot(sp); S.resTab='assign'; S.asgSub='mark'; openResults(); renderResults(); draw(); return; }
+  const g=geomFor(sp,laneInfo()), lt=g.top, lh=Math.max(1,g.base-g.top);
+  sp.freeMarks=sp.freeMarks||[];
+  let fk=-1, fd=Math.max(7,(S.markSize||4.6)+3);
+  sp.freeMarks.forEach((fm,k)=>{ const d=Math.hypot(ppmToX(fm.ppm)-x,(lt+fm.yf*lh)-y);
+    if(d<=fd){ fd=d; fk=k; } });
   pushUndo(sp);
-  if(best.mark===S.markColor) delete best.mark;  // same color → remove
-  else best.mark=S.markColor;                    // new/other color → set
+  if(fk>=0){ if(sp.freeMarks[fk].color===S.markColor) sp.freeMarks.splice(fk,1);
+    else sp.freeMarks[fk].color=S.markColor; }
+  else sp.freeMarks.push({ppm:xToPpm(x), yf:Math.max(0,Math.min(1,(y-lt)/lh)), color:S.markColor});
   saveAnnot(sp); S.resTab='assign'; S.asgSub='mark'; openResults(); renderResults(); draw(); }
 
 /* remove detections within a ppm region (active spectrum) */
@@ -3980,7 +4045,7 @@ function sigKey(sp){ let h=2166136261>>>0;
    undoable as well as the original calibration / peak / integral operations. */
 const APP_UNDO=[], APP_REDO=[];
 const HIST_SP_KEYS=['name','origName','color','colorLocked','visible','vzoom','source','mode','wdw','lb','zf','gdc','ph0','ph1','sr','yscale',
-  'peaks','integrals','multiplets','shades','images'];
+  'peaks','integrals','multiplets','shades','images','freeMarks','freeTexts'];
 let _histId=0, _historyApplying=false;
 function histClone(v){
   if(typeof structuredClone==='function') return structuredClone(v);
@@ -4060,7 +4125,7 @@ function refreshUndoUI(){
 
 function saveAnnot(sp){ try{ const k=sigKey(sp);
   const data={name:sp.name, sr:sp.sr||0, mode:sp.mode, ph0:sp.ph0, ph1:sp.ph1, color:sp.color, colorLocked:!!sp.colorLocked, source:sp.source,
-    images:sp.images||[], markPos:sp.markPos||{},
+    images:sp.images||[], markPos:sp.markPos||{}, freeMarks:sp.freeMarks||[], freeTexts:sp.freeTexts||[],
     peaks:sp.peaks||[], integrals:sp.integrals||[], multiplets:sp.multiplets||[], shades:sp.shades||[]};
   localStorage.setItem(k, JSON.stringify(data)); }catch(e){} }
 function restoreAnnot(sp){ try{ const raw=localStorage.getItem(sigKey(sp)); if(!raw)return false;
@@ -4079,6 +4144,7 @@ function restoreAnnot(sp){ try{ const raw=localStorage.getItem(sigKey(sp)); if(!
       if(cmap[p.asg.cid]) p.mark=cmap[p.asg.cid]; delete p.asg; } });
   }
   sp.peaks=d.peaks||[]; sp.integrals=d.integrals||[]; sp.multiplets=d.multiplets||[]; sp.shades=d.shades||[];
+  sp.freeMarks=d.freeMarks||[]; sp.freeTexts=d.freeTexts||[];
   return true; }catch(e){ return false; } }
 
 /* ===================== results panel (dock ⇆ float) ===================== */
@@ -4189,23 +4255,33 @@ function renderResults(){
       `<button class="rsub toolbtn${sub==='conn'?' on':''}${S.tool==='tLine'?' armed':''}" data-sub="conn" data-tool="tLine">${t('subConn')}</button></div>`;
     if(sub==='mark'){
       const rows=[]; (sp.peaks||[]).forEach((p,k)=>{ if(p.mark) rows.push({p,k}); });
+      const frows=sp.freeMarks||[];
       const cpick=`<div class="mkrow"><label>${t('markColorLbl')}</label><input type="color" id="rMarkColor" value="${S.markColor}"></div>`;
-      body.innerHTML = subbar + cpick + (rows.length? `<table><thead><tr><th>#</th><th>${t('thPpm')}</th><th>${t('thColor')}</th><th></th><th></th></tr></thead><tbody>`+
+      body.innerHTML = subbar + cpick + ((rows.length||frows.length)? `<table><thead><tr><th>#</th><th>${t('thPpm')}</th><th>${t('thColor')}</th><th></th><th></th></tr></thead><tbody>`+
         rows.map((r,j)=>`<tr${r.p.markHidden?' class="rowoff"':''}><td>${j+1}</td><td>${fmtPpm(r.p.ppm)}</td>`+
           `<td>${swC(r.p.mark,'mark',r.k)} <span style="color:var(--faint);font-size:10px">${r.p.mark}</span></td>`+
           eyeC(!r.p.markHidden,'mark',r.k)+
-          `<td><button class="rrm" data-del="mark" data-k="${r.k}">×</button></td></tr>`).join('')+`</tbody></table>`
+          `<td><button class="rrm" data-del="mark" data-k="${r.k}">×</button></td></tr>`).join('')+
+        frows.map((fm,k)=>`<tr${fm.hidden?' class="rowoff"':''}><td>${rows.length+k+1}</td><td>${fmtPpm(fm.ppm)}</td>`+
+          `<td>${swC(fm.color,'freeMarks',k)} <span style="color:var(--faint);font-size:10px">${fm.color}</span></td>`+
+          eyeC(!fm.hidden,'freeMarks',k)+
+          `<td><button class="rrm" data-del="freeMarks" data-k="${k}">×</button></td></tr>`).join('')+`</tbody></table>`
         : `<div class="rempty">${t('emptyMark')}</div>`);
       const mc=document.getElementById('rMarkColor');
       if(mc) mc.oninput=e=>{ S.markColor=e.target.value;
         setColorBtn('markColor', e.target.value); };
     } else if(sub==='text'){
       const rows=[]; (sp.peaks||[]).forEach((p,k)=>{ if(p.label) rows.push({p,k}); });
-      body.innerHTML = subbar + (rows.length? `<table><thead><tr><th>#</th><th>${t('thPpm')}</th><th>${t('thLabel')}</th><th></th><th></th></tr></thead><tbody>`+
+      const frows=sp.freeTexts||[];
+      body.innerHTML = subbar + ((rows.length||frows.length)? `<table><thead><tr><th>#</th><th>${t('thPpm')}</th><th>${t('thLabel')}</th><th></th><th></th></tr></thead><tbody>`+
         rows.map((r,j)=>`<tr${r.p.labelHidden?' class="rowoff"':''}><td>${j+1}</td><td>${fmtPpm(r.p.ppm)}</td>`+
           `<td><span style="color:var(--mult)">${r.p.label.replace(/</g,'&lt;')}</span></td>`+
           eyeC(!r.p.labelHidden,'label',r.k)+
-          `<td><button class="rrm" data-del="label" data-k="${r.k}">×</button></td></tr>`).join('')+`</tbody></table>`
+          `<td><button class="rrm" data-del="label" data-k="${r.k}">×</button></td></tr>`).join('')+
+        frows.map((ft,k)=>`<tr${ft.hidden?' class="rowoff"':''}><td>${rows.length+k+1}</td><td>${fmtPpm(ft.ppm)}</td>`+
+          `<td><span style="color:var(--mult)">${ft.text.replace(/</g,'&lt;')}</span></td>`+
+          eyeC(!ft.hidden,'freeTexts',k)+
+          `<td><button class="rrm" data-del="freeTexts" data-k="${k}">×</button></td></tr>`).join('')+`</tbody></table>`
         : `<div class="rempty">${t('emptyText')}</div>`);
     } else if(sub==='conn'){
       const ls=S.lines||[];
@@ -4286,9 +4362,12 @@ function renderResults(){
   // per-item recolour (shades, marks) — opens the preset/OK-Cancel popover
   body.querySelectorAll('[data-color]').forEach(b=>b.onclick=ev=>{ ev.stopPropagation();
     const type=b.dataset.color, k=+b.dataset.k;
-    const cur = type==='shades' ? ((sp.shades||[])[k]||{}).color : ((sp.peaks||[])[k]||{}).mark;
+    const cur = type==='shades' ? ((sp.shades||[])[k]||{}).color
+              : type==='freeMarks' ? ((sp.freeMarks||[])[k]||{}).color
+              : ((sp.peaks||[])[k]||{}).mark;
     openColorPopover(b, cur, c=>{
       if(type==='shades'){ const s2=(sp.shades||[])[k]; if(s2) s2.color=c; }
+      else if(type==='freeMarks'){ const fm=(sp.freeMarks||[])[k]; if(fm) fm.color=c; }
       else { const p=(sp.peaks||[])[k]; if(p) p.mark=c; }
       saveAnnot(sp); renderResults(); draw();
     });
@@ -4618,12 +4697,17 @@ document.getElementById('axisPad').oninput=e=>{ S.axisPad=+e.target.value;
   document.getElementById('axv').textContent=e.target.value; resize(); draw(); };
 document.getElementById('baseGap').oninput=e=>{ S.baseGap=(+e.target.value)/100;
   document.getElementById('bgv').textContent=(+e.target.value).toFixed(1)+'%'; persistUI(); draw(); };
-document.getElementById('fontScale').oninput=e=>{ S.fontScale=+e.target.value;
-  document.getElementById('fsv').textContent=Math.round(S.fontScale*100)+'%'; persistUI(); draw(); };
-document.getElementById('nameScale').oninput=e=>{ S.nameScale=+e.target.value;
-  document.getElementById('nsv').textContent=Math.round(S.nameScale*100)+'%'; persistUI(); draw(); };
-document.getElementById('axisScale').oninput=e=>{ S.axisScale=+e.target.value;
-  document.getElementById('asv').textContent=Math.round(S.axisScale*100)+'%'; persistUI(); resize(); draw(); };
+/* the three text-size sliders show absolute pt; internally they stay scale
+   factors relative to the 11px base the canvas fonts are built from */
+const BASE_FONT_PT=11;
+const ptOf=s=>Math.round((s||1)*BASE_FONT_PT*2)/2;
+const fmtPt=s=>ptOf(s)+'pt';
+document.getElementById('fontScale').oninput=e=>{ S.fontScale=(+e.target.value)/BASE_FONT_PT;
+  document.getElementById('fsv').textContent=fmtPt(S.fontScale); persistUI(); draw(); };
+document.getElementById('nameScale').oninput=e=>{ S.nameScale=(+e.target.value)/BASE_FONT_PT;
+  document.getElementById('nsv').textContent=fmtPt(S.nameScale); persistUI(); draw(); };
+document.getElementById('axisScale').oninput=e=>{ S.axisScale=(+e.target.value)/BASE_FONT_PT;
+  document.getElementById('asv').textContent=fmtPt(S.axisScale); persistUI(); resize(); draw(); };
 document.getElementById('markSize').oninput=e=>{ S.markSize=+e.target.value;
   document.getElementById('mkv').textContent=(S.markSize).toFixed(1); persistUI(); draw(); };
 document.getElementById('textSize').oninput=e=>{ S.textSize=+e.target.value;
@@ -4653,12 +4737,12 @@ document.getElementById('btnResetSet').onclick=()=>{
   S.fontScale=DEFAULTS.fontScale; S.nameScale=DEFAULTS.nameScale; S.axisScale=DEFAULTS.axisScale; S.markSize=DEFAULTS.markSize; S.plotFont=DEFAULTS.plotFont;
   { const ms=document.getElementById('markSize'); if(ms){ ms.value=DEFAULTS.markSize;
       const v=document.getElementById('mkv'); if(v) v.textContent=DEFAULTS.markSize.toFixed(1); } }
-  { const fs=document.getElementById('fontScale'); if(fs){ fs.value=DEFAULTS.fontScale;
-      const v=document.getElementById('fsv'); if(v) v.textContent=Math.round(DEFAULTS.fontScale*100)+'%'; } }
-  { const ns=document.getElementById('nameScale'); if(ns){ ns.value=DEFAULTS.nameScale;
-      const v=document.getElementById('nsv'); if(v) v.textContent=Math.round(DEFAULTS.nameScale*100)+'%'; } }
-  { const as_=document.getElementById('axisScale'); if(as_){ as_.value=DEFAULTS.axisScale;
-      const v=document.getElementById('asv'); if(v) v.textContent=Math.round(DEFAULTS.axisScale*100)+'%'; } }
+  { const fs=document.getElementById('fontScale'); if(fs){ fs.value=ptOf(DEFAULTS.fontScale);
+      const v=document.getElementById('fsv'); if(v) v.textContent=fmtPt(DEFAULTS.fontScale); } }
+  { const ns=document.getElementById('nameScale'); if(ns){ ns.value=ptOf(DEFAULTS.nameScale);
+      const v=document.getElementById('nsv'); if(v) v.textContent=fmtPt(DEFAULTS.nameScale); } }
+  { const as_=document.getElementById('axisScale'); if(as_){ as_.value=ptOf(DEFAULTS.axisScale);
+      const v=document.getElementById('asv'); if(v) v.textContent=fmtPt(DEFAULTS.axisScale); } }
   S.ppmDigits=DEFAULTS.ppmDigits;
   { const pd=document.getElementById('ppmDigits'); if(pd){ pd.value=DEFAULTS.ppmDigits;
       const v=document.getElementById('digv'); if(v) v.textContent=String(DEFAULTS.ppmDigits); } }
@@ -4816,7 +4900,7 @@ document.querySelectorAll('.menu>.mbtn').forEach(b=>b.addEventListener('click',e
 document.getElementById('btnFileDirect').addEventListener('click',e=>{ e.stopPropagation(); closeMenus(); openDataset(); });
 document.getElementById('btnFileReopen').addEventListener('click',e=>{ e.stopPropagation(); closeMenus();
   reopenLast().then(ok=>{ if(!ok) openDataset(); }); });
-document.addEventListener('click',e=>{ if(!e.target.closest('.menu')) closeMenus(); });
+document.addEventListener('click',e=>{ if(!clickPathHas(e,'menu')) closeMenus(); });
 
 /* toolbar dropdowns open on CLICK only (pinned); hover just highlights the button border via CSS */
 /* ---- tear-off tool dropdowns: float into a draggable window / dock back ---- */
@@ -5293,9 +5377,9 @@ function syncUIControls(){
   const lw=document.getElementById('lineW'); if(lw){ lw.value=S.lineW; const v=document.getElementById('lwv'); if(v) v.textContent=(+S.lineW).toFixed(1); }
   const pd=document.getElementById('ppmDigits'); if(pd){ pd.value=S.ppmDigits; const v=document.getElementById('digv'); if(v) v.textContent=String(S.ppmDigits); }
   const kd=document.getElementById('pkDigits'); if(kd){ kd.value=S.pkDigits; const v=document.getElementById('pkdigv'); if(v) v.textContent=String(S.pkDigits); }
-  const fs=document.getElementById('fontScale'); if(fs){ fs.value=S.fontScale; const v=document.getElementById('fsv'); if(v) v.textContent=Math.round(S.fontScale*100)+'%'; }
-  const ns=document.getElementById('nameScale'); if(ns){ ns.value=S.nameScale; const v=document.getElementById('nsv'); if(v) v.textContent=Math.round((S.nameScale||1)*100)+'%'; }
-  const as_=document.getElementById('axisScale'); if(as_){ as_.value=S.axisScale; const v=document.getElementById('asv'); if(v) v.textContent=Math.round((S.axisScale||1)*100)+'%'; }
+  const fs=document.getElementById('fontScale'); if(fs){ fs.value=ptOf(S.fontScale); const v=document.getElementById('fsv'); if(v) v.textContent=fmtPt(S.fontScale); }
+  const ns=document.getElementById('nameScale'); if(ns){ ns.value=ptOf(S.nameScale); const v=document.getElementById('nsv'); if(v) v.textContent=fmtPt(S.nameScale); }
+  const as_=document.getElementById('axisScale'); if(as_){ as_.value=ptOf(S.axisScale); const v=document.getElementById('asv'); if(v) v.textContent=fmtPt(S.axisScale); }
   const mks=document.getElementById('markSize'); if(mks){ mks.value=S.markSize; const v=document.getElementById('mkv'); if(v) v.textContent=(S.markSize||4.6).toFixed(1); }
   const tss=document.getElementById('textSize'); if(tss){ tss.value=S.textSize; const v=document.getElementById('tsv'); if(v) v.textContent=(S.textSize||10.5).toFixed(1); }
   const tcb=document.getElementById('textColor'); if(tcb) setColorBtn('textColor', S.textColor||css('--mult'));
@@ -5333,6 +5417,19 @@ function toast(msg){ let el=document.getElementById('toast');
    a large rework bumps the major (→ 2.0). Badge shows v + CHANGELOG[0].v.
    Fields: v (version string), date (YYYY-MM-DD), en[] / ja[] bullet lists. */
 const CHANGELOG=[
+  { v:'1.11', date:'2026-07-18',
+    en:['Marks and text labels can now be placed anywhere on the plot: with the ● or ✎ tool, clicking empty space places a free-standing mark / label at that spot (clicking near a picked peak still attaches to the peak as before). Free annotations can be dragged to reposition, edited by re-clicking, removed with the delete tools, and are listed in the results panel and saved with the workspace.',
+        'Renamed the “Pick Peaks” tab to “Peaks” (Japanese UI) and the Assignment image action to “Add image from file”.',
+        'Appearance settings: the line-width default is now 1 (was 1.1); the three text-size sliders show absolute sizes (e.g. 14pt) instead of percentages and share the same 8–26 pt range; the plot-annotation slider is now labelled “Annotation size (peaks, ∫, …)” to clarify what it controls.',
+        'The δ-axis height slider now reaches 600 (was 160), and a tall axis can no longer squeeze the spectrum area below a usable minimum height.',
+        'Fixed: clicking “Reset to defaults” inside the Settings panel no longer closes the panel (outside-click detection now tolerates buttons that re-render themselves while being clicked; the same fix covers the tool dropdowns).',
+        'Hover polish: the show / hide rows in Settings, the Assignment gear popover and all menu rows now share the same calm flat-tint hover — the leftover gradient + slide effect and the icon zoom / glow on toolbar buttons were removed.'],
+    ja:['マークとテキストラベルをスペクトル上の好きな位置に置けるようにしました。●／✎ツールで空きスペースをクリックするとその位置に自由配置され（ピーク近くのクリックは従来どおりピークに付きます）、ドラッグで移動、再クリックで編集、削除ツールで削除できます。自由配置した注釈は結果一覧に表示され、ワークスペースにも保存されます。',
+        '「ピーク検出」タブの名称を「ピーク」に変更し、帰属の画像ボタンを「画像をファイルから追加」に変更しました。',
+        '見た目の設定：線の太さの初期値を1にしました（従来1.1）。3つの文字サイズスライダーを％表記から絶対表記（例：14pt）に変更し、範囲を8–26ptに統一しました。また、対象が分かるよう「注釈のサイズ（ピーク・積分など）」という名称にしました。',
+        'δ軸の高さの上限を160から600に拡大しました。軸を高くしてもスペクトル領域が最低限の高さを下回らないようにしています。',
+        '修正：設定パネル内の「デフォルトに戻す」を押すとパネルが閉じてしまう問題を修正しました（クリック中に自身を再描画するボタンでも「パネル外クリック」と誤判定しないようにし、ツールのドロップダウンにも同じ修正を適用）。',
+        'ホバー表示の統一：設定の表示・非表示の行、帰属の歯車ポップオーバー、各メニュー行のホバーを同じ控えめなフラット表示に揃え、残っていたグラデーション＋スライド効果と、ツールバーアイコンの拡大・発光効果を廃止しました。'] },
   { v:'1.10-preview', date:'2026-07-14',
     en:['Preview: merged the View and Settings menus into one task-oriented Settings panel with Display, Controls, Spectrum and General tabs.',
         'Separated display and interaction resets, clarified that data source and display mode apply to the selected spectrum, and added persistence for language, theme, background and wheel preferences.'],
@@ -6328,9 +6425,13 @@ openResults();
   box-shadow:inset 0 0 0 1px color-mix(in srgb,currentColor 13%,transparent) !important;
 }
 
-/* dropdown items: keep minimal highlight */
+/* dropdown items: keep minimal highlight (.vistog = show/hide rows in settings;
+   .asg-gear-popover = the assign gear popover, which is attached to <body> and
+   would otherwise miss this #toolbar-scoped override) */
 #toolbar .mitem:hover,
-#toolbar .tmitem:hover{
+#toolbar .tmitem:hover,
+#toolbar .vistog:hover,
+.asg-gear-popover .tmitem:hover{
   background:color-mix(in srgb,var(--panel2) 92%,var(--trace) 3%) !important;
   color:var(--ink) !important;
 }
@@ -6463,11 +6564,11 @@ html[data-theme="light"] #toolbar .menu .mbtn:hover{
     image:{label:'画像',icon:'<svg class="svi" viewBox="0 0 16 16"><rect x="2" y="3" width="12" height="10" rx="1.2"/><circle cx="5.6" cy="6.4" r="1.1"/><path d="m3 12 3.4-3.3 2.2 2.1 2.3-2.5L14 11.4"/></svg>'}
   };
   const setLabel=(el,text)=>{const s=el&&el.querySelector('span:last-child');if(s){s.removeAttribute('data-i18n');s.textContent=text;}};
-  setLabel(controls.mark.action,'ピークをクリックしてマークを付け外し'); setLabel(controls.mark.toggle,'マークを表示');
-  setLabel(controls.text.action,'ピークをクリックしてラベルを追加・編集'); setLabel(controls.text.toggle,'テキストラベルを表示');
+  setLabel(controls.mark.action,'クリックした位置にマークを配置（ピーク上は付け外し）'); setLabel(controls.mark.toggle,'マークを表示');
+  setLabel(controls.text.action,'クリックした位置にラベルを追加・編集'); setLabel(controls.text.toggle,'テキストラベルを表示');
   setLabel(controls.shade.action,'範囲をドラッグして塗りつぶし'); setLabel(controls.shade.del,'クリックして削除'); setLabel(controls.shade.clear,'すべて削除'); setLabel(controls.shade.toggle,'塗りつぶしを表示');
   setLabel(controls.line.action,'2点をドラッグしてコネクタを作成'); setLabel(controls.line.del,'クリックして削除'); setLabel(controls.line.clear,'すべて削除'); setLabel(controls.line.toggle,'コネクタを表示');
-  setLabel(controls.image.action,'画像を追加'); setLabel(controls.image.toggle,'画像を表示');
+  setLabel(controls.image.action,'画像をファイルから追加'); setLabel(controls.image.toggle,'画像を表示');
   controls.mark.clear.classList.add('asg-delete-all');controls.text.clear.classList.add('asg-delete-all');controls.shade.clear.classList.add('asg-delete-all');controls.line.clear.classList.add('asg-delete-all');controls.image.clear.classList.add('asg-delete-all');
   const order=['mark','text','shade','line','image'];
   const makeSelectRow=(label,value,options,onchange)=>{
@@ -6523,8 +6624,8 @@ html[data-theme="light"] #toolbar .menu .mbtn:hover{
   const syncAssignHeaderState=()=>{
     const sp=typeof A==='function'?A():null;
     const has={
-      mark:!!(sp&&(sp.peaks||[]).some(p=>p.mark)),
-      text:!!(sp&&(sp.peaks||[]).some(p=>p.label)),
+      mark:!!(sp&&((sp.peaks||[]).some(p=>p.mark)||(sp.freeMarks||[]).length)),
+      text:!!(sp&&((sp.peaks||[]).some(p=>p.label)||(sp.freeTexts||[]).length)),
       shade:!!(sp&&(sp.shades||[]).length),
       line:!!((S.lines||[]).length),
       image:!!(sp&&imgsOf(sp).length)
