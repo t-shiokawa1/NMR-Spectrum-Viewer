@@ -98,6 +98,26 @@ input[type=number]:focus,input[type=text]:focus{border-color:var(--trace)}
 .mitem:hover{background:var(--panel2);color:var(--trace)}
 .mitem .ic{display:inline-flex;width:16px;height:16px;align-items:center;justify-content:center;color:var(--dim);flex:none}
 .msep{height:1px;background:var(--line);margin:6px 0}
+.msec{font-size:10px;color:var(--faint);font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:3px 6px 3px}
+/* Assign-tab style group: icon + bold heading, then indented "• bullet" sub-items (used by File & Other menus) */
+.grphead{display:flex;align-items:center;gap:8px;padding:7px 6px 3px;font-size:12px;font-weight:650;color:var(--ink)}
+.grphead .ic,.grphead .tmic{display:inline-flex;width:16px;height:16px;align-items:center;justify-content:center;color:var(--dim);flex:none}
+.grphead .ic .svi,.grphead .tmic .svi{width:15px;height:15px}
+.grpitem{padding:4px 8px 4px 14px!important}
+.grpitem.on{color:var(--trace)}
+.grpitem.on::before{color:var(--trace)}
+.grpitem.disabled{opacity:.45;pointer-events:none}
+.grpitem>.ic,.grpitem>.tmic{display:none!important}
+.grpitem::before{content:'•';flex:0 0 12px;margin-right:4px;color:var(--dim);font-size:14px;line-height:1;text-align:center}
+.grpsub{padding-left:26px!important}          /* a control that belongs to the bulleted row above it (no bullet) */
+.grpsub>.tmic{display:none!important}
+.menuhelp-row{display:flex;align-items:center}
+.menuhelp-row>.mitem{width:auto;flex:1;min-width:0}
+.menuhelp-row>.grphint{margin-left:2px;margin-right:2px}
+.grphint{margin-left:auto;flex:none;width:15px;height:15px;border-radius:50%;border:1px solid var(--line);display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:var(--dim);cursor:help;background:transparent}
+.grphint:hover,.grphint:focus{color:var(--ink);border-color:var(--dim);outline:none}
+#floattip{position:fixed;z-index:300;max-width:280px;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:7px;padding:7px 9px;font-size:11px;line-height:1.55;box-shadow:0 6px 22px rgba(0,0,0,.30);pointer-events:none;opacity:0;transition:opacity .12s;white-space:normal}
+#floattip.show{opacity:1}
 .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px}
 aside{grid-row:1;background:var(--panel);overflow-y:auto;overflow-x:hidden}
 #dragbar{grid-row:1;cursor:col-resize;position:relative;background:transparent;user-select:none}
@@ -240,6 +260,13 @@ main{grid-row:1;position:relative;display:flex;flex-direction:column;background:
 .tmrow input[type=range]{flex:1;min-width:70px;margin-left:auto;accent-color:var(--peak)}
 .tmrow .thrval{font-family:var(--mono);font-size:11px;color:var(--dim);min-width:32px;text-align:right}
 .tmsep{height:1px;background:var(--line);margin:4px 2px}
+.cutctl{display:flex;align-items:center;gap:8px;padding:2px 9px 2px 30px;font-size:11.5px;color:var(--ink)}
+.cutctl>span{flex:none;min-width:44px}
+.cutctl input[type=range]{flex:1;min-width:80px;accent-color:var(--peak)}
+.cutctl .cutclr{display:flex;align-items:center;gap:6px;margin-left:auto}
+.cutctl input[type=color]{width:26px;height:20px;border:1px solid var(--line);border-radius:5px;background:var(--panel2);padding:2px;cursor:pointer}
+.cutctl .cutclr button{border:1px solid var(--line);background:var(--panel2);color:var(--dim);border-radius:5px;font-size:10.5px;padding:2px 7px;cursor:pointer}
+.cutctl .cutclr button.on{border-color:var(--peak);color:var(--peak)}
 /* organized peak menu */
 #tmShift .tmpanel.peak-organized{min-width:min(334px,calc(100vw - 20px));max-width:calc(100vw - 20px);padding:7px;gap:4px}
 #tmInteg .tmpanel.integ-organized{min-width:min(360px,calc(100vw - 20px));max-width:calc(100vw - 20px);padding:7px;gap:4px}
@@ -559,6 +586,38 @@ html[data-theme=light] .manmodal{background:rgba(40,44,48,.36)}
 .man-fig svg{display:block;width:100%;height:auto;max-width:640px;margin:0 auto}
 .man-fig figcaption{margin-top:8px;text-align:center;font-size:10.5px;color:var(--faint)}
 @media (max-width:720px){.mantabs{flex-basis:54px}.mantabs button span:last-child{display:none}.mancard{height:92vh}}
+
+/* === paper-format text (embedded in the Export menu) === */
+.paper-caret{margin-left:auto;color:var(--faint);font-size:11px}
+/* section header for the always-open paper panel — distinct from the action .mitem rows above it */
+.paperhead{display:flex;align-items:center;gap:8px;cursor:default;padding:5px 4px 4px;
+  font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--faint)}
+.paperhead .ic{width:14px;height:14px;color:var(--faint)}
+.paperhead .svi{width:13px;height:13px}
+.paperempty{padding:11px 12px;color:var(--faint);font-size:11.5px}
+.paperinline{margin-left:26px;width:334px;max-width:calc(100vw - 66px);max-height:min(60vh,520px);overflow-y:auto;
+  background:var(--panel2)}
+.paperpane{display:flex;flex-direction:column;gap:9px;padding:4px 11px 12px}
+.paperctl{display:grid;grid-template-columns:auto minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:8px 10px}
+.paperctl label{display:contents;font-size:11px;color:var(--dim)}
+.paperctl label .pl{font-size:11px;color:var(--dim);white-space:nowrap}
+.paperctl input[type=number]{width:100%;min-width:0;padding:4px 6px;font-size:11.5px}
+.paperctl select{width:100%;min-width:0;padding:4px 6px;font-size:11.5px}
+.paper-seclbl{font-size:10px;color:var(--faint);font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-top:2px}
+.paper-editline{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.paper-editline .tbtn{text-transform:none;letter-spacing:0;width:auto;padding:3px 11px;font-size:11px;font-weight:500}
+.paper-editline .tbtn.attn{border-color:var(--trace);color:var(--trace);background:color-mix(in srgb,var(--trace) 12%,transparent)}
+.paperedit{width:100%;min-height:38px;max-height:220px;overflow-y:auto;resize:vertical;box-sizing:border-box;
+  background:var(--panel2);border:1px solid var(--line);border-radius:8px;
+  padding:9px 11px;color:var(--ink);font-family:var(--mono);font-size:12px;line-height:1.7;outline:none}
+.paperedit:focus{border-color:color-mix(in srgb,var(--trace) 55%,var(--line))}
+.paperprev{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:11px 13px;
+  font-family:Georgia,"Times New Roman",serif;font-size:13.5px;line-height:1.8;color:var(--ink);min-height:44px}
+.paperprev i{font-style:italic}
+.paperbtns{display:flex;align-items:center;gap:8px}
+.paperbtns .grow{flex:1}
+.paperbtns .tbtn{width:auto;padding:6px 13px;font-size:11.5px}
+.paperbtns .tbtn.main{background:var(--trace);color:var(--bg);font-weight:600;border-color:var(--trace)}
 
 /* === Variant B: Button / menu motion === */
 .mbtn,.tbtn,.rsub,.seg button,.vistog,.tmitem,.mitem,.sprow,.cmp{
@@ -896,28 +955,25 @@ html[data-theme="light"] .toolmenu.open .tmpanel{
   <main>
     <div id="toolbar">
       <nav class="menubar">
-        <div class="menu" id="menuFileBox">
+        <div class="menu" id="menuExportBox">
           <button class="mbtn tbc" data-i18n-title="menuFile"><span class="mi"><svg class="svi" viewBox="0 0 16 16"><path d="M1.5 4.2c0-.6.4-1 1-1h3.3c.3 0 .6.1.8.4l.7.9h5c.6 0 1 .4 1 1v6.4c0 .6-.4 1-1 1H2.5c-.6 0-1-.4-1-1V4.2Z"/></svg></span><span class="tb-lbl" data-i18n="menuFile">File</span></button>
-          <div class="mpanel" style="min-width:215px">
-            <button class="mitem" id="btnFileDirect"><span class="ic"><svg class="svi" viewBox="0 0 16 16"><path d="M1.5 4.2c0-.6.4-1 1-1h3.3c.3 0 .6.1.8.4l.7.9h5c.6 0 1 .4 1 1v6.4c0 .6-.4 1-1 1H2.5c-.6 0-1-.4-1-1V4.2Z"/></svg></span><span data-i18n="actOpenFolder">Open folder…</span></button>
-            <button class="mitem" id="btnFileReopen"><span class="ic"><svg class="svi" viewBox="0 0 16 16"><path d="M3.2 8a4.8 4.8 0 1 0 1.5-3.5"/><path d="M2.4 2.8v2.6h2.6"/></svg></span><span data-i18n="actReopenLast">Reopen last folder</span></button>
-            <div class="msep"></div>
-            <div class="mkrow" style="display:block;color:var(--faint);font-size:10.5px;line-height:1.5;white-space:normal"><span data-i18n="hintDropFolder">Tip: drag several dataset folders (or one parent folder) onto the window to import them all at once — no prompt.</span></div>
-          </div>
-          <input type="file" id="fileIn" multiple webkitdirectory>
-        </div>
-        <div class="menu">
-          <button class="mbtn tbc" data-i18n-title="menuExport"><span class="mi"><svg class="svi" viewBox="0 0 16 16"><path d="M8 2.4v7.2"/><path d="M5 6.8 8 9.8l3-3"/><path d="M2.6 12.4h10.8"/></svg></span><span class="tb-lbl" data-i18n="menuExport">Export</span></button>
           <div class="mpanel">
-            <button class="mitem" id="btnPng"><span class="ic"><svg class="svi" viewBox="0 0 16 16"><rect x="2" y="3" width="12" height="10" rx="1.2"/><circle cx="5.6" cy="6.4" r="1.1"/><path d="m3 12 3.4-3.3 2.2 2.1 2.3-2.5L14 11.4"/></svg></span><span data-i18n="expPng">Image (PNG)</span></button>
-            <button class="mitem" id="btnCopyImg"><span class="ic"><svg class="svi" viewBox="0 0 16 16"><rect x="5" y="5" width="9" height="9" rx="1.2"/><path d="M11 5V3.2c0-.6-.4-1-1-1H3.2c-.6 0-1 .4-1 1V10c0 .6.4 1 1 1H5"/></svg></span><span data-i18n="expCopy">Copy image to clipboard</span></button>
-            <button class="mitem" id="btnCsv"><span class="ic"><svg class="svi" viewBox="0 0 16 16"><path d="M1.5 11.5V5M14.5 11.5V5"/><path d="M1.5 10c1.3 0 1.5-5.2 2.9-5.2S6 11 7.6 11s1.2-5.6 2.6-5.6 1.2 3.4 2.4 3.4c.7 0 1.1-.6 1.4-1.2"/></svg></span><span data-i18n="expCsv">Spectrum (CSV)</span></button>
-            <button class="mitem" id="btnReport"><span class="ic"><svg class="svi" viewBox="0 0 16 16"><rect x="3" y="2" width="10" height="12" rx="1"/><path d="M5.2 5.2h5.6M5.2 7.6h5.6M5.2 10h3.4"/></svg></span><span data-i18n="expReport">Analysis report (CSV)</span></button>
+            <div class="grphead"><span class="ic"><svg class="svi" viewBox="0 0 16 16"><path d="M8 2.4v7.2"/><path d="M5 6.8 8 9.8l3-3"/><path d="M2.6 12.4h10.8"/></svg></span><span data-i18n="secImport">Import</span></div>
+            <div class="menuhelp-row"><button class="mitem grpitem" id="btnFileDirect"><span class="ic"><svg class="svi" viewBox="0 0 16 16"><path d="M1.5 4.2c0-.6.4-1 1-1h3.3c.3 0 .6.1.8.4l.7.9h5c.6 0 1 .4 1 1v6.4c0 .6-.4 1-1 1H2.5c-.6 0-1-.4-1-1V4.2Z"/></svg></span><span data-i18n="actOpenFolder">Open folder</span></button><span class="grphint" data-i18n-title="hintDropFolder" tabindex="0">?</span></div>
+            <button class="mitem grpitem" id="btnFileReopen"><span class="ic"><svg class="svi" viewBox="0 0 16 16"><path d="M3.2 8a4.8 4.8 0 1 0 1.5-3.5"/><path d="M2.4 2.8v2.6h2.6"/></svg></span><span data-i18n="actReopenLast">Reopen last folder</span></button>
+            <div class="menuhelp-row"><button class="mitem grpitem" id="btnLoadSession"><span class="ic"><svg class="svi" viewBox="0 0 16 16"><path d="M2.5 11.5V4.2c0-.4.3-.7.7-.7h3l1.3 1.4h5.3c.4 0 .7.3.7.7v5.9c0 .4-.3.7-.7.7H3.2c-.4 0-.7-.3-.7-.7Z"/><path d="M8 10.5V6.5M6.3 8.2 8 6.5l1.7 1.7"/></svg></span><span data-i18n="expLoadSession">Import analysis data (JSON)</span></button><span class="grphint" data-i18n-title="hintAnalysisState" tabindex="0">?</span></div>
             <div class="msep"></div>
-            <button class="mitem" id="btnSession"><span class="ic"><svg class="svi" viewBox="0 0 16 16"><path d="M2.5 3.5h11v9h-11z"/><path d="M5 3.5v3h6v-3M5 12.5V9h6v3.5"/></svg></span><span data-i18n="expSession">Save session (JSON)</span></button>
-            <button class="mitem" id="btnLoadSession"><span class="ic"><svg class="svi" viewBox="0 0 16 16"><path d="M2.5 11.5V4.2c0-.4.3-.7.7-.7h3l1.3 1.4h5.3c.4 0 .7.3.7.7v5.9c0 .4-.3.7-.7.7H3.2c-.4 0-.7-.3-.7-.7Z"/><path d="M8 10.5V6.5M6.3 8.2 8 6.5l1.7 1.7"/></svg></span><span data-i18n="expLoadSession">Load session…</span></button>
+            <div class="grphead"><span class="ic"><svg class="svi" viewBox="0 0 16 16"><path d="M8 3.4v7.2"/><path d="M5 6.4 8 3.4l3 3"/><path d="M2.6 12.4h10.8"/></svg></span><span data-i18n="secExport">Export</span></div>
+            <button class="mitem grpitem" id="btnSession"><span class="ic"><svg class="svi" viewBox="0 0 16 16"><path d="M2.5 3.5h11v9h-11z"/><path d="M5 3.5v3h6v-3M5 12.5V9h6v3.5"/></svg></span><span data-i18n="expSession">Export analysis data (JSON)</span></button>
+            <button class="mitem grpitem" id="btnPng"><span class="ic"><svg class="svi" viewBox="0 0 16 16"><rect x="2" y="3" width="12" height="10" rx="1.2"/><circle cx="5.6" cy="6.4" r="1.1"/><path d="m3 12 3.4-3.3 2.2 2.1 2.3-2.5L14 11.4"/></svg></span><span data-i18n="expPng">Image (PNG)</span></button>
+            <button class="mitem grpitem" id="btnCopyImg"><span class="ic"><svg class="svi" viewBox="0 0 16 16"><rect x="5" y="5" width="9" height="9" rx="1.2"/><path d="M11 5V3.2c0-.6-.4-1-1-1H3.2c-.6 0-1 .4-1 1V10c0 .6.4 1 1 1H5"/></svg></span><span data-i18n="expCopy">Copy image to clipboard</span></button>
+            <button class="mitem grpitem" id="btnCsv"><span class="ic"><svg class="svi" viewBox="0 0 16 16"><path d="M1.5 11.5V5M14.5 11.5V5"/><path d="M1.5 10c1.3 0 1.5-5.2 2.9-5.2S6 11 7.6 11s1.2-5.6 2.6-5.6 1.2 3.4 2.4 3.4c.7 0 1.1-.6 1.4-1.2"/></svg></span><span data-i18n="expCsv">Spectrum (CSV)</span></button>
+            <button class="mitem grpitem" id="btnReport"><span class="ic"><svg class="svi" viewBox="0 0 16 16"><rect x="3" y="2" width="10" height="12" rx="1"/><path d="M5.2 5.2h5.6M5.2 7.6h5.6M5.2 10h3.4"/></svg></span><span data-i18n="expReport">Analysis report (CSV)</span></button>
+            <button class="mitem grpitem" id="btnPaper"><span class="ic"><svg class="svi" viewBox="0 0 16 16"><path d="M3 2.5h7l3 3v8H3z"/><path d="M9.5 2.5V6h3.5"/><path d="M5.2 8.4h5.6M5.2 10.6h3.6"/></svg></span><span data-i18n="expPaper">Paper-format text</span></button>
+            <div class="paperinline" id="paperInline"></div>
             <input type="file" id="sessionIn" accept=".json,application/json" style="display:none">
           </div>
+          <input type="file" id="fileIn" multiple webkitdirectory>
         </div>
         <div class="menu" id="menuViewBox">
           <button class="mbtn tbc" data-i18n-title="menuView"><span class="mi"><svg class="svi" viewBox="0 0 16 16"><path d="M1.2 8S3.6 3.6 8 3.6 14.8 8 14.8 8 12.4 12.4 8 12.4 1.2 8 1.2 8Z"/><circle cx="8" cy="8" r="2.1"/></svg></span><span class="tb-lbl" data-i18n="menuView">View</span></button>
@@ -985,6 +1041,9 @@ html[data-theme="light"] .toolmenu.open .tmpanel{
                 <button class="vistog" id="btnMinimap"><span class="eyeic"><svg class="svi" viewBox="0 0 16 16"><path d="M1.5 8S4 3.8 8 3.8 14.5 8 14.5 8 12 12.2 8 12.2 1.5 8 1.5 8z"/><circle cx="8" cy="8" r="2"/><line class="eyeslash" x1="2.5" y1="13.5" x2="13.5" y2="2.5"/></svg></span><span data-i18n="lblMinimap">Minimap</span></button>
                 <button class="vistog on" id="btnResultsView"><span class="eyeic"><svg class="svi" viewBox="0 0 16 16"><path d="M1.5 8S4 3.8 8 3.8 14.5 8 14.5 8 12 12.2 8 12.2 1.5 8 1.5 8z"/><circle cx="8" cy="8" r="2"/><line class="eyeslash" x1="2.5" y1="13.5" x2="13.5" y2="2.5"/></svg></span><span data-i18n="lblResults">Results list</span></button>
               </div>
+              <div class="row2" style="margin-top:6px">
+                <button class="vistog" id="btnShowTitle"><span class="eyeic"><svg class="svi" viewBox="0 0 16 16"><path d="M1.5 8S4 3.8 8 3.8 14.5 8 14.5 8 12 12.2 8 12.2 1.5 8 1.5 8z"/><circle cx="8" cy="8" r="2"/><line class="eyeslash" x1="2.5" y1="13.5" x2="13.5" y2="2.5"/></svg></span><span data-i18n="lblTitle">Title</span></button>
+              </div>
             </div>
             <div class="msep"></div>
             <div class="ctl">
@@ -993,6 +1052,15 @@ html[data-theme="light"] .toolmenu.open .tmpanel{
             </div>
             <div class="vcol">
             <div class="tmhead" data-i18n="setLook">Appearance</div>
+            <div class="ctl">
+              <label data-i18n="lblTitleText">Title text</label>
+              <input type="text" id="figTitleInput" placeholder="¹H NMR (CDCl₃)">
+              <label style="margin-top:6px"><span data-i18n="lblTitleSize">Title size</span> <span class="val" id="tszv">15pt</span></label>
+              <input type="range" id="titleSize" min="9" max="30" step="0.5" value="15">
+              <label style="margin-top:6px" data-i18n="lblTitleWeight">Title weight</label>
+              <div class="seg" id="segTitleWeight"><button data-v="normal" class="on" data-i18n="optThin">Thin</button><button data-v="bold" data-i18n="optBold">Bold</button></div>
+            </div>
+            <div class="msep"></div>
             <div class="ctl">
               <label><span data-i18n="lblLineW">Line width</span> <span class="val" id="lwv">1.0</span></label>
               <input type="range" id="lineW" min="0.5" max="3" step="0.1" value="1">
@@ -1225,21 +1293,30 @@ html[data-theme="light"] .toolmenu.open .tmpanel{
         </div>
       </span>
 
-      <span class="toolmenu" id="tmZoom">
-        <button class="tbtn main ic-btn tbc" id="tZoom" title=""><svg class="svi" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><line x1="15.2" y1="15.2" x2="21" y2="21"/><line x1="10.5" y1="7.6" x2="10.5" y2="13.4"/><line x1="7.6" y1="10.5" x2="13.4" y2="10.5"/></svg><span class="tb-lbl" data-i18n="tZoomTxt">Zoom view</span></button>        <div class="tmpanel">
-          <button class="tmitem" data-act="tZoom"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><circle cx="7" cy="7" r="4.3"/><line x1="10.2" y1="10.2" x2="14" y2="14"/><line x1="7" y1="5.2" x2="7" y2="8.8"/><line x1="5.2" y1="7" x2="8.8" y2="7"/></svg></span><span data-i18n="actZoomDrag">Create (drag δ window)</span></button>
+      <span class="toolmenu" id="tmOther">
+        <button class="tbtn main ic-btn tbc" id="tOther" data-i18n-title="ttOther" title=""><svg class="svi" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.7" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.7" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.7" fill="currentColor" stroke="none"/></svg><span class="tb-lbl" data-i18n="tOtherTxt">Other</span></button>
+        <div class="tmpanel">
+          <div class="grphead"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><circle cx="7" cy="7" r="4.3"/><line x1="10.2" y1="10.2" x2="14" y2="14"/><line x1="7" y1="5.2" x2="7" y2="8.8"/><line x1="5.2" y1="7" x2="8.8" y2="7"/></svg></span><span data-i18n="tZoomTxt">Zoom view</span></div>
+          <button class="tmitem grpitem" data-act="tZoom"><span class="tmic"></span><span data-i18n="actZoomDrag">Create (drag δ window)</span></button>
+          <div class="tmrow grpitem"><span class="tmic"></span><span data-i18n="lblZoomBorder">Frame color</span><input type="color" id="zoomBorderColor" value="#6B7780"></div>
+          <div class="tmrow grpitem"><span class="tmic"></span><span data-i18n="lblZoomBorderW">Frame width</span><input type="range" id="zoomBorderW" min="0.5" max="4" step="0.5" value="1"><span class="thrval" id="zbwv">1</span></div>
+          <div class="tmrow grpitem"><span class="tmic"></span><span data-i18n="lblLeaderStyle">Leader style</span></div>
+          <div class="seg" id="segLeaderStyle" style="margin:2px 9px 4px 26px"><button data-v="solid" data-i18n="optSolid">Solid</button><button data-v="dashed" class="on" data-i18n="optDashed">Dashed</button><button data-v="dotted" data-i18n="optDotted">Dotted</button></div>
+          <button class="tmitem grpitem" data-act="resetZoom"><span class="tmic"></span><span data-i18n="btnResetDef">Reset to defaults</span></button>
+          <button class="tmtog grpitem" id="tgZooms"><span class="eyeic"><svg class="svi" viewBox="0 0 16 16"><path d="M1.5 8S4 3.8 8 3.8 14.5 8 14.5 8 12 12.2 8 12.2 1.5 8 1.5 8z"/><circle cx="8" cy="8" r="2"/><line class="eyeslash" x1="2.5" y1="13.5" x2="13.5" y2="2.5"/></svg></span><span data-i18n="lblShowZooms">Zoom insets</span></button>
+          <button class="tmtog grpitem" id="tgLeaders"><span class="eyeic"><svg class="svi" viewBox="0 0 16 16"><path d="M1.5 8S4 3.8 8 3.8 14.5 8 14.5 8 12 12.2 8 12.2 1.5 8 1.5 8z"/><circle cx="8" cy="8" r="2"/><line class="eyeslash" x1="2.5" y1="13.5" x2="13.5" y2="2.5"/></svg></span><span data-i18n="lblZoomLeaders">Zoom leaders</span></button>
           <div class="tmsep"></div>
-          <div class="tmrow indent"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><rect x="2.5" y="2.5" width="11" height="11" rx="2.2"/><path d="M2.5 10l3-3 2.5 2.5L11 6l2.5 2.5"/></svg></span><span data-i18n="lblZoomBorder">Frame color</span><input type="color" id="zoomBorderColor" value="#6B7780"></div>
-          <div class="tmrow indent"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><rect x="2.5" y="3.5" width="11" height="9" rx="1.5"/></svg></span><span data-i18n="lblZoomBorderW">Frame width</span><input type="range" id="zoomBorderW" min="0.5" max="4" step="0.5" value="1"><span class="thrval" id="zbwv">1</span></div>
-          <div class="tmrow indent"><span class="tmic">⇢</span><span data-i18n="lblLeaderStyle">Leader style</span></div>
-          <div class="seg" id="segLeaderStyle" style="margin:2px 9px 4px 9px"><button data-v="solid" data-i18n="optSolid">Solid</button><button data-v="dashed" class="on" data-i18n="optDashed">Dashed</button><button data-v="dotted" data-i18n="optDotted">Dotted</button></div>
-          <button class="tmitem indent" data-act="resetZoom"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M3.2 8a4.8 4.8 0 1 0 1.5-3.5"/><path d="M2.4 2.8v2.6h2.6"/></svg></span><span data-i18n="btnResetDef">Reset to defaults</span></button>
-          <div class="tmsep"></div>
-          <div class="tmhead" data-i18n="hdVisibility">Show / hide</div>
-          <div class="tmtoggles">
-            <button class="tmtog" id="tgZooms"><span class="eyeic"><svg class="svi" viewBox="0 0 16 16"><path d="M1.5 8S4 3.8 8 3.8 14.5 8 14.5 8 12 12.2 8 12.2 1.5 8 1.5 8z"/><circle cx="8" cy="8" r="2"/><line class="eyeslash" x1="2.5" y1="13.5" x2="13.5" y2="2.5"/></svg></span><span data-i18n="lblShowZooms">Zoom insets</span></button>
-            <button class="tmtog" id="tgLeaders"><span class="eyeic"><svg class="svi" viewBox="0 0 16 16"><path d="M1.5 8S4 3.8 8 3.8 14.5 8 14.5 8 12 12.2 8 12.2 1.5 8 1.5 8z"/><circle cx="8" cy="8" r="2"/><line class="eyeslash" x1="2.5" y1="13.5" x2="13.5" y2="2.5"/></svg></span><span data-i18n="lblZoomLeaders">Zoom leaders</span></button>
-          </div>
+          <div class="grphead"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M2 8h3"/><path d="M11 8h3"/><path d="M6.5 3c1 1.6 1 8.4 1.5 10"/><path d="M9.5 3c-1 1.6-1 8.4-1.5 10"/></svg></span><span data-i18n="tCutTxt">Cut</span></div>
+          <button class="tmitem grpitem" data-act="tCut"><span class="tmic"></span><span data-i18n="actCutDrag">Create (drag δ window)</span></button>
+          <div class="grpsub" style="font-size:10.5px;color:var(--faint);white-space:normal;line-height:1.4;padding-top:1px;padding-bottom:2px"><span data-i18n="hintCutMulti">Drag more windows to add cuts.</span></div>
+          <div class="tmrow grpitem"><span class="tmic"></span><span data-i18n="lblCutStyle">Break style</span></div>
+          <div class="seg" id="segCutStyle" style="margin:2px 9px 4px 26px"><button data-v="wave" class="on" data-i18n="optCutWave">Wave</button><button data-v="zigzag" data-i18n="optCutZig">Zigzag</button><button data-v="slash" data-i18n="optCutSlash">Slash</button></div>
+          <label class="cutctl grpitem"><span data-i18n="lblCutSpacing">Spacing</span><input type="range" id="cutGapInp" min="6" max="40" step="1"></label>
+          <label class="cutctl grpitem"><span data-i18n="lblCutWave">Wave</span><input type="range" id="cutWaveInp" min="4" max="26" step="1"></label>
+          <label class="cutctl grpitem"><span data-i18n="lblCutWidth">Thickness</span><input type="range" id="cutWidthInp" min="0.5" max="4" step="0.1"></label>
+          <label class="cutctl grpitem"><span data-i18n="lblCutColor">Color</span><span class="cutclr"><input type="color" id="cutColorInp"><button type="button" id="cutColorAuto" data-i18n="optAuto">Auto</button></span></label>
+          <button class="tmitem grpitem" data-act="undoCut"><span class="tmic"></span><span data-i18n="actCutUndo">Undo last cut</span></button>
+          <button class="tmitem erase grpitem" data-act="clearCut"><span class="tmic"></span><span data-i18n="actCutClear">Clear all cuts</span></button>
         </div>
       </span>
       <button class="tbtn ic-btn tbc" id="btnManualBar" data-i18n-title="manualTitle"><svg class="svi" viewBox="0 0 16 16"><path d="M8 4.3C6.8 3.3 5.1 3 3.3 3.2V12c1.8-.2 3.5.1 4.7 1.1 1.2-1 2.9-1.3 4.7-1.1V3.2C10.9 3 9.2 3.3 8 4.3Z"/><path d="M8 4.3V13"/></svg><span class="tb-lbl" data-i18n="manual">Manual</span></button>
@@ -1288,10 +1365,10 @@ html[data-theme="light"] .toolmenu.open .tmpanel{
 /* ===================== i18n ===================== */
 const I18N={
  en:{
-  menuFile:"File", menuView:"View", menuExport:"Export", menuSettings:"Settings",
+  menuFile:"Data", menuView:"View", menuExport:"Export", menuSettings:"Settings", secImport:"Import", secExport:"Export", tOtherTxt:"Other", ttOther:"Zoom view & cut tools", hdZoomVis:"Show / hide",
   clogTitle:"Changelog", clogCurrent:"current", verTitle:"Version — click for changelog",
   manual:"Manual", manualTitle:"Manual — how to use",
-  actOpenFolder:"Open folder…", actReopenLast:"Reopen last folder", hintDropFolder:"Tip: drag several dataset folders (or one parent folder) onto the window to import them all at once — no prompt.",
+  actOpenFolder:"Open folder", actReopenLast:"Reopen last folder", hintDropFolder:"Tip: drag several dataset folders (or one parent folder) onto the window to import them all at once — no prompt.", hintAnalysisState:"Analysis and annotations are saved automatically to each data folder in Chrome or Edge. Use this analysis-data JSON to share, move or explicitly back up the state; open the original data before importing it.",
   lblLang:"Language", lblTheme:"Theme", optDark:"Dark", optLight:"Light",
   lblZoom:"Zoom", mZoomIn:"⊕ In", mZoomOut:"⊖ Out", lblWheel:"Wheel sensitivity", lblAxisH:"δ-axis height", lblBaseGap:"δ-axis ↔ spectrum gap",
   lblInertia:"Inertia", lblInvert:"Invert", lblHscroll:"H-scroll = pan δ",
@@ -1299,7 +1376,7 @@ const I18N={
   secImages:"Images", btnAddImg:"＋ Add image from file", imgItem:"Image",
   imgHint:"Paste a screenshot (Ctrl+V) or add a PNG. Click to select · drag corner to resize · Del to remove (when no tool is active).",
   ttImgEye:"Show this image on the spectrum", ttImgBg:"Make background transparent (toggle)", secDisplay:"Display", secData:"Data", ttShowHide:"Show / hide", cpCustom:"Custom", cpOk:"OK", cpCancel:"Cancel",
-  lblInsets:"Images", lblNames:"File names", lblShowPeaks:"Peaks", lblShowIntegs:"Integrals", lblShowShades:"Shades", lblJTree:"Coupling tree",
+  lblInsets:"Images", lblNames:"File names", lblTitle:"Title", lblTitleText:"Title text", lblTitleSize:"Title size", lblTitleWeight:"Title weight", optThin:"Thin", optBold:"Bold", lblCutStyle:"Break style", optCutWave:"Wave", optCutZig:"Zigzag", optCutSlash:"Slash", lblShowPeaks:"Peaks", lblShowIntegs:"Integrals", lblShowShades:"Shades", lblJTree:"Coupling tree",
   lblPalette:"Color palette", lblApplyPalette:"Re-apply to all", lblMonoBase:"Base color", lblSigDigits:"δ decimal places",
   btnResetDisp:"Reset display defaults", lblCustomPal:"Custom colors", lblAddColor:"+ Add color",
   subText:"Text", subMark:"Mark", subShade:"Shade", subConn:"Conn.", thColor:"Color", thSpectrum:"Spectrum",
@@ -1308,14 +1385,15 @@ const I18N={
   lblAxisDigits:"δ-axis decimals", lblPeakDigits:"Label decimals",
   lblShowLines:"Connectors", lblShowZooms:"Zoom views", lblShowLanes:"Lane lines",
   tZoomTxt:"Zoom view", tLineTxt:"Connector", ttZoom:"Drag a δ window → floating magnified view (× to remove)", ttZoomSingle:"Zoom view works with a single spectrum only",
+  tCutTxt:"Cut", ttCut:"Cut out a δ region with a break mark", actCutDrag:"Create (drag δ window)", actCutClear:"Clear all cuts", actCutUndo:"Undo last cut", hintCutMulti:"Drag more windows to add cuts.", lblCutSpacing:"Spacing", lblCutWave:"Wave", lblCutWidth:"Thickness", lblCutColor:"Color", optAuto:"Auto",
   actZoomDrag:"Create (drag δ window)", lblZoomBorder:"Frame color", lblZoomBorderW:"Frame width", lblLeaderStyle:"Leader style", optSolid:"Solid", optDashed:"Dashed", optDotted:"Dotted",
   ttLine:"Drag two points → dashed connector; click a line to remove",
   hdAnnotate:"Annotate", hdVisibility:"Show / hide", lblVisToggle:"Show / hide", hdWheel:"Wheel / scroll", secKeyboard:"Keyboard", setGen:"General", setLook:"Appearance", setAxis:"δ-axis", secRegion:"Region",
   actCalManual:"Manual (click a peak)", hdSolvent:"Residual solvent → auto", actCalReset:"Reset calibration",
-  expCopy:"Copy image to clipboard", expSession:"Save session (JSON)", expLoadSession:"Load session…",
+  expCopy:"Copy image to clipboard", expSession:"Export analysis data (JSON)", expLoadSession:"Import analysis data (JSON)",
   lblMinimap:"Minimap", lblZoomLeaders:"Zoom leaders", lblFontScale:"Annotation size (peaks, ∫, …)", lblNameScale:"File-name size", lblAxisScale:"δ-axis text size", lblMarkSize:"Size", lblFontFamily:"Font",
   optMono:"Mono", optSans:"Sans", optSerif:"Serif",
-  msgCopied:"Image copied to clipboard", msgCopyFail:"Copy failed — try PNG export", msgBgFail:"Could not process image background", msgCalOk:"Calibrated", msgCalNone:"No peak found near that position to calibrate", msgCalApprox:"No picked peak nearby — calibrated to the strongest point", msgSessionLoaded:"Session loaded", msgBadSession:"Could not read session file",
+  msgCopied:"Image copied to clipboard", msgCopyFail:"Copy failed — try PNG export", msgBgFail:"Could not process image background", msgCalOk:"Calibrated", msgCalNone:"No peak found near that position to calibrate", msgCalApprox:"No picked peak nearby — calibrated to the strongest point", msgSessionLoaded:"Analysis data imported", msgBadSession:"Could not import analysis data",
   actLine:"Connector (2-pt drag)", actDelLine:"Delete connector", actClearLines:"Clear all connectors",
   kbCalib:"Calibrate", kbPeaks:"Pick peaks", kbErasePk:"Erase peaks", kbInteg:"Integrate",
   kbEraseInt:"Erase integrals", kbMult:"Multiplets", kbText:"Text label", kbMark:"Mark",
@@ -1329,6 +1407,7 @@ const I18N={
   ttUndo:"Undo (Ctrl+Z)", ttRedo:"Redo (Ctrl+Shift+Z / Ctrl+Y)",
   hintKeys:"Keys: <b>C</b> calibrate · <b>P</b> peaks (<b>⇧P</b> erase) · <b>I</b> integrate (<b>⇧I</b> erase) · <b>M</b> multiplets · <b>A</b> label · <b>D</b> mark · <b>L</b> list · <b>F</b> full · <b>0</b> auto · <b>↑↓</b> intensity · <b>←→</b> pan · <b>Esc</b> cancel · <b>Ctrl+Z/Y</b> undo/redo · <b>Ctrl+O</b> open",
   expPng:"Image (PNG)", expCsv:"Spectrum (CSV)", expReport:"Analysis report (CSV)",
+  expPaper:"Paper-format text", paperTitle:"Paper-format text", paperNuc:"Nucleus", paperMHz:"MHz", paperSolv:"Solvent", paperJDec:"J decimals", paperEditLbl:"Editable text", paperPrevLbl:"Preview", paperRegen:"Regenerate", paperRegenWarn:"Regenerating replaces your manual edits. Continue?", paperCopy:"Copy (plain)", paperCopyRich:"Copy (formatted)", paperCopied:"Copied to clipboard", paperCopiedRich:"Copied with formatting (paste into Word)",
   secSpectra:"Spectra", noSpectra:"No spectra loaded", secAcq:"Acquisition",
   secProc:"Processing",
   lblSource:"Data source", optProcessed:"Processed", optRawFid:"Raw FID",
@@ -1357,7 +1436,7 @@ const I18N={
     "<b>scroll over spectrum</b> = intensity · <b>scroll over δ-axis</b> = zoom · <b>drag δ-axis</b> = pan · <b>drag</b> = zoom region · <b>right/⇧+drag</b> = pan · <b>double-click</b> = full<br>"+
     "<b>zoom inset</b>: click to select · <b>drag source box</b> = move / resize δ · <b>drag its top edge</b> = vertical magnify (reveals weak peaks) · <b>scroll</b> = δ-width",
   dropTitle:"Drop Bruker folder(s)", dropSub:"reads fid + acqus, and pdata/ if present",
-  tabPeaks:"Peaks", tabInteg:"Integrals", tabMult:"Multiplets", tabAssign:"Assignments", tabShade:"Shade", markColorLbl:"Color", textColorLbl:"Color", lblTextSize:"Size",
+  tabPeaks:"Peaks", tabInteg:"Integrals", tabMult:"Multiplets", tabAssign:"Assignments", tabPaper:"Paper", tabShade:"Shade", markColorLbl:"Color", textColorLbl:"Color", lblTextSize:"Size",
   assignTabAnnot:"Annotations", assignTabImp:"Impurities", assignGroupAdd:"Add / edit annotations", assignGroupDelete:"Delete annotations", assignGroupDisplay:"Display settings", assignStyleSettings:"Style settings",
   assignMarkAction:"Mark a peak", assignTextAction:"Add a text label", assignShadeAction:"Shade a range", assignLineAction:"Draw a connector", assignImageAction:"Add an image from file",
   assignShowMark:"Show marks", assignShowText:"Show text labels", assignShowShade:"Show shaded regions", assignShowLine:"Show connectors", assignShowImage:"Show images",
@@ -1392,10 +1471,10 @@ const I18N={
   warnMaxFull:"⚠ Already showing the maximum of {cap} spectra.\nRemove some before loading more."
  },
  ja:{
-  menuFile:"ファイル", menuView:"表示", menuExport:"出力", menuSettings:"設定",
+  menuFile:"データ", menuView:"表示", menuExport:"出力", menuSettings:"設定", secImport:"読み込み", secExport:"書き出し", tOtherTxt:"その他", ttOther:"拡大図・カット", hdZoomVis:"表示・非表示",
   clogTitle:"更新履歴", clogCurrent:"現在", verTitle:"バージョン — クリックで更新履歴",
   manual:"マニュアル", manualTitle:"マニュアル（使い方）",
-  actOpenFolder:"フォルダを開く…", actReopenLast:"前のフォルダを再読み込み", hintDropFolder:"ヒント：複数のデータフォルダ（または親フォルダ）をまとめてウィンドウにドラッグ&ドロップすれば、確認なしで一度に読み込めます。",
+  actOpenFolder:"フォルダを開く", actReopenLast:"前のフォルダを再読み込み", hintDropFolder:"ヒント：複数のデータフォルダ（または親フォルダ）をまとめてウィンドウにドラッグ&ドロップすれば、確認なしで一度に読み込めます。", hintAnalysisState:"Chrome / Edge では、解析・注釈状態は各データフォルダへ自動保存されます。この解析データJSONは共有・別PCへの移動・明示的なバックアップ用です。元データを開いた後に読み込んでください。",
   lblLang:"言語", lblTheme:"テーマ", optDark:"ダーク", optLight:"ライト",
   lblZoom:"ズーム", mZoomIn:"⊕ 拡大", mZoomOut:"⊖ 縮小", lblWheel:"ホイール感度", lblAxisH:"δ軸の高さ", lblBaseGap:"δ軸とスペクトルの間隔",
   lblInertia:"ホイール慣性", lblInvert:"向きを反転", lblHscroll:"横スクロールでδ移動",
@@ -1403,7 +1482,7 @@ const I18N={
   secImages:"画像", btnAddImg:"＋ 画像をファイルから追加", imgItem:"画像",
   imgHint:"スクリーンショットを貼り付け（Ctrl+V）またはPNGを追加。クリックで選択・角ドラッグで拡縮・Delで削除（ツール未選択時）。",
   ttImgEye:"この画像をスペクトル上に表示", ttImgBg:"背景を透過（クリックで切替）", secDisplay:"表示", secData:"データ", ttShowHide:"表示 / 非表示", cpCustom:"カスタム", cpOk:"OK", cpCancel:"キャンセル",
-  lblInsets:"画像を表示", lblNames:"ファイル名", lblShowPeaks:"ピーク", lblShowIntegs:"積分", lblShowShades:"塗りつぶし", lblJTree:"カップリングツリー",
+  lblInsets:"画像を表示", lblNames:"ファイル名", lblTitle:"タイトル", lblTitleText:"タイトル文字", lblTitleSize:"タイトルの大きさ", lblTitleWeight:"タイトルの太さ", optThin:"細字", optBold:"太字", lblCutStyle:"波線スタイル", optCutWave:"波線", optCutZig:"ジグザグ", optCutSlash:"斜線", lblShowPeaks:"ピーク", lblShowIntegs:"積分", lblShowShades:"塗りつぶし", lblJTree:"カップリングツリー",
   lblPalette:"カラーパレット", lblApplyPalette:"全てに再適用", lblMonoBase:"基準色", lblSigDigits:"δ 小数桁数",
   btnResetDisp:"表示設定をリセット", lblCustomPal:"カスタムカラー", lblAddColor:"+ 色を追加",
   subText:"テキスト", subMark:"マーク", subShade:"塗りつぶし", subConn:"破線", thColor:"色", thSpectrum:"スペクトル",
@@ -1412,14 +1491,15 @@ const I18N={
   lblAxisDigits:"δ軸の小数桁", lblPeakDigits:"ラベルの小数桁",
   lblShowLines:"破線コネクタ", lblShowZooms:"拡大図", lblShowLanes:"レーン区切り線",
   tZoomTxt:"拡大図", tLineTxt:"破線コネクタ", ttZoom:"δ範囲をドラッグ→拡大図をフロート配置（×で削除）", ttZoomSingle:"拡大図は単一スペクトルのときのみ使えます",
+  tCutTxt:"カット", ttCut:"δ範囲を省略記号で切り取る", actCutDrag:"作成（δ範囲をドラッグ）", actCutClear:"すべて解除", actCutUndo:"直前のカットを取消", hintCutMulti:"ドラッグを繰り返すと複数箇所カットできます", lblCutSpacing:"間隔", lblCutWave:"うねり", lblCutWidth:"太さ", lblCutColor:"色", optAuto:"自動",
   actZoomDrag:"作成（δ範囲をドラッグ）", lblZoomBorder:"枠線の色", lblZoomBorderW:"枠線の太さ", lblLeaderStyle:"引き出し線", optSolid:"実線", optDashed:"破線", optDotted:"点線",
   ttLine:"2点をドラッグ→破線で結ぶ／線をクリックで削除",
   hdAnnotate:"注釈", hdVisibility:"表示・非表示", lblVisToggle:"表示 / 非表示", hdWheel:"ホイール / スクロール", secKeyboard:"キーボード", setGen:"全般", setLook:"見た目", setAxis:"δ軸", secRegion:"領域",
   actCalManual:"手動（ピークをクリック）", hdSolvent:"残留溶媒 → 自動", actCalReset:"校正をリセット",
-  expCopy:"画像をクリップボードにコピー", expSession:"セッションを保存（JSON）", expLoadSession:"セッションを読み込み…",
+  expCopy:"画像をクリップボードにコピー", expSession:"解析データを書き出す（JSON）", expLoadSession:"解析データを読み込む（JSON）",
   lblMinimap:"ミニマップ", lblZoomLeaders:"拡大引き出し線", lblFontScale:"注釈のサイズ（ピーク・積分など）", lblNameScale:"ファイル名のサイズ", lblAxisScale:"δ軸テキストのサイズ", lblMarkSize:"大きさ", lblFontFamily:"フォント",
   optMono:"等幅", optSans:"ゴシック", optSerif:"明朝",
-  msgCopied:"画像をコピーしました", msgCopyFail:"コピー失敗 — PNG出力をお試しください", msgBgFail:"画像の背景を処理できませんでした", msgCalOk:"校正しました", msgCalNone:"近くに校正できるピークが見つかりませんでした", msgCalApprox:"近くにピーク未検出のため最大強度点で校正しました", msgSessionLoaded:"セッションを読み込みました", msgBadSession:"セッションファイルを読み込めません",
+  msgCopied:"画像をコピーしました", msgCopyFail:"コピー失敗 — PNG出力をお試しください", msgBgFail:"画像の背景を処理できませんでした", msgCalOk:"校正しました", msgCalNone:"近くに校正できるピークが見つかりませんでした", msgCalApprox:"近くにピーク未検出のため最大強度点で校正しました", msgSessionLoaded:"解析データを読み込みました", msgBadSession:"解析データを読み込めません",
   actLine:"コネクタ（2点をドラッグ）", actDelLine:"コネクタを削除", actClearLines:"コネクタを全て削除",
   kbCalib:"校正", kbPeaks:"ピーク検出", kbErasePk:"ピーク消去", kbInteg:"積分",
   kbEraseInt:"積分消去", kbMult:"多重線", kbText:"テキスト帰属", kbMark:"マーク",
@@ -1433,6 +1513,7 @@ const I18N={
   ttUndo:"元に戻す (Ctrl+Z)", ttRedo:"やり直す (Ctrl+Shift+Z / Ctrl+Y)",
   hintKeys:"キー: <b>C</b> 校正 ・ <b>P</b> ピーク（<b>⇧P</b> 消去）・ <b>I</b> 積分（<b>⇧I</b> 消去）・ <b>M</b> 多重線 ・ <b>A</b> ラベル ・ <b>D</b> マーク ・ <b>L</b> 一覧 ・ <b>F</b> 全体 ・ <b>0</b> 自動 ・ <b>↑↓</b> 強度 ・ <b>←→</b> 移動 ・ <b>Esc</b> 解除 ・ <b>Ctrl+Z/Y</b> 取消/やり直し ・ <b>Ctrl+O</b> 開く",
   expPng:"画像 (PNG)", expCsv:"スペクトル (CSV)", expReport:"解析レポート (CSV)",
+  expPaper:"論文形式テキスト", paperTitle:"論文形式テキスト", paperNuc:"核種", paperMHz:"MHz", paperSolv:"溶媒", paperJDec:"J 小数桁", paperEditLbl:"編集テキスト", paperPrevLbl:"プレビュー", paperRegen:"再生成", paperRegenWarn:"再生成すると手動で編集した内容が置き換わります。続けますか？", paperCopy:"コピー（プレーン）", paperCopyRich:"コピー（書式付き）", paperCopied:"クリップボードにコピーしました", paperCopiedRich:"書式付きでコピーしました（Wordに貼付可）",
   secSpectra:"スペクトル", noSpectra:"未読み込み", secAcq:"測定条件",
   secProc:"処理",
   lblSource:"データ源", optProcessed:"処理済み", optRawFid:"生FID",
@@ -1461,7 +1542,7 @@ const I18N={
     "<b>スペクトル上でスクロール</b>＝強度 ・ <b>δ軸上でスクロール</b>＝ズーム ・ <b>δ軸をドラッグ</b>＝移動 ・ <b>ドラッグ</b>＝範囲ズーム ・ <b>右/⇧+ドラッグ</b>＝移動 ・ <b>ダブルクリック</b>＝全体<br>"+
     "<b>拡大図</b>：クリックで選択 ・ <b>元範囲の枠をドラッグ</b>＝移動/δ幅・<b>上辺をドラッグ</b>＝縦拡大（弱いピークを拡大）・ <b>スクロール</b>＝δ幅",
   dropTitle:"Bruker フォルダをドロップ", dropSub:"fid + acqus、あれば pdata/ も読みます",
-  tabPeaks:"ピーク", tabInteg:"積分", tabMult:"多重線", tabAssign:"帰属", tabShade:"塗りつぶし", markColorLbl:"色", textColorLbl:"色", lblTextSize:"大きさ",
+  tabPeaks:"ピーク", tabInteg:"積分", tabMult:"多重線", tabAssign:"帰属", tabPaper:"論文", tabShade:"塗りつぶし", markColorLbl:"色", textColorLbl:"色", lblTextSize:"大きさ",
   assignTabAnnot:"注釈", assignTabImp:"不純物", assignGroupAdd:"注釈を追加・編集する", assignGroupDelete:"注釈を削除する", assignGroupDisplay:"表示設定", assignStyleSettings:"スタイル設定",
   assignMarkAction:"ピークにマークを付ける", assignTextAction:"テキストラベルを付ける", assignShadeAction:"範囲を塗りつぶす", assignLineAction:"コネクタを引く", assignImageAction:"画像をファイルから追加する",
   assignShowMark:"マークを表示", assignShowText:"テキストラベルを表示", assignShowShade:"塗りつぶしを表示", assignShowLine:"コネクタを表示", assignShowImage:"画像を表示",
@@ -1501,7 +1582,9 @@ function t(k){return (I18N[LANG]&&I18N[LANG][k])||I18N.en[k]||k;}
 function applyI18n(){
   document.querySelectorAll('[data-i18n]').forEach(el=>{const v=t(el.getAttribute('data-i18n'));
     if(v.indexOf('<')>=0)el.innerHTML=v;else el.textContent=v;});
-  document.querySelectorAll('[data-i18n-title]').forEach(el=>{ el.title=t(el.getAttribute('data-i18n-title')); });
+  document.querySelectorAll('[data-i18n-title]').forEach(el=>{ const txt=t(el.getAttribute('data-i18n-title'));
+    if(el.classList.contains('grphint')){ el.setAttribute('data-tip',txt); el.removeAttribute('title'); }
+    else el.title=txt; });
   const tt={tCalib:'ttCalib',tPeaks:'ttPeaks',tInteg:'ttInteg',tMult:'ttMult',intDown:'ttIntDown',
     intUp:'ttIntUp',intAuto:'ttAuto',zoomIn:'ttZoomIn',zoomOut:'ttZoomOut',zoomReset:'ttFull',
     btnUndo:'ttUndo',btnRedo:'ttRedo',tMark:'ttMark',tAssign:'ttAssign',
@@ -1516,6 +1599,28 @@ function applyI18n(){
     if(m&&m.classList.contains('show')) renderManual(); }
   if(typeof fitToolbar==='function') fitToolbar();
 }
+
+/* Floating tooltip for any element with a data-tip attribute (e.g. the "?" help
+   dots). Rendered on <body> so the surrounding menu's overflow can't clip it. */
+(function(){
+  const tip=document.createElement('div'); tip.id='floattip'; document.body.appendChild(tip);
+  let cur=null;
+  function show(el){
+    const txt=el.getAttribute('data-tip'); if(!txt){hide();return;}
+    tip.textContent=txt; tip.style.left='0px'; tip.style.top='0px'; tip.classList.add('show');
+    const r=el.getBoundingClientRect(), tr=tip.getBoundingClientRect();
+    let left=r.left+r.width/2-tr.width/2;
+    left=Math.max(6,Math.min(left,innerWidth-tr.width-6));
+    let top=r.bottom+7;
+    if(top+tr.height>innerHeight-6) top=r.top-tr.height-7;
+    tip.style.left=left+'px'; tip.style.top=Math.max(6,top)+'px';
+  }
+  function hide(){ cur=null; tip.classList.remove('show'); }
+  document.addEventListener('mouseover',e=>{ const el=e.target.closest&&e.target.closest('[data-tip]'); if(el&&el!==cur){cur=el;show(el);} });
+  document.addEventListener('mouseout',e=>{ const el=e.target.closest&&e.target.closest('[data-tip]'); if(el&&el===cur){hide();} });
+  document.addEventListener('focusin',e=>{ const el=e.target.closest&&e.target.closest('[data-tip]'); if(el){cur=el;show(el);} });
+  document.addEventListener('focusout',hide);
+})();
 
 /* keep the toolbar on a single line: collapse buttons to icon-only from the right
    (Manual first) until the row fits; expand again when there is room */
@@ -1654,7 +1759,8 @@ function paletteColors(name, n){
 function paletteSwatch(name){ return paletteColors(name,6); }
 const DEFAULTS={lineW:1, wheelSens:1, wheelInertia:false, wheelInvert:false, hscroll:true, axisPad:56, baseGap:0.035,
   fontScale:1, nameScale:1, axisScale:1, markSize:4.6, markColor:'#0E6E7E', shadeColor:'#D33A2C', textColor:null, textSize:10.5, lineColor:null, lineStyle:'dashed', imageBorder:false, imageBorderColor:'#3A4750', imageBorderWidth:1, imageBorderStyle:'solid', integDigits:3, multColor:null, multDigits:2, multJStyle:'full', multStyle:'style1', plotFont:'mono', ppmDigits:2, pkDigits:2,
-  zoomBorderColor:null, zoomBorderWidth:1, zoomLeaderStyle:'dashed', peakStyle:'style1', integStyle:'style1', showIntegCurve:true};
+  zoomBorderColor:null, zoomBorderWidth:1, zoomLeaderStyle:'dashed', peakStyle:'style1', integStyle:'style1', showIntegCurve:true,
+  showTitle:false, figTitle:null, titleSize:15, titleBold:false, cutStyle:'wave', cutColor:null, cutWidth:1.2, cutWave:8, cutGap:11};
 const S={ spectra:[], active:-1, view:{pHi:1,pLo:0}, yscale:1, tool:null,
   lineW:1, wheelSens:1, wheelInertia:false, wheelInvert:false, hscroll:true, selInteg:-1, selImg:-1, selZoom:-1,
   selPeak:-1, selPeaks:[], selMults:[], thr:0.05, axisPad:56, baseGap:0.035, integShift:0,
@@ -1665,7 +1771,8 @@ const S={ spectra:[], active:-1, view:{pHi:1,pLo:0}, yscale:1, tool:null,
   fontScale:1, nameScale:1, axisScale:1, plotFont:'mono', showMinimap:false, zoomLeaders:true,
   zoomBorderColor:null, zoomBorderWidth:1, zoomLeaderStyle:'dashed',
   customPalette:['#1f3a93','#9e2b25','#117a4d','#8a5a00','#6a1b8a'],
-  impSolvent:'cdcl3', impTol:0.03, impTolC:0.3, showImpurities:false, impPins:[], impFilter:'' };
+  impSolvent:'cdcl3', impTol:0.03, impTolC:0.3, showImpurities:false, impPins:[], impFilter:'',
+  showTitle:false, figTitle:null, titleSize:15, titleBold:false, cut:null, cuts:[], cutStyle:'wave', cutColor:null, cutWidth:1.2, cutWave:8, cutGap:11 };
 function A(){ return S.spectra[S.active]||null; }
 // Platform modifier key for display (Ctrl on Windows/Linux, ⌘ on Mac; default ⌘ if unknown)
 const IS_MAC=(function(){ try{
@@ -2001,7 +2108,7 @@ function loadImageFile(blob){
     img.onload=()=>{
       pushUndo();
       let w=img.width,h=img.height; const mx=Math.max(w,h);
-      if(mx>800){ // downscale to be kind to localStorage
+      if(mx>800){ // downscale to keep dataset/work-file JSON compact
         const k=800/mx, c=document.createElement('canvas');
         c.width=Math.round(w*k); c.height=Math.round(h*k);
         c.getContext('2d').drawImage(img,0,0,c.width,c.height);
@@ -2213,10 +2320,64 @@ function axisDigits(span){ const d=(S.ppmDigits!=null?S.ppmDigits:2);
 let VP=null; // when set {x0,top,w,ph,view}: geometry maps into a sub-rectangle (used by zoom insets)
 function curView(){ return VP?VP.view:S.view; }
 function curX0(){ return VP?VP.x0:PADR; }
-function curTop(){ return VP?VP.top:PADT; }
-function plotW(){return VP?VP.w:(W-PADL-PADR);} function plotH(){return VP?VP.ph:(H-PADT-PADB());}
-function ppmToX(ppm){ const v=curView(); return curX0() + (v.pHi-ppm)/(v.pHi-v.pLo)*plotW(); }
-function xToPpm(x){ const v=curView(); return v.pHi - (x-curX0())/plotW()*(v.pHi-v.pLo); }
+function curTop(){ return VP?VP.top:(PADT+titleBandH()); }
+function plotW(){return VP?VP.w:(W-PADL-PADR);} function plotH(){return VP?VP.ph:(H-PADT-titleBandH()-PADB());}
+/* ---- figure title (¹H NMR (CDCl₃)) ---- */
+function solvName(key){ const r=(typeof IMP_SOLV!=='undefined'?IMP_SOLV:[]).find(s=>s[0]===key); return r?r[1]:''; }
+function nucLabel(sp){ const k=sp?nucKind(sp):'1H'; return k==='13C'?'¹³C':k==='1H'?'¹H':k; }
+function autoTitle(){ const sp=A()||visibleSpectra()[0]; if(!sp) return '';
+  const sv=solvName(S.impSolvent)||'CDCl₃'; return nucLabel(sp)+' NMR ('+sv+')'; }
+function titleText(){ const t=(S.figTitle!=null&&S.figTitle!=='')?S.figTitle:autoTitle(); return (t||'').trim(); }
+function titleBandH(){ if(VP||!S.showTitle||!titleText()) return 0; return Math.round((S.titleSize||15)*1.55)+8; }
+/* ---- cuts: array of {a,b} ppm (a>b) regions, each collapsed to a narrow gap with a break ---- */
+function curCutGap(){ return Math.max(6, Math.min(60, S.cutGap||18)); }
+/* active (in-view, non-edge, merged, high→low) cut regions, or [] */
+function cutActiveList(){ if(VP) return [];
+  const list=(S.cuts||[]);
+  if(!list.length) return [];
+  const v=S.view, hi=Math.max(v.pHi,v.pLo), lo=Math.min(v.pHi,v.pLo);
+  const acc=[];
+  for(const cut of list){ if(!cut||!isFinite(cut.a)||!isFinite(cut.b)) continue;
+    let a=Math.max(cut.a,cut.b), b=Math.min(cut.a,cut.b);
+    a=Math.min(a,hi); b=Math.max(b,lo);
+    if(a-b<1e-6) continue;                          // nothing left inside the view
+    if(a>=hi-1e-6 || b<=lo+1e-6) continue;          // touches an edge → just a crop, not a break
+    acc.push({a,b}); }
+  acc.sort((p,q)=>q.a-p.a);                          // downfield (high ppm) first = left→right
+  const merged=[];
+  for(const c of acc){ const prev=merged[merged.length-1];
+    if(prev && c.a >= prev.b-1e-9){ prev.b=Math.min(prev.b,c.b); prev.a=Math.max(prev.a,c.a); }
+    else merged.push({a:c.a,b:c.b}); }
+  return merged; }
+/* piecewise geometry: total collapsed ppm + scale for the current view */
+function cutGeom(){ const v=curView(), cuts=cutActiveList(), G=curCutGap();
+  let collapsed=0; for(const c of cuts) collapsed+=(c.a-c.b);
+  const sc=(plotW()-cuts.length*G)/((v.pHi-v.pLo)-collapsed);
+  return {v, cuts, G, sc, X0:curX0()}; }
+function ppmToX(ppm){ const {v,cuts,G,sc,X0}=cutGeom();
+  if(!cuts.length) return X0 + (v.pHi-ppm)*sc;
+  let x=X0, cur=v.pHi;                               // walk downfield→upfield
+  for(const c of cuts){ if(ppm>=c.a-1e-12) return x+(cur-ppm)*sc;
+    x+=(cur-c.a)*sc;
+    if(ppm>c.b+1e-12) return x+G*0.5;               // inside the omitted region → gap center
+    x+=G; cur=c.b; }
+  return x+(cur-ppm)*sc; }
+function xToPpm(x){ const {v,cuts,G,sc,X0}=cutGeom();
+  if(!cuts.length) return v.pHi - (x-X0)/sc;
+  let px=X0, cur=v.pHi;
+  for(const c of cuts){ const segW=(cur-c.a)*sc;
+    if(x<=px+segW) return cur-(x-px)/sc;
+    px+=segW; if(x<=px+G) return c.a;               // inside the gap → clamp to its downfield edge
+    px+=G; cur=c.b; }
+  return cur-(x-px)/sc; }
+/* gap pixel-ranges [{x0,x1,xc,c},…] of the cuts, or [] (for skipping traces/ticks + drawing breaks) */
+function cutGapsX(){ const {v,cuts,G,sc,X0}=cutGeom(); if(!cuts.length) return [];
+  const out=[]; let x=X0, cur=v.pHi;
+  for(const c of cuts){ x+=(cur-c.a)*sc; out.push({x0:x, x1:x+G, xc:x+G*0.5, c}); x+=G; cur=c.b; }
+  return out; }
+/* true if a ppm falls strictly inside any omitted (cut) region — annotations there are dropped */
+function ppmInCut(ppm){ const cuts=cutActiveList();
+  for(const c of cuts){ if(ppm<c.a-1e-9 && ppm>c.b+1e-9) return true; } return false; }
 function niceStep(span,target){ const raw=span/target, pw=Math.pow(10,Math.floor(Math.log10(raw))), n=raw/pw;
   let s=n<1.5?1:n<3?2:n<7?5:10; return s*pw; }
 function hexA(hex,a){ hex=(hex||'#000').replace('#',''); if(hex.length===3)hex=hex.split('').map(c=>c+c).join('');
@@ -2335,6 +2496,7 @@ function drawJTrees(){
     const groups=groupCouplings(m.Js||[]).slice(0,6);   // each equivalent-coupling group = one split level
     const k=groups.length; if(k<1) return;
     if(m.center<VW.pLo || m.center>VW.pHi) return;
+    if(ppmInCut(m.center)) return;                      // in an omitted (cut) region
     const X = hz => ppmToX(sp.sr + hz/mhz);
     const cHz=(m.center - sp.sr)*mhz;
     const st2 = S.multStyle==='style2';
@@ -2607,6 +2769,16 @@ function renderContent(opts){
   const VW=curView();
   const pw=plotW(), ph=plotH(), axisY=curTop()+ph;
   const XL=curX0(), XR=curX0()+plotW(), TOP=curTop();
+  const _cgs=cutGapsX();                          // [{x0,x1,xc,c},…] collapsed regions, or []
+  const inGapX=x=>{ for(const g of _cgs){ if(x>g.x0-0.5 && x<g.x1+0.5) return true; } return false; };
+  const inCutPpm=p=>{ for(const g of _cgs){ if(p<g.c.a-1e-9 && p>g.c.b+1e-9) return true; } return false; };
+
+  // ----- figure title (¹H NMR (CDCl₃)) — top-left band of the main plot -----
+  if(!VP && opts.names!==false && S.showTitle){ const tt=titleText();
+    if(tt){ ctx.fillStyle=css('--ink'); ctx.textAlign='left'; ctx.textBaseline='alphabetic';
+      ctx.font=plotFont(S.titleSize||15, S.titleBold?'700':'400');
+      ctx.fillText(tt, PADL+2, PADT+(S.titleSize||15)+2); }
+  }
 
   // ----- ppm axis (ticks + labels at bottom only; no vertical grid) -----
   const span=Math.abs(VW.pHi-VW.pLo);
@@ -2615,10 +2787,15 @@ function renderContent(opts){
   const tickLabY=axisY+8+axf;                     // baseline scales with text size
   ctx.font=axisFont(11); ctx.textAlign='center'; ctx.lineWidth=1.4;
   ctx.strokeStyle=css('--axis'); ctx.beginPath();
-  ctx.moveTo(XL,axisY+0.5); ctx.lineTo(XR,axisY+0.5); ctx.stroke();
+  if(_cgs.length){ let cx=XL;                       // break the axis across each omitted gap
+    for(const g of _cgs){ ctx.moveTo(cx,axisY+0.5); ctx.lineTo(g.x0,axisY+0.5); cx=g.x1; }
+    ctx.moveTo(cx,axisY+0.5); ctx.lineTo(XR,axisY+0.5); }
+  else { ctx.moveTo(XL,axisY+0.5); ctx.lineTo(XR,axisY+0.5); }
+  ctx.stroke();
   const startP=Math.ceil(VW.pLo/step)*step;
   ctx.lineWidth=1.2; ctx.strokeStyle=css('--axis');
   for(let p=startP;p<=VW.pHi+1e-9;p+=step){
+    if(inCutPpm(p)) continue;                       // tick falls inside an omitted region
     const x=ppmToX(p); ctx.beginPath(); ctx.moveTo(x,axisY); ctx.lineTo(x,axisY+6); ctx.stroke();
     ctx.fillStyle=css('--axis'); ctx.fillText(p.toFixed(axisDigits(span)), x, Math.min(tickLabY, H-4));
   }
@@ -2659,16 +2836,20 @@ function renderContent(opts){
       let a=idxAtPpm(sp,sh.a), b=idxAtPpm(sp,sh.b); if(a>b){const t=a;a=b;b=t;} return {a,b,color:sh.color};
     });
     const inShade=i=>{ for(const r of shRanges){ if(i>=r.a&&i<=r.b) return true; } return false; };
+    // omitted-region index range (cut): leave the trace open across the wavy break
+    const cutIdx=_cgs.map(g=>{ let ia=idxAtPpm(sp,g.c.a), ib=idxAtPpm(sp,g.c.b); if(ia>ib){const t=ia;ia=ib;ib=t;} return [ia,ib]; });
+    const inCut=i=>{ for(const r of cutIdx){ if(i>r[0] && i<r[1]) return true; } return false; };
     ctx.strokeStyle=sp.color; ctx.lineWidth=S.lineW; ctx.lineJoin='round'; ctx.lineCap='round'; ctx.beginPath();
     if(visN<=pw*2){
       let started=false;
       for(let i=iL;i<=iR;i++){
-        if(inShade(i)){ started=false; continue; } // leave a gap; shade pass fills it
+        if(inShade(i)||inCut(i)){ started=false; continue; } // leave a gap; shade pass fills it
         const x=ppmToX(ppmAt(sp,i)), y=clampY(sy(d[i]));
         if(!started){ctx.moveTo(x,y);started=true;} else ctx.lineTo(x,y); }
     } else {
       let started=false;
       for(let px=0;px<=pw;px++){ const x=XL+px;
+        if(inGapX(x)){ started=false; continue; } // gap over the wavy break
         let a=idxAtPpm(sp,xToPpm(x)), b=idxAtPpm(sp,xToPpm(x+1)); if(a>b){const t=a;a=b;b=t;}
         a=Math.max(0,Math.min(sp.N-1,a)); b=Math.max(0,Math.min(sp.N-1,b));
         if(inShade(a)||inShade(b)){ started=false; continue; } // gap over shaded pixels
@@ -2752,6 +2933,7 @@ function renderContent(opts){
     }
     if(S.showIntegs) (sp.integrals||[]).forEach((ig,kIg)=>{
       if(ig.hidden) return;
+      if(inCutPpm(ig.a) && inCutPpm(ig.b)) return;   // wholly inside an omitted region
       const igCol=S.integColor||css('--integ');
       const x1=Math.min(ppmToX(ig.a),ppmToX(ig.b)), x2=Math.max(ppmToX(ig.a),ppmToX(ig.b));
       if(x2<XL||x1>XR) return;
@@ -2822,6 +3004,7 @@ function renderContent(opts){
     });
     if(S.showMults) (sp.multiplets||[]).forEach(m=>{
       if(m.hidden) return;
+      if(inCutPpm(m.center)||inCutPpm(m.a)||inCutPpm(m.b)) return;   // in an omitted region
       const x1=Math.min(ppmToX(m.a),ppmToX(m.b)), x2=Math.max(ppmToX(m.a),ppmToX(m.b));
       if(x2<XL||x1>XR) return;
       const hasTree = S.showJTree && (m.Js||[]).some(j=>j>0.05);
@@ -2839,6 +3022,7 @@ function renderContent(opts){
       const vis=[];
       (sp.peaks||[]).forEach((pk,pk_i)=>{ if(pk.ppm<VW.pLo||pk.ppm>VW.pHi) return;
         if(pk.hidden) return;        // per-item hidden (Peaks results tab)
+        if(inCutPpm(pk.ppm)) return; // in an omitted (cut) region
         if(inTree(pk.ppm)) return;   // covered by a coupling tree → don't double-label
         vis.push({pk,pk_i,x:ppmToX(pk.ppm)}); });
       vis.sort((a,b)=>a.x-b.x);
@@ -2912,7 +3096,7 @@ function renderContent(opts){
     if(S.showMarks){
       const runs=[]; let run=null;
       (sp.peaks||[]).forEach(pk=>{
-        if(pk.ppm<VW.pLo||pk.ppm>VW.pHi){ if(run){runs.push(run);run=null;} return; }
+        if(pk.ppm<VW.pLo||pk.ppm>VW.pHi||inCutPpm(pk.ppm)){ if(run){runs.push(run);run=null;} return; }
         const key=(pk.mark&&!pk.markHidden)?pk.mark:null;
         if(key&&run&&run.key===key&&Math.abs(run.last-pk.ppm)<=0.15){ run.pks.push(pk); run.last=pk.ppm; }
         else { if(run) runs.push(run);
@@ -2937,7 +3121,7 @@ function renderContent(opts){
       });
       // free-standing ● marks (placed anywhere with the ● tool)
       (sp.freeMarks||[]).forEach((fm,fi)=>{
-        if(fm.hidden||fm.ppm<VW.pLo||fm.ppm>VW.pHi) return;
+        if(fm.hidden||fm.ppm<VW.pLo||fm.ppm>VW.pHi||inCutPpm(fm.ppm)) return;
         const cx=ppmToX(fm.ppm), yD=lt+fm.yf*lh, mR=S.markSize||4.6;
         ctx.beginPath(); ctx.arc(cx,yD,mR,0,7);
         ctx.fillStyle=fm.color; ctx.fill();
@@ -2948,7 +3132,7 @@ function renderContent(opts){
     // free-standing text labels (placed anywhere with the ✎ tool)
     if(S.showText){
       (sp.freeTexts||[]).forEach((ft,fi)=>{
-        if(ft.hidden||ft.ppm<VW.pLo||ft.ppm>VW.pHi) return;
+        if(ft.hidden||ft.ppm<VW.pLo||ft.ppm>VW.pHi||inCutPpm(ft.ppm)) return;
         const cx=ppmToX(ft.ppm), yD=lt+ft.yf*lh;
         ctx.fillStyle=S.textColor||css('--mult'); ctx.font=plotFont(S.textSize||10.5,'600');
         ctx.textAlign='center'; ctx.fillText(ft.text,cx,yD);
@@ -2996,7 +3180,7 @@ function draw(){
       /* click-to-delete: no drag rectangle */
     } else if(!dragRect.zVP){
       // main-plot gesture: preview under the insets (inset gestures are drawn after drawZooms)
-      drawDragPreview(PADT, PADT+ph);
+      drawDragPreview(curTop(), curTop()+ph);
     }
   }
   drawInsets();
@@ -3012,18 +3196,38 @@ function draw(){
   }
   drawLines();
   drawJTrees();
+  drawCutBreak();
   if(cursorX!=null){ ctx.strokeStyle=hexA(css('--accent'),.55); ctx.setLineDash([3,3]);
-    ctx.beginPath();ctx.moveTo(cursorX,PADT);ctx.lineTo(cursorX,PADT+ph);ctx.stroke(); ctx.setLineDash([]); }
+    ctx.beginPath();ctx.moveTo(cursorX,curTop());ctx.lineTo(cursorX,curTop()+ph);ctx.stroke(); ctx.setLineDash([]); }
+}
+/* the break marking the omitted (cut) region: two torn vertical edges that run through the δ-axis */
+function drawCutBreak(){
+  const gaps=cutGapsX(); if(!gaps.length) return;
+  const top=PADT+titleBandH(), axisY=top+plotH(), bot=axisY+5;   // run a little past the axis
+  const st=S.cutStyle||'wave', amp=3.4, wl=Math.max(3, Math.min(30, S.cutWave||8));
+  ctx.save();
+  ctx.strokeStyle=S.cutColor||hexA(css('--axis'),.95); ctx.lineWidth=Math.max(.5,Math.min(4,S.cutWidth||1.2));
+  ctx.lineJoin='round'; ctx.lineCap='round';
+  const edge=bx=>{ ctx.beginPath();
+    if(st==='slash'){ ctx.moveTo(bx-amp*0.75, top); ctx.lineTo(bx+amp*0.75, bot); }
+    else { let first=true;
+      for(let yy=top; yy<=bot; yy+=1.5){
+        let dx; if(st==='zigzag'){ const ph=((yy-top)/wl)%1; dx=(ph<0.5?ph*4-1:3-ph*4)*amp; }
+        else dx=Math.sin((yy-top)/wl*Math.PI)*amp;
+        const X=bx+dx; if(first){ctx.moveTo(X,yy);first=false;} else ctx.lineTo(X,yy); } }
+    ctx.stroke(); };
+  for(const g of gaps){ edge(g.x0); edge(g.x1); }
+  ctx.restore();
 }
 
 /* ===================== interaction ===================== */
-const TOOLS=['tCalib','tPeaks','tInteg','tMult','tAssign','tMark','tDelMark','tDelText','tDelImg','tErasePk','tEraseInt','tEraseMult','tDelPeak','tShade','tZoom','tLine','tDelLine'];
+const TOOLS=['tCalib','tPeaks','tInteg','tMult','tAssign','tMark','tDelMark','tDelText','tDelImg','tErasePk','tEraseInt','tEraseMult','tDelPeak','tShade','tZoom','tLine','tDelLine','tCut'];
 function toolsEnabled(){ return visibleSpectra().length>=1; }
 function toolOk(id){ const n=visibleSpectra().length; return id==='tZoom' ? n===1 : n>=1; }
 /* lane → spectrum (stacked); overlay → active. Activates it for annotation. */
 function spAtY(y){ const li=laneInfo();
   if(li.mode==='stack'&&li.vs.length){
-    let k=Math.floor((y-PADT)/li.laneH);
+    let k=Math.floor((y-curTop())/li.laneH);
     k=Math.max(0,Math.min(li.vs.length-1,k));
     return li.vs[k];
   }
@@ -3037,13 +3241,14 @@ function activateAt(y){ const sp=spAtY(y); if(!sp) return null;
 }
 function updateToolAvail(){
   const n=visibleSpectra().length, any=n>=1;
-  const KH={tCalib:'C',tPeaks:'P',tInteg:'I',tMult:'M',tAssign:'A',tMark:'D',tErasePk:'⇧P',tEraseInt:'⇧I',tEraseMult:'⇧M',tZoom:'Z',tLine:'G',tDelLine:'⇧G'};
+  const KH={tCalib:'C',tPeaks:'P',tInteg:'I',tMult:'M',tAssign:'A',tMark:'D',tErasePk:'⇧P',tEraseInt:'⇧I',tEraseMult:'⇧M',tZoom:'Z',tLine:'G',tDelLine:'⇧G',tCut:'X'};
   TOOLS.forEach(id=>{ const el=document.getElementById(id); if(!el)return;
     const ok = id==='tZoom' ? n===1 : any;
     el.classList.toggle('disabled',!ok);
     const kh=KH[id]?' ['+KH[id]+']':'';
     el.title = ok ? t('tt'+id.slice(1))+kh : (id==='tZoom'&&n>1 ? t('ttZoomSingle') : t('toolNeedOne')); });
   if(S.tool && (!any || (S.tool==='tZoom'&&n!==1))){ S.tool=null; TOOLS.forEach(x=>{ const el=document.getElementById(x); if(el) el.classList.remove('on'); }); syncToolMains(); }
+  { const ot=document.getElementById('tOther'); if(ot) ot.classList.toggle('disabled',!any); }
   updateEraseVis(); syncToolMains();
   if(visibleSpectra().length===1){ const v=visibleSpectra()[0]; const k=S.spectra.indexOf(v); if(k>=0&&k!==S.active){ S.active=k; } }
 }
@@ -3064,6 +3269,7 @@ function syncToolMains(){
   setOn('tInteg', armed('tInteg')||armed('tEraseInt'));
   setOn('tMult', armed('tMult')||armed('tEraseMult'));
   setOn('tMark', armed('tMark')||armed('tAssign')||armed('tDelMark')||armed('tDelText')||armed('tDelImg')||armed('tShade')||armed('tDelShade')||armed('tLine')||armed('tDelLine'));
+  setOn('tOther', armed('tZoom')||armed('tCut'));
 }
 /* which main-button group a tool belongs to (for releasing the tool when another tab/menu opens) */
 function toolGroup(t){
@@ -3071,6 +3277,7 @@ function toolGroup(t){
   if(t==='tInteg'||t==='tEraseInt') return 'tInteg';
   if(t==='tMult'||t==='tEraseMult') return 'tMult';
   if(t==='tMark'||t==='tAssign'||t==='tDelMark'||t==='tDelText'||t==='tDelImg'||t==='tShade'||t==='tDelShade'||t==='tLine'||t==='tDelLine') return 'tMark';
+  if(t==='tZoom'||t==='tCut') return 'tOther';
   return t;
 }
 function disarmTool(){ if(!S.tool && !(S.selPeaks&&S.selPeaks.length)) return;
@@ -3081,7 +3288,7 @@ function disarmTool(){ if(!S.tool && !(S.selPeaks&&S.selPeaks.length)) return;
    hover reveals their dropdown + tooltip, and a click never ARMS the tool (use the
    dropdown items for that). A click DOES still turn the tool OFF when this group is
    currently armed. Zoom keeps its plain click-to-arm/toggle. */
-const HOVER_ONLY_TOOLS=new Set(['tCalib','tPeaks','tInteg','tMult','tMark','tZoom']);
+const HOVER_ONLY_TOOLS=new Set(['tCalib','tPeaks','tInteg','tMult','tMark','tZoom','tCut']);
 /* keep a wide docked dropdown inside the viewport (shift left if it would overflow the right edge) */
 function clampDockedPanel(anchor, panel){ if(!anchor||!panel) return;
   panel.style.left='0px';
@@ -3098,6 +3305,12 @@ TOOLS.forEach(id=>{ const el=document.getElementById(id); if(!el) return;
         if(sameArmed){ disarmTool(); return; }   // pressing this group's tab while its tool is armed → release it
         if(!wasOpen){ tm.classList.add('open','sticky'); if(tm.id==='tmAssign'){ if(typeof renderImpPanel==='function') renderImpPanel(); clampWidePanel(tm); } } }
     : ()=>setTool(id); });
+/* "Other" groups the Zoom-inset and Cut tools: the main button only opens its dropdown
+   (the two 作成 items arm the actual tools); it never arms a tool itself. */
+(function(){ const btn=document.getElementById('tOther'); if(!btn) return;
+  btn.onclick=()=>{ const tm=document.getElementById('tmOther'); if(!tm||tm.classList.contains('floating')) return;
+    const wasOpen=tm.classList.contains('open'); closeMenus(); closeToolMenus();
+    if(!wasOpen) tm.classList.add('open','sticky'); }; })();
 
 let panning=false,panStart=0,panHi=0,panLo=0,dragging=false,edgeDrag=null,zoomDrag=null,lineDrag=null,mmDrag=false;
 cv.addEventListener('pointermove',e=>{
@@ -3132,7 +3345,7 @@ cv.addEventListener('pointermove',e=>{
       draw(); }
     return; }
   if(lineDrag){ const l=S.lines[lineDrag.k], yy=e.clientY-r.top;
-    if(l){ const p=xToPpm(x), yf=(yy-PADT)/plotH();
+    if(l){ const p=xToPpm(x), yf=(yy-curTop())/plotH();
       if(lineDrag.which===0){ l.p0=p; l.y0=yf; } else { l.p1=p; l.y1=yf; } draw(); }
     return; }
   if(markDrag){ const b=markDrag.mb, sp=b.sp; const yy=e.clientY-r.top;
@@ -3159,7 +3372,7 @@ cv.addEventListener('pointermove',e=>{
   else if(panning){ const dppm=(x-panStart)/plotW()*(panHi-panLo);
     S.view.pHi=panHi+dppm; S.view.pLo=panLo+dppm; draw(); }
   else { // cursor feedback: images / δ-axis grab / selected-integral edges
-    const yy=e.clientY-r.top, overAxis = yy>=PADT+plotH();
+    const yy=e.clientY-r.top, overAxis = yy>=curTop()+plotH();
     const re=regionEdgeAt(x,yy);
     cv.style.cursor = (!S.tool&&(markAt(x,yy)||textAt(x,yy))) ? 'grab'
       : zoomCloseAt(x,yy) ? 'pointer'
@@ -3235,7 +3448,7 @@ cv.addEventListener('pointerdown',e=>{
     }
     if(S.selImg>=0){ S.selImg=-1; draw(); }
   }
-  if(e.button===0 && y>=PADT+plotH()){ // grab the δ-axis to pan
+  if(e.button===0 && y>=curTop()+plotH()){ // grab the δ-axis to pan
     cv.setPointerCapture(e.pointerId);
     panning=true; panStart=x; panHi=S.view.pHi; panLo=S.view.pLo;
     cv.style.cursor='grabbing'; return;
@@ -3269,6 +3482,15 @@ cv.addEventListener('pointerup',e=>{
   if(!dragging)return; dragging=false;
   const r=cv.getBoundingClientRect(), x=e.clientX-r.left, y=e.clientY-r.top;
   const sp = (S.tool && S.tool!=='') ? (activateAt(dragRect.y0)||A()) : A();
+  // ---- cut: drag a δ window → collapse it to a break (append; multiple regions allowed) ----
+  if(S.tool==='tCut'){
+    if(Math.abs(x-dragRect.x0)>6){
+      const pA=xToPpm(dragRect.x0), pB=xToPpm(x);
+      if(!Array.isArray(S.cuts)) S.cuts=[];
+      S.cuts.push({a:Math.max(pA,pB), b:Math.min(pA,pB)}); persistUI();
+    }                                          // a click leaves cuts unchanged (clear via the tool menu)
+    dragRect=null; draw(); return;
+  }
   // ---- zoom inset: drag a ppm window → floating magnified panel ----
   if(S.tool==='tZoom'){
     if(Math.abs(x-dragRect.x0)>6){
@@ -3276,7 +3498,7 @@ cv.addEventListener('pointerup',e=>{
       const w=Math.max(150,Math.min(320,Math.abs(x-dragRect.x0)*1.4)), h=Math.round(w*0.62);
       let zx=Math.min(dragRect.x0,x), zy=Math.min(dragRect.y0,y)-h-12;
       if(zy<PADT+2) zy=Math.max(dragRect.y0,y)+12;
-      zx=Math.max(PADR, Math.min(W-PADR-w, zx)); zy=Math.max(PADT, Math.min(PADT+plotH()-h, zy));
+      zx=Math.max(PADR, Math.min(W-PADR-w, zx)); zy=Math.max(curTop(), Math.min(curTop()+plotH()-h, zy));
       S.zooms=S.zooms||[];
       const nz={a:Math.max(pA,pB), b:Math.min(pA,pB), x:zx, y:zy, w, h};
       nz.vscale=autoVscale(nz);          // auto-amplify so low peaks in the window are visible
@@ -3289,8 +3511,8 @@ cv.addEventListener('pointerup',e=>{
     if(Math.hypot(x-dragRect.x0,y-dragRect.y0)>6){
       const ph=plotH();
       S.lines=S.lines||[];
-      S.lines.push({ p0:xToPpm(dragRect.x0), y0:(dragRect.y0-PADT)/ph,
-                     p1:xToPpm(x),           y1:(y-PADT)/ph });
+      S.lines.push({ p0:xToPpm(dragRect.x0), y0:(dragRect.y0-curTop())/ph,
+                     p1:xToPpm(x),           y1:(y-curTop())/ph });
       S.resTab='assign'; S.asgSub='conn'; openResults(); renderResults(); persistUI();
     }
     dragRect=null; draw(); return;
@@ -3376,9 +3598,9 @@ cv.addEventListener('pointerup',e=>{
     if(k>=0){ pushUndo(sp); arr.splice(k,1); S.resTab='assign'; S.asgSub='shade'; openResults(); saveAnnot(sp); }
   }
   VP=null;
-  dragRect=null; renderResults(); draw();
+  dragRect=null; renderResults(); draw(); persistUI();
 });
-cv.addEventListener('dblclick',()=>{ const g=globalRange(); if(g){S.view={pHi:g.pHi,pLo:g.pLo};} S.spectra.forEach(sp=>sp.yscale=1); draw(); });
+cv.addEventListener('dblclick',()=>{ const g=globalRange(); if(g){S.view={pHi:g.pHi,pLo:g.pLo};} S.spectra.forEach(sp=>sp.yscale=1); draw(); persistUI(); });
 cv.addEventListener('contextmenu',e=>{
   e.preventDefault();
   const r=cv.getBoundingClientRect(), x=e.clientX-r.left, y=e.clientY-r.top;
@@ -3420,11 +3642,11 @@ function kickMomentum(type,v,anchor,tsp){
   mom.running=true;
   const step=()=>{
     mom.v*=0.90;
-    if(Math.abs(mom.v)<0.8 || !S.wheelInertia){ mom.v=0; mom.running=false; return; }
+    if(Math.abs(mom.v)<0.8 || !S.wheelInertia){ mom.v=0; mom.running=false; persistUI(); return; }
     if(mom.type==='int') wheelInt(mom.v, mom.sp);
     else if(mom.type==='zoom') wheelZoom(mom.v,mom.anchor);
     else wheelPan(mom.v);
-    draw(); RAF(step);
+    draw(); persistUI(); RAF(step);
   };
   RAF(step);
 }
@@ -3463,32 +3685,32 @@ cv.addEventListener('wheel',e=>{
     persistUI(); draw(); return; }
   // horizontal scroll (trackpad two-finger swipe) → pan δ
   if(S.hscroll && Math.abs(e.deltaX)>Math.abs(e.deltaY) && Math.abs(e.deltaX)>0.5){
-    wheelPan(e.deltaX); draw(); kickMomentum('pan', e.deltaX, 0); return;
+    wheelPan(e.deltaX); draw(); persistUI(); kickMomentum('pan', e.deltaX, 0); return;
   }
-  const axisY=PADT+plotH();
+  const axisY=curTop()+plotH();
   const horizontal = e.ctrlKey||e.metaKey || y>=axisY-2; // over δ-axis strip → zoom; else intensity
   if(!horizontal || e.shiftKey || e.altKey){
-    const tsp=spAtY(y)||A(); wheelInt(e.deltaY, tsp); draw(); kickMomentum('int', e.deltaY, 0, tsp); return;
+    const tsp=spAtY(y)||A(); wheelInt(e.deltaY, tsp); draw(); persistUI(); kickMomentum('int', e.deltaY, 0, tsp); return;
   }
   const pc=xToPpm(x);
-  wheelZoom(e.deltaY,pc); draw(); kickMomentum('zoom', e.deltaY, pc);
+  wheelZoom(e.deltaY,pc); draw(); persistUI(); kickMomentum('zoom', e.deltaY, pc);
 },{passive:false});
 
-function intensity(m){ const set=vzoomArmed(); (set.length?set:(A()?[A()]:[])).forEach(sp=>applyYscale(sp,m)); draw(); }
+function intensity(m){ const set=vzoomArmed(); (set.length?set:(A()?[A()]:[])).forEach(sp=>applyYscale(sp,m)); draw(); persistUI(); }
 function autoIntensity(){
   const fit=sp=>{ if(!sp||!sp.mag) return; const d=dispOf(sp);
     let iL=idxAtPpm(sp,S.view.pHi),iR=idxAtPpm(sp,S.view.pLo); if(iL>iR){const t=iL;iL=iR;iR=t;}
     iL=Math.max(0,iL);iR=Math.min(sp.N-1,iR); let mx=1e-9; for(let i=iL;i<=iR;i++) if(d[i]>mx)mx=d[i];
     sp.yscale=sp.gmax/mx; };
   const set=vzoomArmed(); (set.length?set:(A()?[A()]:[])).forEach(fit);
-  draw(); }
+  draw(); persistUI(); }
 function zoomOut(){ const c=(S.view.pHi+S.view.pLo)/2, h=(S.view.pHi-S.view.pLo)/2*1.4;
-  S.view={pHi:c+h,pLo:c-h}; draw(); }
+  S.view={pHi:c+h,pLo:c-h}; draw(); persistUI(); }
 function zoomIn(){ const c=(S.view.pHi+S.view.pLo)/2, h=(S.view.pHi-S.view.pLo)/2/1.4;
-  S.view={pHi:c+h,pLo:c-h}; draw(); }
+  S.view={pHi:c+h,pLo:c-h}; draw(); persistUI(); }
 function toggleAllVzoom(){ const vs=S.spectra; if(!vs.length) return;
   const allOn=vs.every(sp=>sp.vzoom!==false);
-  vs.forEach(sp=>sp.vzoom=!allOn); renderList(); }
+  vs.forEach(sp=>sp.vzoom=!allOn); renderList(); persistUI(); }
 function refreshVzoomBtn(){ const vs=S.spectra, allOn=vs.length>0 && vs.every(sp=>sp.vzoom!==false);
   const b=document.getElementById('btnLinkY'); if(b) b.classList.toggle('on', allOn);
   const b2=document.getElementById('btnVzAll'); if(b2){ b2.classList.toggle('on', allOn); b2.style.display = vs.length>1?'':'none'; } }
@@ -3644,6 +3866,8 @@ function doToolAction(act){
   if(act==='clearMult'){ const sp=A(); if(sp){ pushUndo(sp); sp.multiplets=[]; saveAnnot(sp); } S.selMults=[]; S.resTab='mult'; openResults(); renderResults(); draw(); return; }
   if(act==='clearShade') return clearShades();
   if(act==='clearLines'){ S.lines=[]; persistUI(); draw(); return; }
+  if(act==='clearCut'){ S.cuts=[]; S.cut=null; persistUI(); draw(); return; }
+  if(act==='undoCut'){ if(Array.isArray(S.cuts)&&S.cuts.length){ S.cuts.pop(); persistUI(); draw(); } return; }
   if(act==='clearMarks') return clearMarks();
   if(act==='clearTextLabels') return clearTextLabels();
   if(act==='clearImages') return clearImages();
@@ -3736,7 +3960,7 @@ document.getElementById('intDown').onclick=()=>intensity(.5);
 document.getElementById('intAuto').onclick=autoIntensity;
 document.getElementById('zoomOut').onclick=zoomOut;
 document.getElementById('zoomIn').onclick=zoomIn;
-document.getElementById('zoomReset').onclick=()=>{ const g=globalRange(); if(g){S.view={pHi:g.pHi,pLo:g.pLo};} S.spectra.forEach(sp=>sp.yscale=1); draw(); };
+document.getElementById('zoomReset').onclick=()=>{ const g=globalRange(); if(g){S.view={pHi:g.pHi,pLo:g.pLo};} S.spectra.forEach(sp=>sp.yscale=1); draw(); persistUI(); };
 
 function doCalibrate(clickedPpm, tsp){ const sp=tsp||A(); if(!sp)return;
   const v=prompt(t('calPrompt'),'7.26'); if(v===null)return; const tg=parseFloat(v); if(isNaN(tg))return;
@@ -4032,7 +4256,11 @@ function eraseMultRegion(sp,pA,pB){ const lo=Math.min(pA,pB), hi=Math.max(pA,pB)
   sp.multiplets=(sp.multiplets||[]).filter(m=>!inR(m.a,m.b)); S.selMults=[];
 }
 
-/* ===================== persistence (localStorage, guarded) ===================== */
+/* ===================== persistence =====================
+   Per-dataset analysis/annotation state is persisted in nmrspectrumviewer.json.
+   localStorage is reserved for application preferences and the lightweight
+   multi-spectrum workspace (layout/order/view), never spectral arrays. */
+const PERSISTENCE_VERSION=30;
 function sigKey(sp){ let h=2166136261>>>0;
   const src = sp.haveFid? sp.cplxRe : sp.procReal;
   const n=Math.min(src?src.length:0, 4096);
@@ -4045,7 +4273,7 @@ function sigKey(sp){ let h=2166136261>>>0;
    undoable as well as the original calibration / peak / integral operations. */
 const APP_UNDO=[], APP_REDO=[];
 const HIST_SP_KEYS=['name','origName','color','colorLocked','visible','vzoom','source','mode','wdw','lb','zf','gdc','ph0','ph1','sr','yscale',
-  'peaks','integrals','multiplets','shades','images','freeMarks','freeTexts'];
+  'peaks','integrals','multiplets','shades','images','markPos','freeMarks','freeTexts'];
 let _histId=0, _historyApplying=false;
 function histClone(v){
   if(typeof structuredClone==='function') return structuredClone(v);
@@ -4123,17 +4351,27 @@ function refreshUndoUI(){
   r.disabled=!APP_REDO.length;
 }
 
-function saveAnnot(sp){ try{ const k=sigKey(sp);
-  const data={name:sp.name, sr:sp.sr||0, mode:sp.mode, ph0:sp.ph0, ph1:sp.ph1, color:sp.color, colorLocked:!!sp.colorLocked, source:sp.source,
+function annotDataOf(sp){ return {v:PERSISTENCE_VERSION, sig:sigKey(sp), name:sp.name, sr:sp.sr||0, mode:sp.mode, ph0:sp.ph0, ph1:sp.ph1,
+    source:sp.source, wdw:sp.wdw, lb:sp.lb, zf:sp.zf, gdc:!!sp.gdc,
     images:sp.images||[], markPos:sp.markPos||{}, freeMarks:sp.freeMarks||[], freeTexts:sp.freeTexts||[],
-    peaks:sp.peaks||[], integrals:sp.integrals||[], multiplets:sp.multiplets||[], shades:sp.shades||[]};
-  localStorage.setItem(k, JSON.stringify(data)); }catch(e){} }
-function restoreAnnot(sp){ try{ const raw=localStorage.getItem(sigKey(sp)); if(!raw)return false;
-  const d=JSON.parse(raw);
+    peaks:sp.peaks||[], integrals:sp.integrals||[], multiplets:sp.multiplets||[], shades:sp.shades||[]}; }
+function saveAnnot(sp){
+  if(typeof scheduleFolderJson==='function') scheduleFolderJson();
+  if(typeof persistUI==='function') persistUI(); }
+/* Read-only migration path for annotations written by versions <=1.11.
+   New edits are never written back to per-spectrum localStorage keys. */
+function restoreLegacyAnnot(sp){ try{ const raw=localStorage.getItem(sigKey(sp)); if(!raw)return false;
+  return applyAnnotData(sp, JSON.parse(raw)); }catch(e){ return false; } }
+function applyAnnotData(sp, d){ try{
+  if(!d||typeof d!=='object') return false;
   if(d.name) sp.name=d.name;
   if(d.source && ((d.source==='proc'&&sp.haveProc)||(d.source==='fid'&&sp.haveFid))) sp.source=d.source;
   if(typeof d.sr==='number') sp.sr=d.sr;
   if(d.mode) sp.mode=d.mode; if(typeof d.ph0==='number')sp.ph0=d.ph0; if(typeof d.ph1==='number')sp.ph1=d.ph1;
+  if(['none','em','gm'].includes(d.wdw)) sp.wdw=d.wdw;
+  if(typeof d.lb==='number'&&isFinite(d.lb)) sp.lb=d.lb;
+  if([1,2,4,8].includes(d.zf)) sp.zf=d.zf;
+  if(typeof d.gdc==='boolean') sp.gdc=d.gdc;
   if(d.colorLocked && d.color){ sp.color=d.color; sp.colorLocked=true; }
   if(d.images) sp.images=d.images;
   if(d.markPos) sp.markPos=d.markPos;
@@ -4143,8 +4381,12 @@ function restoreAnnot(sp){ try{ const raw=localStorage.getItem(sigKey(sp)); if(!
     (d.peaks||[]).forEach(p=>{ if(p.asg){
       if(cmap[p.asg.cid]) p.mark=cmap[p.asg.cid]; delete p.asg; } });
   }
-  sp.peaks=d.peaks||[]; sp.integrals=d.integrals||[]; sp.multiplets=d.multiplets||[]; sp.shades=d.shades||[];
-  sp.freeMarks=d.freeMarks||[]; sp.freeTexts=d.freeTexts||[];
+  if(Array.isArray(d.peaks)) sp.peaks=d.peaks;
+  if(Array.isArray(d.integrals)) sp.integrals=d.integrals;
+  if(Array.isArray(d.multiplets)) sp.multiplets=d.multiplets;
+  if(Array.isArray(d.shades)) sp.shades=d.shades;
+  if(Array.isArray(d.freeMarks)) sp.freeMarks=d.freeMarks;
+  if(Array.isArray(d.freeTexts)) sp.freeTexts=d.freeTexts;
   return true; }catch(e){ return false; } }
 
 /* ===================== results panel (dock ⇆ float) ===================== */
@@ -4674,16 +4916,16 @@ function segWire(id,fn){ const el=document.getElementById(id);
 segWire('segSrc',v=>{ const sp=A(); if(!sp)return; if(v==='fid'&&!sp.haveFid)return; if(v==='proc'&&!sp.haveProc)return;
   sp.source=v; sp.mode=v==='proc'?'real':'mag'; rebuildSpectrum(sp); saveAnnot(sp); refreshActive(); });
 segWire('segMode',v=>{ const sp=A(); if(!sp)return; sp.mode=v; finalize(sp); saveAnnot(sp); syncControls(); draw(); });
-segWire('segZf',v=>{ const sp=A(); if(!sp)return; sp.zf=+v; rebuildSpectrum(sp); draw(); });
+segWire('segZf',v=>{ const sp=A(); if(!sp)return; sp.zf=+v; rebuildSpectrum(sp); saveAnnot(sp); draw(); });
 segWire('segLayout',v=>{ S.layout=v; draw(); });
 segWire('segPeakStyle',v=>{ S.peakStyle=v; persistUI(); draw(); });
 segWire('segIntegStyle',v=>{ S.integStyle=v; persistUI(); draw(); });
 segWire('segMultStyle',v=>{ S.multStyle=v; persistUI(); draw(); });
 document.getElementById('wdw').onchange=e=>{ const sp=A(); if(!sp)return; sp.wdw=e.target.value;
-  document.getElementById('lbBox').style.display=sp.wdw==='none'?'none':'block'; rebuildSpectrum(sp); draw(); };
+  document.getElementById('lbBox').style.display=sp.wdw==='none'?'none':'block'; rebuildSpectrum(sp); saveAnnot(sp); draw(); };
 document.getElementById('lb').oninput=e=>{ const sp=A(); if(!sp)return; sp.lb=+e.target.value;
-  document.getElementById('lbv').textContent=sp.lb.toFixed(2)+' Hz'; rebuildSpectrum(sp); draw(); };
-document.getElementById('gdc').onchange=e=>{ const sp=A(); if(!sp)return; sp.gdc=e.target.checked; rebuildSpectrum(sp); draw(); };
+  document.getElementById('lbv').textContent=sp.lb.toFixed(2)+' Hz'; rebuildSpectrum(sp); saveAnnot(sp); draw(); };
+document.getElementById('gdc').onchange=e=>{ const sp=A(); if(!sp)return; sp.gdc=e.target.checked; rebuildSpectrum(sp); saveAnnot(sp); draw(); };
 document.getElementById('ph0').oninput=e=>{ const sp=A(); if(!sp)return; sp.ph0=+e.target.value;
   document.getElementById('ph0v').textContent=sp.ph0+'°'; finalize(sp); saveAnnot(sp); draw(); };
 document.getElementById('ph1').oninput=e=>{ const sp=A(); if(!sp)return; sp.ph1=+e.target.value;
@@ -4834,6 +5076,37 @@ document.getElementById('btnShowLines').onclick=()=>{
   document.getElementById('btnShowLines').classList.toggle('on',S.showLines);
   { const tg=document.getElementById('tgLine'); if(tg) tg.classList.toggle('on',S.showLines); }
   draw(); };
+document.getElementById('btnShowTitle').onclick=()=>{
+  S.showTitle=!S.showTitle;
+  document.getElementById('btnShowTitle').classList.toggle('on',S.showTitle);
+  persistUI(); resize(); draw(); };
+{ const ti=document.getElementById('figTitleInput'); if(ti){
+    ti.oninput=e=>{ S.figTitle=e.target.value; persistUI(); resize(); draw(); };
+    ti.onfocus=()=>{ ti.placeholder=autoTitle()||'¹H NMR (CDCl₃)'; }; }
+  const tsz=document.getElementById('titleSize'); if(tsz){
+    tsz.oninput=e=>{ S.titleSize=+e.target.value;
+      const v=document.getElementById('tszv'); if(v) v.textContent=(+e.target.value)+'pt';
+      persistUI(); resize(); draw(); }; }
+  const stw=document.getElementById('segTitleWeight'); if(stw){
+    stw.querySelectorAll('button').forEach(b=>b.onclick=()=>{ S.titleBold=(b.dataset.v==='bold');
+      stw.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b)); persistUI(); draw(); }); }
+  const scs=document.getElementById('segCutStyle'); if(scs){
+    scs.querySelectorAll('button').forEach(b=>b.onclick=()=>{ S.cutStyle=b.dataset.v;
+      scs.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b)); persistUI(); draw(); }); }
+  const cgp=document.getElementById('cutGapInp'); if(cgp){ cgp.oninput=()=>{ S.cutGap=+cgp.value; persistUI(); draw(); }; }
+  const cwv=document.getElementById('cutWaveInp'); if(cwv){ cwv.oninput=()=>{ S.cutWave=+cwv.value; persistUI(); draw(); }; }
+  const cwd=document.getElementById('cutWidthInp'); if(cwd){ cwd.oninput=()=>{ S.cutWidth=+cwd.value; persistUI(); draw(); }; }
+  const cclr=document.getElementById('cutColorInp'), cauto=document.getElementById('cutColorAuto');
+  if(cclr){ cclr.oninput=()=>{ S.cutColor=cclr.value; syncCutStyleUI(); persistUI(); draw(); }; }
+  if(cauto){ cauto.onclick=()=>{ S.cutColor=null; syncCutStyleUI(); persistUI(); draw(); }; }
+}
+function syncCutStyleUI(){
+  const cgp=document.getElementById('cutGapInp'); if(cgp) cgp.value=S.cutGap??11;
+  const cwv=document.getElementById('cutWaveInp'); if(cwv) cwv.value=S.cutWave??8;
+  const cwd=document.getElementById('cutWidthInp'); if(cwd) cwd.value=S.cutWidth??1.2;
+  const cclr=document.getElementById('cutColorInp'); if(cclr){ const ax=css('--axis'); cclr.value=S.cutColor||(/^#[0-9a-fA-F]{6}$/.test(ax)?ax:'#556070'); }
+  const cauto=document.getElementById('cutColorAuto'); if(cauto) cauto.classList.toggle('on', !S.cutColor);
+}
 function syncZoomToggles(){
   const a=document.getElementById('tgZooms'); if(a) a.classList.toggle('on',S.showZooms);
   const b=document.getElementById('btnShowZooms'); if(b) b.classList.toggle('on',S.showZooms);
@@ -4865,25 +5138,26 @@ document.getElementById('btnRedo').onclick=()=>doRedo();
     cv.addEventListener('pointerdown',()=>{ if(visibleSpectra().length) gestureBefore=snapState(); },true);
     cv.addEventListener('wheel',()=>{ const before=snapState(); queueMicrotask(()=>recordIfChanged(before)); },{capture:true,passive:true});
   }
-  window.addEventListener('pointerup',()=>{ if(gestureBefore){ const before=gestureBefore; gestureBefore=null; queueMicrotask(()=>recordIfChanged(before)); } });
+  window.addEventListener('pointerup',()=>{ if(gestureBefore){ const before=gestureBefore; gestureBefore=null;
+    queueMicrotask(()=>{ recordIfChanged(before); persistUI(); }); } });
   window.addEventListener('pointercancel',()=>{ gestureBefore=null; });
   const afterEvent=e=>{ if(e.target.closest&&e.target.closest('#btnUndo,#btnRedo')) return;
-    const before=snapState(); queueMicrotask(()=>recordIfChanged(before)); };
+    const before=snapState(); queueMicrotask(()=>{ recordIfChanged(before); persistUI(); }); };
   document.addEventListener('click',afterEvent,true);
   document.addEventListener('input',afterEvent,true);
   document.addEventListener('change',afterEvent,true);
   document.addEventListener('keydown',e=>{
     if(e.ctrlKey||e.metaKey){ if(['z','y'].includes(e.key.toLowerCase())) return; }
     if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','0','Home','Delete','Backspace'].includes(e.key)){
-      const before=snapState(); queueMicrotask(()=>recordIfChanged(before)); }
+      const before=snapState(); queueMicrotask(()=>{ recordIfChanged(before); persistUI(); }); }
   },true);
 })();
 document.getElementById('btnRangeApply').onclick=()=>{
   const hi=parseFloat(document.getElementById('rangeHi').value);
   const lo=parseFloat(document.getElementById('rangeLo').value);
   if(!isFinite(hi)||!isFinite(lo)||hi===lo) return;
-  S.view={pHi:Math.max(hi,lo), pLo:Math.min(hi,lo)}; draw(); };
-document.getElementById('bgColor').oninput=e=>{ document.documentElement.style.setProperty('--bg',e.target.value); draw(); };
+  S.view={pHi:Math.max(hi,lo), pLo:Math.min(hi,lo)}; draw(); persistUI(); };
+document.getElementById('bgColor').oninput=e=>{ document.documentElement.style.setProperty('--bg',e.target.value); draw(); persistUI(); };
 
 /* ===================== menubar ===================== */
 function closeMenus(){ document.querySelectorAll('.menu.open').forEach(m=>m.classList.remove('open','sticky')); }
@@ -4896,6 +5170,7 @@ document.querySelectorAll('.menu>.mbtn').forEach(b=>b.addEventListener('click',e
   e.stopPropagation(); const m=b.parentElement, was=m.classList.contains('open');
   closeMenus(); closeToolMenus(); disarmTool(); if(!was){ m.classList.add('open','sticky');
     if(m.id==='menuViewBox') fillRangeInputs();
+    if(m.id==='menuExportBox') refreshPaperInline();
     { const mp=m.querySelector('.mpanel'); if(mp) clampDockedPanel(m, mp); } } }));
 document.getElementById('btnFileDirect').addEventListener('click',e=>{ e.stopPropagation(); closeMenus(); openDataset(); });
 document.getElementById('btnFileReopen').addEventListener('click',e=>{ e.stopPropagation(); closeMenus();
@@ -4964,6 +5239,7 @@ document.addEventListener('keydown',e=>{
     case 'z': case 'Z': setTool('tZoom'); break;
     case 'g': setTool('tLine'); break;
     case 'G': setTool('tDelLine'); break;
+    case 'x': case 'X': setTool('tCut'); break;
     case 'l': case 'L': toggleResults(); break;
     case 'f': case 'F': case 'Home': document.getElementById('zoomReset').onclick(); break;
     case '0': document.getElementById('intAuto').onclick(); break;
@@ -4972,7 +5248,7 @@ document.addEventListener('keydown',e=>{
     case 'ArrowLeft': case 'ArrowRight': {
       e.preventDefault();
       const span=S.view.pHi-S.view.pLo, st=span*0.1*(e.key==='ArrowLeft'?1:-1);
-      S.view={pHi:S.view.pHi+st, pLo:S.view.pLo+st}; draw(); break; }
+      S.view={pHi:S.view.pHi+st, pLo:S.view.pLo+st}; draw(); persistUI(); break; }
   }
 });
 segWire('segTheme',v=>{ const h=document.documentElement;
@@ -5033,8 +5309,13 @@ async function buildSpectrumFromGroup(key, gfiles){
   if(!sp.par && acqPar) sp.par=acqPar;
   if(!sp.haveFid && !sp.haveProc) return null;
   sp.source = sp.haveProc?'proc':'fid'; sp.mode = sp.source==='proc'?'real':'mag';
+  sp._dirHandle = dirHandles[key] || null;        // handle of this dataset's own folder (legacy per-dataset file)
+  sp._topHandle = groupTop[key] || null;          // top-level opened folder → where nmrspectrumviewer.json lives
   rebuildSpectrum(sp);
-  if(restoreAnnot(sp)){ rebuildSpectrum(sp); }   // re-apply with saved source/phase/sr
+  let restored=restoreLegacyAnnot(sp);            // one-time migration from <=1.11 browser-local annotations
+  if(sp._dirHandle){ const fd=await readFolderAnnot(sp._dirHandle);   // legacy folder file wins over legacy browser data
+    if(fd && applyAnnotData(sp,fd)) restored=true; }
+  if(restored){ rebuildSpectrum(sp); }            // re-apply with saved source/phase/sr
   return sp;
 }
 const MAX_SPECTRA=10;   // cap on how many spectra can be loaded at the same time
@@ -5069,7 +5350,21 @@ async function handleFiles(files){
   applyPalette();
   const g=globalRange(); if(g) S.view={pHi:g.pHi,pLo:g.pLo};
   document.getElementById('hint').style.display='none';
+  // Apply each dataset's nmrspectrumviewer.json (portable truth). Must run BEFORE
+  // any auto-save writes it back. A top-folder file (older layout / migration) is applied
+  // first, then each dataset-folder file wins.
+  if(typeof applyFolderJson==='function'){
+    const _topH=new Set(newSps.map(sp=>sp._topHandle).filter(Boolean));
+    for(const th of _topH){ await applyFolderJson(th); }
+    const _dsH=new Set(newSps.map(sp=>sp._dirHandle).filter(Boolean));
+    for(const dh of _dsH){ await applyFolderJson(dh); }
+  }
+  // The browser-local workspace owns ordering, visibility, colours, scale and the
+  // shared canvas layout. Apply it only after dataset-specific JSON has restored.
+  if(typeof applyStoredWorkspace==='function') applyStoredWorkspace(true);
   refreshActive();
+  if(typeof persistUI==='function') persistUI();
+  if(typeof resumeFolderSave==='function') resumeFolderSave();
 }
 document.getElementById('fileIn').onchange=e=>handleFiles([...e.target.files]);
 
@@ -5080,6 +5375,13 @@ document.getElementById('fileIn').onchange=e=>handleFiles([...e.target.files]);
    The first grant of a new folder is a browser security requirement and
    cannot be suppressed; drag-and-drop a folder for a fully prompt-free path. */
 let lastDirHandle=null;
+/* ---- folder auto-save state ---- */
+const dirHandles={};                 // group-key -> FileSystemDirectoryHandle (this session)
+const groupTop={};                   // group-key -> the TOP-level opened handle it lives under (where the JSON is written)
+const topHandles=new Set();          // top-level opened handles (grant read/write on the whole subtree at once)
+let _applyingFolderJson=false;       // guard: don't re-write the JSON while we're applying one we just read
+const ANNOT_FILE='nmrviewer.annot.json';        // legacy per-dataset annotation file (still read for back-compat)
+const SESSION_FILE='nmrspectrumviewer.json';    // complete state of the spectrum(s) in this dataset folder
 function idbReady(){ return typeof indexedDB!=='undefined'; }
 function idbOpen(){ return new Promise((res,rej)=>{ if(!idbReady())return rej();
   const r=indexedDB.open('nmrviewer',1);
@@ -5095,6 +5397,7 @@ async function idbGet(k){ try{ const db=await idbOpen(); return await new Promis
 async function collectDirFiles(dir){
   const files=[];
   async function walk(handle, pre){
+    try{ const gk=pre.replace(/\/+$/,''); dirHandles[gk]=handle; groupTop[gk]=dir; }catch(_){}   // remember each folder's write handle + the top folder it lives under
     for await(const entry of handle.values()){
       if(entry.kind==='file'){
         try{ const f=await entry.getFile();
@@ -5113,7 +5416,7 @@ async function collectDirFiles(dir){
 }
 async function readDirHandle(dir){
   const files=await collectDirFiles(dir);
-  if(files.length) handleFiles(files);
+  if(files.length) await handleFiles(files);   // handleFiles reads/applies nmrspectrumviewer.json for the folder
 }
 async function ensurePerm(handle, prompt){
   if(!handle||!handle.queryPermission) return true;
@@ -5125,12 +5428,15 @@ async function ensurePerm(handle, prompt){
 async function pickDirectory(){
   if(!(window.showDirectoryPicker)) return false;
   let dir;
+  // Ask for read+write in the same dialog: opening a data folder always enables
+  // dataset-state auto-save, with no separate switch.
+  const wantRW = true;
   try{
-    const opt={ id:'nmrData', mode:'read' };
+    const opt={ id:'nmrData', mode: wantRW?'readwrite':'read' };
     if(lastDirHandle) opt.startIn=lastDirHandle;          // reopen in the last folder
     dir=await window.showDirectoryPicker(opt);
   }catch(err){ return true; }                              // dismissed → nothing to do
-  lastDirHandle=dir; idbSet('lastDir', dir);
+  lastDirHandle=dir; topHandles.add(dir); idbSet('lastDir', dir);
   await readDirHandle(dir);
   return true;
 }
@@ -5138,13 +5444,107 @@ async function pickDirectory(){
 async function reopenLast(){
   if(!lastDirHandle) lastDirHandle=await idbGet('lastDir');
   if(!lastDirHandle) return false;
-  if(!(await ensurePerm(lastDirHandle, true))) return false;
+  const wantRW = true;
+  const granted = wantRW ? await ensurePermRW(lastDirHandle, true) : await ensurePerm(lastDirHandle, true);
+  if(!granted) return false;
+  topHandles.add(lastDirHandle);
   await readDirHandle(lastDirHandle);
   return true;
 }
 function openDataset(){ pickDirectory().then(done=>{ if(!done) document.getElementById('fileIn').click(); }); }
 // preload the stored handle so the picker can start in the last folder
 idbGet('lastDir').then(h=>{ if(h) lastDirHandle=h; }).catch(()=>{});
+
+/* ===================== folder auto-save (File System Access) =====================
+   When on, each spectrum's annotations are written to a small JSON file inside that
+   spectrum's own dataset folder (next to acqus / pdata), so the notes travel with
+   the data. Reading back happens automatically on load (buildSpectrumFromGroup). */
+async function ensurePermRW(handle, prompt){
+  if(!handle) return false;
+  if(!handle.queryPermission) return true;
+  const opt={mode:'readwrite'};
+  try{
+    if(await handle.queryPermission(opt)==='granted') return true;
+    if(prompt && handle.requestPermission) return (await handle.requestPermission(opt))==='granted';
+  }catch(_){}
+  return false;
+}
+async function readFolderAnnot(handle){ try{
+  if(!handle || !handle.getFileHandle) return null;
+  if(!(await ensurePerm(handle,false))) return null;              // read permission (already granted on open)
+  const fh=await handle.getFileHandle(ANNOT_FILE).catch(()=>null);
+  if(!fh) return null;
+  const f=await fh.getFile(); return JSON.parse(await f.text());
+}catch(_){ return null; } }
+/* ---- per-dataset JSON: nmrspectrumviewer.json ----
+   The file is written INTO each spectrum's own dataset folder (the expno folder that
+   holds acqus / fid / pdata), so the notes sit next to the data they describe. It contains
+   the complete dataset-specific analysis/annotation state. Shared layout and UI state live
+   only in the browser-local workspace and are intentionally not duplicated here. */
+function sessionSpectraFor(dirHandle){
+  return S.spectra.filter(sp=>sp._dirHandle===dirHandle).map(annotDataOf);
+}
+async function writeFolderJson(dirHandle){
+  if(!dirHandle || !dirHandle.getFileHandle) return false;
+  const sps=sessionSpectraFor(dirHandle);
+  if(!sps.length) return false;
+  if(!(await ensurePermRW(dirHandle,false))) return false;
+  const o={kind:'nmr-spectrum-dataset', version:PERSISTENCE_VERSION,
+    savedAt:new Date().toISOString(), spectra:sps};
+  try{
+    const fh=await dirHandle.getFileHandle(SESSION_FILE,{create:true});
+    const w=await fh.createWritable(); await w.write(JSON.stringify(o,null,1)); await w.close();
+    return true;
+  }catch(_){ return false; }
+}
+let _fjBusy=false, _fjQueued=false, _fjT=null;
+async function writeAllFolderJson(){
+  if(_fjBusy){ _fjQueued=true; return; }
+  _fjBusy=true;
+  try{
+    const dirs=new Set(S.spectra.map(sp=>sp._dirHandle).filter(Boolean));
+    for(const dh of dirs){ await writeFolderJson(dh); }
+  } finally {
+    _fjBusy=false;
+    if(_fjQueued){ _fjQueued=false; scheduleFolderJson(); }
+  }
+}
+function scheduleFolderJson(){ if(_applyingFolderJson) return;
+  clearTimeout(_fjT); _fjT=setTimeout(writeAllFolderJson,700); }
+function folderSaveCount(){ return S.spectra.filter(s=>s._dirHandle).length; }
+async function readTopJson(handle){ try{
+  if(!handle || !handle.getFileHandle) return null;
+  if(!(await ensurePerm(handle,false))) return null;          // read permission (granted on open)
+  const fh=await handle.getFileHandle(SESSION_FILE).catch(()=>null);
+  if(!fh) return null;
+  const f=await fh.getFile(); return JSON.parse(await f.text());
+}catch(_){ return null; } }
+async function applyFolderJson(handle){
+  const o=await readTopJson(handle);
+  if(!o) return false;
+  _applyingFolderJson=true;
+  try{ importDatasetState(o); }
+  finally{ _applyingFolderJson=false; }
+  return true;
+}
+// grant read/write once per subtree (top handles), falling back to per-dataset handles
+async function grantFolderWrite(prompt){
+  const tops=[...topHandles];
+  let okAny=false;
+  for(const h of tops){ if(await ensurePermRW(h,prompt)) okAny=true; }
+  // any dataset folder not covered by a granted top → request on it directly
+  for(const sp of S.spectra){ const h=sp._dirHandle; if(!h) continue;
+    if(await ensurePermRW(h,false)){ okAny=true; continue; }
+    if(prompt && await ensurePermRW(h,true)) okAny=true;
+  }
+  return okAny;
+}
+// Resume silently whenever folder-backed data is (re)loaded.
+async function resumeFolderSave(){
+  if(!folderSaveCount()) return;
+  const ok=await grantFolderWrite(false);   // no prompt: only if permission still granted
+  if(ok){ await writeAllFolderJson(); }
+}
 
 const drop=document.getElementById('drop'); let dc=0;
 window.addEventListener('dragenter',e=>{e.preventDefault();dc++;drop.classList.add('show');});
@@ -5169,7 +5569,11 @@ window.addEventListener('drop',async e=>{ e.preventDefault();dc=0;drop.classList
       const files=[];
       for(const h of handles){
         try{
-          if(h.kind==='directory'){ const fs=await collectDirFiles(h); files.push(...fs); }
+          if(h.kind==='directory'){ topHandles.add(h);
+            // best-effort: try to upgrade to write access while the drop's user gesture is
+            // still active, so folder auto-save can go straight to work with no extra click.
+            await ensurePermRW(h,true).catch(()=>{});
+            const fs=await collectDirFiles(h); files.push(...fs); }
           else if(h.kind==='file'){ const f=await h.getFile();
             try{ Object.defineProperty(f,'_rel',{value:h.name,configurable:true,writable:true}); }catch(_){ try{ f._rel=h.name; }catch(__){} }
             files.push(f); }
@@ -5238,6 +5642,122 @@ document.getElementById('btnReport').onclick=()=>{ closeMenus(); const sp=A(); i
   (sp.multiplets||[]).forEach(m=>out+=`${m.center.toFixed(4)},${m.mult},${m.n},${esc(m.Js.map(j=>j.toFixed(2)).join(' '))}\n`);
   dlBlob(out,(sp.name||'spectrum').replace(/\//g,'_')+'_report.csv','text/csv'); };
 
+/* ---------- paper-format (¹H / ¹³C NMR) characterization text ---------- */
+function pNucSup(k){ return k==='13C'?'¹³C':'¹H'; }
+function pHzList(m, jdec){ return (m.Js||[]).filter(j=>j>0.05).map(j=>(+j).toFixed(jdec)+' Hz'); }
+/* protons for a multiplet: prefer a covering integral's normalized value, else scale its own area */
+function hCountFor(sp,m){
+  const igs=sp.integrals||[];
+  for(const g of igs){ const hi=Math.max(g.a,g.b), lo=Math.min(g.a,g.b);
+    if(m.center<=hi+1e-9 && m.center>=lo-1e-9) return Math.max(1,Math.round(g.rel)); }
+  if(igs.length && m.integ>0){ const g=igs.find(x=>x.sum>0); if(g) return Math.max(1,Math.round(m.integ*(g.rel/g.sum))); }
+  return null;
+}
+function buildPaperText(sp, opts){
+  opts=opts||{};
+  const nuc=opts.nuc||nucKind(sp);
+  const mhz=opts.mhz||Math.round(refMHz(sp));
+  const solv=opts.solv||solvName(S.impSolvent)||'CDCl₃';
+  const jdec=(opts.jdec==null)?1:opts.jdec, pdec=2;
+  const head=pNucSup(nuc)+' NMR ('+mhz+' MHz, '+solv+'): δ ';
+  if(nuc==='13C'){
+    let vals=(sp.peaks||[]).map(p=>p.ppm);
+    if(!vals.length) vals=(sp.multiplets||[]).filter(m=>!m.hidden).map(m=>m.center);
+    vals=vals.slice().sort((a,b)=>b-a).map(v=>(+v).toFixed(pdec));
+    const out=[]; vals.forEach(v=>{ if(!out.length||out[out.length-1]!==v) out.push(v); });
+    return out.length ? head+out.join(', ')+'.' : head.replace(/δ $/,'').trim();
+  }
+  const ms=(sp.multiplets||[]).filter(m=>!m.hidden).slice().sort((a,b)=>b.center-a.center);
+  if(!ms.length) return head+'…';
+  const parts=ms.map(m=>{
+    const mult=m.mult||'m', isM=mult==='m';
+    let dtxt;
+    if(isM){ const hi=Math.max(m.a,m.b), lo=Math.min(m.a,m.b);
+      dtxt=(Math.abs(hi-lo)>0.005)?(hi.toFixed(pdec)+'–'+lo.toFixed(pdec)):m.center.toFixed(pdec); }
+    else dtxt=m.center.toFixed(pdec);
+    const H=hCountFor(sp,m), js=pHzList(m,jdec);
+    let inside=mult;
+    if(!isM && js.length) inside+=', J = '+js.join(', ');
+    if(H!=null) inside+=', '+H+'H';
+    return dtxt+' ('+inside+')';
+  });
+  return head+parts.join(', ')+'.';
+}
+/* plain text → rich HTML preview (italic J, keep unicode super/subscripts) */
+function paperToHTML(txt){
+  const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  return esc(txt).replace(/\bJ\b(\s*=)/g,'<i>J</i>$1').replace(/δ/g,'<i>δ</i>');
+}
+/* paper-format text is embedded in the results panel's "Paper" tab (renderPaperInto).
+   paperState persists the controls + edited text across re-renders / tab switches. */
+let paperState=null;
+function paperInit(sp){
+  return { key:sp.name,
+    nuc:(nucKind(sp)==='13C'?'13C':'1H'),
+    mhz:Math.round(refMHz(sp)),
+    solv:(typeof IMP_SOLV!=='undefined'&&IMP_SOLV.some(s=>s[0]===S.impSolvent))?S.impSolvent:'cdcl3',
+    jdec:1, text:'', dirty:false }; }
+function paperOpts(ps){ return {nuc:ps.nuc, mhz:+ps.mhz||undefined, solv:solvName(ps.solv)||'CDCl₃', jdec:Math.max(0,Math.min(3,+ps.jdec||0))}; }
+function paperRegen(sp,ps){ ps.text=buildPaperText(sp,paperOpts(ps)); ps.dirty=false; }
+function paperCopyPlain(txt){
+  (navigator.clipboard&&navigator.clipboard.writeText?navigator.clipboard.writeText(txt):Promise.reject())
+    .then(()=>toast(t('paperCopied'))).catch(()=>toast(t('msgCopyFail'))); }
+function paperCopyRich(txt){
+  const html='<span style="font-family:Georgia,serif">'+paperToHTML(txt)+'</span>';
+  try{ if(navigator.clipboard&&window.ClipboardItem){
+      navigator.clipboard.write([new ClipboardItem({'text/html':new Blob([html],{type:'text/html'}),'text/plain':new Blob([txt],{type:'text/plain'})})])
+        .then(()=>toast(t('paperCopiedRich'))).catch(()=>toast(t('msgCopyFail')));
+    } else throw 0;
+  }catch(e){ paperCopyPlain(txt); } }
+function renderPaperInto(body, sp){
+  if(!paperState || paperState.key!==sp.name){ paperState=paperInit(sp); paperRegen(sp,paperState); }
+  const ps=paperState;
+  const solvOpts=(typeof IMP_SOLV!=='undefined'?IMP_SOLV:[['cdcl3','CDCl₃']])
+    .map(s=>`<option value="${s[0]}"${s[0]===ps.solv?' selected':''}>${s[1]}</option>`).join('');
+  body.innerHTML=`<div class="paperpane">
+    <div class="paperctl">
+      <label><span class="pl">${t('paperNuc')}</span><select id="pTabNuc"><option value="1H"${ps.nuc==='1H'?' selected':''}>¹H</option><option value="13C"${ps.nuc==='13C'?' selected':''}>¹³C</option></select></label>
+      <label><span class="pl">${t('paperMHz')}</span><input type="number" id="pTabMHz" min="1" step="1" value="${ps.mhz}"></label>
+      <label><span class="pl">${t('paperSolv')}</span><select id="pTabSolv">${solvOpts}</select></label>
+      <label><span class="pl">${t('paperJDec')}</span><input type="number" id="pTabJ" min="0" max="3" step="1" value="${ps.jdec}"></label>
+    </div>
+    <div class="paper-seclbl paper-editline"><span>${t('paperEditLbl')}</span><button class="tbtn" id="pTabRegen">${t('paperRegen')}</button></div>
+    <textarea id="pTabEdit" class="paperedit" spellcheck="false">${(ps.text||'').replace(/</g,'&lt;')}</textarea>
+    <div class="paper-seclbl">${t('paperPrevLbl')}</div>
+    <div class="paperprev" id="pTabPrev">${paperToHTML(ps.text||'')}</div>
+    <div class="paperbtns"><span class="grow"></span><button class="tbtn" id="pTabCopy">${t('paperCopy')}</button><button class="tbtn main" id="pTabCopyRich">${t('paperCopyRich')}</button></div>
+  </div>`;
+  const nuc=body.querySelector('#pTabNuc'), mhz=body.querySelector('#pTabMHz'),
+        solv=body.querySelector('#pTabSolv'), jd=body.querySelector('#pTabJ'),
+        edit=body.querySelector('#pTabEdit'), prev=body.querySelector('#pTabPrev'),
+        regenBtn=body.querySelector('#pTabRegen');
+  const autoGrow=()=>{ edit.style.height='auto'; edit.style.height=Math.min(220,edit.scrollHeight+2)+'px'; };
+  const rebuild=()=>{ ps.nuc=nuc.value; ps.mhz=+mhz.value; ps.solv=solv.value; ps.jdec=+jd.value;
+    paperRegen(sp,ps); ps.dirty=false; edit.value=ps.text; prev.innerHTML=paperToHTML(ps.text);
+    regenBtn.classList.remove('attn'); autoGrow(); };
+  // control change: don't clobber manual edits — flag Regenerate instead of silently overwriting
+  const onCtrl=()=>{ ps.nuc=nuc.value; ps.mhz=+mhz.value; ps.solv=solv.value; ps.jdec=+jd.value;
+    if(ps.dirty) regenBtn.classList.add('attn'); else rebuild(); };
+  [nuc,mhz,solv,jd].forEach(el=>el.addEventListener('input',onCtrl));
+  regenBtn.onclick=()=>{ if(ps.dirty && !window.confirm(t('paperRegenWarn'))) return; rebuild(); };
+  edit.addEventListener('input',()=>{ ps.text=edit.value; ps.dirty=true; prev.innerHTML=paperToHTML(edit.value);
+    regenBtn.classList.add('attn'); autoGrow(); });
+  body.querySelector('#pTabCopy').onclick=()=>paperCopyPlain(edit.value);
+  body.querySelector('#pTabCopyRich').onclick=()=>paperCopyRich(edit.value);
+  requestAnimationFrame(autoGrow);   // size the editor to its content once laid out
+}
+/* the paper panel is always shown in the Export menu; (re)render it whenever the menu opens */
+function refreshPaperInline(){
+  const box=document.getElementById('paperInline'); if(!box) return;
+  const sp=A();
+  if(!sp){ box.innerHTML=`<div class="paperempty">${t('toolNeedOne')}</div>`; return; }
+  renderPaperInto(box, sp);
+}
+document.getElementById('btnPaper').onclick=e=>{ e.stopPropagation();
+  const ta=document.querySelector('#paperInline #pTabEdit'); if(ta) ta.focus(); };
+/* keep the Export menu open while interacting with the embedded paper panel */
+document.getElementById('paperInline').addEventListener('click',e=>e.stopPropagation());
+
 /* copy the current plot image to the clipboard (no download) */
 document.getElementById('btnCopyImg').onclick=()=>{ closeMenus(); if(!visibleSpectra().length)return;
   const done=ok=>{ const b=document.getElementById('btnCopyImg'); };
@@ -5251,8 +5771,8 @@ document.getElementById('btnCopyImg').onclick=()=>{ closeMenus(); if(!visibleSpe
   }catch(e){ toast(t('msgCopyFail')); }
 };
 
-/* ---------- session (annotations + display state) as JSON ---------- */
-const SHOW_FLAGS=['showInsets','showNames','showPeaks','showIntegs','showShades','showMarks','showText','showMults','showMultSources','showThresholdLine','showLanes','showLines','showZooms','showMinimap','zoomLeaders','laneOverflow'];
+/* ---------- portable work file (dataset states + workspace) as JSON ---------- */
+const SHOW_FLAGS=['showInsets','showNames','showPeaks','showIntegs','showShades','showMarks','showText','showMults','showMultSources','showThresholdLine','showLanes','showLines','showZooms','showMinimap','zoomLeaders','laneOverflow','showTitle'];
 function uiState(){ const o={
     view:{pHi:S.view.pHi,pLo:S.view.pLo}, layout:S.layout, palette:S.palette, monoBase:S.monoBase,
     lineW:S.lineW, ppmDigits:S.ppmDigits, pkDigits:S.pkDigits, fontScale:S.fontScale, nameScale:S.nameScale, axisScale:S.axisScale, markSize:S.markSize, plotFont:S.plotFont,
@@ -5263,7 +5783,9 @@ function uiState(){ const o={
     imageBorder:S.imageBorder, imageBorderColor:S.imageBorderColor, imageBorderWidth:S.imageBorderWidth, imageBorderStyle:S.imageBorderStyle, integDigits:S.integDigits,
     customPalette:S.customPalette||[],
     impSolvent:S.impSolvent, impTol:S.impTol, impTolC:S.impTolC, showImpurities:S.showImpurities, impPins:S.impPins||[],
-    lines:S.lines||[], zooms:S.zooms||[], flags:{} };
+    lines:S.lines||[], zooms:S.zooms||[],
+    figTitle:S.figTitle, titleSize:S.titleSize, titleBold:S.titleBold, cuts:S.cuts||[], cutStyle:S.cutStyle,
+    cutColor:S.cutColor, cutWidth:S.cutWidth, cutWave:S.cutWave, cutGap:S.cutGap, flags:{} };
   SHOW_FLAGS.forEach(f=>o.flags[f]=S[f]); return o; }
 function applyUIState(o, withView){
   if(!o) return;
@@ -5313,42 +5835,95 @@ function applyUIState(o, withView){
   if(Array.isArray(o.impPins)) S.impPins=o.impPins;
   if(Array.isArray(o.lines)) S.lines=o.lines;
   if(Array.isArray(o.zooms)) S.zooms=o.zooms;
+  if('figTitle' in o) S.figTitle=o.figTitle;
+  if(typeof o.titleSize==='number') S.titleSize=o.titleSize;
+  if(typeof o.titleBold==='boolean') S.titleBold=o.titleBold;
+  if(['wave','zigzag','slash'].includes(o.cutStyle)) S.cutStyle=o.cutStyle;
+  if('cutColor' in o) S.cutColor=o.cutColor;
+  if(typeof o.cutWidth==='number') S.cutWidth=o.cutWidth;
+  if(typeof o.cutWave==='number') S.cutWave=o.cutWave;
+  if(typeof o.cutGap==='number') S.cutGap=o.cutGap;
+  if(Array.isArray(o.cuts)) S.cuts=o.cuts.filter(c=>c&&isFinite(c.a)&&isFinite(c.b)).map(c=>({a:c.a,b:c.b}));
+  else if(o.cut && isFinite(o.cut.a) && isFinite(o.cut.b)) S.cuts=[{a:o.cut.a,b:o.cut.b}];   // migrate legacy single cut
   if(withView && o.view && isFinite(o.view.pHi) && isFinite(o.view.pLo)) S.view={pHi:o.view.pHi,pLo:o.view.pLo};
 }
-function exportSession(){
-  const o=uiState();
-  o.version=29; o.savedAt=new Date().toISOString();
-  o.spectra=S.spectra.map(sp=>({ sig:sigKey(sp), name:sp.name, sr:sp.sr||0, mode:sp.mode, source:sp.source,
-    color:sp.color, colorLocked:!!sp.colorLocked, yscale:sp.yscale||1, vzoom:sp.vzoom!==false,
-    peaks:sp.peaks||[], integrals:sp.integrals||[], multiplets:sp.multiplets||[], shades:sp.shades||[], images:sp.images||[] }));
-  dlBlob(JSON.stringify(o,null,1),'nmr_session_'+new Date().toISOString().slice(0,10)+'.nmrsession.json','application/json');
+function workspaceSpectrumState(sp){ return {
+  sig:sigKey(sp), color:sp.color, colorLocked:!!sp.colorLocked,
+  visible:sp.visible!==false, yscale:sp.yscale||1, vzoom:sp.vzoom!==false
+}; }
+function workspaceState(){ const o=uiState();
+  o.kind='nmr-spectrum-workspace'; o.version=PERSISTENCE_VERSION;
+  o.spectra=S.spectra.map(workspaceSpectrumState);
+  o.activeSig=A()?sigKey(A()):null; o.activeIndex=S.active; o.nextColor=S.nextColor;
+  o.resTab=S.resTab; o.asgSub=S.asgSub; o.docked=!!S.docked;
+  o.showJTree=!!S.showJTree; o.integShift=S.integShift||0;
+  return o;
 }
-function importSession(obj){
-  if(!obj || typeof obj!=='object'){ toast(t('msgBadSession')); return; }
-  // write per-spectrum annotations to localStorage keyed by signature so that
-  // matching data restores them now *and* on future loads
-  (obj.spectra||[]).forEach(e=>{ if(!e.sig) return;
-    try{ const data={name:e.name, sr:e.sr||0, mode:e.mode, color:e.color, colorLocked:!!e.colorLocked, source:e.source,
-      images:e.images||[], peaks:e.peaks||[], integrals:e.integrals||[], multiplets:e.multiplets||[], shades:e.shades||[]};
-      localStorage.setItem(e.sig, JSON.stringify(data)); }catch(_){}
+function applyWorkspaceState(o, withView){
+  if(!o||typeof o!=='object') return;
+  applyUIState(o,withView);
+  const saved=Array.isArray(o.spectra)?o.spectra:[];
+  if(saved.length&&S.spectra.length){
+    const bySig=new Map(); saved.forEach((e,i)=>{ if(e&&e.sig&&!bySig.has(e.sig)) bySig.set(e.sig,{e,i}); });
+    S.spectra.sort((a,b)=>{
+      const aa=bySig.get(sigKey(a)), bb=bySig.get(sigKey(b));
+      return (aa?aa.i:Number.MAX_SAFE_INTEGER)-(bb?bb.i:Number.MAX_SAFE_INTEGER); });
+    S.spectra.forEach(sp=>{ const rec=bySig.get(sigKey(sp)); if(!rec)return; const e=rec.e;
+      if(e.color){ sp.color=e.color; sp.colorLocked=!!e.colorLocked; }
+      if(typeof e.visible==='boolean') sp.visible=e.visible;
+      if(typeof e.yscale==='number'&&isFinite(e.yscale)) sp.yscale=e.yscale;
+      if(typeof e.vzoom==='boolean') sp.vzoom=e.vzoom;
+    });
+    let active=-1;
+    if(o.activeSig) active=S.spectra.findIndex(sp=>sigKey(sp)===o.activeSig);
+    if(active<0&&Number.isInteger(o.activeIndex)&&o.activeIndex>=0&&o.activeIndex<S.spectra.length) active=o.activeIndex;
+    if(active>=0) S.active=active;
+  }
+  if(Number.isInteger(o.nextColor)&&o.nextColor>=0) S.nextColor=o.nextColor;
+  if(['peaks','integ','mult','assign'].includes(o.resTab)) S.resTab=o.resTab;
+  if(['text','mark','shade','conn','img'].includes(o.asgSub)) S.asgSub=o.asgSub;
+  if(typeof o.docked==='boolean') S.docked=o.docked;
+  if(typeof o.showJTree==='boolean') S.showJTree=o.showJTree;
+  if(typeof o.integShift==='number'&&isFinite(o.integShift)) S.integShift=o.integShift;
+  if(typeof applyDock==='function') applyDock();
+}
+function importDatasetState(obj){
+  if(!obj||typeof obj!=='object') return false;
+  const entries=Array.isArray(obj.spectra)?obj.spectra:(obj.sig?[obj]:[]);
+  if(!entries.length) return false;
+  const bySig=new Map(); entries.forEach(e=>{ if(e&&e.sig) bySig.set(e.sig,e); });
+  let applied=false;
+  S.spectra.forEach(sp=>{ const e=bySig.get(sigKey(sp)); if(!e)return;
+    if(applyAnnotData(sp,e)){ rebuildSpectrum(sp); applied=true; }
   });
-  // re-apply to currently loaded spectra by signature
+  return applied;
+}
+function exportSession(){
+  const o=workspaceState();
+  o.kind='nmr-spectrum-work-file'; o.version=PERSISTENCE_VERSION; o.savedAt=new Date().toISOString();
+  o.spectra=S.spectra.map(sp=>Object.assign(annotDataOf(sp),workspaceSpectrumState(sp)));
+  dlBlob(JSON.stringify(o,null,1),'nmr_workspace_'+new Date().toISOString().slice(0,10)+'.nmrworkspace.json','application/json');
+}
+function importSession(obj, opts){
+  opts=opts||{};
+  if(!obj || typeof obj!=='object'){ if(!opts.silent) toast(t('msgBadSession')); return; }
+  // Re-apply the complete per-dataset state to currently loaded matching spectra.
+  // It is then mirrored to each writable dataset JSON; no per-spectrum localStorage copy is made.
   const bySig={}; (obj.spectra||[]).forEach(e=>bySig[e.sig]=e);
   S.spectra.forEach(sp=>{ const e=bySig[sigKey(sp)]; if(!e) return;
-    if(typeof e.sr==='number') sp.sr=e.sr;
-    if(e.mode) sp.mode=e.mode;
+    applyAnnotData(sp,e);
     if(e.color){ sp.color=e.color; sp.colorLocked=!!e.colorLocked; }
+    if(typeof e.visible==='boolean') sp.visible=e.visible;
     if(typeof e.yscale==='number') sp.yscale=e.yscale;
     if(typeof e.vzoom==='boolean') sp.vzoom=e.vzoom;
-    sp.peaks=e.peaks||[]; sp.integrals=e.integrals||[]; sp.multiplets=e.multiplets||[]; sp.shades=e.shades||[];
-    if(e.images) sp.images=e.images;
-    finalize(sp);
+    rebuildSpectrum(sp);
   });
-  applyUIState(obj, true);
+  applyWorkspaceState(obj,true);
   // reflect restored global state in the UI
   if(typeof rebuildPaletteUI==='function') rebuildPaletteUI();
   syncUIControls(); renderImgs(); renderResults(); persistUI(); refreshActive();
-  toast(t('msgSessionLoaded'));
+  if(typeof scheduleFolderJson==='function') scheduleFolderJson();
+  if(!opts.silent) toast(t('msgSessionLoaded'));
 }
 document.getElementById('btnSession').onclick=()=>{ closeMenus(); exportSession(); };
 document.getElementById('btnLoadSession').onclick=()=>{ closeMenus(); document.getElementById('sessionIn').click(); };
@@ -5356,14 +5931,20 @@ document.getElementById('sessionIn').onchange=e=>{ const f=e.target.files&&e.tar
   const r=new FileReader(); r.onload=()=>{ try{ pushUndo(); importSession(JSON.parse(r.result)); }catch(_){ toast(t('msgBadSession')); } };
   r.readAsText(f); e.target.value=''; };
 
-/* ---------- lightweight global-UI persistence (localStorage) ---------- */
+/* ---------- preferences + multi-spectrum workspace (localStorage) ---------- */
+const WORKSPACE_KEY='nmrviewer:workspace';
+let _storedWorkspace=null;
 let _persistT=null;
 function persistUI(){ clearTimeout(_persistT); _persistT=setTimeout(()=>{
-  try{ localStorage.setItem('nmrviewer:ui', JSON.stringify(uiState())); }catch(_){}
+  try{ _storedWorkspace=workspaceState(); localStorage.setItem(WORKSPACE_KEY, JSON.stringify(_storedWorkspace)); }catch(_){}
 },250); }
-function restoreUI(){ try{ const raw=localStorage.getItem('nmrviewer:ui'); if(!raw) return;
-  applyUIState(JSON.parse(raw), false); }catch(_){} }
-window.addEventListener('beforeunload',()=>{ try{ localStorage.setItem('nmrviewer:ui', JSON.stringify(uiState())); }catch(_){} });
+function restoreUI(){ try{
+  // nmrviewer:ui is the <=1.11 global-UI key; reading it keeps existing users' settings.
+  const raw=localStorage.getItem(WORKSPACE_KEY)||localStorage.getItem('nmrviewer:ui'); if(!raw)return;
+  _storedWorkspace=JSON.parse(raw); applyWorkspaceState(_storedWorkspace,false);
+}catch(_){} }
+function applyStoredWorkspace(withView){ if(_storedWorkspace) applyWorkspaceState(_storedWorkspace,!!withView); }
+window.addEventListener('beforeunload',()=>{ try{ _storedWorkspace=workspaceState(); localStorage.setItem(WORKSPACE_KEY, JSON.stringify(_storedWorkspace)); }catch(_){} });
 
 // reflect S display-state into the various sidebar/menu controls
 function syncUIControls(){
@@ -5372,7 +5953,12 @@ function syncUIControls(){
   set('btnShowIntegs',S.showIntegs); set('btnShowShades',S.showShades); set('btnShowMults',S.showMults);
   set('btnShowLines',S.showLines); set('btnShowZooms',S.showZooms); set('btnShowLanes',S.showLanes);
   set('btnMinimap',S.showMinimap); set('btnZoomLeaders',S.zoomLeaders); set('btnOverflow',S.laneOverflow);
-  set('tgThreshold',S.showThresholdLine);
+  set('tgThreshold',S.showThresholdLine); set('btnShowTitle',S.showTitle);
+  const fti=document.getElementById('figTitleInput'); if(fti){ fti.value=(S.figTitle||''); fti.placeholder=autoTitle()||'¹H NMR (CDCl₃)'; }
+  const tsz=document.getElementById('titleSize'); if(tsz){ tsz.value=(S.titleSize||15); const v=document.getElementById('tszv'); if(v) v.textContent=(S.titleSize||15)+'pt'; }
+  { const stw=document.getElementById('segTitleWeight'); if(stw) stw.querySelectorAll('button').forEach(b=>b.classList.toggle('on', (b.dataset.v==='bold')===!!S.titleBold)); }
+  { const scs=document.getElementById('segCutStyle'); if(scs) scs.querySelectorAll('button').forEach(b=>b.classList.toggle('on', b.dataset.v===(S.cutStyle||'wave'))); }
+  if(typeof syncCutStyleUI==='function') syncCutStyleUI();
   const th=document.getElementById('thrSlider'); if(th){ th.value=Math.round(S.thr*100); const v=document.getElementById('thrVal'); if(v) v.textContent=Math.round(S.thr*100)+'%'; }
   const lw=document.getElementById('lineW'); if(lw){ lw.value=S.lineW; const v=document.getElementById('lwv'); if(v) v.textContent=(+S.lineW).toFixed(1); }
   const pd=document.getElementById('ppmDigits'); if(pd){ pd.value=S.ppmDigits; const v=document.getElementById('digv'); if(v) v.textContent=String(S.ppmDigits); }
@@ -5417,6 +6003,21 @@ function toast(msg){ let el=document.getElementById('toast');
    a large rework bumps the major (→ 2.0). Badge shows v + CHANGELOG[0].v.
    Fields: v (version string), date (YYYY-MM-DD), en[] / ja[] bullet lists. */
 const CHANGELOG=[
+  { v:'1.12', date:'2026-07-22',
+    en:['Added a Cut tool that collapses one or more dragged δ regions and marks each omission with a wave, zigzag or slash break. Break spacing, wave, thickness and colour can be adjusted, and the most recent cut or all cuts can be cleared.',
+        'Added an optional figure title. The automatically generated nucleus / solvent title can be replaced with custom text, and its size and weight can be adjusted for display and image output.',
+        'Added paper-format text generation for the active ¹H or ¹³C spectrum. Nucleus, frequency, solvent and J precision can be adjusted; the generated description can be edited, previewed and copied as plain or formatted text for Word.',
+        'Reorganised the former File and Export menus into a single Data menu with clear Import and Export groups. Zoom view and the new Cut tool are now grouped under Other, with contextual help for folder and analysis-data operations.',
+        'Separated persistence responsibilities: each dataset now keeps its complete spectrum-specific analysis data in nmrspectrumviewer.json, while localStorage keeps application preferences and the lightweight multi-spectrum workspace.',
+        'Dataset JSON now includes phase, processing settings, free marks, free text, mark positions, images, peaks, integrals, multiplets and shaded regions. It is loaded and saved automatically whenever folder permission is available; existing browser-local annotations and older JSON files remain readable for migration.',
+        'The browser workspace now restores spectrum order, the active and visible spectra, colours, vertical scales, the ppm view and shared figure layout. Portable analysis-data JSON combines the analyses and workspace for sharing, transfer and explicit backup.'],
+    ja:['「カット」ツールを追加しました。ドラッグした1か所以上のδ範囲を省略し、波線・ジグザグ・斜線の切れ目で表示できます。切れ目の間隔、うねり、太さ、色を調整でき、直前のカット取消と一括解除にも対応します。',
+        '図タイトルを追加しました。核種と溶媒から自動生成したタイトルを任意の文字へ変更でき、大きさと太さも調整して画面表示や画像出力へ反映できます。',
+        '選択中の¹H／¹³Cスペクトルから「論文形式テキスト」を生成できるようにしました。核種、測定周波数、溶媒、J値の小数桁を指定し、生成文の編集・プレビュー・プレーンコピー・Word向け書式付きコピーができます。',
+        '従来の「ファイル」と「出力」を「データ」メニューへ統合し、「読み込み」「書き出し」に整理しました。拡大図と新しいカットは「その他」ツールへまとめ、フォルダと解析データの操作にはヘルプ表示を追加しました。',
+        '保存先の役割を分離しました。各データセット固有の完全な解析データは nmrspectrumviewer.json、言語・テーマなどのアプリ設定と軽量な複数スペクトルワークスペースは localStorage に保存します。',
+        'データセットJSONへ位相、処理設定、自由マーク、自由テキスト、マーク位置、画像、ピーク、積分、多重線、シェードを保存するようにしました。フォルダへの権限があれば自動で読み書きし、従来のブラウザ内注釈と旧形式JSONも移行用に読み込めます。',
+        'ブラウザのワークスペースから、スペクトル順、選択・表示状態、色、縦倍率、ppm表示範囲、図全体の配置を復元します。持ち運び用の解析データJSONには解析内容とワークスペースをまとめ、共有・別PCへの移動・明示的なバックアップに利用できます。'] },
   { v:'1.11', date:'2026-07-18',
     en:['Marks and text labels can now be placed anywhere on the plot: with the ● or ✎ tool, clicking empty space places a free-standing mark / label at that spot (clicking near a picked peak still attaches to the peak as before). Free annotations can be dragged to reposition, edited by re-clicking, removed with the delete tools, and are listed in the results panel and saved with the workspace.',
         'Renamed the “Pick Peaks” tab to “Peaks” (Japanese UI) and the Assignment image action to “Add image from file”.',
@@ -5449,7 +6050,7 @@ const CHANGELOG=[
     ja:['ピーク検出・積分・多重線のドロップダウンを「作成／削除／表示設定」の作業別セクションに再編し、アイコン・表記・インデントを帰属パネルと統一しました。',
         '帰属パネルを「注釈／不純物」タブと、マーク・テキストラベル・塗りつぶし・コネクタ・画像の種類別カードに再構成し、各カードに表示切り替え・一括削除・設定ポップオーバーを追加しました。',
         '積分値の重なりを避けて配置する、デルタ型の引き出し線と縦書き値を用いた「スタイル3」を追加しました。',
-        'コネクタの線種と画像の枠線（表示・色・太さ・線種）を設定できるようにし、新しい設定をワークスペース履歴とセッションJSONへ保存するようにしました。',
+        'コネクタの線種と画像の枠線（表示・色・太さ・線種）を設定できるようにし、新しい設定をワークスペース履歴と解析データJSONへ保存するようにしました。',
         'マニュアルの更新履歴をバージョン別から日付別の項目表示へ変更し、関連するツールパネルの説明も更新しました。'] },
   { v:'1.7', date:'2026-07-11',
     en:['Added independent Style 1 / Style 2 display selectors for peak labels and integrals.',
@@ -5491,7 +6092,7 @@ const CHANGELOG=[
         'Rewrote the impurity workflow and made manual shortcut labels use ⌘ on Mac and Ctrl on Windows / Linux.'],
     ja:['マニュアルのホイール・ズーム・ドラッグ・パンの説明を、実際のプロット／δ軸操作に合わせて修正しました。',
         '取り消し／やり直しを画面全体の履歴に拡張し、画像、コネクタ、ズーム挿入図、表示設定、処理設定、スペクトルの追加・削除にも対応しました。',
-        '複数スペクトル時と出力時の対象を明記し、セッションJSONは別途読み込んだ元データへ状態を復元するものだと明確化しました。',
+        '複数スペクトル時と出力時の対象を明記し、解析データJSONは別途読み込んだ元データへ状態を復元するものだと明確化しました。',
         '不純物確認の手順を実際のUIに合わせ、マニュアルの修飾キー表記をMacでは⌘、Windows／LinuxではCtrlにしました。'] },
   { v:'1.1', date:'2026-07-03',
     en:['Zoom insets now render multiplet coupling trees. Previously the splitting diagram was drawn only on the main plot, so multiplets were missing inside a magnified zoom view; the inset now shows the full tree (with J values) using the inset geometry.',
@@ -5849,7 +6450,7 @@ const MANUAL_FIGS = {
       <text x="272" y="73" fill="var(--ink)">CSV</text>
       <rect x="236" y="92" width="168" height="26" rx="7" fill="var(--bg)" stroke="var(--line)"/>
       <rect x="248" y="99" width="12" height="12" rx="2" fill="var(--mult)" opacity=".85"/>
-      <text x="272" y="109" fill="var(--ink)">${J?'セッション JSON':'Session JSON'}</text>
+      <text x="272" y="109" fill="var(--ink)">${J?'解析データ JSON':'Analysis data JSON'}</text>
     </g>
     <path d="M412 69 H454 M444 62 L458 69 L444 76" stroke="var(--trace)" fill="none" stroke-width="2"/>
     <rect x="476" y="24" width="128" height="90" rx="10" fill="var(--panel)" stroke="var(--line)"/>
@@ -5869,8 +6470,15 @@ const MANUAL = {
       {ul:[
         `一番かんたんなのは<b>ドラッグ＆ドロップ</b> ${manIc('drop')} です。Bruker のデータフォルダ（<span class="kbd">fid</span> と <span class="kbd">acqus</span>、あれば <span class="kbd">pdata/1/</span> を含む）をウィンドウにドロップすると、そのまま読み込まれます。`,
         '複数のデータフォルダ、あるいはそれらをまとめた親フォルダをドロップすれば、一度にまとめて読み込めます。',
-        `ダイアログから選びたいときは「ファイル」メニュー ${manIc('folder')} →「フォルダを開く」を使います。`,
+        `ダイアログから選びたいときは「データ」メニュー ${manIc('folder')} →「フォルダを開く」を使います。`,
         '同時に表示できるスペクトルには上限があります。上限に達した場合は、いくつか削除してから追加してください。',
+      ]},
+      {sub:'データと作業内容の保存'},
+      {ul:[
+        '<b>Bruker 元データ</b>：FID・処理済みスペクトル・測定パラメータの正本です。アプリはブラウザ上で読み取るだけで、インターネットへ送信しません。',
+        '<b>データフォルダ内の nmrspectrumviewer.json</b>：位相、処理設定、ピーク、積分、多重線、注釈、自由テキスト／マーク、画像など、そのスペクトル固有の作業内容です。フォルダを開いて書き込みを許可すると、自動作成・自動更新されます。オンにする操作は不要です。',
+        '<b>ブラウザのワークスペース</b>：言語・テーマに加え、複数スペクトルの順序、表示、色、縦倍率、ppm範囲、図全体の配置を localStorage に自動保存します。ブラウザの保存データを消去すると、この配置は失われます。',
+        `<b>解析データ（JSON）</b> ${manIc('session')}：共有・別PCへの移動・明示的なバックアップ用です。「データ」メニューの<b>書き出し</b>から作成し、元データを開いた後に<b>読み込み</b>から復元します。元のスペクトル数値は含みません。`,
       ]},
       {sub:'処理済み or 生 FID'},
       {ul:[
@@ -5883,7 +6491,7 @@ const MANUAL = {
       {fig:'ui'},
       {ul:[
         '<b>① 左サイドバー</b>：読み込んだスペクトルの一覧、取得情報（Acquisition）、処理（窓関数・グループディレイ補正）、位相の各パネル。スペクトル一覧では表示/非表示や色を切り替えられます。',
-        '<b>② メニュー＆ツールバー</b>：上段が「ファイル」「出力」「表示」「設定」メニュー、下段が校正・ピーク・積分などの<b>解析ツール</b>です。',
+        '<b>② メニュー＆ツールバー</b>：上段が「データ（読み込み／書き出し）」「表示」「設定」メニュー、下段が校正・ピーク・積分などの<b>解析ツール</b>です。',
         '<b>③ プロット</b>：スペクトル本体。スペクトル上のホイールは縦強度、δ 軸上のホイールは横軸ズームです。通常ドラッグは範囲ズーム、δ 軸ドラッグ（または右ドラッグ／Shift＋ドラッグ）はパンです。',
         `<b>④ 結果リスト</b>：検出したピーク・積分・多重度・帰属の一覧。ふだんは左サイドバーの下部にドッキングして表示されます。ヘッダーの ⤢ でプロット上にフロート（分離）でき、フロート中に × を押すとサイドバーに戻ります。表示メニューの ${manIc('eye')} で開閉できます。`,
       ]},
@@ -6028,14 +6636,15 @@ const MANUAL = {
       ]},
     ]},
 
-    { icon:'export', tab:'出力と保存', h:'出力と保存', blocks:[
-      {p:'解析した図やデータは「出力」メニューから書き出せます。'},
+    { icon:'export', tab:'書き出し', h:'書き出し', blocks:[
+      {p:'解析した図・数値・解析データは「データ」メニューの「書き出し」から出力できます。'},
       {fig:'exportfig'},
       {ul:[
         `<b>画像（PNG）</b> ${manIc('png')} ／ <b>クリップボードにコピー</b> ${manIc('image')}：現在の表示をそのまま画像化します。スライドや文書に貼り付けられます。`,
         `<b>スペクトル（CSV）</b> ${manIc('csv')}：選択中スペクトル1本の δ と強度を書き出します。`,
         `<b>解析レポート（CSV）</b> ${manIc('report')}：選択中スペクトル1本のピーク・積分・多重度などを書き出します。PNG／クリップボードは、画面に見えている全スペクトルを含みます。`,
-        `<b>セッションの保存（JSON）</b> ${manIc('session')}：各スペクトルを識別する情報、注釈、表示設定を保存します。スペクトルの数値配列や元のBrukerファイル自体はJSONに含まれません。再開時は元データを読み込んだうえで<b>セッションの読み込み</b> ${manIc('load')} を実行すると、一致するスペクトルへ状態が復元されます。`,
+        `<b>論文形式テキスト</b>：選択中スペクトルの核種、周波数、溶媒、δ、多重度、J、積分値を論文記載形式にまとめ、プレーン／書式付きでコピーできます。`,
+        `<b>解析データを書き出す（JSON）</b> ${manIc('session')}：共有・別PCへの移動・バックアップ用に、全スペクトルの解析データとワークスペースを1ファイルへ保存します。元データを開いた後、「読み込み」の<b>解析データを読み込む（JSON）</b> ${manIc('load')} で復元します。`,
       ]},
     ]},
 
@@ -6068,8 +6677,15 @@ const MANUAL = {
       {ul:[
         `The easiest way is <b>drag &amp; drop</b> ${manIc('drop')}. Drop a Bruker dataset folder (containing <span class="kbd">fid</span> and <span class="kbd">acqus</span>, plus <span class="kbd">pdata/1/</span> if present) onto the window and it loads straight away.`,
         'Drop several dataset folders, or one parent folder holding them, to import them all at once.',
-        `To pick from a dialog instead, use the File menu ${manIc('folder')} → “Open folder”.`,
+        `To pick from a dialog instead, use the Data menu ${manIc('folder')} → “Open folder”.`,
         'There is a limit on how many spectra can be shown at once. If you reach it, remove a few before adding more.',
+      ]},
+      {sub:'Data and saving your work'},
+      {ul:[
+        '<b>Original Bruker data</b>: the source of truth for FID, processed spectra and acquisition parameters. The app reads it locally in the browser and never uploads it.',
+        '<b>nmrspectrumviewer.json in each data folder</b>: the spectrum-specific work — phase, processing, peaks, integrals, multiplets, annotations, free text/marks and images. Once you open a folder and allow writing, this file is created and updated automatically; there is no on/off step.',
+        '<b>Browser workspace</b>: language/theme plus spectrum order, visibility, colours, vertical scales, ppm range and shared figure layout are saved automatically in localStorage. Clearing browser data removes this layout.',
+        `<b>Analysis data (JSON)</b> ${manIc('session')}: for sharing, moving to another computer or an explicit backup. Create it under <b>Export</b> in the Data menu, then restore it from <b>Import</b> after opening the original data. It does not contain the original spectral arrays.`,
       ]},
       {sub:'Processed or raw FID'},
       {ul:[
@@ -6082,7 +6698,7 @@ const MANUAL = {
       {fig:'ui'},
       {ul:[
         '<b>① Left sidebar</b>: the list of loaded spectra, Acquisition info, Processing (window, group-delay correction) and Phase. In the spectra list you can toggle visibility and colour.',
-        '<b>② Menus &amp; toolbar</b>: the top row holds the File, Export, View and Settings menus; the lower row holds the <b>analysis tools</b> (calibrate, peaks, integrals, …).',
+        '<b>② Menus &amp; toolbar</b>: the top row holds Data (Import / Export), View and Settings; the lower row holds the <b>analysis tools</b> (calibrate, peaks, integrals, …).',
         '<b>③ Plot</b>: over the spectrum, the wheel changes vertical intensity; over the δ-axis, it zooms the horizontal range. A normal drag zooms to a range; drag the δ-axis (or right-drag / Shift-drag) to pan.',
         `<b>④ Results list</b>: a table of detected peaks, integrals, multiplets and assignments. By default it is docked at the bottom of the left sidebar. Use ⤢ in its header to float it over the plot; pressing × while floating returns it to the sidebar. Toggle it with ${manIc('eye')} in the View menu.`,
       ]},
@@ -6226,14 +6842,15 @@ const MANUAL = {
       ]},
     ]},
 
-    { icon:'export', tab:'Export & save', h:'Export & save', blocks:[
-      {p:'Export the figure and data from the Export menu.'},
+    { icon:'export', tab:'Export', h:'Export', blocks:[
+      {p:'Export figures, values and portable analysis data from Export in the Data menu.'},
       {fig:'exportfig'},
       {ul:[
         `<b>Image (PNG)</b> ${manIc('png')} / <b>Copy to clipboard</b> ${manIc('image')}: turn the current view into an image to paste into slides or documents.`,
         `<b>Spectrum (CSV)</b> ${manIc('csv')}: export δ and intensity for the one active spectrum.`,
         `<b>Analysis report (CSV)</b> ${manIc('report')}: export peaks, integrals and multiplets for the one active spectrum. PNG and clipboard output include every spectrum currently visible on screen.`,
-        `<b>Save session (JSON)</b> ${manIc('session')}: save spectrum identifiers, annotations and display settings. The spectral arrays and original Bruker files are not embedded. To resume, load the original data first, then use <b>Load session</b> ${manIc('load')} to restore state onto matching spectra.`,
+        `<b>Paper-format text</b>: format the active spectrum's nucleus, frequency, solvent, δ, multiplicity, J and integral values for a paper, then copy it as plain or formatted text.`,
+        `<b>Export analysis data (JSON)</b> ${manIc('session')}: combine every spectrum's analysis data and the workspace into one file for sharing, moving or backup. After opening the original data, restore it with <b>Import analysis data (JSON)</b> ${manIc('load')} under Import.`,
       ]},
     ]},
 
@@ -6795,6 +7412,7 @@ html[data-theme="light"] #toolbar .menu .mbtn:hover{
     {ids:['tgZooms','btnShowZooms'],key:'showZooms',has:()=>!!(S.zooms||[]).length},
     {ids:['tgLeaders','btnZoomLeaders'],key:'zoomLeaders',has:()=>!!(S.zooms||[]).length},
     {ids:['btnNames'],key:'showNames',has:()=>!!(S.spectra||[]).length},
+    {ids:['btnShowTitle'],key:'showTitle',has:()=>!!(S.spectra||[]).length},
     {ids:['btnInsets'],key:'showInsets',has:()=>allSpectraHave(sp=>imgsOf(sp).length)},
     {ids:['btnShowShades'],key:'showShades',has:()=>allSpectraHave(sp=>(sp.shades||[]).length)},
     {ids:['btnShowLines'],key:'showLines',has:()=>!!(S.lines||[]).length},
@@ -6831,8 +7449,7 @@ html[data-theme="light"] #toolbar .menu .mbtn:hover{
   moveToHeading('#tmShift .peak-settings-section .peak-work-heading',['tgPeaks']);
   moveToHeading('#tmInteg .peak-settings-section .peak-work-heading',['tgInteg','tgIntegCurve']);
   moveToHeading('#tmMult .peak-settings-section .peak-work-heading',['tgMult','tgMultSources']);
-  const zoomHeading=document.querySelector('#tmZoom .tmhead[data-i18n="hdVisibility"]');
-  if(zoomHeading){zoomHeading.classList.add('vis-section-heading');moveToHeading('#tmZoom .tmhead[data-i18n="hdVisibility"]',['tgZooms','tgLeaders']);}
+  /* zoom show/hide toggles stay inline in the その他 dropdown (their own tmtog buttons) */
   const threshold=document.getElementById('tgThreshold'),thresholdRow=document.querySelector('#tmShift .peak-threshold .tmrow');
   if(threshold&&thresholdRow){const oldParent=threshold.parentElement;threshold.classList.add('vis-inline-eye');thresholdRow.appendChild(threshold);
     if(oldParent&&oldParent.childElementCount===0)oldParent.remove();}
@@ -7056,12 +7673,12 @@ html[data-theme="light"] #toolbar .menu .mbtn:hover{
 
   resetVisibility.className='tbtn uset-reset';
   resetVisibility.onclick=()=>{
-    Object.assign(S,{showInsets:true,showNames:true,showPeaks:true,showIntegs:true,showMults:true,showShades:true,showLines:true,showLanes:false,showZooms:true,zoomLeaders:true,showMinimap:false});
+    Object.assign(S,{showInsets:true,showNames:true,showPeaks:true,showIntegs:true,showMults:true,showShades:true,showLines:true,showLanes:false,showZooms:true,zoomLeaders:true,showMinimap:false,showTitle:false});
     syncUIControls();openResults();renderList();resize();persistUI();savePrefs();draw();
     if(typeof syncVisibilityControls==='function')syncVisibilityControls();
   };
   resetAppearance.onclick=()=>{
-    Object.assign(S,{lineW:DEFAULTS.lineW,fontScale:DEFAULTS.fontScale,nameScale:DEFAULTS.nameScale,axisScale:DEFAULTS.axisScale,plotFont:DEFAULTS.plotFont,ppmDigits:DEFAULTS.ppmDigits,axisPad:DEFAULTS.axisPad,baseGap:DEFAULTS.baseGap});
+    Object.assign(S,{lineW:DEFAULTS.lineW,fontScale:DEFAULTS.fontScale,nameScale:DEFAULTS.nameScale,axisScale:DEFAULTS.axisScale,plotFont:DEFAULTS.plotFont,ppmDigits:DEFAULTS.ppmDigits,axisPad:DEFAULTS.axisPad,baseGap:DEFAULTS.baseGap,figTitle:DEFAULTS.figTitle,titleSize:DEFAULTS.titleSize,titleBold:DEFAULTS.titleBold,cutStyle:DEFAULTS.cutStyle,cutColor:DEFAULTS.cutColor,cutWidth:DEFAULTS.cutWidth,cutWave:DEFAULTS.cutWave,cutGap:DEFAULTS.cutGap});
     document.documentElement.style.removeProperty('--bg');
     const bg=document.getElementById('bgColor');if(bg)bg.value=css('--bg');
     syncUIControls();resize();persistUI();savePrefs();draw();
