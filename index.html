@@ -36,10 +36,18 @@ button,select,input{font-family:inherit;color:inherit}
 .menu.open>.mbtn{border-color:var(--trace);color:var(--trace);background:color-mix(in srgb,var(--trace) 10%,transparent)}.mbtn .mi{display:inline-flex;width:16px;height:16px;align-items:center;justify-content:center;color:var(--faint)}
 .menu.open>.mbtn .mi,.mbtn:hover .mi{color:var(--trace)}
 .svi{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;display:block}
-/* toolbar icons: uniform box size + constant stroke regardless of each icon's viewBox */
-#toolbar .svi{width:16px;height:16px;vector-effect:non-scaling-stroke}
-.ic-btn{display:inline-flex;align-items:center;gap:5px}
-.ic-btn .svi{width:17px;height:17px}
+/* toolbar icons: one visual grid, stroke, and optical weight */
+#toolbar .svi{width:18px;height:18px;stroke-width:1.8;vector-effect:non-scaling-stroke}
+#toolbar .mbtn .mi{width:18px;height:18px}
+#menuExportBox>.mbtn .mi{width:16px;height:16px}
+#menuExportBox>.mbtn .svi{width:16px;height:16px;stroke-width:1.4}
+#btnManualBar .svi{width:16px;height:16px;stroke-width:1.4;opacity:.84}
+#toolbar .mbtn[data-i18n-title="menuSettings"] .svi,#tMult>.svi,#tMark>.svi{width:15.12px;height:15.12px}
+#toolbar .mbtn[data-i18n-title="menuSettings"] .mi{transform:translateY(-.5px)}
+.ic-btn{display:inline-flex;align-items:center;gap:6px}
+.ic-btn .svi{width:18px;height:18px}
+.history-btn{display:inline-flex;align-items:center;justify-content:center;width:30px;padding:5px 0}
+.history-btn .svi{width:26px;height:26px;stroke-width:2.2}
 .mitem .ic .svi{width:16px;height:16px}
 input[type=number],input[type=text]{background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:6px 8px;font-size:12px;width:100%;font-family:var(--mono);outline:none}
 input[type=number]:focus,input[type=text]:focus{border-color:var(--trace)}
@@ -112,7 +120,7 @@ input[type=number]:focus,input[type=text]:focus{border-color:var(--trace)}
 .grpsub{padding-left:26px!important}          /* a control that belongs to the bulleted row above it (no bullet) */
 .grpsub>.tmic{display:none!important}
 .menuhelp-row{display:flex;align-items:center}
-.menuhelp-row>.mitem{width:auto;flex:1;min-width:0}
+.menuhelp-row>button{width:auto;flex:1;min-width:0}
 .menuhelp-row>.grphint{margin-left:2px;margin-right:2px}
 .grphint{margin-left:auto;flex:none;width:15px;height:15px;border-radius:50%;border:1px solid var(--line);display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:var(--dim);cursor:help;background:transparent}
 .grphint:hover,.grphint:focus{color:var(--ink);border-color:var(--dim);outline:none}
@@ -267,6 +275,33 @@ main{grid-row:1;position:relative;display:flex;flex-direction:column;background:
 .cutctl input[type=color]{width:26px;height:20px;border:1px solid var(--line);border-radius:5px;background:var(--panel2);padding:2px;cursor:pointer}
 .cutctl .cutclr button{border:1px solid var(--line);background:var(--panel2);color:var(--dim);border-radius:5px;font-size:10.5px;padding:2px 7px;cursor:pointer}
 .cutctl .cutclr button.on{border-color:var(--peak);color:var(--peak)}
+.cutctl.is-disabled{color:var(--faint)}
+.cutctl input:disabled{opacity:.38;cursor:not-allowed}
+.grphead .asg-gear-btn{margin-left:auto}
+#tmOther #tgZooms{margin-left:auto!important}
+#tmOther #tgLeaders,#tmOther #zoomStyleGear{margin-left:-1px!important}
+#cutStyleSettings{width:360px}
+#cutStyleSettings .cut-style-body{display:flex;flex-direction:column;gap:2px}
+#cutStyleSettings .cut-style-row,#cutStyleSettings .cutctl{display:grid;grid-template-columns:13px 90px minmax(0,1fr) auto;column-gap:5px;align-items:center;margin:0;padding:4px 7px;font-size:12px;color:var(--ink)}
+#cutStyleSettings .cut-style-row::before,#cutStyleSettings .cutctl::before{content:'•';grid-column:1;color:var(--dim);font-size:14px;line-height:1}
+#cutStyleSettings .cut-style-row>span,#cutStyleSettings .cutctl>span{grid-column:2;min-width:0;white-space:nowrap}
+#cutStyleSettings .cut-style-row .seg{grid-column:3/5;min-width:0;margin:0}
+#cutStyleSettings .cut-style-row .seg button{white-space:nowrap;padding-left:2px;padding-right:2px}
+#cutStyleSettings .cutctl input[type=range],#cutStyleSettings .cutctl .cutclr{grid-column:3;min-width:0;margin:0}
+#cutStyleSettings .cutctl .cutclr{justify-content:flex-end}
+#cutStyleSettings .cutval{grid-column:4;min-width:38px;font-family:var(--mono);font-size:11px;color:var(--dim);text-align:right;white-space:nowrap}
+#cutStyleSettings .cut-reset,#zoomStyleSettings .zoom-reset{width:100%;margin-top:2px;border:1px solid var(--line)!important;background:transparent!important}
+#cutStyleSettings .cut-reset:hover,#zoomStyleSettings .zoom-reset:hover{border-color:var(--gridw)!important}
+#zoomStyleSettings{width:330px}
+#zoomStyleSettings .zoom-style-body{display:flex;flex-direction:column;gap:2px}
+#zoomStyleSettings .tmrow,#zoomStyleSettings .zoom-style-row{display:grid;grid-template-columns:13px 98px minmax(0,1fr) auto;column-gap:5px;align-items:center;margin:0;padding:4px 7px;font-size:12px;color:var(--ink)}
+#zoomStyleSettings .tmrow::before,#zoomStyleSettings .zoom-style-row::before{content:'•';grid-column:1;color:var(--dim);font-size:14px;line-height:1}
+#zoomStyleSettings .tmrow>label,#zoomStyleSettings .zoom-style-row>label{grid-column:2;white-space:nowrap;color:var(--ink)}
+#zoomStyleSettings .tmrow input[type=range]{grid-column:3;min-width:0;margin:0}
+#zoomStyleSettings .tmrow input[type=color]{grid-column:4;margin:0}
+#zoomStyleSettings .tmrow .thrval{grid-column:4}
+#zoomStyleSettings .zoom-style-row .seg{grid-column:3/5;min-width:0}
+#zoomStyleSettings .zoom-style-row .seg button{white-space:nowrap;padding-left:3px;padding-right:3px}
 /* organized peak menu */
 #tmShift .tmpanel.peak-organized{min-width:min(334px,calc(100vw - 20px));max-width:calc(100vw - 20px);padding:7px;gap:4px}
 #tmInteg .tmpanel.integ-organized{min-width:min(360px,calc(100vw - 20px));max-width:calc(100vw - 20px);padding:7px;gap:4px}
@@ -1159,7 +1194,7 @@ html[data-theme="light"] .toolmenu.open .tmpanel{
         </div>
       </nav>
       <span class="toolmenu" id="tmCalib">
-        <button class="tbtn main ic-btn tbc" id="tCalib" title=""><svg class="svi" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/></svg><span class="tb-lbl" data-i18n="tCalibTxt">Calibrate</span></button>        <div class="tmpanel">
+        <button class="tbtn main ic-btn tbc" id="tCalib" title=""><svg class="svi" viewBox="0 0 24 24"><circle cx="12" cy="12" r="6.2"/><circle cx="12" cy="12" r="1.5"/><path d="M12 2.5v3.3M12 18.2v3.3M2.5 12h3.3M18.2 12h3.3"/></svg><span class="tb-lbl" data-i18n="tCalibTxt">Calibrate</span></button>        <div class="tmpanel">
           <button class="tmitem" data-act="tCalib"><span class="tmic">⌖</span><span data-i18n="actCalManual">Manual (click a peak)</span></button>
           <div class="tmsep"></div>
           <div class="tmhead" data-i18n="hdSolvent">Residual solvent → auto</div>
@@ -1170,7 +1205,7 @@ html[data-theme="light"] .toolmenu.open .tmpanel{
       </span>
 
       <span class="toolmenu" id="tmShift">
-        <button class="tbtn main ic-btn tbc" id="tPeaks" title=""><svg class="svi" viewBox="0 0 16 16"><path d="M2.5 13 6 3.5 8 9l1.6-4L13.5 13"/></svg><span class="tb-lbl" data-i18n="tPeaksTxt">Peaks</span></button>        <div class="tmpanel peak-organized">
+        <button class="tbtn main ic-btn tbc" id="tPeaks" title=""><svg class="svi" viewBox="0 0 24 24"><path d="M3 17h4l2.3-9.5L11.6 17h3.1l2.1-5.2L18.8 17H21"/></svg><span class="tb-lbl" data-i18n="tPeaksTxt">Peaks</span></button>        <div class="tmpanel peak-organized">
           <section class="peak-work-section">
             <div class="peak-work-heading"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M2.5 13 6 3.5 8 9l1.6-4L13.5 13"/></svg></span><span data-i18n="peakGroupDetect">Detect peaks</span></div>
             <button class="tmitem" data-act="tPeaks"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M2.5 13 6 3.5 8 9l1.6-4L13.5 13"/></svg></span><span data-i18n="actDetect">Detect (drag range)</span></button>
@@ -1199,7 +1234,7 @@ html[data-theme="light"] .toolmenu.open .tmpanel{
       </span>
 
       <span class="toolmenu" id="tmInteg">
-        <button class="tbtn main ic-btn tbc" id="tInteg" title=""><svg class="svi" viewBox="0 0 16 16"><path d="M10 3.1c-.2-.9-1.2-1.1-1.8-.4-.5.6-.5 1.7-.6 3.3-.1 2.7-.1 5.3-.7 6.1-.6.8-1.6.6-1.9-.3"/></svg><span class="tb-lbl" data-i18n="tIntegTxt">Integrals</span></button>        <div class="tmpanel peak-organized integ-organized">
+        <button class="tbtn main ic-btn tbc" id="tInteg" title=""><svg class="svi" viewBox="0 0 24 24"><path d="M15.7 4.3c-.5-1.5-2.2-2.1-3.4-.9-1.1 1-1.1 3.1-1.2 5.3-.1 3.8-.2 7.4-1.5 8.9-1.1 1.3-2.9.6-3.5-.9"/></svg><span class="tb-lbl" data-i18n="tIntegTxt">Integrals</span></button>        <div class="tmpanel peak-organized integ-organized">
           <section class="peak-work-section">
             <div class="peak-work-heading"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M10 3.1c-.2-.9-1.2-1.1-1.8-.4-.5.6-.5 1.7-.6 3.3-.1 2.7-.1 5.3-.7 6.1-.6.8-1.6.6-1.9-.3"/></svg></span><span data-i18n="integGroupCreate">Create integrals</span></div>
             <button class="tmitem" data-act="tInteg"><span class="tmic"></span><span data-i18n="actIntegrate">Integrate (drag range)</span></button>
@@ -1296,32 +1331,63 @@ html[data-theme="light"] .toolmenu.open .tmpanel{
       <span class="toolmenu" id="tmOther">
         <button class="tbtn main ic-btn tbc" id="tOther" data-i18n-title="ttOther" title=""><svg class="svi" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.7" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.7" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.7" fill="currentColor" stroke="none"/></svg><span class="tb-lbl" data-i18n="tOtherTxt">Other</span></button>
         <div class="tmpanel">
-          <div class="grphead"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><circle cx="7" cy="7" r="4.3"/><line x1="10.2" y1="10.2" x2="14" y2="14"/><line x1="7" y1="5.2" x2="7" y2="8.8"/><line x1="5.2" y1="7" x2="8.8" y2="7"/></svg></span><span data-i18n="tZoomTxt">Zoom view</span></div>
+          <div class="grphead"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><circle cx="7" cy="7" r="4.3"/><line x1="10.2" y1="10.2" x2="14" y2="14"/><line x1="7" y1="5.2" x2="7" y2="8.8"/><line x1="5.2" y1="7" x2="8.8" y2="7"/></svg></span><span data-i18n="tZoomTxt">Zoom view</span><button class="tmtog asg-header-eye" id="tgZooms" data-i18n-title="lblShowZooms"><span class="eyeic"><svg class="svi" viewBox="0 0 16 16"><path d="M1.5 8S4 3.8 8 3.8 14.5 8 14.5 8 12 12.2 8 12.2 1.5 8 1.5 8z"/><circle cx="8" cy="8" r="2"/><line class="eyeslash" x1="2.5" y1="13.5" x2="13.5" y2="2.5"/></svg></span><span data-i18n="lblShowZooms">Zoom insets</span></button><button class="tmtog asg-header-eye" id="tgLeaders" data-i18n-title="lblZoomLeaders"><span class="eyeic"><svg class="svi" viewBox="0 0 16 16"><path d="M1.5 8S4 3.8 8 3.8 14.5 8 14.5 8 12 12.2 8 12.2 1.5 8 1.5 8z"/><circle cx="8" cy="8" r="2"/><line class="eyeslash" x1="2.5" y1="13.5" x2="13.5" y2="2.5"/></svg></span><span data-i18n="lblZoomLeaders">Zoom leaders</span></button><button type="button" class="asg-gear-btn" id="zoomStyleGear" data-i18n-title="zoomStyleSettings" title=""><svg class="svi" viewBox="0 0 24 24"><path d="M10.3 2.6h3.4l.5 2.3 1.9.8 2-1.3 2.4 2.4-1.3 2 .8 1.9 2.3.5v3.4l-2.3.5-.8 1.9 1.3 2-2.4 2.4-2-1.3-1.9.8-.5 2.3h-3.4l-.5-2.3-1.9-.8-2 1.3-2.4-2.4 1.3-2-.8-1.9-2.3-.5v-3.4l2.3-.5.8-1.9-1.3-2 2.4-2.4 2 1.3 1.9-.8.5-2.3Z"/><circle cx="12" cy="12" r="3.1"/></svg></button></div>
           <button class="tmitem grpitem" data-act="tZoom"><span class="tmic"></span><span data-i18n="actZoomDrag">Create (drag δ window)</span></button>
-          <div class="tmrow grpitem"><span class="tmic"></span><span data-i18n="lblZoomBorder">Frame color</span><input type="color" id="zoomBorderColor" value="#6B7780"></div>
-          <div class="tmrow grpitem"><span class="tmic"></span><span data-i18n="lblZoomBorderW">Frame width</span><input type="range" id="zoomBorderW" min="0.5" max="4" step="0.5" value="1"><span class="thrval" id="zbwv">1</span></div>
-          <div class="tmrow grpitem"><span class="tmic"></span><span data-i18n="lblLeaderStyle">Leader style</span></div>
-          <div class="seg" id="segLeaderStyle" style="margin:2px 9px 4px 26px"><button data-v="solid" data-i18n="optSolid">Solid</button><button data-v="dashed" class="on" data-i18n="optDashed">Dashed</button><button data-v="dotted" data-i18n="optDotted">Dotted</button></div>
-          <button class="tmitem grpitem" data-act="resetZoom"><span class="tmic"></span><span data-i18n="btnResetDef">Reset to defaults</span></button>
-          <button class="tmtog grpitem" id="tgZooms"><span class="eyeic"><svg class="svi" viewBox="0 0 16 16"><path d="M1.5 8S4 3.8 8 3.8 14.5 8 14.5 8 12 12.2 8 12.2 1.5 8 1.5 8z"/><circle cx="8" cy="8" r="2"/><line class="eyeslash" x1="2.5" y1="13.5" x2="13.5" y2="2.5"/></svg></span><span data-i18n="lblShowZooms">Zoom insets</span></button>
-          <button class="tmtog grpitem" id="tgLeaders"><span class="eyeic"><svg class="svi" viewBox="0 0 16 16"><path d="M1.5 8S4 3.8 8 3.8 14.5 8 14.5 8 12 12.2 8 12.2 1.5 8 1.5 8z"/><circle cx="8" cy="8" r="2"/><line class="eyeslash" x1="2.5" y1="13.5" x2="13.5" y2="2.5"/></svg></span><span data-i18n="lblZoomLeaders">Zoom leaders</span></button>
+          <button class="tmitem erase grpitem" data-act="clearZoom"><span class="tmic"></span><span data-i18n="actClearZoom">Clear all zoom views</span></button>
+          <div id="zoomStyleSettings" class="asg-gear-settings zoom-gear-popover" hidden data-i18n-popover-title="zoomStyleSettings">
+            <div class="zoom-style-body">
+              <div class="tmrow"><label data-i18n="lblZoomBorder">Frame color</label><input type="color" id="zoomBorderColor" value="#6B7780"></div>
+              <div class="tmrow"><label data-i18n="lblZoomBorderW">Frame width</label><input type="range" id="zoomBorderW" min="0.5" max="4" step="0.5" value="1"><span class="thrval" id="zbwv">1</span></div>
+              <div class="zoom-style-row"><label data-i18n="lblLeaderStyle">Leader style</label><div class="seg" id="segLeaderStyle"><button data-v="solid" data-i18n="optSolid">Solid</button><button data-v="dashed" class="on" data-i18n="optDashed">Dashed</button><button data-v="dotted" data-i18n="optDotted">Dotted</button></div></div>
+              <button class="tmitem tbtn uset-reset zoom-reset" data-act="resetZoom"><svg class="svi" viewBox="0 0 16 16" aria-hidden="true"><path d="M13 5.6A5.8 5.8 0 1 0 13.6 9"/><path d="M13 2.7v3h-3"/></svg><span data-i18n="btnResetDef">Reset to defaults</span></button>
+            </div>
+          </div>
           <div class="tmsep"></div>
-          <div class="grphead"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M2 8h3"/><path d="M11 8h3"/><path d="M6.5 3c1 1.6 1 8.4 1.5 10"/><path d="M9.5 3c-1 1.6-1 8.4-1.5 10"/></svg></span><span data-i18n="tCutTxt">Cut</span></div>
-          <button class="tmitem grpitem" data-act="tCut"><span class="tmic"></span><span data-i18n="actCutDrag">Create (drag δ window)</span></button>
-          <div class="grpsub" style="font-size:10.5px;color:var(--faint);white-space:normal;line-height:1.4;padding-top:1px;padding-bottom:2px"><span data-i18n="hintCutMulti">Drag more windows to add cuts.</span></div>
-          <div class="tmrow grpitem"><span class="tmic"></span><span data-i18n="lblCutStyle">Break style</span></div>
-          <div class="seg" id="segCutStyle" style="margin:2px 9px 4px 26px"><button data-v="wave" class="on" data-i18n="optCutWave">Wave</button><button data-v="zigzag" data-i18n="optCutZig">Zigzag</button><button data-v="slash" data-i18n="optCutSlash">Slash</button></div>
-          <label class="cutctl grpitem"><span data-i18n="lblCutSpacing">Spacing</span><input type="range" id="cutGapInp" min="6" max="40" step="1"></label>
-          <label class="cutctl grpitem"><span data-i18n="lblCutWave">Wave</span><input type="range" id="cutWaveInp" min="4" max="26" step="1"></label>
-          <label class="cutctl grpitem"><span data-i18n="lblCutWidth">Thickness</span><input type="range" id="cutWidthInp" min="0.5" max="4" step="0.1"></label>
-          <label class="cutctl grpitem"><span data-i18n="lblCutColor">Color</span><span class="cutclr"><input type="color" id="cutColorInp"><button type="button" id="cutColorAuto" data-i18n="optAuto">Auto</button></span></label>
+          <div class="grphead"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M2 8h3"/><path d="M11 8h3"/><path d="M6.5 3c1 1.6 1 8.4 1.5 10"/><path d="M9.5 3c-1 1.6-1 8.4-1.5 10"/></svg></span><span data-i18n="tCutTxt">Cut</span><button type="button" class="asg-gear-btn" id="cutStyleGear" data-i18n-title="cutStyleSettings" title=""><svg class="svi" viewBox="0 0 24 24"><path d="M10.3 2.6h3.4l.5 2.3 1.9.8 2-1.3 2.4 2.4-1.3 2 .8 1.9 2.3.5v3.4l-2.3.5-.8 1.9 1.3 2-2.4 2.4-2-1.3-1.9.8-.5 2.3h-3.4l-.5-2.3-1.9-.8-2 1.3-2.4-2.4 1.3-2-.8-1.9-2.3-.5v-3.4l2.3-.5.8-1.9-1.3-2 2.4-2.4 2 1.3 1.9-.8.5-2.3Z"/><circle cx="12" cy="12" r="3.1"/></svg></button></div>
+          <div class="menuhelp-row"><button class="tmitem grpitem" data-act="tCut"><span class="tmic"></span><span data-i18n="actCutDrag">Create (drag δ window)</span></button><span class="grphint" data-i18n-title="hintCutMulti" tabindex="0">?</span></div>
           <button class="tmitem grpitem" data-act="undoCut"><span class="tmic"></span><span data-i18n="actCutUndo">Undo last cut</span></button>
           <button class="tmitem erase grpitem" data-act="clearCut"><span class="tmic"></span><span data-i18n="actCutClear">Clear all cuts</span></button>
+          <div id="cutStyleSettings" class="asg-gear-settings cut-gear-popover" hidden data-i18n-popover-title="cutStyleSettings">
+            <div class="cut-style-body">
+              <div class="cut-style-row"><span data-i18n="lblCutStyle">Break style</span><div class="seg" id="segCutStyle"><button data-v="wave" class="on" data-i18n="optCutWave">Wave</button><button data-v="zigzag" data-i18n="optCutZig">Zigzag</button><button data-v="slash" data-i18n="optCutSlash">Solid</button></div></div>
+              <label class="cutctl"><span data-i18n="lblCutSpacing">Spacing</span><input type="range" id="cutGapInp" min="6" max="40" step="1"><output class="cutval" id="cutGapVal"></output></label>
+              <label class="cutctl"><span data-i18n="lblCutSpan">Width</span><input type="range" id="cutSpanInp" min="1" max="12" step="0.5"><output class="cutval" id="cutSpanVal"></output></label>
+              <label class="cutctl" id="cutWaveCtl"><span data-i18n="lblCutWave">Wave</span><input type="range" id="cutWaveInp" min="4" max="26" step="1"><output class="cutval" id="cutWaveVal"></output></label>
+              <label class="cutctl"><span data-i18n="lblCutWidth">Thickness</span><input type="range" id="cutWidthInp" min="0.5" max="4" step="0.1"><output class="cutval" id="cutWidthVal"></output></label>
+              <label class="cutctl"><span data-i18n="lblCutOpacity">Opacity</span><input type="range" id="cutOpacityInp" min="0.1" max="1" step="0.05"><output class="cutval" id="cutOpacityVal"></output></label>
+              <label class="cutctl"><span data-i18n="lblCutColor">Color</span><span class="cutclr"><input type="color" id="cutColorInp"></span></label>
+              <button class="tmitem tbtn uset-reset cut-reset" data-act="resetCut"><svg class="svi" viewBox="0 0 16 16" aria-hidden="true"><path d="M13 5.6A5.8 5.8 0 1 0 13.6 9"/><path d="M13 2.7v3h-3"/></svg><span data-i18n="btnResetDef">Reset to defaults</span></button>
+            </div>
+          </div>
         </div>
       </span>
+      <script>
+      (()=>{
+        const setupStyleGear=(gearId,boxId,closeName)=>{
+          const gear=document.getElementById(gearId), box=document.getElementById(boxId); if(!gear||!box) return;
+          document.body.appendChild(box); let open=false;
+          const close=()=>{ if(!open) return; box.hidden=true; gear.classList.remove('on'); gear.setAttribute('aria-expanded','false'); open=false; };
+          window[closeName]=close;
+          const place=()=>{
+            box.hidden=false; box.style.visibility='hidden';
+            const r=gear.getBoundingClientRect(), w=box.offsetWidth, h=box.offsetHeight;
+            const left=Math.max(8,Math.min(innerWidth-w-8,r.right-w));
+            let top=r.bottom+6; if(top+h>innerHeight-8) top=Math.max(8,r.top-h-6);
+            box.style.left=Math.round(left)+'px'; box.style.top=Math.round(top)+'px'; box.style.visibility='';
+          };
+          gear.setAttribute('aria-expanded','false');
+          gear.addEventListener('click',e=>{ e.preventDefault(); e.stopPropagation(); if(open){close();return;} open=true; gear.classList.add('on'); gear.setAttribute('aria-expanded','true'); place(); });
+          box.addEventListener('pointerdown',e=>e.stopPropagation()); box.addEventListener('click',e=>e.stopPropagation());
+          document.addEventListener('pointerdown',e=>{ if(open&&!box.contains(e.target)&&!gear.contains(e.target)) close(); },true);
+          document.addEventListener('keydown',e=>{ if(e.key==='Escape') close(); },true); window.addEventListener('resize',close);
+        };
+        setupStyleGear('zoomStyleGear','zoomStyleSettings','closeZoomStyleSettings');
+        setupStyleGear('cutStyleGear','cutStyleSettings','closeCutStyleSettings');
+      })();
+      </script>
       <button class="tbtn ic-btn tbc" id="btnManualBar" data-i18n-title="manualTitle"><svg class="svi" viewBox="0 0 16 16"><path d="M8 4.3C6.8 3.3 5.1 3 3.3 3.2V12c1.8-.2 3.5.1 4.7 1.1 1.2-1 2.9-1.3 4.7-1.1V3.2C10.9 3 9.2 3.3 8 4.3Z"/><path d="M8 4.3V13"/></svg><span class="tb-lbl" data-i18n="manual">Manual</span></button>
-      <button class="tbtn" id="btnUndo" title="">↶</button>
-      <button class="tbtn" id="btnRedo" title="">↷</button>
+      <button class="tbtn history-btn" id="btnUndo" title=""><svg class="svi" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5 2.5 12 9 19"/><path d="M3 12h11a8 8 0 0 1 8 8"/></svg></button>
+      <button class="tbtn history-btn" id="btnRedo" title=""><svg class="svi" viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5 6.5 7-6.5 7"/><path d="M21 12H10a8 8 0 0 0-8 8"/></svg></button>
       <div id="readout"><span>δ <b id="roPpm">—</b></span><span class="ipk">I <b id="roInt">—</b></span></div>
     </div>
     <div class="canvas-wrap" id="cwrap">
@@ -1376,7 +1442,7 @@ const I18N={
   secImages:"Images", btnAddImg:"＋ Add image from file", imgItem:"Image",
   imgHint:"Paste a screenshot (Ctrl+V) or add a PNG. Click to select · drag corner to resize · Del to remove (when no tool is active).",
   ttImgEye:"Show this image on the spectrum", ttImgBg:"Make background transparent (toggle)", secDisplay:"Display", secData:"Data", ttShowHide:"Show / hide", cpCustom:"Custom", cpOk:"OK", cpCancel:"Cancel",
-  lblInsets:"Images", lblNames:"File names", lblTitle:"Title", lblTitleText:"Title text", lblTitleSize:"Title size", lblTitleWeight:"Title weight", optThin:"Thin", optBold:"Bold", lblCutStyle:"Break style", optCutWave:"Wave", optCutZig:"Zigzag", optCutSlash:"Slash", lblShowPeaks:"Peaks", lblShowIntegs:"Integrals", lblShowShades:"Shades", lblJTree:"Coupling tree",
+  lblInsets:"Images", lblNames:"File names", lblTitle:"Title", lblTitleText:"Title text", lblTitleSize:"Title size", lblTitleWeight:"Title weight", optThin:"Thin", optBold:"Bold", lblCutStyle:"Style", optCutWave:"Wave", optCutZig:"Zigzag", optCutSlash:"Solid", lblShowPeaks:"Peaks", lblShowIntegs:"Integrals", lblShowShades:"Shades", lblJTree:"Coupling tree",
   lblPalette:"Color palette", lblApplyPalette:"Re-apply to all", lblMonoBase:"Base color", lblSigDigits:"δ decimal places",
   btnResetDisp:"Reset display defaults", lblCustomPal:"Custom colors", lblAddColor:"+ Add color",
   subText:"Text", subMark:"Mark", subShade:"Shade", subConn:"Conn.", thColor:"Color", thSpectrum:"Spectrum",
@@ -1385,8 +1451,8 @@ const I18N={
   lblAxisDigits:"δ-axis decimals", lblPeakDigits:"Label decimals",
   lblShowLines:"Connectors", lblShowZooms:"Zoom views", lblShowLanes:"Lane lines",
   tZoomTxt:"Zoom view", tLineTxt:"Connector", ttZoom:"Drag a δ window → floating magnified view (× to remove)", ttZoomSingle:"Zoom view works with a single spectrum only",
-  tCutTxt:"Cut", ttCut:"Cut out a δ region with a break mark", actCutDrag:"Create (drag δ window)", actCutClear:"Clear all cuts", actCutUndo:"Undo last cut", hintCutMulti:"Drag more windows to add cuts.", lblCutSpacing:"Spacing", lblCutWave:"Wave", lblCutWidth:"Thickness", lblCutColor:"Color", optAuto:"Auto",
-  actZoomDrag:"Create (drag δ window)", lblZoomBorder:"Frame color", lblZoomBorderW:"Frame width", lblLeaderStyle:"Leader style", optSolid:"Solid", optDashed:"Dashed", optDotted:"Dotted",
+  tCutTxt:"Cut", ttCut:"Cut out a δ region with a break mark", actCutDrag:"Create (drag δ window)", actCutClear:"Clear all cuts", actCutUndo:"Undo last cut", hintCutMulti:"Drag more windows to add cuts.", zoomStyleSettings:"Zoom style settings", cutStyleSettings:"Cut style settings", lblCutSpacing:"Spacing", lblCutSpan:"Width", lblCutWave:"Wave", lblCutWidth:"Thickness", lblCutOpacity:"Opacity", lblCutColor:"Color", optAuto:"Auto",
+  actZoomDrag:"Create (drag δ window)", actClearZoom:"Clear all zoom views", lblZoomBorder:"Frame color", lblZoomBorderW:"Frame width", lblLeaderStyle:"Leader style", optSolid:"Solid", optDashed:"Dashed", optDotted:"Dotted",
   ttLine:"Drag two points → dashed connector; click a line to remove",
   hdAnnotate:"Annotate", hdVisibility:"Show / hide", lblVisToggle:"Show / hide", hdWheel:"Wheel / scroll", secKeyboard:"Keyboard", setGen:"General", setLook:"Appearance", setAxis:"δ-axis", secRegion:"Region",
   actCalManual:"Manual (click a peak)", hdSolvent:"Residual solvent → auto", actCalReset:"Reset calibration",
@@ -1482,7 +1548,7 @@ const I18N={
   secImages:"画像", btnAddImg:"＋ 画像をファイルから追加", imgItem:"画像",
   imgHint:"スクリーンショットを貼り付け（Ctrl+V）またはPNGを追加。クリックで選択・角ドラッグで拡縮・Delで削除（ツール未選択時）。",
   ttImgEye:"この画像をスペクトル上に表示", ttImgBg:"背景を透過（クリックで切替）", secDisplay:"表示", secData:"データ", ttShowHide:"表示 / 非表示", cpCustom:"カスタム", cpOk:"OK", cpCancel:"キャンセル",
-  lblInsets:"画像を表示", lblNames:"ファイル名", lblTitle:"タイトル", lblTitleText:"タイトル文字", lblTitleSize:"タイトルの大きさ", lblTitleWeight:"タイトルの太さ", optThin:"細字", optBold:"太字", lblCutStyle:"波線スタイル", optCutWave:"波線", optCutZig:"ジグザグ", optCutSlash:"斜線", lblShowPeaks:"ピーク", lblShowIntegs:"積分", lblShowShades:"塗りつぶし", lblJTree:"カップリングツリー",
+  lblInsets:"画像を表示", lblNames:"ファイル名", lblTitle:"タイトル", lblTitleText:"タイトル文字", lblTitleSize:"タイトルの大きさ", lblTitleWeight:"タイトルの太さ", optThin:"細字", optBold:"太字", lblCutStyle:"スタイル", optCutWave:"波線", optCutZig:"ジグザグ", optCutSlash:"実線", lblShowPeaks:"ピーク", lblShowIntegs:"積分", lblShowShades:"塗りつぶし", lblJTree:"カップリングツリー",
   lblPalette:"カラーパレット", lblApplyPalette:"全てに再適用", lblMonoBase:"基準色", lblSigDigits:"δ 小数桁数",
   btnResetDisp:"表示設定をリセット", lblCustomPal:"カスタムカラー", lblAddColor:"+ 色を追加",
   subText:"テキスト", subMark:"マーク", subShade:"塗りつぶし", subConn:"破線", thColor:"色", thSpectrum:"スペクトル",
@@ -1491,8 +1557,8 @@ const I18N={
   lblAxisDigits:"δ軸の小数桁", lblPeakDigits:"ラベルの小数桁",
   lblShowLines:"破線コネクタ", lblShowZooms:"拡大図", lblShowLanes:"レーン区切り線",
   tZoomTxt:"拡大図", tLineTxt:"破線コネクタ", ttZoom:"δ範囲をドラッグ→拡大図をフロート配置（×で削除）", ttZoomSingle:"拡大図は単一スペクトルのときのみ使えます",
-  tCutTxt:"カット", ttCut:"δ範囲を省略記号で切り取る", actCutDrag:"作成（δ範囲をドラッグ）", actCutClear:"すべて解除", actCutUndo:"直前のカットを取消", hintCutMulti:"ドラッグを繰り返すと複数箇所カットできます", lblCutSpacing:"間隔", lblCutWave:"うねり", lblCutWidth:"太さ", lblCutColor:"色", optAuto:"自動",
-  actZoomDrag:"作成（δ範囲をドラッグ）", lblZoomBorder:"枠線の色", lblZoomBorderW:"枠線の太さ", lblLeaderStyle:"引き出し線", optSolid:"実線", optDashed:"破線", optDotted:"点線",
+  tCutTxt:"カット", ttCut:"δ範囲を省略記号で切り取る", actCutDrag:"作成（δ範囲をドラッグ）", actCutClear:"すべて解除", actCutUndo:"直前のカットを取消", hintCutMulti:"ドラッグを繰り返すと複数箇所カットできます", zoomStyleSettings:"拡大図のスタイル設定", cutStyleSettings:"カットのスタイル設定", lblCutSpacing:"間隔", lblCutSpan:"横幅", lblCutWave:"うねり", lblCutWidth:"太さ", lblCutOpacity:"透明度", lblCutColor:"色", optAuto:"自動",
+  actZoomDrag:"作成（δ範囲をドラッグ）", actClearZoom:"すべて削除", lblZoomBorder:"枠線の色", lblZoomBorderW:"枠線の太さ", lblLeaderStyle:"引き出し線", optSolid:"実線", optDashed:"破線", optDotted:"点線",
   ttLine:"2点をドラッグ→破線で結ぶ／線をクリックで削除",
   hdAnnotate:"注釈", hdVisibility:"表示・非表示", lblVisToggle:"表示 / 非表示", hdWheel:"ホイール / スクロール", secKeyboard:"キーボード", setGen:"全般", setLook:"見た目", setAxis:"δ軸", secRegion:"領域",
   actCalManual:"手動（ピークをクリック）", hdSolvent:"残留溶媒 → 自動", actCalReset:"校正をリセット",
@@ -1585,6 +1651,7 @@ function applyI18n(){
   document.querySelectorAll('[data-i18n-title]').forEach(el=>{ const txt=t(el.getAttribute('data-i18n-title'));
     if(el.classList.contains('grphint')){ el.setAttribute('data-tip',txt); el.removeAttribute('title'); }
     else el.title=txt; });
+  document.querySelectorAll('[data-i18n-popover-title]').forEach(el=>el.dataset.title=t(el.getAttribute('data-i18n-popover-title')));
   const tt={tCalib:'ttCalib',tPeaks:'ttPeaks',tInteg:'ttInteg',tMult:'ttMult',intDown:'ttIntDown',
     intUp:'ttIntUp',intAuto:'ttAuto',zoomIn:'ttZoomIn',zoomOut:'ttZoomOut',zoomReset:'ttFull',
     btnUndo:'ttUndo',btnRedo:'ttRedo',tMark:'ttMark',tAssign:'ttAssign',
@@ -1760,7 +1827,7 @@ function paletteSwatch(name){ return paletteColors(name,6); }
 const DEFAULTS={lineW:1, wheelSens:1, wheelInertia:false, wheelInvert:false, hscroll:true, axisPad:56, baseGap:0.035,
   fontScale:1, nameScale:1, axisScale:1, markSize:4.6, markColor:'#0E6E7E', shadeColor:'#D33A2C', textColor:null, textSize:10.5, lineColor:null, lineStyle:'dashed', imageBorder:false, imageBorderColor:'#3A4750', imageBorderWidth:1, imageBorderStyle:'solid', integDigits:3, multColor:null, multDigits:2, multJStyle:'full', multStyle:'style1', plotFont:'mono', ppmDigits:2, pkDigits:2,
   zoomBorderColor:null, zoomBorderWidth:1, zoomLeaderStyle:'dashed', peakStyle:'style1', integStyle:'style1', showIntegCurve:true,
-  showTitle:false, figTitle:null, titleSize:15, titleBold:false, cutStyle:'wave', cutColor:null, cutWidth:1.2, cutWave:8, cutGap:11};
+  showTitle:false, figTitle:null, titleSize:15, titleBold:false, cutStyle:'wave', cutColor:null, cutWidth:1.3, cutWave:6, cutSpan:2, cutGap:10, cutOpacity:0.9};
 const S={ spectra:[], active:-1, view:{pHi:1,pLo:0}, yscale:1, tool:null,
   lineW:1, wheelSens:1, wheelInertia:false, wheelInvert:false, hscroll:true, selInteg:-1, selImg:-1, selZoom:-1,
   selPeak:-1, selPeaks:[], selMults:[], thr:0.05, axisPad:56, baseGap:0.035, integShift:0,
@@ -1772,7 +1839,7 @@ const S={ spectra:[], active:-1, view:{pHi:1,pLo:0}, yscale:1, tool:null,
   zoomBorderColor:null, zoomBorderWidth:1, zoomLeaderStyle:'dashed',
   customPalette:['#1f3a93','#9e2b25','#117a4d','#8a5a00','#6a1b8a'],
   impSolvent:'cdcl3', impTol:0.03, impTolC:0.3, showImpurities:false, impPins:[], impFilter:'',
-  showTitle:false, figTitle:null, titleSize:15, titleBold:false, cut:null, cuts:[], cutStyle:'wave', cutColor:null, cutWidth:1.2, cutWave:8, cutGap:11 };
+  showTitle:false, figTitle:null, titleSize:15, titleBold:false, cut:null, cuts:[], cutStyle:'wave', cutColor:null, cutWidth:1.3, cutWave:6, cutSpan:2, cutGap:10, cutOpacity:0.9 };
 function A(){ return S.spectra[S.active]||null; }
 // Platform modifier key for display (Ctrl on Windows/Linux, ⌘ on Mac; default ⌘ if unknown)
 const IS_MAC=(function(){ try{
@@ -2330,7 +2397,7 @@ function autoTitle(){ const sp=A()||visibleSpectra()[0]; if(!sp) return '';
 function titleText(){ const t=(S.figTitle!=null&&S.figTitle!=='')?S.figTitle:autoTitle(); return (t||'').trim(); }
 function titleBandH(){ if(VP||!S.showTitle||!titleText()) return 0; return Math.round((S.titleSize||15)*1.55)+8; }
 /* ---- cuts: array of {a,b} ppm (a>b) regions, each collapsed to a narrow gap with a break ---- */
-function curCutGap(){ return Math.max(6, Math.min(60, S.cutGap||18)); }
+function curCutGap(){ return Math.max(6, Math.min(60, S.cutGap??10)); }
 /* active (in-view, non-edge, merged, high→low) cut regions, or [] */
 function cutActiveList(){ if(VP) return [];
   const list=(S.cuts||[]);
@@ -3200,13 +3267,14 @@ function draw(){
   if(cursorX!=null){ ctx.strokeStyle=hexA(css('--accent'),.55); ctx.setLineDash([3,3]);
     ctx.beginPath();ctx.moveTo(cursorX,curTop());ctx.lineTo(cursorX,curTop()+ph);ctx.stroke(); ctx.setLineDash([]); }
 }
-/* the break marking the omitted (cut) region: two torn vertical edges that run through the δ-axis */
+/* the break marking the omitted (cut) region: two edges that run through the δ-axis */
 function drawCutBreak(){
   const gaps=cutGapsX(); if(!gaps.length) return;
   const top=PADT+titleBandH(), axisY=top+plotH(), bot=axisY+5;   // run a little past the axis
-  const st=S.cutStyle||'wave', amp=3.4, wl=Math.max(3, Math.min(30, S.cutWave||8));
+  const st=S.cutStyle||'wave', amp=Math.max(1, Math.min(12, S.cutSpan??2)), wl=Math.max(3, Math.min(30, S.cutWave??6));
   ctx.save();
-  ctx.strokeStyle=S.cutColor||hexA(css('--axis'),.95); ctx.lineWidth=Math.max(.5,Math.min(4,S.cutWidth||1.2));
+  ctx.globalAlpha=Math.max(.1,Math.min(1,S.cutOpacity??.9));
+  ctx.strokeStyle=S.cutColor||hexA(css('--axis'),.95); ctx.lineWidth=Math.max(.5,Math.min(4,S.cutWidth??1.3));
   ctx.lineJoin='round'; ctx.lineCap='round';
   const edge=bx=>{ ctx.beginPath();
     if(st==='slash'){ ctx.moveTo(bx-amp*0.75, top); ctx.lineTo(bx+amp*0.75, bot); }
@@ -3856,6 +3924,8 @@ function clearImages(){ const sp=A(); if(!sp)return; const rows=imgsOf(sp); if(!
 /* dropdown action dispatcher: tool ids arm a tool, others run a one-shot action */
 function doToolAction(act){
   if(typeof window.closeAssignSettings==='function') window.closeAssignSettings();
+  if(typeof window.closeCutStyleSettings==='function') window.closeCutStyleSettings();
+  if(typeof window.closeZoomStyleSettings==='function') window.closeZoomStyleSettings();
   closeToolMenus();
   if(act==='clearPk') return clearPeaks();
   if(act==='clearInteg') return clearIntegrals();
@@ -3866,8 +3936,10 @@ function doToolAction(act){
   if(act==='clearMult'){ const sp=A(); if(sp){ pushUndo(sp); sp.multiplets=[]; saveAnnot(sp); } S.selMults=[]; S.resTab='mult'; openResults(); renderResults(); draw(); return; }
   if(act==='clearShade') return clearShades();
   if(act==='clearLines'){ S.lines=[]; persistUI(); draw(); return; }
+  if(act==='clearZoom'){ S.zooms=[]; S.selZoom=-1; persistUI(); draw(); return; }
   if(act==='clearCut'){ S.cuts=[]; S.cut=null; persistUI(); draw(); return; }
   if(act==='undoCut'){ if(Array.isArray(S.cuts)&&S.cuts.length){ S.cuts.pop(); persistUI(); draw(); } return; }
+  if(act==='resetCut') return resetCutStyle();
   if(act==='clearMarks') return clearMarks();
   if(act==='clearTextLabels') return clearTextLabels();
   if(act==='clearImages') return clearImages();
@@ -3881,6 +3953,11 @@ function doToolAction(act){
 function resetZoomStyle(){
   S.zoomBorderColor=DEFAULTS.zoomBorderColor; S.zoomBorderWidth=DEFAULTS.zoomBorderWidth; S.zoomLeaderStyle=DEFAULTS.zoomLeaderStyle;
   syncUIControls(); persistUI(); draw();
+}
+/* reset the Cut appearance only; existing cut regions are retained */
+function resetCutStyle(){
+  Object.assign(S,{cutStyle:DEFAULTS.cutStyle,cutColor:DEFAULTS.cutColor,cutWidth:DEFAULTS.cutWidth,cutWave:DEFAULTS.cutWave,cutSpan:DEFAULTS.cutSpan,cutGap:DEFAULTS.cutGap,cutOpacity:DEFAULTS.cutOpacity});
+  syncCutStyleUI(); persistUI(); draw();
 }
 /* per-feature "reset to defaults" for the annotate panel */
 function resetMarkStyle(){
@@ -5092,20 +5169,32 @@ document.getElementById('btnShowTitle').onclick=()=>{
       stw.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b)); persistUI(); draw(); }); }
   const scs=document.getElementById('segCutStyle'); if(scs){
     scs.querySelectorAll('button').forEach(b=>b.onclick=()=>{ S.cutStyle=b.dataset.v;
-      scs.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b)); persistUI(); draw(); }); }
-  const cgp=document.getElementById('cutGapInp'); if(cgp){ cgp.oninput=()=>{ S.cutGap=+cgp.value; persistUI(); draw(); }; }
-  const cwv=document.getElementById('cutWaveInp'); if(cwv){ cwv.oninput=()=>{ S.cutWave=+cwv.value; persistUI(); draw(); }; }
-  const cwd=document.getElementById('cutWidthInp'); if(cwd){ cwd.oninput=()=>{ S.cutWidth=+cwd.value; persistUI(); draw(); }; }
-  const cclr=document.getElementById('cutColorInp'), cauto=document.getElementById('cutColorAuto');
+      syncCutStyleUI(); persistUI(); draw(); }); }
+  const cgp=document.getElementById('cutGapInp'); if(cgp){ cgp.oninput=()=>{ S.cutGap=+cgp.value; setCutValue('cutGapVal',S.cutGap+' px'); persistUI(); draw(); }; }
+  const csp=document.getElementById('cutSpanInp'); if(csp){ csp.oninput=()=>{ S.cutSpan=+csp.value; setCutValue('cutSpanVal',S.cutSpan.toFixed(1)+' px'); persistUI(); draw(); }; }
+  const cwv=document.getElementById('cutWaveInp'); if(cwv){ cwv.oninput=()=>{ S.cutWave=+cwv.value; setCutValue('cutWaveVal',S.cutWave+' px'); persistUI(); draw(); }; }
+  const cwd=document.getElementById('cutWidthInp'); if(cwd){ cwd.oninput=()=>{ S.cutWidth=+cwd.value; setCutValue('cutWidthVal',S.cutWidth.toFixed(1)+' px'); persistUI(); draw(); }; }
+  const cop=document.getElementById('cutOpacityInp'); if(cop){ cop.oninput=()=>{ S.cutOpacity=+cop.value; setCutValue('cutOpacityVal',Math.round(S.cutOpacity*100)+'%'); persistUI(); draw(); }; }
+  const cclr=document.getElementById('cutColorInp');
   if(cclr){ cclr.oninput=()=>{ S.cutColor=cclr.value; syncCutStyleUI(); persistUI(); draw(); }; }
-  if(cauto){ cauto.onclick=()=>{ S.cutColor=null; syncCutStyleUI(); persistUI(); draw(); }; }
 }
+function setCutValue(id,text){ const el=document.getElementById(id); if(el) el.textContent=text; }
 function syncCutStyleUI(){
-  const cgp=document.getElementById('cutGapInp'); if(cgp) cgp.value=S.cutGap??11;
-  const cwv=document.getElementById('cutWaveInp'); if(cwv) cwv.value=S.cutWave??8;
-  const cwd=document.getElementById('cutWidthInp'); if(cwd) cwd.value=S.cutWidth??1.2;
+  const scs=document.getElementById('segCutStyle'); if(scs) scs.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===(S.cutStyle||'wave')));
+  const cgp=document.getElementById('cutGapInp'); if(cgp) cgp.value=S.cutGap??10;
+  const csp=document.getElementById('cutSpanInp'); if(csp) csp.value=S.cutSpan??2;
+  const cwv=document.getElementById('cutWaveInp'); if(cwv) cwv.value=S.cutWave??6;
+  const cwd=document.getElementById('cutWidthInp'); if(cwd) cwd.value=S.cutWidth??1.3;
+  const cop=document.getElementById('cutOpacityInp'); if(cop) cop.value=S.cutOpacity??.9;
+  setCutValue('cutGapVal',(S.cutGap??10)+' px');
+  setCutValue('cutSpanVal',(S.cutSpan??2).toFixed(1)+' px');
+  setCutValue('cutWaveVal',(S.cutWave??6)+' px');
+  setCutValue('cutWidthVal',(S.cutWidth??1.3).toFixed(1)+' px');
+  setCutValue('cutOpacityVal',Math.round((S.cutOpacity??.9)*100)+'%');
   const cclr=document.getElementById('cutColorInp'); if(cclr){ const ax=css('--axis'); cclr.value=S.cutColor||(/^#[0-9a-fA-F]{6}$/.test(ax)?ax:'#556070'); }
-  const cauto=document.getElementById('cutColorAuto'); if(cauto) cauto.classList.toggle('on', !S.cutColor);
+  const waveDisabled=(S.cutStyle||'wave')==='slash';
+  const waveCtl=document.getElementById('cutWaveCtl'); if(waveCtl) waveCtl.classList.toggle('is-disabled',waveDisabled);
+  if(cwv) cwv.disabled=waveDisabled;
 }
 function syncZoomToggles(){
   const a=document.getElementById('tgZooms'); if(a) a.classList.toggle('on',S.showZooms);
@@ -5785,7 +5874,7 @@ function uiState(){ const o={
     impSolvent:S.impSolvent, impTol:S.impTol, impTolC:S.impTolC, showImpurities:S.showImpurities, impPins:S.impPins||[],
     lines:S.lines||[], zooms:S.zooms||[],
     figTitle:S.figTitle, titleSize:S.titleSize, titleBold:S.titleBold, cuts:S.cuts||[], cutStyle:S.cutStyle,
-    cutColor:S.cutColor, cutWidth:S.cutWidth, cutWave:S.cutWave, cutGap:S.cutGap, flags:{} };
+    cutColor:S.cutColor, cutWidth:S.cutWidth, cutWave:S.cutWave, cutSpan:S.cutSpan, cutGap:S.cutGap, cutOpacity:S.cutOpacity, flags:{} };
   SHOW_FLAGS.forEach(f=>o.flags[f]=S[f]); return o; }
 function applyUIState(o, withView){
   if(!o) return;
@@ -5842,7 +5931,9 @@ function applyUIState(o, withView){
   if('cutColor' in o) S.cutColor=o.cutColor;
   if(typeof o.cutWidth==='number') S.cutWidth=o.cutWidth;
   if(typeof o.cutWave==='number') S.cutWave=o.cutWave;
+  if(typeof o.cutSpan==='number') S.cutSpan=Math.max(1,Math.min(12,o.cutSpan));
   if(typeof o.cutGap==='number') S.cutGap=o.cutGap;
+  if(typeof o.cutOpacity==='number') S.cutOpacity=Math.max(.1,Math.min(1,o.cutOpacity));
   if(Array.isArray(o.cuts)) S.cuts=o.cuts.filter(c=>c&&isFinite(c.a)&&isFinite(c.b)).map(c=>({a:c.a,b:c.b}));
   else if(o.cut && isFinite(o.cut.a) && isFinite(o.cut.b)) S.cuts=[{a:o.cut.a,b:o.cut.b}];   // migrate legacy single cut
   if(withView && o.view && isFinite(o.view.pHi) && isFinite(o.view.pLo)) S.view={pHi:o.view.pHi,pLo:o.view.pLo};
@@ -7000,13 +7091,12 @@ openResults();
 }
 
 /* remove previous lift / strong glow */
-#toolbar .mbtn:hover,
-#toolbar .tbtn:hover,
-#toolbar .rsub:hover,
+#toolbar .menu:not(.open) > .mbtn:hover,
+#toolbar .tbtn:not(.on):not(.armed):not(.main):hover,
+#toolbar .toolmenu:not(.open) > .tbtn.main:not(.armed):hover,
+#toolbar .rsub:not(.on):hover,
 #toolbar .tmitem:hover,
-#toolbar .mitem:hover,
-#toolbar .toolmenu .tbtn:hover,
-#toolbar .menu .mbtn:hover{
+#toolbar .mitem:hover{
   transform:none !important;
   color:color-mix(in srgb,var(--ink) 88%,var(--dim) 12%) !important;
   border-color:color-mix(in srgb,var(--line) 72%,var(--gridw) 28%) !important;
@@ -7015,9 +7105,10 @@ openResults();
 }
 
 /* icons should react only slightly */
-#toolbar .mbtn:hover .mi,
+#toolbar .menu:not(.open) > .mbtn:hover .mi,
 #toolbar .ic-btn:hover .svi,
-#toolbar .tbtn:hover .svi,
+#toolbar .tbtn:not(.on):not(.armed):not(.main):hover .svi,
+#toolbar .toolmenu:not(.open) > .tbtn.main:not(.armed):hover .svi,
 #toolbar .tmitem:hover .tmic,
 #toolbar .mitem:hover .ic{
   color:color-mix(in srgb,var(--trace) 58%,var(--dim) 42%) !important;
@@ -7034,14 +7125,6 @@ openResults();
   box-shadow:inset 0 0 0 1px color-mix(in srgb,currentColor 12%,transparent) !important;
 }
 
-/* active hover should not become louder */
-#toolbar .menu.open > .mbtn:hover,
-#toolbar .toolmenu.open .tbtn.main:hover,
-#toolbar .tbtn.on:hover,
-#toolbar .rsub.on:hover{
-  box-shadow:inset 0 0 0 1px color-mix(in srgb,currentColor 13%,transparent) !important;
-}
-
 /* dropdown items: keep minimal highlight (.vistog = show/hide rows in settings;
    .asg-gear-popover = the assign gear popover, which is attached to <body> and
    would otherwise miss this #toolbar-scoped override) */
@@ -7054,15 +7137,47 @@ openResults();
 }
 
 /* Light mode: even softer hover */
-html[data-theme="light"] #toolbar .mbtn:hover,
-html[data-theme="light"] #toolbar .tbtn:hover,
-html[data-theme="light"] #toolbar .rsub:hover,
-html[data-theme="light"] #toolbar .toolmenu .tbtn:hover,
-html[data-theme="light"] #toolbar .menu .mbtn:hover{
+html[data-theme="light"] #toolbar .menu:not(.open) > .mbtn:hover,
+html[data-theme="light"] #toolbar .tbtn:not(.on):not(.armed):not(.main):hover,
+html[data-theme="light"] #toolbar .toolmenu:not(.open) > .tbtn.main:not(.armed):hover,
+html[data-theme="light"] #toolbar .rsub:not(.on):hover{
   background:color-mix(in srgb,#fff 88%,var(--trace) 4%) !important;
   border-color:color-mix(in srgb,var(--line) 82%,var(--trace) 8%) !important;
   color:color-mix(in srgb,var(--ink) 86%,var(--dim) 14%) !important;
   box-shadow:none !important;
+}
+
+/* Persistent state outranks transient hover. Open/selected controls keep their
+   exact resting appearance when the pointer moves over them. */
+#toolbar .menu.open > .mbtn:hover,
+#toolbar .toolmenu.open .tbtn.main:not(.armed):hover,
+#toolbar .rsub.on:hover{
+  color:var(--trace) !important;
+  border-color:var(--trace) !important;
+  background:color-mix(in srgb,var(--trace) 10%,transparent) !important;
+  box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--trace) 12%,transparent) !important;
+}
+
+#toolbar .tbtn.on:hover{
+  color:var(--accent) !important;
+  border-color:var(--accent) !important;
+  background:color-mix(in srgb,var(--accent) 12%,transparent) !important;
+  box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--accent) 12%,transparent) !important;
+}
+
+#toolbar .toolmenu .tbtn.main.armed:hover{
+  color:var(--peak) !important;
+  border-color:var(--peak) !important;
+  background:color-mix(in srgb,var(--peak) 12%,transparent) !important;
+  box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--peak) 12%,transparent) !important;
+}
+
+#toolbar .menu.open > .mbtn:hover .mi,
+#toolbar .toolmenu.open .tbtn.main:not(.armed):hover .svi,
+#toolbar .toolmenu .tbtn.main.armed:hover .svi,
+#toolbar .tbtn.on:hover .svi,
+#toolbar .rsub.on:hover .svi{
+  color:inherit !important;
 }
 
 @media (prefers-reduced-motion: reduce){
@@ -7678,7 +7793,7 @@ html[data-theme="light"] #toolbar .menu .mbtn:hover{
     if(typeof syncVisibilityControls==='function')syncVisibilityControls();
   };
   resetAppearance.onclick=()=>{
-    Object.assign(S,{lineW:DEFAULTS.lineW,fontScale:DEFAULTS.fontScale,nameScale:DEFAULTS.nameScale,axisScale:DEFAULTS.axisScale,plotFont:DEFAULTS.plotFont,ppmDigits:DEFAULTS.ppmDigits,axisPad:DEFAULTS.axisPad,baseGap:DEFAULTS.baseGap,figTitle:DEFAULTS.figTitle,titleSize:DEFAULTS.titleSize,titleBold:DEFAULTS.titleBold,cutStyle:DEFAULTS.cutStyle,cutColor:DEFAULTS.cutColor,cutWidth:DEFAULTS.cutWidth,cutWave:DEFAULTS.cutWave,cutGap:DEFAULTS.cutGap});
+    Object.assign(S,{lineW:DEFAULTS.lineW,fontScale:DEFAULTS.fontScale,nameScale:DEFAULTS.nameScale,axisScale:DEFAULTS.axisScale,plotFont:DEFAULTS.plotFont,ppmDigits:DEFAULTS.ppmDigits,axisPad:DEFAULTS.axisPad,baseGap:DEFAULTS.baseGap,figTitle:DEFAULTS.figTitle,titleSize:DEFAULTS.titleSize,titleBold:DEFAULTS.titleBold,cutStyle:DEFAULTS.cutStyle,cutColor:DEFAULTS.cutColor,cutWidth:DEFAULTS.cutWidth,cutWave:DEFAULTS.cutWave,cutSpan:DEFAULTS.cutSpan,cutGap:DEFAULTS.cutGap,cutOpacity:DEFAULTS.cutOpacity});
     document.documentElement.style.removeProperty('--bg');
     const bg=document.getElementById('bgColor');if(bg)bg.value=css('--bg');
     syncUIControls();resize();persistUI();savePrefs();draw();
