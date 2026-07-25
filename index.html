@@ -149,11 +149,19 @@ aside::-webkit-scrollbar-thumb{background:var(--gridw);border-radius:5px}
 .ctl label .val{font-family:var(--mono);color:var(--accent);font-size:11px}
 input[type=range]{-webkit-appearance:none;width:100%;height:3px;background:var(--grid);border-radius:2px;outline:none;cursor:pointer}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;border-radius:50%;background:var(--trace);cursor:pointer;border:2px solid var(--bg);box-shadow:0 0 0 1px var(--trace)}
-.seg{display:flex;border:1px solid var(--line);border-radius:6px;overflow:hidden}
-.seg button{flex:1;background:transparent;border:none;padding:6px 4px;font-size:11px;color:var(--dim);cursor:pointer;transition:.12s;border-right:1px solid var(--line)}
-.seg button:last-child{border-right:none}
+.seg{display:flex;border-radius:7px;overflow:hidden;background:var(--panel2);padding:2px;gap:2px;border:1px solid var(--line)}
+.seg button{flex:1;background:transparent;border:none;border-radius:5px;padding:6px 4px;font-size:11px;color:var(--dim);cursor:pointer;transition:.12s}
 .seg button.on{background:var(--trace);color:var(--bg);font-weight:600}
 .seg button:hover:not(.on){color:var(--ink)}
+/* Keyboard focus ring drawn INSIDE the pill so it can't bleed over the
+   neighbouring button or get clipped by .seg{overflow:hidden}. */
+.seg button:focus{outline:none}
+.seg button:focus-visible{outline:2px solid var(--trace);outline-offset:-2px}
+.seg button.on:focus-visible{outline-color:var(--bg)}
+/* Space between the 重ね/並べる segmented control and the ピークの貫通を許可
+   toggle below it (the toggle's original inline margin is stripped when it is
+   turned into a switch, leaving them touching). */
+#layoutRow #btnOverflow{margin-top:6px}
 .tmstyle{display:flex;align-items:center;gap:8px;padding:4px 9px;font-size:11px;color:var(--dim);white-space:nowrap}
 .tmstyle>span:first-child{min-width:74px}
 .tmstyle .seg{flex:1;min-width:142px}
@@ -302,6 +310,13 @@ main{grid-row:1;position:relative;display:flex;flex-direction:column;background:
 #zoomStyleSettings .tmrow .thrval{grid-column:4}
 #zoomStyleSettings .zoom-style-row .seg{grid-column:3/5;min-width:0}
 #zoomStyleSettings .zoom-style-row .seg button{white-space:nowrap;padding-left:3px;padding-right:3px}
+.lblgear-row{display:flex;align-items:center;gap:6px}
+.lblgear-row>label{flex:1;min-width:0}
+#titleStyleSettings{width:230px}
+#titleStyleSettings .title-style-body{display:flex;flex-direction:column}
+#titleStyleSettings .title-style-body>label{display:flex;justify-content:space-between;align-items:baseline;font-size:12px;color:var(--ink);margin:0 0 4px}
+#titleStyleSettings .title-style-body>input[type=range]{width:100%;margin:0}
+#titleStyleSettings .title-style-body .seg{margin-top:4px}
 /* organized peak menu */
 #tmShift .tmpanel.peak-organized{min-width:min(334px,calc(100vw - 20px));max-width:calc(100vw - 20px);padding:7px;gap:4px}
 #tmInteg .tmpanel.integ-organized{min-width:min(360px,calc(100vw - 20px));max-width:calc(100vw - 20px);padding:7px;gap:4px}
@@ -1088,12 +1103,16 @@ html[data-theme="light"] .toolmenu.open .tmpanel{
             <div class="vcol">
             <div class="tmhead" data-i18n="setLook">Appearance</div>
             <div class="ctl">
-              <label data-i18n="lblTitleText">Title text</label>
+              <div class="lblgear-row"><label data-i18n="lblTitleText" style="margin:0">Title text</label><button type="button" class="asg-gear-btn" id="titleStyleGear" data-i18n-title="titleStyleSettings" title=""><svg class="svi" viewBox="0 0 24 24"><path d="M10.3 2.6h3.4l.5 2.3 1.9.8 2-1.3 2.4 2.4-1.3 2 .8 1.9 2.3.5v3.4l-2.3.5-.8 1.9 1.3 2-2.4 2.4-2-1.3-1.9.8-.5 2.3h-3.4l-.5-2.3-1.9-.8-2 1.3-2.4-2.4 1.3-2-.8-1.9-2.3-.5v-3.4l2.3-.5.8-1.9-1.3-2 2.4-2.4 2 1.3 1.9-.8.5-2.3Z"/><circle cx="12" cy="12" r="3.1"/></svg></button></div>
               <input type="text" id="figTitleInput" placeholder="¹H NMR (CDCl₃)">
-              <label style="margin-top:6px"><span data-i18n="lblTitleSize">Title size</span> <span class="val" id="tszv">15pt</span></label>
-              <input type="range" id="titleSize" min="9" max="30" step="0.5" value="15">
-              <label style="margin-top:6px" data-i18n="lblTitleWeight">Title weight</label>
-              <div class="seg" id="segTitleWeight"><button data-v="normal" class="on" data-i18n="optThin">Thin</button><button data-v="bold" data-i18n="optBold">Bold</button></div>
+            </div>
+            <div id="titleStyleSettings" class="asg-gear-settings title-gear-popover" hidden data-i18n-popover-title="titleStyleSettings">
+              <div class="title-style-body">
+                <label><span data-i18n="lblTitleSize">Title size</span> <span class="val" id="tszv">15pt</span></label>
+                <input type="range" id="titleSize" min="9" max="30" step="0.5" value="15">
+                <label style="margin-top:6px" data-i18n="lblTitleWeight">Title weight</label>
+                <div class="seg" id="segTitleWeight"><button data-v="normal" class="on" data-i18n="optThin">Thin</button><button data-v="bold" data-i18n="optBold">Bold</button></div>
+              </div>
             </div>
             <div class="msep"></div>
             <div class="ctl">
@@ -1180,6 +1199,7 @@ html[data-theme="light"] .toolmenu.open .tmpanel{
                 <button class="tbtn" id="btnInvert" data-i18n="lblInvert">Invert direction</button>
               </div>
               <button class="tbtn on" id="btnHscroll" style="width:100%;margin-top:6px" data-i18n="lblHscroll">H-scroll = pan</button>
+              <button class="tbtn on" id="btnLimitView" style="width:100%;margin-top:6px" data-i18n="lblLimitView">Hide out-of-range</button>
             </div>
             <div class="msep"></div>
             <button class="mitem" id="btnResetSet"><span class="ic"><svg class="svi" viewBox="0 0 16 16"><path d="M3.2 8a4.8 4.8 0 1 0 1.5-3.5"/><path d="M2.4 2.8v2.6h2.6"/></svg></span><span data-i18n="btnResetDef">Reset to defaults</span></button>
@@ -1383,6 +1403,7 @@ html[data-theme="light"] .toolmenu.open .tmpanel{
         };
         setupStyleGear('zoomStyleGear','zoomStyleSettings','closeZoomStyleSettings');
         setupStyleGear('cutStyleGear','cutStyleSettings','closeCutStyleSettings');
+        setupStyleGear('titleStyleGear','titleStyleSettings','closeTitleStyleSettings');
       })();
       </script>
       <button class="tbtn ic-btn tbc" id="btnManualBar" data-i18n-title="manualTitle"><svg class="svi" viewBox="0 0 16 16"><path d="M8 4.3C6.8 3.3 5.1 3 3.3 3.2V12c1.8-.2 3.5.1 4.7 1.1 1.2-1 2.9-1.3 4.7-1.1V3.2C10.9 3 9.2 3.3 8 4.3Z"/><path d="M8 4.3V13"/></svg><span class="tb-lbl" data-i18n="manual">Manual</span></button>
@@ -1437,7 +1458,7 @@ const I18N={
   actOpenFolder:"Open folder", actReopenLast:"Reopen last folder", hintDropFolder:"Tip: drag several dataset folders (or one parent folder) onto the window to import them all at once — no prompt.", hintAnalysisState:"Analysis and annotations are saved automatically to each data folder in Chrome or Edge. Use this analysis-data JSON to share, move or explicitly back up the state; open the original data before importing it.",
   lblLang:"Language", lblTheme:"Theme", optDark:"Dark", optLight:"Light",
   lblZoom:"Zoom", mZoomIn:"⊕ In", mZoomOut:"⊖ Out", lblWheel:"Wheel sensitivity", lblAxisH:"δ-axis height", lblBaseGap:"δ-axis ↔ spectrum gap",
-  lblInertia:"Inertia", lblInvert:"Invert", lblHscroll:"H-scroll = pan δ",
+  lblInertia:"Inertia", lblInvert:"Invert", lblHscroll:"H-scroll = pan δ", lblLimitView:"Hide out-of-range",
   lblRange:"δ range", btnApply:"Apply", hdViewVis:"Show / hide",
   secImages:"Images", btnAddImg:"＋ Add image from file", imgItem:"Image",
   imgHint:"Paste a screenshot (Ctrl+V) or add a PNG. Click to select · drag corner to resize · Del to remove (when no tool is active).",
@@ -1451,7 +1472,7 @@ const I18N={
   lblAxisDigits:"δ-axis decimals", lblPeakDigits:"Label decimals",
   lblShowLines:"Connectors", lblShowZooms:"Zoom views", lblShowLanes:"Lane lines",
   tZoomTxt:"Zoom view", tLineTxt:"Connector", ttZoom:"Drag a δ window → floating magnified view (× to remove)", ttZoomSingle:"Zoom view works with a single spectrum only",
-  tCutTxt:"Cut", ttCut:"Cut out a δ region with a break mark", actCutDrag:"Create (drag δ window)", actCutClear:"Clear all cuts", actCutUndo:"Undo last cut", hintCutMulti:"Drag more windows to add cuts.", zoomStyleSettings:"Zoom style settings", cutStyleSettings:"Cut style settings", lblCutSpacing:"Spacing", lblCutSpan:"Width", lblCutWave:"Wave", lblCutWidth:"Thickness", lblCutOpacity:"Opacity", lblCutColor:"Color", optAuto:"Auto",
+  tCutTxt:"Cut", ttCut:"Cut out a δ region with a break mark", actCutDrag:"Create (drag δ window)", actCutClear:"Clear all cuts", actCutUndo:"Undo last cut", hintCutMulti:"Drag more windows to add cuts.", zoomStyleSettings:"Zoom style settings", cutStyleSettings:"Cut style settings", titleStyleSettings:"Title style", lblCutSpacing:"Spacing", lblCutSpan:"Width", lblCutWave:"Wave", lblCutWidth:"Thickness", lblCutOpacity:"Opacity", lblCutColor:"Color", optAuto:"Auto",
   actZoomDrag:"Create (drag δ window)", actClearZoom:"Clear all zoom views", lblZoomBorder:"Frame color", lblZoomBorderW:"Frame width", lblLeaderStyle:"Leader style", optSolid:"Solid", optDashed:"Dashed", optDotted:"Dotted",
   ttLine:"Drag two points → dashed connector; click a line to remove",
   hdAnnotate:"Annotate", hdVisibility:"Show / hide", lblVisToggle:"Show / hide", hdWheel:"Wheel / scroll", secKeyboard:"Keyboard", setGen:"General", setLook:"Appearance", setAxis:"δ-axis", secRegion:"Region",
@@ -1543,7 +1564,7 @@ const I18N={
   actOpenFolder:"フォルダを開く", actReopenLast:"前のフォルダを再読み込み", hintDropFolder:"ヒント：複数のデータフォルダ（または親フォルダ）をまとめてウィンドウにドラッグ&ドロップすれば、確認なしで一度に読み込めます。", hintAnalysisState:"Chrome / Edge では、解析・注釈状態は各データフォルダへ自動保存されます。この解析データJSONは共有・別PCへの移動・明示的なバックアップ用です。元データを開いた後に読み込んでください。",
   lblLang:"言語", lblTheme:"テーマ", optDark:"ダーク", optLight:"ライト",
   lblZoom:"ズーム", mZoomIn:"⊕ 拡大", mZoomOut:"⊖ 縮小", lblWheel:"ホイール感度", lblAxisH:"δ軸の高さ", lblBaseGap:"δ軸とスペクトルの間隔",
-  lblInertia:"ホイール慣性", lblInvert:"向きを反転", lblHscroll:"横スクロールでδ移動",
+  lblInertia:"ホイール慣性", lblInvert:"向きを反転", lblHscroll:"横スクロールでδ移動", lblLimitView:"データ範囲外を表示しない",
   lblRange:"δ 表示範囲", btnApply:"適用", hdViewVis:"表示・非表示",
   secImages:"画像", btnAddImg:"＋ 画像をファイルから追加", imgItem:"画像",
   imgHint:"スクリーンショットを貼り付け（Ctrl+V）またはPNGを追加。クリックで選択・角ドラッグで拡縮・Delで削除（ツール未選択時）。",
@@ -1557,7 +1578,7 @@ const I18N={
   lblAxisDigits:"δ軸の小数桁", lblPeakDigits:"ラベルの小数桁",
   lblShowLines:"破線コネクタ", lblShowZooms:"拡大図", lblShowLanes:"レーン区切り線",
   tZoomTxt:"拡大図", tLineTxt:"破線コネクタ", ttZoom:"δ範囲をドラッグ→拡大図をフロート配置（×で削除）", ttZoomSingle:"拡大図は単一スペクトルのときのみ使えます",
-  tCutTxt:"カット", ttCut:"δ範囲を省略記号で切り取る", actCutDrag:"作成（δ範囲をドラッグ）", actCutClear:"すべて解除", actCutUndo:"直前のカットを取消", hintCutMulti:"ドラッグを繰り返すと複数箇所カットできます", zoomStyleSettings:"拡大図のスタイル設定", cutStyleSettings:"カットのスタイル設定", lblCutSpacing:"間隔", lblCutSpan:"横幅", lblCutWave:"うねり", lblCutWidth:"太さ", lblCutOpacity:"透明度", lblCutColor:"色", optAuto:"自動",
+  tCutTxt:"カット", ttCut:"δ範囲を省略記号で切り取る", actCutDrag:"作成（δ範囲をドラッグ）", actCutClear:"すべて解除", actCutUndo:"直前のカットを取消", hintCutMulti:"ドラッグを繰り返すと複数箇所カットできます", zoomStyleSettings:"拡大図のスタイル設定", cutStyleSettings:"カットのスタイル設定", titleStyleSettings:"タイトルのスタイル", lblCutSpacing:"間隔", lblCutSpan:"横幅", lblCutWave:"うねり", lblCutWidth:"太さ", lblCutOpacity:"透明度", lblCutColor:"色", optAuto:"自動",
   actZoomDrag:"作成（δ範囲をドラッグ）", actClearZoom:"すべて削除", lblZoomBorder:"枠線の色", lblZoomBorderW:"枠線の太さ", lblLeaderStyle:"引き出し線", optSolid:"実線", optDashed:"破線", optDotted:"点線",
   ttLine:"2点をドラッグ→破線で結ぶ／線をクリックで削除",
   hdAnnotate:"注釈", hdVisibility:"表示・非表示", lblVisToggle:"表示 / 非表示", hdWheel:"ホイール / スクロール", secKeyboard:"キーボード", setGen:"全般", setLook:"見た目", setAxis:"δ軸", secRegion:"領域",
@@ -1785,7 +1806,7 @@ const PAL_QUAL={
   set2  :['#66c2a5','#fc8d62','#8da0cb','#e78ac3','#a6d854','#ffd92f','#e5c494','#b3b3b3'],
   dark2 :['#1b9e77','#d95f02','#7570b3','#e7298a','#66a61e','#e6ab02','#a6761d','#666666']
 };
-const PALETTES=['wbHC','kbHC','viridis','plasma','inferno','magma','cividis','turbo','coolwarm','rdbu','bwr','spectral','blues','reds','greens','oranges','purples','okabe','tab10','set2','dark2','mono','white','black','custom'];
+const PALETTES=['wbHC','kbHC','viridis','plasma','inferno','magma','cividis','turbo','coolwarm','rdbu','spectral','blues','reds','greens','oranges','purples','okabe','tab10','set2','dark2','mono','white','black','custom'];
 const PAL_LABEL={wbHC:'White bg (HC)',kbHC:'Black bg (HC)',
   viridis:'Viridis',plasma:'Plasma',inferno:'Inferno',magma:'Magma',cividis:'Cividis',turbo:'Turbo',
   coolwarm:'Cool–Warm',rdbu:'Red → Blue',bwr:'Blue → Red',spectral:'Spectral',
@@ -1824,16 +1845,16 @@ function paletteColors(name, n){
 }
 // preview swatch strip (6 samples) for a palette name
 function paletteSwatch(name){ return paletteColors(name,6); }
-const DEFAULTS={lineW:1, wheelSens:1, wheelInertia:false, wheelInvert:false, hscroll:true, axisPad:56, baseGap:0.035,
+const DEFAULTS={lineW:1, wheelSens:1, wheelInertia:false, wheelInvert:false, hscroll:true, limitView:true, axisPad:56, baseGap:0.035,
   fontScale:1, nameScale:1, axisScale:1, markSize:4.6, markColor:'#0E6E7E', shadeColor:'#D33A2C', textColor:null, textSize:10.5, lineColor:null, lineStyle:'dashed', imageBorder:false, imageBorderColor:'#3A4750', imageBorderWidth:1, imageBorderStyle:'solid', integDigits:3, multColor:null, multDigits:2, multJStyle:'full', multStyle:'style1', plotFont:'mono', ppmDigits:2, pkDigits:2,
   zoomBorderColor:null, zoomBorderWidth:1, zoomLeaderStyle:'dashed', peakStyle:'style1', integStyle:'style1', showIntegCurve:true,
   showTitle:false, figTitle:null, titleSize:15, titleBold:false, cutStyle:'wave', cutColor:null, cutWidth:1.3, cutWave:6, cutSpan:2, cutGap:10, cutOpacity:0.9};
 const S={ spectra:[], active:-1, view:{pHi:1,pLo:0}, yscale:1, tool:null,
-  lineW:1, wheelSens:1, wheelInertia:false, wheelInvert:false, hscroll:true, selInteg:-1, selImg:-1, selZoom:-1,
+  lineW:1, wheelSens:1, wheelInertia:false, wheelInvert:false, hscroll:true, limitView:true, selInteg:-1, selImg:-1, selZoom:-1,
   selPeak:-1, selPeaks:[], selMults:[], thr:0.05, axisPad:56, baseGap:0.035, integShift:0,
   peakColor:null, integColor:null, peakStyle:'style1', integStyle:'style1', showIntegCurve:true, multColor:null, multDigits:2, multJStyle:'full', multStyle:'style1', showMultSources:false,
   markColor:'#0E6E7E', shadeColor:'#D33A2C', markSize:4.6, textColor:null, textSize:10.5, lineColor:null, lineStyle:'dashed', imageBorder:false, imageBorderColor:'#3A4750', imageBorderWidth:1, imageBorderStyle:'solid', integDigits:3, showInsets:true, showNames:true, showPeaks:true, showIntegs:true, showShades:true, showMarks:true, showText:true,
-  resTab:'peaks', asgSub:'text', docked:true, nextColor:0, layout:'stack', palette:'wbHC', monoBase:'#0E6E7E', ppmDigits:2,
+  resTab:'peaks', asgSub:'text', docked:true, nextColor:0, layout:'stack', palette:'wbHC', paletteReverse:false, monoBase:'#0E6E7E', ppmDigits:2,
   pkDigits:2, showMults:true, showJTree:true, showThresholdLine:true, showLanes:false, laneOverflow:false, showLines:true, showZooms:true, lines:[], zooms:[],
   fontScale:1, nameScale:1, axisScale:1, plotFont:'mono', showMinimap:false, zoomLeaders:true,
   zoomBorderColor:null, zoomBorderWidth:1, zoomLeaderStyle:'dashed',
@@ -2385,6 +2406,10 @@ function axisDigits(span){ const d=(S.ppmDigits!=null?S.ppmDigits:2);
   const byspan = span<2?2:(span<10?1:0);
   return Math.min(d, byspan); }
 let VP=null; // when set {x0,top,w,ph,view}: geometry maps into a sub-rectangle (used by zoom insets)
+/* when set (during a δ-axis pan with cuts) the main-plot geometry is LOCKED to a fixed
+   compressed coordinate + scale, so the pan is a pure rigid translation with no zoom/lag
+   regardless of the gap width. {sc, X0, pw, cuts:[{a,b,w,gap}], bp:[{d,p}], grabP}. */
+let PAN_LOCK=null;
 function curView(){ return VP?VP.view:S.view; }
 function curX0(){ return VP?VP.x0:PADR; }
 function curTop(){ return VP?VP.top:(PADT+titleBandH()); }
@@ -2398,50 +2423,102 @@ function titleText(){ const t=(S.figTitle!=null&&S.figTitle!=='')?S.figTitle:aut
 function titleBandH(){ if(VP||!S.showTitle||!titleText()) return 0; return Math.round((S.titleSize||15)*1.55)+8; }
 /* ---- cuts: array of {a,b} ppm (a>b) regions, each collapsed to a narrow gap with a break ---- */
 function curCutGap(){ return Math.max(6, Math.min(60, S.cutGap??10)); }
-/* active (in-view, non-edge, merged, high→low) cut regions, or [] */
+/* active (in-view, merged, high→low) cut regions, or [].
+   FIX: a cut that overhangs a view edge is CLAMPED to the visible window instead
+   of being dropped outright. That keeps the collapsed δ span (and therefore the
+   horizontal scale) continuous while panning across a cut boundary — previously
+   the cut flipped on/off in one step, so the whole trace jumped sideways.
+   Each cut also carries `gf` (0..1): the break gap fades to 0 as a cut edge
+   reaches the plot edge, so the gap width does not pop either. */
 function cutActiveList(){ if(VP) return [];
   const list=(S.cuts||[]);
   if(!list.length) return [];
-  const v=S.view, hi=Math.max(v.pHi,v.pLo), lo=Math.min(v.pHi,v.pLo);
+  const v=S.view, hi=Math.max(v.pHi,v.pLo), lo=Math.min(v.pHi,v.pLo), span=hi-lo;
   const acc=[];
   for(const cut of list){ if(!cut||!isFinite(cut.a)||!isFinite(cut.b)) continue;
-    let a=Math.max(cut.a,cut.b), b=Math.min(cut.a,cut.b);
-    a=Math.min(a,hi); b=Math.max(b,lo);
-    if(a-b<1e-6) continue;                          // nothing left inside the view
-    if(a>=hi-1e-6 || b<=lo+1e-6) continue;          // touches an edge → just a crop, not a break
-    acc.push({a,b}); }
-  acc.sort((p,q)=>q.a-p.a);                          // downfield (high ppm) first = left→right
+    const aFull=Math.max(cut.a,cut.b), bFull=Math.min(cut.a,cut.b);
+    const a=Math.min(aFull,hi), b=Math.max(bFull,lo);   // clamp to the visible window
+    if(a-b<1e-6) continue;                              // wholly outside the view
+    acc.push({a,b,aFull,bFull}); }
+  acc.sort((p,q)=>q.a-p.a);                             // downfield (high ppm) first = left→right
   const merged=[];
   for(const c of acc){ const prev=merged[merged.length-1];
-    if(prev && c.a >= prev.b-1e-9){ prev.b=Math.min(prev.b,c.b); prev.a=Math.max(prev.a,c.a); }
-    else merged.push({a:c.a,b:c.b}); }
+    if(prev && c.a >= prev.b-1e-9){ prev.b=Math.min(prev.b,c.b); prev.a=Math.max(prev.a,c.a);
+      prev.bFull=Math.min(prev.bFull,c.bFull); prev.aFull=Math.max(prev.aFull,c.aFull); }
+    else merged.push({a:c.a,b:c.b,aFull:c.aFull,bFull:c.bFull}); }
+  // if the cuts would swallow (nearly) the whole visible window there is no
+  // spectrum left to place a break between → show the view plainly instead.
+  let vis=span; for(const c of merged) vis-=(c.a-c.b);
+  if(vis < span*0.02) return [];
+  // fade each break gap to zero as its nearer edge runs into the plot edge
+  const ramp=Math.max(1e-9, span*0.03);                 // ppm window of the fade
+  for(const c of merged){
+    const room=Math.min(hi-c.aFull, c.bFull-lo);        // spectrum left on the nearer side of the break
+    c.gf=Math.max(0, Math.min(1, room/ramp));           // 1 = full break, 0 = flush with an edge (pure crop)
+  }
   return merged; }
 /* piecewise geometry: total collapsed ppm + scale for the current view */
-function cutGeom(){ const v=curView(), cuts=cutActiveList(), G=curCutGap();
-  let collapsed=0; for(const c of cuts) collapsed+=(c.a-c.b);
-  const sc=(plotW()-cuts.length*G)/((v.pHi-v.pLo)-collapsed);
+function cutGeom(){
+  if(PAN_LOCK && !VP) return {v:S.view, cuts:cutActiveList(), G:curCutGap(), sc:PAN_LOCK.sc, X0:PAN_LOCK.X0};
+  const v=curView(), cuts=cutActiveList(), G=curCutGap();
+  let collapsed=0, gaps=0;
+  for(const c of cuts){ collapsed+=(c.a-c.b); gaps+=G*c.gf; }
+  const sc=(plotW()-gaps)/((v.pHi-v.pLo)-collapsed);
   return {v, cuts, G, sc, X0:curX0()}; }
-function ppmToX(ppm){ const {v,cuts,G,sc,X0}=cutGeom();
+/* compressed δ coordinate used only while a pan is locked: outside cuts advances 1 per ppm,
+   inside a cut advances only gap/w (so each cut occupies a fixed `gap` δ-equivalent). */
+function panP(δ, cuts){ cuts=cuts||PAN_LOCK.cuts; let p=-δ;
+  for(const c of cuts){ const o=Math.max(0, c.a-Math.max(c.b, δ)); if(o>0) p-=o*(1-c.gap/c.w); }
+  return p; }
+function panPinv(u){ const bp=PAN_LOCK.bp;                 // invert panP via precomputed breakpoints
+  if(!bp.length) return -u;
+  if(u<=bp[0].p) return bp[0].d+(bp[0].p-u);               // above the top cut → slope -1
+  for(let i=1;i<bp.length;i++){ if(u<=bp[i].p+1e-12){
+    const t=(u-bp[i-1].p)/((bp[i].p-bp[i-1].p)||1e-12); return bp[i-1].d+(bp[i].d-bp[i-1].d)*t; } }
+  const n=bp.length-1; return bp[n].d+(bp[n].p-u); }        // below the bottom cut → slope -1
+function ppmToX(ppm){
+  if(PAN_LOCK && !VP) return PAN_LOCK.X0+(panP(ppm)-panP(S.view.pHi))*PAN_LOCK.sc;
+  const {v,cuts,G,sc,X0}=cutGeom();
   if(!cuts.length) return X0 + (v.pHi-ppm)*sc;
   let x=X0, cur=v.pHi;                               // walk downfield→upfield
-  for(const c of cuts){ if(ppm>=c.a-1e-12) return x+(cur-ppm)*sc;
+  for(const c of cuts){ const g=G*c.gf;
+    if(ppm>=c.a-1e-12) return x+(cur-ppm)*sc;
     x+=(cur-c.a)*sc;
-    if(ppm>c.b+1e-12) return x+G*0.5;               // inside the omitted region → gap center
-    x+=G; cur=c.b; }
+    if(ppm>c.b+1e-12) return x+g*0.5;               // inside the omitted region → gap center
+    x+=g; cur=c.b; }
   return x+(cur-ppm)*sc; }
-function xToPpm(x){ const {v,cuts,G,sc,X0}=cutGeom();
+function xToPpm(x){
+  if(PAN_LOCK && !VP) return panPinv(panP(S.view.pHi)+(x-PAN_LOCK.X0)/PAN_LOCK.sc);
+  const {v,cuts,G,sc,X0}=cutGeom();
   if(!cuts.length) return v.pHi - (x-X0)/sc;
   let px=X0, cur=v.pHi;
-  for(const c of cuts){ const segW=(cur-c.a)*sc;
+  for(const c of cuts){ const g=G*c.gf, segW=(cur-c.a)*sc;
     if(x<=px+segW) return cur-(x-px)/sc;
-    px+=segW; if(x<=px+G) return c.a;               // inside the gap → clamp to its downfield edge
-    px+=G; cur=c.b; }
+    px+=segW; if(x<=px+g) return c.a;               // inside the gap → clamp to its downfield edge
+    px+=g; cur=c.b; }
   return cur-(x-px)/sc; }
 /* gap pixel-ranges [{x0,x1,xc,c},…] of the cuts, or [] (for skipping traces/ticks + drawing breaks) */
-function cutGapsX(){ const {v,cuts,G,sc,X0}=cutGeom(); if(!cuts.length) return [];
+function cutGapsX(){
+  if(PAN_LOCK && !VP){ const out=[], Ph=panP(S.view.pHi), L=PAN_LOCK.X0, R=PAN_LOCK.X0+PAN_LOCK.pw;
+    for(const c of PAN_LOCK.cuts){
+      const x0=L+(panP(c.a)-Ph)*PAN_LOCK.sc, x1=L+(panP(c.b)-Ph)*PAN_LOCK.sc;
+      if(x1<L-0.5 || x0>R+0.5) continue;              // gap scrolled fully off an edge
+      out.push({x0, x1, xc:(x0+x1)/2, c:{a:c.a,b:c.b}}); }
+    return out; }
+  const {v,cuts,G,sc,X0}=cutGeom(); if(!cuts.length) return [];
   const out=[]; let x=X0, cur=v.pHi;
-  for(const c of cuts){ x+=(cur-c.a)*sc; out.push({x0:x, x1:x+G, xc:x+G*0.5, c}); x+=G; cur=c.b; }
+  for(const c of cuts){ const g=G*c.gf; x+=(cur-c.a)*sc; out.push({x0:x, x1:x+g, xc:x+g*0.5, c}); x+=g; cur=c.b; }
   return out; }
+/* all user cuts normalized (a>b), sorted downfield-first and merged — NOT clamped to the
+   view (used by panning, which is deciding what the view should become). */
+function mergedCutsAbs(){
+  const list=(S.cuts||[]).filter(c=>c&&isFinite(c.a)&&isFinite(c.b))
+    .map(c=>({a:Math.max(c.a,c.b), b:Math.min(c.a,c.b)})).sort((p,q)=>q.a-p.a);
+  const m=[];
+  for(const c of list){ const prev=m[m.length-1];
+    if(prev && c.a>=prev.b-1e-9){ prev.b=Math.min(prev.b,c.b); prev.a=Math.max(prev.a,c.a); }
+    else m.push({a:c.a,b:c.b}); }
+  return m; }
 /* true if a ppm falls strictly inside any omitted (cut) region — annotations there are dropped */
 function ppmInCut(ppm){ const cuts=cutActiveList();
   for(const c of cuts){ if(ppm<c.a-1e-9 && ppm>c.b+1e-9) return true; } return false; }
@@ -2456,6 +2533,39 @@ function globalRange(){
   const vs=visibleSpectra(); if(!vs.length) return null;
   let hi=-1e9, lo=1e9; vs.forEach(s=>{ hi=Math.max(hi,s.ppmHi); lo=Math.min(lo,s.ppmLo); });
   return {pHi:hi,pLo:lo};
+}
+/* Keep the δ-window inside the actual data extent (+a small margin) so wheel/pan
+   can't shrink to −100..100 or drift off into empty space. Returns a corrected
+   {pHi,pLo}; clampView._hit flags that a wall was met so momentum can stop against it.
+   When S.limitView===false this is a no-op (free mode = the original behavior:
+   the view may roam anywhere, including out past the data into empty space). */
+const VIEW_MARGIN=0;                           // blank padding shown beyond data, each side
+                                               // (fraction of data span; 0 = strict, never show out-of-range)
+function clampView(v){
+  clampView._hit=false;
+  if(S.limitView===false) return v;            // free mode → no restriction
+  const g=globalRange(); if(!g||!isFinite(v.pHi)||!isFinite(v.pLo)) return v;
+  const dataSpan=g.pHi-g.pLo; if(!(dataSpan>0)) return v;
+  const margin=dataSpan*VIEW_MARGIN;
+  const maxHi=g.pHi+margin, minLo=g.pLo-margin, maxSpan=maxHi-minLo;
+  let span=v.pHi-v.pLo;
+  const cSpan=Math.min(Math.max(span, dataSpan*1e-4), maxSpan);   // never wider than data(+margin)
+  if(cSpan!==span) clampView._hit=true;
+  span=cSpan;
+  let hi=v.pHi;
+  if(span>=dataSpan){
+    // window is wide enough to hold every point → CENTER the data. Panning can't scroll
+    // blank in on one side; any margin (if VIEW_MARGIN>0) shows up symmetrically, and with
+    // VIEW_MARGIN=0 the full view is exactly [g.pLo,g.pHi] with no out-of-range at all.
+    const mid=(g.pHi+g.pLo)/2, chi=mid+span/2;
+    if(Math.abs(chi-hi)>1e-9) clampView._hit=true;
+    hi=chi;
+  } else {
+    // zoomed in → free pan across sub-regions, stopping right at the data edge (+margin)
+    if(hi>maxHi){ hi=maxHi; clampView._hit=true; }
+    if(hi-span<minLo){ hi=minLo+span; clampView._hit=true; }
+  }
+  return {pHi:hi, pLo:hi-span};
 }
 function laneInfo(){
   const vs=visibleSpectra(), ph=plotH();
@@ -3065,8 +3175,6 @@ function renderContent(opts){
       } else {
         ctx.fillStyle=igCol; ctx.textAlign='center'; ctx.font=plotFont(10);
         ctx.fillText(ig.rel.toFixed(S.integDigits??3),(x1+x2)/2,lt+lh*0.46+shift);
-        if(ig.norm>0){ ctx.font=plotFont(9); ctx.fillStyle=hexA(igCol,.75);
-          ctx.fillText('('+t('refTag')+')',(x1+x2)/2,lt+lh*0.46+12+shift); }
       }
     });
     if(S.showMults) (sp.multiplets||[]).forEach(m=>{
@@ -3284,7 +3392,8 @@ function drawCutBreak(){
         else dx=Math.sin((yy-top)/wl*Math.PI)*amp;
         const X=bx+dx; if(first){ctx.moveTo(X,yy);first=false;} else ctx.lineTo(X,yy); } }
     ctx.stroke(); };
-  for(const g of gaps){ edge(g.x0); edge(g.x1); }
+  for(const g of gaps){ if(g.x1-g.x0<0.75) continue;   // gap faded to ~0 at a plot edge → plain crop, no break
+    edge(g.x0); edge(g.x1); }
   ctx.restore();
 }
 
@@ -3380,7 +3489,21 @@ TOOLS.forEach(id=>{ const el=document.getElementById(id); if(!el) return;
     const wasOpen=tm.classList.contains('open'); closeMenus(); closeToolMenus();
     if(!wasOpen) tm.classList.add('open','sticky'); }; })();
 
-let panning=false,panStart=0,panHi=0,panLo=0,dragging=false,edgeDrag=null,zoomDrag=null,lineDrag=null,mmDrag=false;
+let panning=false,panStart=0,panHi=0,panLo=0,panPPP=0,dragging=false,edgeDrag=null,zoomDrag=null,lineDrag=null,mmDrag=false;
+/* Begin a δ-axis pan. When a cut is active, LOCK the geometry to a fixed compressed
+   coordinate + scale (PAN_LOCK) so the whole move is a rigid translation: every point —
+   the grabbed δ included — tracks the cursor 1:1, and the break gap simply scrolls off
+   the edge instead of resizing the view. With no active cut it's a plain full-span pan. */
+function panBegin(px){ panning=true; panStart=px; panHi=S.view.pHi; panLo=S.view.pLo; PAN_LOCK=null;
+  const sc=cutGeom().sc;
+  if(!VP && cutActiveList().length && isFinite(sc) && sc>0){
+    const gapPpm=curCutGap()/sc;                                   // gap width in δ-equivalent, fixed for this pan
+    const cuts=mergedCutsAbs().map(c=>({a:c.a, b:c.b, w:(c.a-c.b), gap:Math.min(gapPpm, (c.a-c.b)*0.999)}));
+    const grabPpm=xToPpm(px);                                      // grabbed δ, via normal geometry (lock still null)
+    const ds=[]; for(const c of cuts){ ds.push(c.a,c.b); } ds.sort((a,b)=>b-a);
+    const bp=ds.map(d=>({d, p:panP(d,cuts)}));
+    PAN_LOCK={sc, X0:curX0(), pw:plotW(), cuts, bp, grabP:panP(grabPpm,cuts)};
+  } else { panPPP=(panHi-panLo)/Math.max(1,plotW()); } }
 cv.addEventListener('pointermove',e=>{
   const r=cv.getBoundingClientRect(), x=e.clientX-r.left, yhov=e.clientY-r.top; cursorX=x;
   const sp=A();
@@ -3437,8 +3560,11 @@ cv.addEventListener('pointermove',e=>{
     }
     return; }
   if(dragging&&dragRect){ dragRect.x1=x; dragRect.y1=e.clientY-r.top; draw(); }
-  else if(panning){ const dppm=(x-panStart)/plotW()*(panHi-panLo);
-    S.view.pHi=panHi+dppm; S.view.pLo=panLo+dppm; draw(); }
+  else if(panning){
+    if(PAN_LOCK){ const Ph=PAN_LOCK.grabP-(x-PAN_LOCK.X0)/PAN_LOCK.sc;   // anchor grabbed δ under the cursor
+      S.view.pHi=panPinv(Ph); S.view.pLo=panPinv(Ph+PAN_LOCK.pw/PAN_LOCK.sc); }
+    else { const dppm=(x-panStart)*panPPP; S.view=clampView({pHi:panHi+dppm, pLo:panLo+dppm}); }
+    draw(); }
   else { // cursor feedback: images / δ-axis grab / selected-integral edges
     const yy=e.clientY-r.top, overAxis = yy>=curTop()+plotH();
     const re=regionEdgeAt(x,yy);
@@ -3518,7 +3644,7 @@ cv.addEventListener('pointerdown',e=>{
   }
   if(e.button===0 && y>=curTop()+plotH()){ // grab the δ-axis to pan
     cv.setPointerCapture(e.pointerId);
-    panning=true; panStart=x; panHi=S.view.pHi; panLo=S.view.pLo;
+    panBegin(x);
     cv.style.cursor='grabbing'; return;
   }
   // a tool armed + pressed INSIDE a zoom inset → route this whole gesture through the inset's
@@ -3529,7 +3655,7 @@ cv.addEventListener('pointerdown',e=>{
     let ppm; if(_zvp){ VP=_zvp; ppm=xToPpm(x); VP=null; } else ppm=xToPpm(x);
     doCalibrate(ppm, sp); return; }
   cv.setPointerCapture(e.pointerId);
-  if(e.button===2 || e.shiftKey){ panning=true; panStart=x; panHi=S.view.pHi; panLo=S.view.pLo; return; }
+  if(e.button===2 || e.shiftKey){ panBegin(x); return; }
   if(S.tool==='tInteg' && e.button===0){ const tsp=activateAt(y)||A();
     let hit; if(_zvp){ VP=_zvp; hit=integralEdgeAt(tsp,x); VP=null; } else hit=integralEdgeAt(tsp,x);
     if(hit){ pushUndo(tsp); edgeDrag=hit; edgeDrag.zVP=_zvp; return; } }
@@ -3546,7 +3672,7 @@ cv.addEventListener('pointerup',e=>{
   if(insetDrag){ const sp=insetDrag.sp||A(); cv.style.cursor='';
     if(sp) saveAnnot(sp); insetDrag=null; return; }
   if(edgeDrag){ const sp=A(); if(sp){ renormIntegrals(sp); saveAnnot(sp); } edgeDrag=null; renderResults(); draw(); return; }
-  if(panning){panning=false; cv.style.cursor=''; return;}
+  if(panning){panning=false; PAN_LOCK=null; cv.style.cursor=''; draw(); persistUI(); return;}
   if(!dragging)return; dragging=false;
   const r=cv.getBoundingClientRect(), x=e.clientX-r.left, y=e.clientY-r.top;
   const sp = (S.tool && S.tool!=='') ? (activateAt(dragRect.y0)||A()) : A();
@@ -3696,10 +3822,10 @@ function wheelInt(dy, tsp){
   const tg = set.length ? set : (tsp && visibleSpectra().indexOf(tsp)>=0 ? [tsp] : (A()?[A()]:[]));
   tg.forEach(sp=>applyYscale(sp,f)); }
 function wheelZoom(dy,pc){ const inv=S.wheelInvert?-1:1; const f=Math.exp(dy*0.0014*S.wheelSens*inv);
-  S.view.pHi=pc+(S.view.pHi-pc)*f; S.view.pLo=pc-(pc-S.view.pLo)*f; }
+  S.view.pHi=pc+(S.view.pHi-pc)*f; S.view.pLo=pc-(pc-S.view.pLo)*f; S.view=clampView(S.view); }
 function wheelPan(dx){ const inv=S.wheelInvert?-1:1; const span=S.view.pHi-S.view.pLo,
     d=-dx/plotW()*span*S.wheelSens*inv;   // default reversed vs natural-scroll feel
-  S.view={pHi:S.view.pHi+d, pLo:S.view.pLo+d}; }
+  S.view=clampView({pHi:S.view.pHi+d, pLo:S.view.pLo+d}); }
 const RAF=(typeof requestAnimationFrame==='function')?requestAnimationFrame:(f=>setTimeout(f,16));
 const mom={v:0,type:null,anchor:0,sp:null,running:false};
 function kickMomentum(type,v,anchor,tsp){
@@ -3712,8 +3838,8 @@ function kickMomentum(type,v,anchor,tsp){
     mom.v*=0.90;
     if(Math.abs(mom.v)<0.8 || !S.wheelInertia){ mom.v=0; mom.running=false; persistUI(); return; }
     if(mom.type==='int') wheelInt(mom.v, mom.sp);
-    else if(mom.type==='zoom') wheelZoom(mom.v,mom.anchor);
-    else wheelPan(mom.v);
+    else if(mom.type==='zoom'){ wheelZoom(mom.v,mom.anchor); if(clampView._hit) mom.v=0; }
+    else { wheelPan(mom.v); if(clampView._hit) mom.v=0; }   // stop dead against the data wall
     draw(); persistUI(); RAF(step);
   };
   RAF(step);
@@ -3773,9 +3899,9 @@ function autoIntensity(){
   const set=vzoomArmed(); (set.length?set:(A()?[A()]:[])).forEach(fit);
   draw(); persistUI(); }
 function zoomOut(){ const c=(S.view.pHi+S.view.pLo)/2, h=(S.view.pHi-S.view.pLo)/2*1.4;
-  S.view={pHi:c+h,pLo:c-h}; draw(); persistUI(); }
+  S.view=clampView({pHi:c+h,pLo:c-h}); draw(); persistUI(); }
 function zoomIn(){ const c=(S.view.pHi+S.view.pLo)/2, h=(S.view.pHi-S.view.pLo)/2/1.4;
-  S.view={pHi:c+h,pLo:c-h}; draw(); persistUI(); }
+  S.view=clampView({pHi:c+h,pLo:c-h}); draw(); persistUI(); }
 function toggleAllVzoom(){ const vs=S.spectra; if(!vs.length) return;
   const allOn=vs.every(sp=>sp.vzoom!==false);
   vs.forEach(sp=>sp.vzoom=!allOn); renderList(); persistUI(); }
@@ -4364,7 +4490,7 @@ function snapState(){
   });
   const ui=(typeof uiState==='function')?histClone(uiState()):{};
   const extra={active:S.active, nextColor:S.nextColor, wheelSens:S.wheelSens,
-    wheelInertia:S.wheelInertia, wheelInvert:S.wheelInvert, hscroll:S.hscroll,
+    wheelInertia:S.wheelInertia, wheelInvert:S.wheelInvert, hscroll:S.hscroll, limitView:S.limitView,
     showJTree:S.showJTree, multJStyle:S.multJStyle, integShift:S.integShift, thr:S.thr,
     bg:document.documentElement.style.getPropertyValue('--bg')||'',
     theme:document.documentElement.getAttribute('data-theme')||'',
@@ -4395,6 +4521,7 @@ function applyState(s){
     applyUIState(histClone(s.ui),true);
     Object.assign(S,{active:s.extra.active,nextColor:s.extra.nextColor,wheelSens:s.extra.wheelSens,
       wheelInertia:s.extra.wheelInertia,wheelInvert:s.extra.wheelInvert,hscroll:s.extra.hscroll,
+      limitView:(s.extra.limitView!==undefined?s.extra.limitView:S.limitView),
       showJTree:s.extra.showJTree,multJStyle:s.extra.multJStyle||'full',integShift:s.extra.integShift,thr:s.extra.thr});
     if(s.extra.bg) document.documentElement.style.setProperty('--bg',s.extra.bg);
     else document.documentElement.style.removeProperty('--bg');
@@ -4402,8 +4529,8 @@ function applyState(s){
     else document.documentElement.removeAttribute('data-theme');
     if(S.active>=S.spectra.length) S.active=S.spectra.length-1;
     S.selInteg=-1; S.selImg=-1; S.selZoom=-1;
-    ['btnInertia','btnInvert','btnHscroll'].forEach((id,i)=>{
-      const el=document.getElementById(id), on=[S.wheelInertia,S.wheelInvert,S.hscroll][i];
+    ['btnInertia','btnInvert','btnHscroll','btnLimitView'].forEach((id,i)=>{
+      const el=document.getElementById(id), on=[S.wheelInertia,S.wheelInvert,S.hscroll,S.limitView][i];
       if(el) el.classList.toggle('on',!!on); });
     const ws=document.getElementById('wheelSens'); if(ws){ ws.value=S.wheelSens;
       const wv=document.getElementById('wsv'); if(wv) wv.textContent=(+S.wheelSens).toFixed(1); }
@@ -5039,10 +5166,11 @@ document.getElementById('multJStyle').onchange=e=>{ S.multJStyle=e.target.value;
 segWire('segFont',v=>{ S.plotFont=v; persistUI(); draw(); });
 document.getElementById('btnResetSet').onclick=()=>{
   S.lineW=DEFAULTS.lineW; S.wheelSens=DEFAULTS.wheelSens;
-  S.wheelInertia=DEFAULTS.wheelInertia; S.wheelInvert=DEFAULTS.wheelInvert; S.hscroll=DEFAULTS.hscroll; mom.v=0;
+  S.wheelInertia=DEFAULTS.wheelInertia; S.wheelInvert=DEFAULTS.wheelInvert; S.hscroll=DEFAULTS.hscroll; S.limitView=DEFAULTS.limitView; mom.v=0;
   document.getElementById('btnInertia').classList.toggle('on',S.wheelInertia);
   document.getElementById('btnInvert').classList.toggle('on',S.wheelInvert);
   document.getElementById('btnHscroll').classList.toggle('on',S.hscroll);
+  document.getElementById('btnLimitView').classList.toggle('on',S.limitView);
   document.getElementById('lineW').value=DEFAULTS.lineW;
   document.getElementById('lwv').textContent=DEFAULTS.lineW.toFixed(1);
   document.getElementById('wheelSens').value=DEFAULTS.wheelSens;
@@ -5117,6 +5245,10 @@ document.getElementById('btnInvert').onclick=()=>{
 document.getElementById('btnHscroll').onclick=()=>{
   S.hscroll=!S.hscroll;
   document.getElementById('btnHscroll').classList.toggle('on',S.hscroll); };
+document.getElementById('btnLimitView').onclick=()=>{
+  S.limitView=!S.limitView;
+  document.getElementById('btnLimitView').classList.toggle('on',S.limitView);
+  if(S.limitView){ S.view=clampView(S.view); draw(); } };
 document.getElementById('btnOverflow').onclick=()=>{
   S.laneOverflow=!S.laneOverflow;
   document.getElementById('btnOverflow').classList.toggle('on',S.laneOverflow); persistUI(); draw(); };
@@ -5337,7 +5469,7 @@ document.addEventListener('keydown',e=>{
     case 'ArrowLeft': case 'ArrowRight': {
       e.preventDefault();
       const span=S.view.pHi-S.view.pLo, st=span*0.1*(e.key==='ArrowLeft'?1:-1);
-      S.view={pHi:S.view.pHi+st, pLo:S.view.pLo+st}; draw(); persistUI(); break; }
+      S.view=clampView({pHi:S.view.pHi+st, pLo:S.view.pLo+st}); draw(); persistUI(); break; }
   }
 });
 segWire('segTheme',v=>{ const h=document.documentElement;
@@ -5354,6 +5486,7 @@ function newSpectrum(name){ const c=PALETTE[S.nextColor++ % PALETTE.length];
 function applyPalette(force){
   const list=S.spectra; if(!list.length) return;
   const cols=paletteColors(S.palette, list.length);
+  if(S.paletteReverse) cols.reverse();
   list.forEach((sp,i)=>{ if(force) sp.colorLocked=false;
     if(!sp.colorLocked){ sp.color=cols[i]; } });
 }
@@ -6094,6 +6227,17 @@ function toast(msg){ let el=document.getElementById('toast');
    a large rework bumps the major (→ 2.0). Badge shows v + CHANGELOG[0].v.
    Fields: v (version string), date (YYYY-MM-DD), en[] / ja[] bullet lists. */
 const CHANGELOG=[
+  { v:'1.13', date:'2026-07-26',
+    en:['Consolidated the Cut, Zoom-view and Title appearance controls into gear-icon popovers. Cut now has break Width and Opacity, the former “Slash” break is now a “Solid” break (with the Wave control disabled for it), and each popover has its own Reset to defaults; Zoom-view adds “Clear all zoom views” and moves the inset / leader show-hide toggles into its section header.',
+        'Added a “Hide out-of-range” toggle (Wheel & scroll settings) that keeps the δ window and every wheel / pan gesture within the actual data extent, so the view can no longer drift off into empty space; wheel momentum now stops against the data edge.',
+        'Rebuilt panning across a cut as a rigid 1:1 translation, so the grabbed δ tracks the cursor without the earlier zoom / lag, and the break gap now fades smoothly to nothing at the plot edge instead of popping on and off.',
+        'Added a palette picker window with a live stacked-spectra preview and a “Reverse order” option; the Display settings now show a palette summary with a Change button that opens the picker.',
+        'Refreshed the toolbar icons onto one visual grid (new Calibrate, Peaks and Integrals icons, vector undo / redo) and refined hovering so open menus and selected tools keep their resting appearance.'],
+    ja:['カット・拡大図・タイトルの見た目の設定を、歯車アイコンのポップアップにまとめました。カットには切れ目の「横幅」と「透明度」を追加し、従来の「斜線」を「実線」に変更（実線では「うねり」を無効化）、各ポップアップに「デフォルトに戻す」を用意しました。拡大図には「すべて削除」を追加し、拡大図・引き出し線の表示切り替えを見出しへ移しました。',
+        '「データ範囲外を表示しない」切り替えを（ホイール・スクロール設定に）追加しました。δ表示範囲とホイール／パン操作を実データの範囲内に保ち、空白へはみ出さないようにします。ホイールの慣性もデータ端で止まります。',
+        'カットをまたぐパンを、ずれのない1:1の平行移動に作り直しました。つかんだδがカーソルに追従し、以前のような拡大・遅延がなくなります。切れ目の間隔もプロット端でパッと切り替わらず、なめらかに消えるようにしました。',
+        'カラーパレットの選択ウィンドウを追加し、積み重ねスペクトルのプレビューと「色順を反転」を用意しました。表示設定にはパレットの概要と、選択ウィンドウを開く「変更」ボタンを表示します。',
+        'ツールバーのアイコンを1つの視覚グリッドに統一し（校正・ピーク・積分の新アイコン、ベクター形式の取り消し／やり直し）、開いているメニューや選択中のツールがホバー時も見た目を保つようにホバー表示を調整しました。'] },
   { v:'1.12', date:'2026-07-22',
     en:['Added a Cut tool that collapses one or more dragged δ regions and marks each omission with a wave, zigzag or slash break. Break spacing, wave, thickness and colour can be adjusted, and the most recent cut or all cuts can be cleared.',
         'Added an optional figure title. The automatically generated nucleus / solvent title can be replaced with custom text, and its size and weight can be adjusted for display and image output.',
@@ -7590,19 +7734,18 @@ html[data-theme="light"] #toolbar .rsub:not(.on):hover{
 /* View + Settings integration preview */
 .menu.open>.mpanel.unified-settings-panel{display:block}
 .unified-settings-panel{
-  width:min(900px,calc(100vw - 24px));min-width:0!important;padding:12px;
+  width:min(660px,calc(100vw - 24px));min-width:0!important;padding:12px;
   overflow-x:hidden;overscroll-behavior:contain
 }
-.uset-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin-bottom:8px}
+.uset-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin-bottom:8px;border-radius:7px;overflow:hidden;box-shadow:inset 0 0 0 1px var(--line)}
 .uset-tabs button{
-  border:1px solid var(--line);border-right:0;background:transparent;color:var(--dim);
+  border:none;background:transparent;color:var(--dim);
   /* Keep this switcher as compact as the Assignment tabs. */
   padding:5px 12px;cursor:pointer;font-size:11.5px;white-space:nowrap
 }
-.uset-tabs button:first-child{border-radius:7px 0 0 7px}
-.uset-tabs button:last-child{border-right:1px solid var(--line);border-radius:0 7px 7px 0}
-.uset-tabs button.on{background:var(--trace);border-color:var(--trace);color:#fff;font-weight:650}
-.uset-tabs button.on+button{border-left-color:var(--trace)}
+.uset-tabs button+button{border-left:1px solid var(--line)}
+.uset-tabs button.on{background:var(--trace);color:#fff;font-weight:650}
+.uset-tabs button.on,.uset-tabs button.on+button{border-left-color:transparent}
 .uset-tabs button:focus{outline:none}
 .uset-tabs button:focus-visible{outline:1px solid var(--dim);outline-offset:-3px}
 .uset-pane[hidden]{display:none!important}
@@ -7611,8 +7754,6 @@ html[data-theme="light"] #toolbar .rsub:not(.on):hover{
 .uset-grid-single{grid-template-columns:minmax(280px,520px)}
 .uset-grid-general{grid-template-columns:repeat(2,minmax(0,1fr));max-width:none}
 .uset-grid-general .seg button{padding:5px 10px;font-size:11.5px}
-.uset-grid-general .seg button:focus{outline:none}
-.uset-grid-general .seg button:focus-visible{outline:1px solid var(--dim);outline-offset:-3px}
 .uset-autosave{grid-column:1/-1;margin-top:2px;color:var(--faint);font-size:10.5px;text-align:center}
 .uset-stack{display:flex;flex-direction:column;gap:10px;min-width:0}
 .uset-card{min-width:0}
@@ -7647,7 +7788,7 @@ html[data-theme="light"] #toolbar .rsub:not(.on):hover{
 .uset-toggle:disabled{opacity:.46;cursor:not-allowed}
 @media(max-width:820px){
   .unified-settings-panel{width:calc(100vw - 200px)}
-  .uset-grid,.uset-grid-controls{grid-template-columns:1fr}
+  .uset-grid,.uset-grid-controls,.uset-grid-display{grid-template-columns:1fr}
   .uset-card .pallist{grid-template-columns:repeat(2,minmax(0,1fr))}
   .uset-spectrum-grid{grid-template-columns:1fr}
 }
@@ -7656,6 +7797,41 @@ html[data-theme="light"] #toolbar .rsub:not(.on):hover{
   .uset-tabs button{padding:5px 3px;font-size:11px}
   .uset-card .pallist{grid-template-columns:1fr}
 }
+/* Display tab: 2-column + palette summary opening a modal picker */
+.uset-grid-display{grid-template-columns:minmax(230px,1fr) minmax(290px,1fr)}
+.uset-pal-summary{display:flex;flex-direction:column;gap:8px;align-items:stretch}
+.uset-pal-row1{display:flex;align-items:center;gap:10px;min-width:0}
+.uset-pal-row1 .palstrip{flex:1 1 auto;min-width:0;height:16px}
+.uset-pal-row1 .pallabel{flex:0 0 auto;font-size:11.5px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:48%}
+.uset-pal-stack{border:1px solid var(--line);border-radius:8px;background:var(--bg);padding:6px;height:154px}
+.uset-pal-stack svg{display:block;width:100%;height:100%}
+.uset-pal-change{width:100%;padding:6px 12px;font-size:11.5px}
+/* palette modal (manual-style separate window) */
+.palmodal{position:fixed;inset:0;background:rgba(14,20,25,.6);z-index:220;display:none;align-items:center;justify-content:center;padding:24px}
+html[data-theme=light] .palmodal{background:rgba(40,44,48,.36)}
+.palmodal.show{display:flex}
+.palcard{background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:0 22px 60px rgba(0,0,0,.45);width:min(940px,100%);height:min(720px,92vh);display:flex;flex-direction:column;overflow:hidden}
+.palhead{display:flex;align-items:center;gap:9px;padding:13px 18px;border-bottom:1px solid var(--line);font-size:14px;color:var(--ink);font-weight:600}
+.palhead .mh-ic{display:inline-flex;color:var(--trace)}
+.palhead .mh-ic svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.palhead .x{margin-left:auto;border:none;background:none;color:var(--faint);cursor:pointer;font-size:20px;line-height:1}
+.palhead .x:hover{color:var(--ink)}
+.palbody{display:grid;grid-template-columns:1fr minmax(230px,300px);min-height:0;flex:1}
+.pallist-scroll{overflow-y:auto;padding:14px 16px;border-right:1px solid var(--line)}
+.pallist-scroll,.palpreview{scrollbar-width:thin;scrollbar-color:var(--gridw) transparent}
+.pallist-scroll::-webkit-scrollbar,.palpreview::-webkit-scrollbar{width:9px}
+.pallist-scroll::-webkit-scrollbar-thumb,.palpreview::-webkit-scrollbar-thumb{background:var(--gridw);border-radius:5px}
+.pallist-scroll::-webkit-scrollbar-track,.palpreview::-webkit-scrollbar-track{background:transparent}
+.pallist-scroll .pallist{grid-template-columns:1fr 1fr;gap:5px;margin-top:0}
+.palpreview{display:flex;flex-direction:column;gap:11px;padding:14px 16px;overflow-y:auto;background:var(--panel2)}
+.palpreview-fig{border:1px solid var(--line);border-radius:10px;padding:8px;background:var(--bg)}
+.palpreview-fig svg{display:block;width:100%;height:215px}
+.palpreview-cap{font-size:12px;color:var(--dim);text-align:center}
+.palpreview-cap b{color:var(--trace)}
+.pal-reverse{width:100%;display:flex;align-items:center;justify-content:center;gap:7px;padding:7px 10px;font-size:11.5px}
+.pal-reverse.on{background:var(--trace);border-color:var(--trace);color:#fff}
+.palpreview-note{font-size:10.5px;color:var(--faint);line-height:1.55}
+@media (max-width:680px){.palbody{grid-template-columns:1fr}.palpreview{border-top:1px solid var(--line)}}
 </style>
 <script>
 (()=>{
@@ -7675,8 +7851,8 @@ html[data-theme="light"] #toolbar .rsub:not(.on):hover{
     return node&&(node.classList.contains('ctl')?node:node.closest('.ctl'));
   };
   const text={
-    ja:{display:'表示',controls:'操作',general:'一般',spectrum:'スペクトル',language:'言語',theme:'テーマ',autoSave:'変更は自動保存されます',layout:'レイアウト',visibility:'表示・非表示',appearance:'見た目',palette:'カラーパレット',viewOps:'表示範囲・ズーム',intensity:'強度調整',wheel:'ホイール・スクロール',spectrumSet:'スペクトル設定',scopeTarget:'適用先',noSpectrum:'スペクトル未選択',resetVisibility:'デフォルトに戻す',resetAppearance:'デフォルトに戻す',resetWheel:'ホイール設定をリセット',allowOverflow:'ピークの貫通を許可',wheelInertia:'ホイール慣性',wheelInvert:'向きを反転',wheelPan:'横スクロールでδ移動',strengthTarget:'強度調整の適用先',targetAll:'全スペクトル',targetActive:'選択中のみ',targetPartial:'個別指定',switchOn:'オン',switchOff:'オフ'},
-    en:{display:'Display',controls:'Controls',general:'General',spectrum:'Spectrum',language:'Language',theme:'Theme',autoSave:'Changes are saved automatically',layout:'Layout',visibility:'Show / hide',appearance:'Appearance',palette:'Color palette',viewOps:'Range & zoom',intensity:'Intensity',wheel:'Wheel & scroll',spectrumSet:'Spectrum settings',scopeTarget:'Applies to',noSpectrum:'No spectrum selected',resetVisibility:'Restore defaults',resetAppearance:'Restore defaults',resetWheel:'Reset wheel settings',allowOverflow:'Allow peak overflow',wheelInertia:'Wheel inertia',wheelInvert:'Invert direction',wheelPan:'Horizontal scroll pans δ',strengthTarget:'Apply intensity changes to',targetAll:'All spectra',targetActive:'Selected only',targetPartial:'Custom selection',switchOn:'On',switchOff:'Off'}
+    ja:{display:'表示',controls:'操作',general:'一般',spectrum:'スペクトル',language:'言語',theme:'テーマ',autoSave:'変更は自動保存されます',layout:'レイアウト',visibility:'表示・非表示',appearance:'見た目',palette:'カラーパレット',viewOps:'表示範囲・ズーム',intensity:'強度調整',wheel:'ホイール・スクロール',spectrumSet:'スペクトル設定',scopeTarget:'適用先',noSpectrum:'スペクトル未選択',resetVisibility:'デフォルトに戻す',resetAppearance:'デフォルトに戻す',resetWheel:'ホイール設定をリセット',allowOverflow:'ピークの貫通を許可',wheelInertia:'ホイール慣性',wheelInvert:'向きを反転',wheelPan:'横スクロールでδ移動',limitView:'データ範囲外を表示しない',strengthTarget:'強度調整の適用先',targetAll:'全スペクトル',targetActive:'選択中のみ',targetPartial:'個別指定',switchOn:'オン',switchOff:'オフ',change:'変更',closePicker:'閉じる',paletteTitle:'カラーパレット',previewFor:'プレビュー：',reverseOrder:'色順を反転'},
+    en:{display:'Display',controls:'Controls',general:'General',spectrum:'Spectrum',language:'Language',theme:'Theme',autoSave:'Changes are saved automatically',layout:'Layout',visibility:'Show / hide',appearance:'Appearance',palette:'Color palette',viewOps:'Range & zoom',intensity:'Intensity',wheel:'Wheel & scroll',spectrumSet:'Spectrum settings',scopeTarget:'Applies to',noSpectrum:'No spectrum selected',resetVisibility:'Restore defaults',resetAppearance:'Restore defaults',resetWheel:'Reset wheel settings',allowOverflow:'Allow peak overflow',wheelInertia:'Wheel inertia',wheelInvert:'Invert direction',wheelPan:'Horizontal scroll pans δ',limitView:'Hide out-of-range',strengthTarget:'Apply intensity changes to',targetAll:'All spectra',targetActive:'Selected only',targetPartial:'Custom selection',switchOn:'On',switchOff:'Off',change:'Change',closePicker:'Close',paletteTitle:'Color palette',previewFor:'Preview:',reverseOrder:'Reverse order'}
   };
   const tr=k=>(text[LANG]||text.ja)[k]||k;
   const make=(tag,cls)=>{const n=document.createElement(tag);if(cls)n.className=cls;return n;};
@@ -7741,8 +7917,9 @@ html[data-theme="light"] #toolbar .rsub:not(.on):hover{
   const inertiaButton=switchify(document.getElementById('btnInertia'),'wheelInertia');
   const invertButton=switchify(document.getElementById('btnInvert'),'wheelInvert');
   const hscrollButton=switchify(document.getElementById('btnHscroll'),'wheelPan');
+  const limitViewButton=switchify(document.getElementById('btnLimitView'),'limitView');
   const wheelToggleList=inertiaButton.parentElement;
-  wheelToggleList.className='uset-toggle-list';wheelToggleList.removeAttribute('style');wheelToggleList.appendChild(hscrollButton);
+  wheelToggleList.className='uset-toggle-list';wheelToggleList.removeAttribute('style');wheelToggleList.appendChild(hscrollButton);wheelToggleList.appendChild(limitViewButton);
   const scope=make('div','uset-scope');scope.innerHTML='<span data-uset-text="scopeTarget"></span><span aria-hidden="true">·</span><span class="uset-scope-name"></span>';
   const spectrumFields=make('div','uset-spectrum-grid');spectrumFields.append(document.getElementById('srcRow'),ctl('segMode'));
   const viewCard=card('viewOps',[ctl('rangeHi'),ctl('zoomIn'),intensityHead,intensityControl]);
@@ -7757,6 +7934,89 @@ html[data-theme="light"] #toolbar .rsub:not(.on):hover{
   const autoSaveNote=make('div','uset-autosave');autoSaveNote.dataset.usetText='autoSave';
   general.append(card('language',[languageControl]),card('theme',[themeControl]),autoSaveNote);
   root.appendChild(general);
+
+  /* --- Palette: summary + 変更 opens a manual-style modal picker with a vertical stacked-spectra preview --- */
+  (function(){
+    const h3=[...display.querySelectorAll('.uset-card>h3')].find(x=>x.dataset.usetText==='palette');
+    const palCard=h3&&h3.parentElement;
+    if(palCard){
+      const palCtl=palCard.querySelector('.ctl')||palCard;
+      const paletteList=document.getElementById('paletteList');
+
+      // vertical stacked-spectra concept diagram (mirrors how spectra actually stack)
+      // sharp Lorentzian NMR-like lines: a singlet, a doublet, a tall singlet, a triplet, a small singlet
+      const PEAKS=[[0.10,0.30,0.0045],[0.275,0.85,0.0045],[0.30,0.85,0.0045],[0.45,0.55,0.0045],[0.605,1.0,0.005],[0.74,0.40,0.0042],[0.762,0.62,0.0042],[0.784,0.40,0.0042],[0.90,0.34,0.0045]];
+      const specPath=(x0,x1,baseY,amp,nn)=>{let d='';for(let k=0;k<=nn;k++){const t=k/nn;let v=0;for(let j=0;j<PEAKS.length;j++){const u=(t-PEAKS[j][0])/PEAKS[j][2];v+=PEAKS[j][1]/(1+u*u);}if(v>1)v=1;const x=x0+(x1-x0)*t,y=baseY-v*amp;d+=(k?'L':'M')+x.toFixed(1)+' '+y.toFixed(1);}return d;};
+      // reversal-aware colors + a count that matches the number of loaded spectra (so the bar & the traces agree)
+      const MAXSP=10; // max spectra the app allows -> the preview illustrates up to this many
+      const pcolors=(pal,n)=>{const c=paletteColors(pal,n)||[];return S.paletteReverse?c.slice().reverse():c;};
+      const paletteN=()=>{const c=(S.spectra&&S.spectra.length)||0;return c>=2?Math.min(c,MAXSP):MAXSP;};
+      // list-row swatches use paletteSwatch -> match the same count & reversal as the preview
+      if(typeof paletteSwatch==='function'){paletteSwatch=function(name){return pcolors(name,paletteN());};}
+      const stackedSVG=(pal,n,w,h)=>{
+        const cols=pcolors(pal,n);
+        const pl=6,pr=6,pt=6,pb=6,iw=w-pl-pr,ih=h-pt-pb,laneH=ih/n,amp=laneH*0.82*0.8;
+        let s='<svg viewBox="0 0 '+w+' '+h+'" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">';
+        for(let i=n-1;i>=0;i--){const c=cols[i]||'#888',white=(c||'').toUpperCase()==='#FFFFFF',baseY=pt+laneH*(i+1)-laneH*0.08;
+          s+='<path d="'+specPath(pl,pl+iw,baseY,amp,240)+'" fill="none" stroke="'+(white?'#cfcfcf':c)+'" stroke-width="1.2" vector-effect="non-scaling-stroke" stroke-linejoin="round" stroke-linecap="round"/>';}
+        return s+'</svg>';
+      };
+
+      // modal (separate window, styled like the Manual)
+      const modal=make('div','palmodal');modal.id='palModal';modal.setAttribute('role','dialog');modal.setAttribute('aria-modal','true');
+      const cardEl=make('div','palcard'),head=make('div','palhead');
+      head.innerHTML='<span class="mh-ic"><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="5.4"/><circle cx="8" cy="4.6" r="1"/><circle cx="11" cy="7" r="1"/><circle cx="10" cy="10.6" r="1"/><circle cx="5.6" cy="10.4" r="1"/><circle cx="5.1" cy="6.4" r="1"/></svg></span><span data-uset-text="paletteTitle"></span>';
+      const xBtn=make('button','x');xBtn.type='button';xBtn.textContent='×';head.appendChild(xBtn);
+      const body=make('div','palbody'),listScroll=make('div','pallist-scroll'),preview=make('div','palpreview');
+      const fig=make('div','palpreview-fig'),cap=make('div','palpreview-cap');
+      const revBtn=make('button','tbtn pal-reverse');revBtn.type='button';
+      [...palCtl.children].forEach(ch=>{ if(ch.id==='btnApplyPalette'){ch.remove();return;} if(ch.id==='paletteList'||ch.classList.contains('pallist')) listScroll.appendChild(ch); else preview.appendChild(ch); });
+      preview.prepend(cap);preview.prepend(fig);cap.after(revBtn);
+      body.append(listScroll,preview);cardEl.append(head,body);modal.appendChild(cardEl);document.body.appendChild(modal);
+
+      // summary shown in the settings panel — three stacked rows: [bar + name] / [spectrum concept] / [変更]
+      const summary=make('div','uset-pal-summary');
+      const row1=make('div','uset-pal-row1');
+      const strip=make('span','palstrip'),label=make('span','pallabel');
+      row1.append(strip,label);
+      const stackBox=make('div','uset-pal-stack');
+      const changeBtn=make('button','tbtn uset-pal-change');changeBtn.type='button';
+      summary.append(row1,stackBox,changeBtn);palCtl.append(summary);
+
+      const renderSummary=()=>{
+        const n=paletteN();strip.innerHTML='';
+        pcolors(S.palette,n).forEach(c=>{const d=make('span');d.style.background=c;if((c||'').toUpperCase()==='#FFFFFF')d.style.boxShadow='inset 0 0 0 1px var(--line)';strip.appendChild(d);});
+        stackBox.innerHTML=stackedSVG(S.palette,n,300,96);
+        label.textContent=(typeof PAL_LABEL!=='undefined'&&PAL_LABEL[S.palette])||S.palette;
+      };
+      const renderPreview=pal=>{
+        fig.innerHTML=stackedSVG(pal,paletteN(),340,215);
+        cap.innerHTML=tr('previewFor')+' <b>'+((typeof PAL_LABEL!=='undefined'&&PAL_LABEL[pal])||pal)+'</b>';
+      };
+      const applyModalText=()=>{const t=head.querySelector('[data-uset-text="paletteTitle"]');if(t)t.textContent=tr('paletteTitle');changeBtn.textContent=tr('change');revBtn.textContent=(S.paletteReverse?'✓ ':'')+tr('reverseOrder');revBtn.classList.toggle('on',!!S.paletteReverse);if(modal.classList.contains('show'))renderPreview(S.palette);};
+      revBtn.onclick=()=>{ S.paletteReverse=!S.paletteReverse;
+        if(typeof rebuildPaletteUI==='function')rebuildPaletteUI();
+        applyPalette(true); if(typeof renderList==='function')renderList();
+        if(typeof persistUI==='function')persistUI(); if(typeof savePrefs==='function')savePrefs();
+        applyModalText(); };
+      const openModal=()=>{if(typeof rebuildPaletteUI==='function')rebuildPaletteUI();modal.classList.add('show');renderPreview(S.palette);};
+      const closeModal=()=>{modal.classList.remove('show');renderSummary();};
+      changeBtn.onclick=openModal;xBtn.onclick=closeModal;
+      // keep all modal interaction from reaching the document handler that closes the settings menu
+      modal.addEventListener('click',e=>{e.stopPropagation();if(e.target===modal)closeModal();});
+      modal.addEventListener('pointerdown',e=>e.stopPropagation());
+      document.addEventListener('keydown',e=>{if(e.key==='Escape'&&modal.classList.contains('show')){e.stopPropagation();closeModal();}},true);
+      listScroll.addEventListener('mouseover',e=>{const r=e.target.closest('.palrow');if(r&&r.dataset.pal)renderPreview(r.dataset.pal);});
+      listScroll.addEventListener('mouseleave',()=>renderPreview(S.palette));
+      if(typeof applyPalette==='function'){const _ap=applyPalette;applyPalette=function(){const r=_ap.apply(this,arguments);renderSummary();if(modal.classList.contains('show'))renderPreview(S.palette);return r;};}
+      preview.addEventListener('input',()=>{renderSummary();renderPreview(S.palette);});
+      const seg=document.getElementById('segLang');
+      if(seg)seg.addEventListener('click',()=>queueMicrotask(applyModalText));
+      left.append(palCard);
+      renderSummary();applyModalText();
+    }
+    display.classList.add('uset-grid-display');
+  })();
 
   settingsPanel.replaceChildren(root);
   viewBox.remove();
@@ -7800,9 +8060,9 @@ html[data-theme="light"] #toolbar .rsub:not(.on):hover{
   };
   document.getElementById('btnResetSet').className='tbtn uset-reset';
   document.getElementById('btnResetSet').onclick=()=>{
-    Object.assign(S,{wheelSens:DEFAULTS.wheelSens,wheelInertia:DEFAULTS.wheelInertia,wheelInvert:DEFAULTS.wheelInvert,hscroll:DEFAULTS.hscroll});mom.v=0;
+    Object.assign(S,{wheelSens:DEFAULTS.wheelSens,wheelInertia:DEFAULTS.wheelInertia,wheelInvert:DEFAULTS.wheelInvert,hscroll:DEFAULTS.hscroll,limitView:DEFAULTS.limitView});mom.v=0;
     const ws=document.getElementById('wheelSens');ws.value=S.wheelSens;document.getElementById('wsv').textContent=S.wheelSens.toFixed(1);
-    [['btnInertia',S.wheelInertia],['btnInvert',S.wheelInvert],['btnHscroll',S.hscroll]].forEach(([id,on])=>document.getElementById(id).classList.toggle('on',on));
+    [['btnInertia',S.wheelInertia],['btnInvert',S.wheelInvert],['btnHscroll',S.hscroll],['btnLimitView',S.limitView]].forEach(([id,on])=>document.getElementById(id).classList.toggle('on',on));
     savePrefs();
   };
 
@@ -7824,6 +8084,7 @@ html[data-theme="light"] #toolbar .rsub:not(.on):hover{
     syncSwitch(inertiaButton,S.wheelInertia);
     syncSwitch(invertButton,S.wheelInvert);
     syncSwitch(hscrollButton,S.hscroll);
+    syncSwitch(limitViewButton,S.limitView);
     const spectra=S.spectra||[],armed=spectra.filter(sp=>sp.vzoom!==false);
     const all=spectra.length>0&&armed.length===spectra.length;
     const partial=armed.length>0&&!all;
@@ -7838,7 +8099,7 @@ html[data-theme="light"] #toolbar .rsub:not(.on):hover{
 
   const PREF_KEY='nmrviewer:unified-settings-prefs';
   function savePrefs(){
-    try{localStorage.setItem(PREF_KEY,JSON.stringify({lang:LANG,theme:document.documentElement.getAttribute('data-theme')||'dark',bg:document.documentElement.style.getPropertyValue('--bg')||'',wheelSens:S.wheelSens,wheelInertia:S.wheelInertia,wheelInvert:S.wheelInvert,hscroll:S.hscroll}));}catch(_){}
+    try{localStorage.setItem(PREF_KEY,JSON.stringify({lang:LANG,theme:document.documentElement.getAttribute('data-theme')||'dark',bg:document.documentElement.style.getPropertyValue('--bg')||'',wheelSens:S.wheelSens,wheelInertia:S.wheelInertia,wheelInvert:S.wheelInvert,hscroll:S.hscroll,limitView:S.limitView,paletteReverse:S.paletteReverse}));}catch(_){}
   }
   function restorePrefs(){
     let p=null;try{p=JSON.parse(localStorage.getItem(PREF_KEY)||'null');}catch(_){}if(!p)return;
@@ -7849,8 +8110,10 @@ html[data-theme="light"] #toolbar .rsub:not(.on):hover{
     if(typeof p.wheelInertia==='boolean')S.wheelInertia=p.wheelInertia;
     if(typeof p.wheelInvert==='boolean')S.wheelInvert=p.wheelInvert;
     if(typeof p.hscroll==='boolean')S.hscroll=p.hscroll;
+    if(typeof p.limitView==='boolean')S.limitView=p.limitView;
+    if(typeof p.paletteReverse==='boolean')S.paletteReverse=p.paletteReverse;
     const ws=document.getElementById('wheelSens');if(ws){ws.value=S.wheelSens;document.getElementById('wsv').textContent=(+S.wheelSens).toFixed(1);}
-    [['btnInertia',S.wheelInertia],['btnInvert',S.wheelInvert],['btnHscroll',S.hscroll]].forEach(([id,on])=>document.getElementById(id).classList.toggle('on',!!on));
+    [['btnInertia',S.wheelInertia],['btnInvert',S.wheelInvert],['btnHscroll',S.hscroll],['btnLimitView',S.limitView]].forEach(([id,on])=>document.getElementById(id).classList.toggle('on',!!on));
     if(p.bg){document.documentElement.style.setProperty('--bg',p.bg);const bg=document.getElementById('bgColor');if(bg)bg.value=p.bg;}
     else{document.documentElement.style.removeProperty('--bg');const bg=document.getElementById('bgColor');if(bg)bg.value=css('--bg');}
     syncColorPickers();draw();
