@@ -149,6 +149,14 @@ aside::-webkit-scrollbar-thumb{background:var(--gridw);border-radius:5px}
 .ctl label .val{font-family:var(--mono);color:var(--accent);font-size:11px}
 input[type=range]{-webkit-appearance:none;width:100%;height:3px;background:var(--grid);border-radius:2px;outline:none;cursor:pointer}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;border-radius:50%;background:var(--trace);cursor:pointer;border:2px solid var(--bg);box-shadow:0 0 0 1px var(--trace)}
+/* Auto-phase / Reset pair above the PH0–PH1 sliders */
+.phbtns{display:flex;gap:6px;margin-bottom:10px}
+.phbtns .mini{flex:1;background:var(--panel2);border:1px solid var(--line);border-radius:7px;padding:6px 4px;
+  font-size:11px;color:var(--dim);cursor:pointer;transition:.12s}
+.phbtns .mini:hover{color:var(--ink);border-color:var(--trace)}
+.phbtns .mini:focus{outline:none}
+.phbtns .mini:focus-visible{outline:2px solid var(--trace);outline-offset:-2px}
+.phbtns .mini.busy{opacity:.55;cursor:progress}
 .seg{display:flex;border-radius:7px;overflow:hidden;background:var(--panel2);padding:2px;gap:2px;border:1px solid var(--line)}
 .seg button{flex:1;background:transparent;border:none;border-radius:5px;padding:6px 4px;font-size:11px;color:var(--dim);cursor:pointer;transition:.12s}
 .seg button.on{background:var(--trace);color:var(--bg);font-weight:600}
@@ -455,7 +463,8 @@ main{grid-row:1;position:relative;display:flex;flex-direction:column;background:
 .tmhead{font-size:9.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--faint);font-weight:600;padding:4px 9px 1px}
 .solvitem .solvppm{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--trace)}
 #toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%) translateY(8px);background:var(--ink);color:var(--bg);
-  font-size:12.5px;padding:7px 14px;border-radius:7px;opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;z-index:9999}
+  font-size:12.5px;padding:7px 14px;border-radius:7px;opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;z-index:9999;
+  max-width:min(560px,88vw);white-space:pre-line;line-height:1.5;text-align:center}
 #toast.show{opacity:.94;transform:translateX(-50%) translateY(0)}
 .tlabel{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin:0 1px}
 #readout{margin-left:auto;font-family:var(--mono);font-size:12px;color:var(--dim);display:flex;gap:12px;white-space:nowrap;font-variant-numeric:tabular-nums;flex:0 0 auto}
@@ -973,10 +982,11 @@ html[data-theme="light"] .toolmenu.open .tmpanel{
     </div>
     <div class="sect" id="phaseSect">
       <div class="ctl" id="phaseBox" style="display:none">
+        <div class="phbtns"><button id="btnAutoPh" class="mini" data-i18n="btnAutoPhase" data-i18n-title="ttAutoPhase">Auto phase</button><button id="btnPhReset" class="mini" data-i18n="btnPhReset">Reset</button></div>
         <label><span data-i18n="lblPh0">Phase PH0</span> <span class="val" id="ph0v">0°</span></label>
-        <input type="range" id="ph0" min="-180" max="180" step="1" value="0">
+        <input type="range" id="ph0" min="-180" max="180" step="0.1" value="0">
         <label style="margin-top:9px"><span data-i18n="lblPh1">Phase PH1</span> <span class="val" id="ph1v">0°</span></label>
-        <input type="range" id="ph1" min="-360" max="360" step="1" value="0">
+        <input type="range" id="ph1" min="-360" max="360" step="0.1" value="0">
       </div>
     </div>
     <div class="sect" id="procSect">
@@ -1552,6 +1562,10 @@ const I18N={
   ttAssign:"Click a picked peak to attach a text label · click empty space to place one anywhere",
   ttIntDown:"Halve intensity", ttIntUp:"Double intensity", ttAuto:"Fit intensity to view",
   ttZoomIn:"Zoom in", ttZoomOut:"Zoom out", ttFull:"Show full spectrum", ttFiles:"Pick individual files",
+  btnAutoPhase:"Auto phase", btnPhReset:"Reset",
+  ttAutoPhase:"Fit PH0/PH1 automatically from the peak shapes",
+  warnNoProc:"⚠ No processed spectrum in pdata/ ({n} dataset(s)): procs is there but 1r is missing — it was most likely dropped in transfer.\nShowing the raw FID instead, phased automatically.",
+  infoAutoPhased:"Phased automatically from the raw FID ({n}).",
   errNoData:"No NMR data found in the dropped items.\nEach dataset folder needs fid+acqus, and/or pdata/1/ with 1r+procs.",
   warnMixNuc:"⚠ Spectra with different nuclei are now loaded together ({list}).\nThe δ axis is shared, so overlaying different nuclei may not be meaningful.\nThe spectrum was still loaded.",
   warnTooMany:"⚠ Up to {cap} spectra can be loaded at once.\nLoaded {loaded} of {total} datasets — the rest were skipped.",
@@ -1658,6 +1672,10 @@ const I18N={
   ttAssign:"ピーククリック=ラベルを付与／空きスペースをクリック=その位置にラベルを配置",
   ttIntDown:"強度を半分に", ttIntUp:"強度を2倍に", ttAuto:"表示に合わせて強度調整",
   ttZoomIn:"ズームイン", ttZoomOut:"ズームアウト", ttFull:"全体表示", ttFiles:"個別ファイルを選択",
+  btnAutoPhase:"自動位相", btnPhReset:"リセット",
+  ttAutoPhase:"ピーク形状から PH0／PH1 を自動で合わせます",
+  warnNoProc:"⚠ pdata に処理済みスペクトルがありません（{n}件）。procs はあるのに 1r が欠けています — 転送時に落ちた可能性が高いです。\n代わりに生FIDを自動位相補正して表示しています。",
+  infoAutoPhased:"生FIDから自動で位相を合わせました（{n}件）。",
   errNoData:"ドロップした項目にNMRデータが見つかりません。\n各フォルダに fid+acqus、または pdata/1/ の 1r+procs が必要です。",
   warnMixNuc:"⚠ 異なる核種のスペクトルが混在しています（{list}）。\nδ軸は共通のため、異なる核種の重ね表示は意味をなさない場合があります。\nスペクトルは読み込まれました。",
   warnTooMany:"⚠ スペクトルの同時読み込みは{cap}個までです。\n{total}個のうち{loaded}個を読み込みました（残りはスキップ）。",
@@ -1938,6 +1956,100 @@ function finalize(sp){
   const dd=sp.mode==='mag'?mag:real; let g=1e-9;
   for(let i=0;i<N;i++){ if(dd[i]>g)g=dd[i]; }
   sp.gmax=g;
+}
+
+/* ---------------- automatic phase correction (raw-FID source) ----------------
+   Only needed when a dataset has no pdata/1/1r: TopSpin already phased that one,
+   but a FID has to be phased here. Two stages:
+   (1) coarse — at the apex of a pure absorption line the phased signal is real
+       and positive, so the correction wanted at peak i is exactly -atan2(sim,sre).
+       Scanning first-order slopes and taking the height-weighted circular mean of
+       the leftover angles gives PH0/PH1 with no unwrapping ambiguity.
+   (2) refine — coordinate descent on Chen's entropy criterion plus a negative-area
+       penalty, which recovers peaks that sat on a neighbour's shoulder in (1).
+   PH1 is searched only within the slider range; that is plenty once the group
+   delay has been removed (uncheck GDC and the residual PH1 is far too large
+   for any of this to help). */
+function _phPeaks(sre,sim,maxPk){
+  const N=sre.length, mag=new Float64Array(N); let gmax=1e-300;
+  for(let i=0;i<N;i++){ const m=Math.hypot(sre[i],sim[i]); mag[i]=m; if(m>gmax)gmax=m; }
+  const thr=gmax*0.02, out=[];
+  for(let i=2;i<N-2;i++){
+    const m=mag[i];
+    if(m>thr && m>=mag[i-1] && m>mag[i+1] && m>=mag[i-2] && m>mag[i+2]) out.push(i);
+  }
+  out.sort((a,b)=>mag[b]-mag[a]);
+  return out.slice(0,maxPk).map(i=>({u:i/(N-1), w:mag[i], psi:-Math.atan2(sim[i],sre[i])}));
+}
+// height-weighted circular fit of psi ≈ p0 + p1·u over a grid of first-order slopes
+function _phCoarse(pk){
+  if(pk.length<2) return {ph0:0,ph1:0};
+  let best={fit:-Infinity,p0:0,p1:0};
+  const scan=(lo,hi,step)=>{
+    for(let p1=lo;p1<=hi;p1+=step){
+      let sc=0,ss=0;
+      for(const p of pk){ const e=p.psi-p1*p.u; sc+=p.w*Math.cos(e); ss+=p.w*Math.sin(e); }
+      const fit=Math.hypot(sc,ss);
+      if(fit>best.fit) best={fit, p0:Math.atan2(ss,sc), p1};
+    }
+  };
+  const D=Math.PI/180;
+  scan(-360*D, 360*D, 2*D);                                   // full slider span, 2° steps
+  scan(best.p1-2*D, best.p1+2*D, 0.05*D);                     // then refine around it
+  return {ph0:best.p0/D, ph1:best.p1/D};
+}
+// entropy of the derivative + negative-area penalty; lower is better, scale-invariant
+function _phScore(sre,sim,st,ph0,ph1){
+  const N=sre.length, D=Math.PI/180, p0=ph0*D, dp=ph1*D*st/(N-1);
+  let c=Math.cos(p0), s=Math.sin(p0);
+  const dc=Math.cos(dp), ds=Math.sin(dp);
+  let prev=sre[0]*c-sim[0]*s, S=0, T=0, neg=0, tot=1e-300;
+  for(let i=st;i<N;i+=st){
+    const nc=c*dc-s*ds; s=s*dc+c*ds; c=nc;
+    const R=sre[i]*c-sim[i]*s, d=Math.abs(R-prev);
+    if(d>0){ S+=d; T+=d*Math.log(d); }
+    if(R<0) neg+=R*R;
+    tot+=R*R; prev=R;
+  }
+  if(S<=0) return Infinity;
+  return Math.log(S)-T/S + 8*(neg/tot);
+}
+function _phRefine(sre,sim,ph0,ph1){
+  const st=Math.max(1,Math.floor(sre.length/16384));
+  const gold=(f,lo,hi)=>{                       // golden-section minimum on [lo,hi]
+    const g=0.6180339887; let a=lo,b=hi, x1=b-g*(b-a), x2=a+g*(b-a), f1=f(x1), f2=f(x2);
+    for(let k=0;k<18;k++){
+      if(f1<f2){ b=x2; x2=x1; f2=f1; x1=b-g*(b-a); f1=f(x1); }
+      else     { a=x1; x1=x2; f1=f2; x2=a+g*(b-a); f2=f(x2); }
+    }
+    return f1<f2?x1:x2;
+  };
+  let w0=25, w1=50;
+  for(let round=0;round<3;round++){
+    ph0=gold(v=>_phScore(sre,sim,st,v,ph1), ph0-w0, ph0+w0);
+    ph1=gold(v=>_phScore(sre,sim,st,ph0,v), Math.max(-360,ph1-w1), Math.min(360,ph1+w1));
+    w0*=0.35; w1*=0.35;
+  }
+  return {ph0,ph1};
+}
+function autoPhaseValues(sre,sim){
+  let {ph0,ph1}=_phCoarse(_phPeaks(sre,sim,48));
+  const st=Math.max(1,Math.floor(sre.length/16384));
+  const before=_phScore(sre,sim,st,ph0,ph1);
+  const r=_phRefine(sre,sim,ph0,ph1);
+  // keep the refinement only if it actually improved the criterion
+  if(_phScore(sre,sim,st,r.ph0,r.ph1)<before){ ph0=r.ph0; ph1=r.ph1; }
+  ph1=Math.max(-360,Math.min(360,ph1));
+  ph0=((ph0+180)%360+360)%360-180;              // slider range is ±180
+  return {ph0:Math.round(ph0*10)/10, ph1:Math.round(ph1*10)/10};
+}
+// returns false when there is nothing to phase (processed data is already phased)
+function autoPhase(sp){
+  if(!sp || sp.source==='proc' || !sp.sre) return false;
+  const r=autoPhaseValues(sp.sre,sp.sim);
+  sp.ph0=r.ph0; sp.ph1=r.ph1; sp.mode='real'; sp.phSet=true;
+  finalize(sp);
+  return true;
 }
 
 /* ===================== peaks/integrals/multiplets ===================== */
@@ -4463,7 +4575,7 @@ function eraseMultRegion(sp,pA,pB){ const lo=Math.min(pA,pB), hi=Math.max(pA,pB)
    Per-dataset analysis/annotation state is persisted in nmrspectrumviewer.json.
    localStorage is reserved for application preferences and the lightweight
    multi-spectrum workspace (layout/order/view), never spectral arrays. */
-const PERSISTENCE_VERSION=30;
+const PERSISTENCE_VERSION=31;
 function sigKey(sp){ let h=2166136261>>>0;
   const src = sp.haveFid? sp.cplxRe : sp.procReal;
   const n=Math.min(src?src.length:0, 4096);
@@ -4475,7 +4587,7 @@ function sigKey(sp){ let h=2166136261>>>0;
    This makes images, connectors, zoom insets, display settings and spectrum removal
    undoable as well as the original calibration / peak / integral operations. */
 const APP_UNDO=[], APP_REDO=[];
-const HIST_SP_KEYS=['name','origName','color','colorLocked','visible','vzoom','source','mode','wdw','lb','zf','gdc','ph0','ph1','sr','yscale',
+const HIST_SP_KEYS=['name','origName','color','colorLocked','visible','vzoom','source','mode','wdw','lb','zf','gdc','ph0','ph1','phSet','sr','yscale',
   'peaks','integrals','multiplets','shades','images','markPos','freeMarks','freeTexts'];
 let _histId=0, _historyApplying=false;
 function histClone(v){
@@ -4555,7 +4667,7 @@ function refreshUndoUI(){
   r.disabled=!APP_REDO.length;
 }
 
-function annotDataOf(sp){ return {v:PERSISTENCE_VERSION, sig:sigKey(sp), name:sp.name, sr:sp.sr||0, mode:sp.mode, ph0:sp.ph0, ph1:sp.ph1,
+function annotDataOf(sp){ return {v:PERSISTENCE_VERSION, sig:sigKey(sp), name:sp.name, sr:sp.sr||0, mode:sp.mode, ph0:sp.ph0, ph1:sp.ph1, phSet:!!sp.phSet,
     source:sp.source, wdw:sp.wdw, lb:sp.lb, zf:sp.zf, gdc:!!sp.gdc,
     images:sp.images||[], markPos:sp.markPos||{}, freeMarks:sp.freeMarks||[], freeTexts:sp.freeTexts||[],
     peaks:sp.peaks||[], integrals:sp.integrals||[], multiplets:sp.multiplets||[], shades:sp.shades||[]}; }
@@ -4572,6 +4684,9 @@ function applyAnnotData(sp, d){ try{
   if(d.source && ((d.source==='proc'&&sp.haveProc)||(d.source==='fid'&&sp.haveFid))) sp.source=d.source;
   if(typeof d.sr==='number') sp.sr=d.sr;
   if(d.mode) sp.mode=d.mode; if(typeof d.ph0==='number')sp.ph0=d.ph0; if(typeof d.ph1==='number')sp.ph1=d.ph1;
+  // Has the phase ever been decided for this dataset? Written since ver31; for older
+  // files a non-zero phase is the only evidence that someone set one.
+  sp.phSet = (typeof d.phSet==='boolean') ? d.phSet : !!(d.ph0||d.ph1);
   if(['none','em','gm'].includes(d.wdw)) sp.wdw=d.wdw;
   if(typeof d.lb==='number'&&isFinite(d.lb)) sp.lb=d.lb;
   if([1,2,4,8].includes(d.zf)) sp.zf=d.zf;
@@ -5022,8 +5137,8 @@ function syncControls(){
   document.getElementById('lb').value=sp.lb; document.getElementById('lbv').textContent=sp.lb.toFixed(2)+' Hz';
   document.getElementById('segZf').querySelectorAll('button').forEach(b=>b.classList.toggle('on',+b.dataset.v===sp.zf));
   document.getElementById('gdc').checked=sp.gdc;
-  document.getElementById('ph0').value=sp.ph0; document.getElementById('ph0v').textContent=sp.ph0+'°';
-  document.getElementById('ph1').value=sp.ph1; document.getElementById('ph1v').textContent=sp.ph1+'°';
+  document.getElementById('ph0').value=sp.ph0; document.getElementById('ph0v').textContent=phDeg(sp.ph0);
+  document.getElementById('ph1').value=sp.ph1; document.getElementById('ph1v').textContent=phDeg(sp.ph1);
 }
 function applyEmptyState(){
   // before any data is loaded, hide spectrum-operation sections to keep the home screen clean
@@ -5118,7 +5233,11 @@ function segWire(id,fn){ const el=document.getElementById(id);
   el.querySelectorAll('button').forEach(b=>b.onclick=()=>{ el.querySelectorAll('button').forEach(x=>x.classList.remove('on'));
     b.classList.add('on'); fn(b.dataset.v); }); }
 segWire('segSrc',v=>{ const sp=A(); if(!sp)return; if(v==='fid'&&!sp.haveFid)return; if(v==='proc'&&!sp.haveProc)return;
-  sp.source=v; sp.mode=v==='proc'?'real':'mag'; rebuildSpectrum(sp); saveAnnot(sp); refreshActive(); });
+  sp.source=v; sp.mode=v==='proc'?'real':'mag'; rebuildSpectrum(sp);
+  // coming back to the raw FID with no phase yet: phase it rather than dropping
+  // the user into the magnitude spectrum
+  if(v==='fid' && !sp.ph0 && !sp.ph1) autoPhase(sp);
+  saveAnnot(sp); refreshActive(); });
 segWire('segMode',v=>{ const sp=A(); if(!sp)return; sp.mode=v; finalize(sp); saveAnnot(sp); syncControls(); draw(); });
 segWire('segZf',v=>{ const sp=A(); if(!sp)return; sp.zf=+v; rebuildSpectrum(sp); saveAnnot(sp); draw(); });
 segWire('segLayout',v=>{ S.layout=v; draw(); });
@@ -5130,10 +5249,21 @@ document.getElementById('wdw').onchange=e=>{ const sp=A(); if(!sp)return; sp.wdw
 document.getElementById('lb').oninput=e=>{ const sp=A(); if(!sp)return; sp.lb=+e.target.value;
   document.getElementById('lbv').textContent=sp.lb.toFixed(2)+' Hz'; rebuildSpectrum(sp); saveAnnot(sp); draw(); };
 document.getElementById('gdc').onchange=e=>{ const sp=A(); if(!sp)return; sp.gdc=e.target.checked; rebuildSpectrum(sp); saveAnnot(sp); draw(); };
-document.getElementById('ph0').oninput=e=>{ const sp=A(); if(!sp)return; sp.ph0=+e.target.value;
-  document.getElementById('ph0v').textContent=sp.ph0+'°'; finalize(sp); saveAnnot(sp); draw(); };
-document.getElementById('ph1').oninput=e=>{ const sp=A(); if(!sp)return; sp.ph1=+e.target.value;
-  document.getElementById('ph1v').textContent=sp.ph1+'°'; finalize(sp); saveAnnot(sp); draw(); };
+// hoisted: syncControls() can run before this point during start-up
+function phDeg(v){ return (Math.round(v*10)/10).toFixed(1)+'°'; }
+document.getElementById('ph0').oninput=e=>{ const sp=A(); if(!sp)return; sp.ph0=+e.target.value; sp.phSet=true;
+  document.getElementById('ph0v').textContent=phDeg(sp.ph0); finalize(sp); saveAnnot(sp); draw(); };
+document.getElementById('ph1').oninput=e=>{ const sp=A(); if(!sp)return; sp.ph1=+e.target.value; sp.phSet=true;
+  document.getElementById('ph1v').textContent=phDeg(sp.ph1); finalize(sp); saveAnnot(sp); draw(); };
+document.getElementById('btnAutoPh').onclick=e=>{ const sp=A(); if(!sp)return;
+  const b=e.currentTarget; b.classList.add('busy');
+  // yield once so the button repaints before the search blocks the thread
+  setTimeout(()=>{ const before=snapState();
+    if(autoPhase(sp)){ recordUndo(before); saveAnnot(sp); syncControls(); draw(); }
+    b.classList.remove('busy'); }, 16); };
+document.getElementById('btnPhReset').onclick=()=>{ const sp=A(); if(!sp)return;
+  const before=snapState(); sp.ph0=0; sp.ph1=0; sp.phSet=true; recordUndo(before);
+  finalize(sp); saveAnnot(sp); syncControls(); draw(); };
 document.getElementById('lineW').oninput=e=>{ S.lineW=+e.target.value;
   document.getElementById('lwv').textContent=(+e.target.value).toFixed(1);
   draw(); };
@@ -5481,7 +5611,7 @@ segWire('segLang',v=>setLang(v));
 /* ===================== loading (multi) ===================== */
 function newSpectrum(name){ const c=PALETTE[S.nextColor++ % PALETTE.length];
   return { name, origName:name, color:c, visible:true, source:'fid', sr:0, mode:'mag', zf:1, wdw:'em', lb:0.3, gdc:true, ph0:0, ph1:0, yscale:1, vzoom:true,
-    peaks:[], integrals:[], multiplets:[], shades:[], haveFid:false, haveProc:false, colorLocked:false }; }
+    peaks:[], integrals:[], multiplets:[], shades:[], haveFid:false, haveProc:false, colorLocked:false, phSet:false, procMissing:false }; }
 // assign palette colors to spectra in display order (skips manually-locked ones)
 function applyPalette(force){
   const list=S.spectra; if(!list.length) return;
@@ -5530,6 +5660,10 @@ async function buildSpectrumFromGroup(key, gfiles){
   if(r && procs) ingestProcessed(await r.arrayBuffer(), parseAcqus(await procs.text()).raw, acqPar, sp);
   if(!sp.par && acqPar) sp.par=acqPar;
   if(!sp.haveFid && !sp.haveProc) return null;
+  // pdata/ exists and TopSpin recorded processing there, but the spectrum itself is
+  // absent — almost always 1r/1i lost in transfer, since they are the only binaries
+  // in that folder. Worth saying out loud: we silently fall back to the raw FID.
+  sp.procMissing = !!(procs && !r);
   sp.source = sp.haveProc?'proc':'fid'; sp.mode = sp.source==='proc'?'real':'mag';
   sp._dirHandle = dirHandles[key] || null;        // handle of this dataset's own folder (legacy per-dataset file)
   sp._topHandle = groupTop[key] || null;          // top-level opened folder → where nmrspectrumviewer.json lives
@@ -5584,7 +5718,14 @@ async function handleFiles(files){
   // The browser-local workspace owns ordering, visibility, colours, scale and the
   // shared canvas layout. Apply it only after dataset-specific JSON has restored.
   if(typeof applyStoredWorkspace==='function') applyStoredWorkspace(true);
+  // Datasets with no 1r arrive unphased. Phase them here rather than leaving the
+  // user with the magnitude spectrum — but never over a phase already decided
+  // for this dataset (including a deliberate reset to zero).
+  const autoPh=newSps.filter(sp=>!sp.haveProc && !sp.phSet && autoPhase(sp));
+  const noProc=newSps.filter(sp=>sp.procMissing);
   refreshActive();
+  if(noProc.length) toast(t('warnNoProc').replace('{n}', noProc.length), 7000);
+  else if(autoPh.length) toast(t('infoAutoPhased').replace('{n}', autoPh.length), 4000);
   if(typeof persistUI==='function') persistUI();
   if(typeof resumeFolderSave==='function') resumeFolderSave();
 }
@@ -6214,10 +6355,10 @@ function syncUIControls(){
 
 /* tiny transient toast */
 let _toastT=null;
-function toast(msg){ let el=document.getElementById('toast');
+function toast(msg, ms){ let el=document.getElementById('toast');
   if(!el){ el=document.createElement('div'); el.id='toast'; document.body.appendChild(el); }
   el.textContent=msg; el.classList.add('show');
-  clearTimeout(_toastT); _toastT=setTimeout(()=>el.classList.remove('show'),1600);
+  clearTimeout(_toastT); _toastT=setTimeout(()=>el.classList.remove('show'), ms||1600);
 }
 
 
@@ -6227,6 +6368,13 @@ function toast(msg){ let el=document.getElementById('toast');
    a large rework bumps the major (→ 2.0). Badge shows v + CHANGELOG[0].v.
    Fields: v (version string), date (YYYY-MM-DD), en[] / ja[] bullet lists. */
 const CHANGELOG=[
+  { v:'1.14', date:'2026-07-28',
+    en:['Added automatic phase correction. A new “Auto phase” button next to the PH0 / PH1 sliders fits both from the peak shapes, and “Reset” puts them back to 0°. The sliders now step in 0.1°.',
+        'Datasets whose pdata folder has no 1r are now phased automatically on load and shown as the real spectrum, instead of silently falling back to the magnitude spectrum.',
+        'Loading such a dataset now says so: procs present but 1r missing almost always means the processed spectrum was dropped in transfer, which used to look like the viewer failing to read the data.'],
+    ja:['自動位相補正を追加しました。PH0 / PH1 スライダーの上に「自動位相」ボタンを置き、ピーク形状から両方を自動で決めます。「リセット」で 0° に戻ります。スライダーの刻みは 0.1° になりました。',
+        'pdata に 1r が無いデータは、読み込み時に自動で位相補正して実部スペクトルとして表示するようにしました（従来は無言で絶対値表示になっていました）。',
+        'その場合に警告を出すようにしました。procs があるのに 1r が無いのは転送時に処理済みスペクトルが欠落したケースがほとんどで、これまではビューアがデータを読めていないように見えていました。'] },
   { v:'1.13', date:'2026-07-26',
     en:['Consolidated the Cut, Zoom-view and Title appearance controls into gear-icon popovers. Cut now has break Width and Opacity, the former “Slash” break is now a “Solid” break (with the Wave control disabled for it), and each popover has its own Reset to defaults; Zoom-view adds “Clear all zoom views” and moves the inset / leader show-hide toggles into its section header.',
         'Added a “Hide out-of-range” toggle (Wheel & scroll settings) that keeps the δ window and every wheel / pan gesture within the actual data extent, so the view can no longer drift off into empty space; wheel momentum now stops against the data edge.',
@@ -6742,7 +6890,9 @@ const MANUAL = {
       ]},
       {sub:'位相（Phase）'},
       {ul:[
-        `<b>PH0 / PH1</b> スライダーで 0 次・1 次の位相を手で調整します ${manIc('phase')}。ピークが上向きの純粋な吸収線になるように合わせます。`,
+        '<b>自動位相</b>：ピーク形状から PH0 / PH1 を自動で決めます。<b>処理済みデータ（pdata の 1r）が無いデータは、読み込み時に自動で実行されます</b>ので、通常は押す必要はありません。窓関数やゼロ充填を変えた後に押し直すこともできます。',
+        `<b>PH0 / PH1</b> スライダーで 0 次・1 次の位相を手で調整します ${manIc('phase')}。ピークが上向きの純粋な吸収線になるように合わせます。<b>リセット</b>で 0° に戻ります。`,
+        '自動位相は<b>群遅延補正（GDC）が ON</b> であることを前提にしています。OFF にすると PH1 がスライダーの範囲（±360°）を大きく超えるため、自動でも手動でも合わせられません。',
         `<b>表示モード</b>（設定 ${manIc('gear')}）：「実部（Real）」＝位相補正した通常表示、「絶対値（Magnitude）」＝位相に依存せず常に正（線幅は広め）。`,
       ]},
     ]},
@@ -6949,7 +7099,9 @@ const MANUAL = {
       ]},
       {sub:'Phase'},
       {ul:[
-        `<b>PH0 / PH1</b> sliders adjust the zero- and first-order phase by hand ${manIc('phase')}. Tune them until peaks are upright, pure-absorption lines.`,
+        '<b>Auto phase</b> fits PH0 / PH1 from the peak shapes. <b>It runs by itself when a dataset has no processed spectrum (pdata 1r)</b>, so you rarely need the button — press it again after changing the window function or zero filling.',
+        `<b>PH0 / PH1</b> sliders adjust the zero- and first-order phase by hand ${manIc('phase')}. Tune them until peaks are upright, pure-absorption lines. <b>Reset</b> puts both back to 0°.`,
+        'Auto phase assumes <b>group-delay correction is on</b>. With it off, PH1 runs far outside the ±360° slider range and neither automatic nor manual phasing can reach it.',
         `<b>Display mode</b> (Settings ${manIc('gear')}): “Real” = phased absorption (normal); “Magnitude” = phase-independent and always positive (broader lines).`,
       ]},
     ]},
