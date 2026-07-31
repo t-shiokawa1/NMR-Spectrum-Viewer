@@ -529,7 +529,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
 .rbody::-webkit-scrollbar{width:8px}
 .rbody::-webkit-scrollbar-thumb{background:var(--gridw);border-radius:5px}
 table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:11px}
-th{text-align:right;color:var(--faint);font-weight:500;padding:4px 6px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel);text-transform:uppercase;letter-spacing:.04em;font-size:9.5px}
+th{text-align:left;color:var(--faint);font-weight:500;padding:4px 6px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel);text-transform:uppercase;letter-spacing:.04em;font-size:9.5px}
 th:first-child,td:first-child{text-align:left}
 td{padding:3px 6px;border-bottom:1px solid var(--grid);color:var(--ink)}
 tr:hover td{background:var(--panel2)}
@@ -1471,7 +1471,7 @@ const I18N={
   lblInertia:"Inertia", lblInvert:"Invert", lblHscroll:"H-scroll = pan δ", lblLimitView:"Hide out-of-range",
   lblRange:"δ range", btnApply:"Apply", hdViewVis:"Show / hide",
   secImages:"Images", btnAddImg:"＋ Add image from file", imgItem:"Image",
-  imgHint:"Paste a screenshot (Ctrl+V) or add a PNG. Click to select · drag corner to resize · Del to remove (when no tool is active).",
+  imgHint:"Paste a screenshot (Ctrl+V) or add a PNG. New images stay anchored to the spectrum; use their settings to change this. Click to select · drag its corner or use Image size to resize · Del to remove (when no tool is active).",
   ttImgEye:"Show this image on the spectrum", ttImgBg:"Make background transparent (toggle)", secDisplay:"Display", secData:"Data", ttShowHide:"Show / hide", cpCustom:"Custom", cpOk:"OK", cpCancel:"Cancel",
   lblInsets:"Images", lblNames:"File names", lblTitle:"Title", lblTitleText:"Title text", lblTitleSize:"Title size", lblTitleWeight:"Title weight", optThin:"Thin", optBold:"Bold", lblCutStyle:"Style", optCutWave:"Wave", optCutZig:"Zigzag", optCutSlash:"Solid", lblShowPeaks:"Peaks", lblShowIntegs:"Integrals", lblShowShades:"Shades", lblJTree:"Coupling tree",
   lblPalette:"Color palette", lblApplyPalette:"Re-apply to all", lblMonoBase:"Base color", lblSigDigits:"δ decimal places",
@@ -1538,6 +1538,7 @@ const I18N={
   assignMarkAction:"Mark a peak", assignTextAction:"Add a text label", assignShadeAction:"Shade a range", assignLineAction:"Draw a connector", assignImageAction:"Add an image from file",
   assignShowMark:"Show marks", assignShowText:"Show text labels", assignShowShade:"Show shaded regions", assignShowLine:"Show connectors", assignShowImage:"Show images",
   assignStyleMark:"Marks", assignStyleText:"Text labels", assignStyleShade:"Shaded regions", assignStyleLine:"Connectors", impSetupHd:"Find impurities", impRefsNote:"References and notes",
+  asgDeleteClick:"Delete by clicking", asgClearAll:"Clear all", asgLineStyle:"Line style", asgImageBorder:"Show border", asgImageBorderColor:"Border color", asgImageBorderWidth:"Border width", asgImageSize:"Image size", asgImageAnchor:"Keep position on spectrum", asgSelectImage:"Select an image on the spectrum first", optDashDot:"Dash-dot", asgHide:"Hide", asgShow:"Show", asgNoItems:"No {item}", asgNothingToDelete:"Nothing to delete", asgConfirmClear:"Clear all {item}?",
   ttDelMark:"Click a marked peak to remove its mark", ttDelText:"Click a labeled peak to remove its label", ttDelImg:"Click an image to delete it",
   tabImp:"Impurities", impInvestigate:"Find impurities", impSolvent:"Solvent", impTol:"± ppm", impOverlay:"Overlay on spectrum",
   impNote:"¹H residual-impurity shifts (<a href='https://doi.org/10.1021/om100106e' target='_blank' rel='noopener'>Fulmer 2010</a>; <a href='https://doi.org/10.1021/acs.oprd.5b00417' target='_blank' rel='noopener'>Babij 2016</a>). Reference your spectrum to the solvent residual first.", impNote13C:"¹³C impurity & solvent shifts (<a href='https://doi.org/10.1021/om100106e' target='_blank' rel='noopener'>Fulmer 2010</a>); most complete for CDCl₃. Reference to the solvent signal first.",
@@ -1581,7 +1582,7 @@ const I18N={
   lblInertia:"ホイール慣性", lblInvert:"向きを反転", lblHscroll:"横スクロールでδ移動", lblLimitView:"データ範囲外を表示しない",
   lblRange:"δ 表示範囲", btnApply:"適用", hdViewVis:"表示・非表示",
   secImages:"画像", btnAddImg:"＋ 画像をファイルから追加", imgItem:"画像",
-  imgHint:"スクリーンショットを貼り付け（Ctrl+V）またはPNGを追加。クリックで選択・角ドラッグで拡縮・Delで削除（ツール未選択時）。",
+  imgHint:"スクリーンショットを貼り付け（Ctrl+V）またはPNGを追加。新しい画像はスペクトル上の位置に固定されます（設定で変更可）。クリックで選択し、角ドラッグまたは設定内の［画像の大きさ］で拡縮・Delで削除（ツール未選択時）。",
   ttImgEye:"この画像をスペクトル上に表示", ttImgBg:"背景を透過（クリックで切替）", secDisplay:"表示", secData:"データ", ttShowHide:"表示 / 非表示", cpCustom:"カスタム", cpOk:"OK", cpCancel:"キャンセル",
   lblInsets:"画像を表示", lblNames:"ファイル名", lblTitle:"タイトル", lblTitleText:"タイトル文字", lblTitleSize:"タイトルの大きさ", lblTitleWeight:"タイトルの太さ", optThin:"細字", optBold:"太字", lblCutStyle:"スタイル", optCutWave:"波線", optCutZig:"ジグザグ", optCutSlash:"実線", lblShowPeaks:"ピーク", lblShowIntegs:"積分", lblShowShades:"塗りつぶし", lblJTree:"カップリングツリー",
   lblPalette:"カラーパレット", lblApplyPalette:"全てに再適用", lblMonoBase:"基準色", lblSigDigits:"δ 小数桁数",
@@ -1648,6 +1649,7 @@ const I18N={
   assignMarkAction:"ピークにマークを付ける", assignTextAction:"テキストラベルを付ける", assignShadeAction:"範囲を塗りつぶす", assignLineAction:"コネクタを引く", assignImageAction:"画像をファイルから追加する",
   assignShowMark:"マークを表示", assignShowText:"テキストラベルを表示", assignShowShade:"塗りつぶしを表示", assignShowLine:"コネクタを表示", assignShowImage:"画像を表示",
   assignStyleMark:"マーク", assignStyleText:"テキストラベル", assignStyleShade:"塗りつぶし", assignStyleLine:"コネクタ", impSetupHd:"不純物を調べる", impRefsNote:"参考文献・注意事項",
+  asgDeleteClick:"クリックして削除", asgClearAll:"すべて削除", asgLineStyle:"線の種類", asgImageBorder:"枠線を表示", asgImageBorderColor:"枠線の色", asgImageBorderWidth:"枠線の太さ", asgImageSize:"画像の大きさ", asgImageAnchor:"スペクトル上の位置に固定", asgSelectImage:"先にスペクトル上の画像を選択してください", optDashDot:"一点鎖線", asgHide:"非表示にする", asgShow:"表示する", asgNoItems:"{item}はありません", asgNothingToDelete:"削除する項目はありません", asgConfirmClear:"「{item}」をすべて削除します。\n本当に削除してもよろしいですか？",
   ttDelMark:"マーク付きピークをクリックして削除", ttDelText:"ラベル付きピークをクリックして削除", ttDelImg:"画像をクリックして削除",
   tabImp:"不純物", impInvestigate:"不純物を調べる", impSolvent:"溶媒", impTol:"± ppm", impOverlay:"スペクトルに重ねて表示",
   impNote:"¹H 残留不純物シフト（<a href='https://doi.org/10.1021/om100106e' target='_blank' rel='noopener'>Fulmer 2010</a>; <a href='https://doi.org/10.1021/acs.oprd.5b00417' target='_blank' rel='noopener'>Babij 2016</a>）。先に溶媒残留ピークで基準合わせを。", impNote13C:"¹³C 不純物・溶媒シフト（<a href='https://doi.org/10.1021/om100106e' target='_blank' rel='noopener'>Fulmer 2010</a>）。CDCl₃が最も充実。先に溶媒シグナルで基準合わせを。",
@@ -1878,7 +1880,7 @@ const S={ spectra:[], active:-1, view:{pHi:1,pLo:0}, yscale:1, tool:null,
   zoomBorderColor:null, zoomBorderWidth:1, zoomLeaderStyle:'dashed',
   customPalette:['#1f3a93','#9e2b25','#117a4d','#8a5a00','#6a1b8a'],
   impSolvent:'cdcl3', impTol:0.03, impTolC:0.3, showImpurities:false, impPins:[], impFilter:'',
-  showTitle:false, figTitle:null, titleSize:15, titleBold:false, cut:null, cuts:[], cutStyle:'wave', cutColor:null, cutWidth:1.3, cutWave:6, cutSpan:2, cutGap:10, cutOpacity:0.9 };
+  showTitle:false, figTitle:null, titleSize:15, titleBold:false, cutStyle:'wave', cutColor:null, cutWidth:1.3, cutWave:6, cutSpan:2, cutGap:10, cutOpacity:0.9 };
 function A(){ return S.spectra[S.active]||null; }
 // Platform modifier key for display (Ctrl on Windows/Linux, ⌘ on Mac; default ⌘ if unknown)
 const IS_MAC=(function(){ try{
@@ -2293,12 +2295,24 @@ let textDrag=null;
 let insetDrag=null;
 function imgsOf(sp){ if(!sp) return []; if(!sp.images) sp.images=[]; return sp.images; }
 function newImgId(){ return 'i'+Date.now().toString(36)+Math.floor(Math.random()*1e4).toString(36); }
+function imageBoxPosition(sp,rec,w,h){
+  if(rec.anchor==='spectrum'&&isFinite(rec.ppm)&&isFinite(rec.yf)){
+    const g=geomFor(sp,laneInfo()), lh=Math.max(1,g.base-g.top);
+    return {x:ppmToX(rec.ppm)-w/2,y:g.top+rec.yf*lh-h/2};
+  }
+  return {x:rec.x||0,y:rec.y||0};
+}
+function anchorImageToSpectrum(sp,rec,x,y){
+  const w=rec.w*rec.s,h=rec.h*rec.s,g=geomFor(sp,laneInfo()),lh=Math.max(1,g.base-g.top);
+  rec.anchor='spectrum'; rec.ppm=xToPpm(x+w/2); rec.yf=(y+h/2-g.top)/lh;
+}
 function addImage(dataURL,w,h){
   const sp=A(); if(!sp||!w||!h) return null;
   const im=imgsOf(sp);
+  const s=Math.min(1,280/w,220/h), x=PADL+60+(im.length%3)*80, y=PADT+70+(im.length%3)*60;
   const rec={id:newImgId(), src:dataURL, w, h, on:true,
-    s:Math.min(1, 280/w, 220/h),
-    x:PADL+60+(im.length%3)*80, y:PADT+70+(im.length%3)*60};
+    s, x, y};
+  anchorImageToSpectrum(sp,rec,x,y);
   im.push(rec); saveAnnot(sp); renderImgs(); draw(); return rec;
 }
 function loadImageFile(blob){
@@ -2372,23 +2386,26 @@ function drawInsets(){
         img.onload=()=>draw(); img.src=rec.src; }
       if(!img.complete||!img.naturalWidth) return;
       const w=rec.w*rec.s, h=rec.h*rec.s;
-      rec.x=Math.max(PADL, Math.min(W-PADR-w, rec.x));
-      rec.y=Math.max(PADT, Math.min(Math.max(PADT,PADT+plotH()-h), rec.y));
-      ctx.drawImage(img, rec.x, rec.y, w, h);
+      let {x,y}=imageBoxPosition(sp,rec,w,h);
+      if(rec.anchor!=='spectrum'){
+        x=Math.max(PADL,Math.min(W-PADR-w,x)); y=Math.max(PADT,Math.min(Math.max(PADT,PADT+plotH()-h),y));
+        rec.x=x; rec.y=y;
+      }
+      ctx.drawImage(img,x,y,w,h);
       if(S.imageBorder){
         ctx.save();
         ctx.strokeStyle=S.imageBorderColor||css('--axis');
         ctx.lineWidth=Math.max(.5,S.imageBorderWidth||1);
         ctx.setLineDash(strokeDash(S.imageBorderStyle));
         const inset=ctx.lineWidth/2;
-        ctx.strokeRect(rec.x+inset, rec.y+inset, Math.max(0,w-ctx.lineWidth), Math.max(0,h-ctx.lineWidth));
+        ctx.strokeRect(x+inset,y+inset,Math.max(0,w-ctx.lineWidth),Math.max(0,h-ctx.lineWidth));
         ctx.restore();
       }
-      const box={sp, rec, ki, x:rec.x, y:rec.y, w, h, hx:rec.x+w, hy:rec.y+h};
+      const box={sp,rec,ki,x,y,w,h,hx:x+w,hy:y+h};
       if(sp===act && ki===S.selImg && !S.tool){
         ctx.save(); ctx.setLineDash([4,3]); ctx.lineWidth=1.2;
         ctx.strokeStyle=css('--accent');
-        ctx.strokeRect(rec.x-1.5, rec.y-1.5, w+3, h+3);
+        ctx.strokeRect(x-1.5,y-1.5,w+3,h+3);
         ctx.restore();
         ctx.fillStyle=css('--accent');
         ctx.fillRect(box.hx-4, box.hy-4, 8, 8);
@@ -2542,8 +2559,9 @@ function curCutGap(){ return Math.max(6, Math.min(60, S.cutGap??10)); }
    the cut flipped on/off in one step, so the whole trace jumped sideways.
    Each cut also carries `gf` (0..1): the break gap fades to 0 as a cut edge
    reaches the plot edge, so the gap width does not pop either. */
+function cutsOf(sp=A()){ return Array.isArray(sp&&sp.cuts)?sp.cuts:[]; }
 function cutActiveList(){ if(VP) return [];
-  const list=(S.cuts||[]);
+  const list=cutsOf();
   if(!list.length) return [];
   const v=S.view, hi=Math.max(v.pHi,v.pLo), lo=Math.min(v.pHi,v.pLo), span=hi-lo;
   const acc=[];
@@ -2624,7 +2642,7 @@ function cutGapsX(){
 /* all user cuts normalized (a>b), sorted downfield-first and merged — NOT clamped to the
    view (used by panning, which is deciding what the view should become). */
 function mergedCutsAbs(){
-  const list=(S.cuts||[]).filter(c=>c&&isFinite(c.a)&&isFinite(c.b))
+  const list=cutsOf().filter(c=>c&&isFinite(c.a)&&isFinite(c.b))
     .map(c=>({a:Math.max(c.a,c.b), b:Math.min(c.a,c.b)})).sort((p,q)=>q.a-p.a);
   const m=[];
   for(const c of list){ const prev=m[m.length-1];
@@ -3663,10 +3681,12 @@ cv.addEventListener('pointermove',e=>{
   if(insetDrag){ const rec=insetDrag.rec;
     if(rec){
       if(insetDrag.mode==='resize'){
-        const d=Math.hypot(x-rec.x,(e.clientY-r.top)-rec.y);
+        const d=Math.hypot(x-insetDrag.baseX,(e.clientY-r.top)-insetDrag.baseY);
         rec.s=Math.max(0.1,Math.min(2,insetDrag.baseS*d/insetDrag.baseD));
       } else {
-        rec.x=x+insetDrag.ox; rec.y=(e.clientY-r.top)+insetDrag.oy;
+        const nx=x+insetDrag.ox, ny=(e.clientY-r.top)+insetDrag.oy;
+        if(rec.anchor==='spectrum') anchorImageToSpectrum(insetDrag.sp,rec,nx,ny);
+        else { rec.x=nx; rec.y=ny; }
       }
       draw();
     }
@@ -3740,19 +3760,20 @@ cv.addEventListener('pointerdown',e=>{
     if(hb){
       const rec=hb.rec;
       cv.setPointerCapture(e.pointerId);
-      insetDrag={mode:'resize', rec, sp:hb.sp, baseS:rec.s,
-        baseD:Math.max(8,Math.hypot(x-rec.x, y-rec.y))};
+      insetDrag={mode:'resize',rec,sp:hb.sp,baseS:rec.s,baseX:hb.x,baseY:hb.y,
+        baseD:Math.max(8,Math.hypot(x-hb.x,y-hb.y))};
       return;
     }
     const ih=insetAt(x,y);
     if(ih&&!S.tool){
       if(ih.sp===A()) S.selImg=ih.ki;
+      if(typeof window.syncAssignHeaderState==='function') window.syncAssignHeaderState();
       const rec=ih.rec;
       cv.setPointerCapture(e.pointerId);
-      insetDrag={mode:'move', rec, sp:ih.sp, ox:rec.x-x, oy:rec.y-y};
+      insetDrag={mode:'move',rec,sp:ih.sp,ox:ih.x-x,oy:ih.y-y};
       cv.style.cursor='grabbing'; draw(); return;
     }
-    if(S.selImg>=0){ S.selImg=-1; draw(); }
+    if(S.selImg>=0){ S.selImg=-1; if(typeof window.syncAssignHeaderState==='function') window.syncAssignHeaderState(); draw(); }
   }
   if(e.button===0 && y>=curTop()+plotH()){ // grab the δ-axis to pan
     cv.setPointerCapture(e.pointerId);
@@ -3792,8 +3813,11 @@ cv.addEventListener('pointerup',e=>{
   if(S.tool==='tCut'){
     if(Math.abs(x-dragRect.x0)>6){
       const pA=xToPpm(dragRect.x0), pB=xToPpm(x);
-      if(!Array.isArray(S.cuts)) S.cuts=[];
-      S.cuts.push({a:Math.max(pA,pB), b:Math.min(pA,pB)}); persistUI();
+      if(sp){
+        sp.cuts=cutsOf(sp);
+        sp.cuts.push({a:Math.max(pA,pB), b:Math.min(pA,pB)});
+        saveAnnot(sp);
+      }
     }                                          // a click leaves cuts unchanged (clear via the tool menu)
     dragRect=null; draw(); return;
   }
@@ -4175,8 +4199,8 @@ function doToolAction(act){
   if(act==='clearShade') return clearShades();
   if(act==='clearLines'){ S.lines=[]; persistUI(); draw(); return; }
   if(act==='clearZoom'){ S.zooms=[]; S.selZoom=-1; persistUI(); draw(); return; }
-  if(act==='clearCut'){ S.cuts=[]; S.cut=null; persistUI(); draw(); return; }
-  if(act==='undoCut'){ if(Array.isArray(S.cuts)&&S.cuts.length){ S.cuts.pop(); persistUI(); draw(); } return; }
+  if(act==='clearCut'){ const sp=A(); if(sp){ sp.cuts=[]; saveAnnot(sp); } draw(); return; }
+  if(act==='undoCut'){ const sp=A(), cuts=cutsOf(sp); if(sp&&cuts.length){ cuts.pop(); sp.cuts=cuts; saveAnnot(sp); draw(); } return; }
   if(act==='resetCut') return resetCutStyle();
   if(act==='clearMarks') return clearMarks();
   if(act==='clearTextLabels') return clearTextLabels();
@@ -4575,7 +4599,7 @@ function eraseMultRegion(sp,pA,pB){ const lo=Math.min(pA,pB), hi=Math.max(pA,pB)
    Per-dataset analysis/annotation state is persisted in nmrspectrumviewer.json.
    localStorage is reserved for application preferences and the lightweight
    multi-spectrum workspace (layout/order/view), never spectral arrays. */
-const PERSISTENCE_VERSION=31;
+const PERSISTENCE_VERSION=32;
 function sigKey(sp){ let h=2166136261>>>0;
   const src = sp.haveFid? sp.cplxRe : sp.procReal;
   const n=Math.min(src?src.length:0, 4096);
@@ -4588,7 +4612,7 @@ function sigKey(sp){ let h=2166136261>>>0;
    undoable as well as the original calibration / peak / integral operations. */
 const APP_UNDO=[], APP_REDO=[];
 const HIST_SP_KEYS=['name','origName','color','colorLocked','visible','vzoom','source','mode','wdw','lb','zf','gdc','ph0','ph1','phSet','sr','yscale',
-  'peaks','integrals','multiplets','shades','images','markPos','freeMarks','freeTexts'];
+  'peaks','integrals','multiplets','shades','images','markPos','freeMarks','freeTexts','cuts'];
 let _histId=0, _historyApplying=false;
 function histClone(v){
   if(typeof structuredClone==='function') return structuredClone(v);
@@ -4670,7 +4694,7 @@ function refreshUndoUI(){
 function annotDataOf(sp){ return {v:PERSISTENCE_VERSION, sig:sigKey(sp), name:sp.name, sr:sp.sr||0, mode:sp.mode, ph0:sp.ph0, ph1:sp.ph1, phSet:!!sp.phSet,
     source:sp.source, wdw:sp.wdw, lb:sp.lb, zf:sp.zf, gdc:!!sp.gdc,
     images:sp.images||[], markPos:sp.markPos||{}, freeMarks:sp.freeMarks||[], freeTexts:sp.freeTexts||[],
-    peaks:sp.peaks||[], integrals:sp.integrals||[], multiplets:sp.multiplets||[], shades:sp.shades||[]}; }
+    peaks:sp.peaks||[], integrals:sp.integrals||[], multiplets:sp.multiplets||[], shades:sp.shades||[], cuts:sp.cuts||[]}; }
 function saveAnnot(sp){
   if(typeof scheduleFolderJson==='function') scheduleFolderJson();
   if(typeof persistUI==='function') persistUI(); }
@@ -4706,6 +4730,7 @@ function applyAnnotData(sp, d){ try{
   if(Array.isArray(d.shades)) sp.shades=d.shades;
   if(Array.isArray(d.freeMarks)) sp.freeMarks=d.freeMarks;
   if(Array.isArray(d.freeTexts)) sp.freeTexts=d.freeTexts;
+  if(Array.isArray(d.cuts)) sp.cuts=d.cuts.filter(c=>c&&isFinite(c.a)&&isFinite(c.b)).map(c=>({a:Math.max(c.a,c.b),b:Math.min(c.a,c.b)}));
   return true; }catch(e){ return false; } }
 
 /* ===================== results panel (dock ⇆ float) ===================== */
@@ -4776,8 +4801,17 @@ document.querySelectorAll('.rtab').forEach(b=>b.onclick=()=>{ S.resTab=b.dataset
 })();
 function renderResults(){
   const body=document.getElementById('rbody'), sp=A();
-  document.querySelectorAll('.rtab').forEach(b=>b.classList.toggle('on', b.dataset.tab===S.resTab));
   if(!sp){ body.innerHTML=`<div class="rempty">—</div>`; return; }
+  const hasTab={
+    peaks:!!(sp.peaks||[]).length,
+    integ:!!(sp.integrals||[]).length,
+    mult:!!(sp.multiplets||[]).length,
+    assign:!!((sp.freeMarks||[]).length||(sp.freeTexts||[]).length||(sp.shades||[]).length||imgsOf(sp).length||(sp.peaks||[]).some(p=>p.mark||p.label)||(S.lines||[]).length)
+  };
+  const available=Object.keys(hasTab).filter(k=>hasTab[k]);
+  if(available.length&&!hasTab[S.resTab]) S.resTab=available[0];
+  document.querySelectorAll('.rtab').forEach(b=>{const show=!!hasTab[b.dataset.tab];b.hidden=!show;b.classList.toggle('on',show&&b.dataset.tab===S.resTab);});
+  if(!available.length){ body.innerHTML=''; return; }
   const eyeC=(on,type,k)=>`<td class="ceye"><button class="reye${on?'':' off'}" data-eye="${type}" data-k="${k}" title="" aria-label="${t('ttShowHide')}" aria-pressed="${String(on)}" data-tooltip="${t('ttShowHide')}">${eyeSvg(on)}</button></td>`;
   const swC=(color,type,k)=>`<button class="rsw" data-color="${type}" data-k="${k}" style="background:${color}" title="${t('cpCustom')}"></button>`;
   if(S.resTab==='peaks'){
@@ -4792,7 +4826,7 @@ function renderResults(){
         const isRef=g.norm>0;
         const cls=isRef?'refval':'editval';
         return `<tr class="${k===S.selInteg?'selrow ':''}${g.hidden?'rowoff':''}"><td>${k+1}</td><td>${g.a.toFixed(2)}–${g.b.toFixed(2)}</td>`+
-          `<td><span class="${cls}" data-k="${k}" title="${t('ttEditNorm')}">${g.rel.toFixed(S.integDigits??3)}${isRef?' <span class="refbadge">'+t('refTag')+'</span>':''}</span></td>`+
+          `<td><span class="${cls}" data-k="${k}" title="${t('ttEditNorm')}">${g.rel.toFixed(S.integDigits??3)}</span></td>`+
           eyeC(!g.hidden,'integrals',k)+
           `<td><button class="rrm" data-del="integrals" data-k="${k}">×</button></td></tr>`;
       }).join('')+`</tbody></table>`+
@@ -5153,6 +5187,7 @@ function refreshActive(){
   applyEmptyState();
   if(sp){ setMeta(sp.par||{}); syncControls(); document.getElementById('hint').style.display='none'; }
   renderList(); renderResults(); renderImgs(); refreshUndoUI();
+  if(typeof window.syncAssignHeaderState==='function') window.syncAssignHeaderState();
   buildSolventList(); if(typeof renderImpPanel==='function') renderImpPanel();
   draw();
 }
@@ -5611,7 +5646,7 @@ segWire('segLang',v=>setLang(v));
 /* ===================== loading (multi) ===================== */
 function newSpectrum(name){ const c=PALETTE[S.nextColor++ % PALETTE.length];
   return { name, origName:name, color:c, visible:true, source:'fid', sr:0, mode:'mag', zf:1, wdw:'em', lb:0.3, gdc:true, ph0:0, ph1:0, yscale:1, vzoom:true,
-    peaks:[], integrals:[], multiplets:[], shades:[], haveFid:false, haveProc:false, colorLocked:false, phSet:false, procMissing:false }; }
+    peaks:[], integrals:[], multiplets:[], shades:[], cuts:[], haveFid:false, haveProc:false, colorLocked:false, phSet:false, procMissing:false }; }
 // assign palette colors to spectra in display order (skips manually-locked ones)
 function applyPalette(force){
   const list=S.spectra; if(!list.length) return;
@@ -6147,7 +6182,7 @@ function uiState(){ const o={
     customPalette:S.customPalette||[],
     impSolvent:S.impSolvent, impTol:S.impTol, impTolC:S.impTolC, showImpurities:S.showImpurities, impPins:S.impPins||[],
     lines:S.lines||[], zooms:S.zooms||[],
-    figTitle:S.figTitle, titleSize:S.titleSize, titleBold:S.titleBold, cuts:S.cuts||[], cutStyle:S.cutStyle,
+    figTitle:S.figTitle, titleSize:S.titleSize, titleBold:S.titleBold, cutStyle:S.cutStyle,
     cutColor:S.cutColor, cutWidth:S.cutWidth, cutWave:S.cutWave, cutSpan:S.cutSpan, cutGap:S.cutGap, cutOpacity:S.cutOpacity, flags:{} };
   SHOW_FLAGS.forEach(f=>o.flags[f]=S[f]); return o; }
 function applyUIState(o, withView){
@@ -6208,8 +6243,8 @@ function applyUIState(o, withView){
   if(typeof o.cutSpan==='number') S.cutSpan=Math.max(1,Math.min(12,o.cutSpan));
   if(typeof o.cutGap==='number') S.cutGap=o.cutGap;
   if(typeof o.cutOpacity==='number') S.cutOpacity=Math.max(.1,Math.min(1,o.cutOpacity));
-  if(Array.isArray(o.cuts)) S.cuts=o.cuts.filter(c=>c&&isFinite(c.a)&&isFinite(c.b)).map(c=>({a:c.a,b:c.b}));
-  else if(o.cut && isFinite(o.cut.a) && isFinite(o.cut.b)) S.cuts=[{a:o.cut.a,b:o.cut.b}];   // migrate legacy single cut
+  // Cut regions are persisted with each spectrum, never with the workspace.
+  // Ignore legacy workspace-wide cuts so they cannot leak into another dataset.
   if(withView && o.view && isFinite(o.view.pHi) && isFinite(o.view.pLo)) S.view={pHi:o.view.pHi,pLo:o.view.pLo};
 }
 function workspaceSpectrumState(sp){ return {
@@ -7340,6 +7375,7 @@ function applyModKeyLabels(){
     if(b&&b.title) b.title=b.title.replace(/Ctrl/g,MODKEY); }); }
 }
 function setLang(l){ LANG=l; applyI18n(); renderShortcuts(); applyModKeyLabels();
+  if(typeof window.refreshAssignI18n==='function') window.refreshAssignI18n();
   const sg=document.getElementById('segLang');
   if(sg) sg.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===l)); }
 
@@ -7533,6 +7569,10 @@ html[data-theme="light"] #toolbar .rsub:not(.on):hover{
 .asg-gear-settings .asg-item-body .tmrow>label{grid-column:2;color:var(--ink)}
 .asg-gear-settings .asg-item-body .tmrow>select{grid-column:3/5;min-width:0;padding:5px 7px;font-size:12px}
 .asg-gear-settings .asg-item-body .tmrow.asg-check-row>input{grid-column:4;width:15px;height:15px;margin:0;accent-color:var(--trace);cursor:pointer}
+.asg-gear-settings .asg-item-body .tmrow.asg-color-row{grid-template-columns:13px 72px minmax(0,1fr) 28px}
+.asg-gear-settings .asg-item-body .tmrow.asg-color-row .asg-color-presets{grid-column:3;display:flex;align-items:center;justify-content:flex-start;gap:3px;min-width:0}
+.asg-gear-settings .asg-item-body .tmrow.asg-color-row .asg-color-presets button{width:13px;height:13px;flex:none;border:1px solid var(--line);border-radius:50%;padding:0;cursor:pointer;background-clip:padding-box}
+.asg-gear-settings .asg-item-body .tmrow.asg-color-row .asg-color-presets button:hover,.asg-gear-settings .asg-item-body .tmrow.asg-color-row .asg-color-presets button:focus-visible{outline:2px solid var(--trace);outline-offset:1px}
 .asg-gear-settings .asg-item-body .tmrow.is-disabled{opacity:.45}
 .asg-gear-settings .asg-item-body .tmitem{padding:4px 7px}
 .asg-layout-d .asg-gear-card>.asg-item-body{padding:0 0 3px}
@@ -7568,14 +7608,14 @@ html[data-theme="light"] #toolbar .rsub:not(.on):hover{
   if(!panel||!pane) return;
   panel.classList.add('assign-item-d');
   const q=s=>panel.querySelector(s);
-  const deleteButton=(id,act,label)=>{const b=document.createElement('button');b.type='button';b.className='tmitem erase';if(id)b.id=id;b.dataset.act=act;
-    b.innerHTML='<span class="tmic"></span><span>'+label+'</span>';b.addEventListener('click',e=>{e.stopPropagation();doToolAction(act);});return b;};
-  const delMark=deleteButton('tDelMark','tDelMark','クリックして削除');
-  const clearMark=deleteButton('','clearMarks','すべて削除');
-  const delText=deleteButton('tDelText','tDelText','クリックして削除');
-  const clearText=deleteButton('','clearTextLabels','すべて削除');
-  const delImage=deleteButton('tDelImg','tDelImg','クリックして削除');
-  const clearImage=deleteButton('','clearImages','すべて削除');
+  const deleteButton=(id,act,labelKey)=>{const b=document.createElement('button');b.type='button';b.className='tmitem erase';if(id)b.id=id;b.dataset.act=act;
+    b.innerHTML='<span class="tmic"></span><span data-asg-text="'+labelKey+'">'+t(labelKey)+'</span>';b.addEventListener('click',e=>{e.stopPropagation();doToolAction(act);});return b;};
+  const delMark=deleteButton('tDelMark','tDelMark','asgDeleteClick');
+  const clearMark=deleteButton('','clearMarks','asgClearAll');
+  const delText=deleteButton('tDelText','tDelText','asgDeleteClick');
+  const clearText=deleteButton('','clearTextLabels','asgClearAll');
+  const delImage=deleteButton('tDelImg','tDelImg','asgDeleteClick');
+  const clearImage=deleteButton('','clearImages','asgClearAll');
   const controls={
     mark:{action:q('[data-act="tMark"]'),del:delMark,clear:clearMark,color:q('#markColor')?.closest('.tmrow'),size:q('#markSize')?.closest('.tmrow'),reset:q('[data-act="resetMark"]'),toggle:q('#tgMark')},
     text:{action:q('[data-act="tAssign"]'),del:delText,clear:clearText,color:q('#textColor')?.closest('.tmrow'),size:q('#textSize')?.closest('.tmrow'),reset:q('[data-act="resetText"]'),toggle:q('#tgText')},
@@ -7585,52 +7625,54 @@ html[data-theme="light"] #toolbar .rsub:not(.on):hover{
   };
   if(Object.values(controls).some(g=>Object.values(g).some(x=>!x))) return;
   const meta={
-    mark:{label:'マーク',icon:'<svg class="svi" viewBox="0 0 16 16"><circle cx="8" cy="8" r="5.4" opacity=".28"/><circle cx="8" cy="8" r="3.1" fill="currentColor" stroke="none"/></svg>'},
-    text:{label:'テキストラベル',icon:'<svg class="svi" viewBox="0 0 16 16"><path d="M2 13l1-3 7-7 2 2-7 7z"/><path d="M9.5 3.5l2 2"/></svg>'},
-    shade:{label:'塗りつぶし',icon:'<svg class="svi" viewBox="0 0 16 16"><path d="M2 12c1.5 0 1.5-7 3-7s1.5 7 3 7 1.5-7 3-7 1.5 7 3 7"/><path d="M2 14h12"/></svg>'},
-    line:{label:'コネクタ',icon:'<svg class="svi" viewBox="0 0 16 16"><circle cx="3.5" cy="12.5" r="1.5"/><circle cx="12.5" cy="3.5" r="1.5"/><line x1="4.6" y1="11.4" x2="11.4" y2="4.6" stroke-dasharray="2.4 2"/></svg>'},
-    image:{label:'画像',icon:'<svg class="svi" viewBox="0 0 16 16"><rect x="2" y="3" width="12" height="10" rx="1.2"/><circle cx="5.6" cy="6.4" r="1.1"/><path d="m3 12 3.4-3.3 2.2 2.1 2.3-2.5L14 11.4"/></svg>'}
+    mark:{labelKey:'assignStyleMark',icon:'<svg class="svi" viewBox="0 0 16 16"><circle cx="8" cy="8" r="5.4" opacity=".28"/><circle cx="8" cy="8" r="3.1" fill="currentColor" stroke="none"/></svg>'},
+    text:{labelKey:'assignStyleText',icon:'<svg class="svi" viewBox="0 0 16 16"><path d="M2 13l1-3 7-7 2 2-7 7z"/><path d="M9.5 3.5l2 2"/></svg>'},
+    shade:{labelKey:'assignStyleShade',icon:'<svg class="svi" viewBox="0 0 16 16"><path d="M2 12c1.5 0 1.5-7 3-7s1.5 7 3 7 1.5-7 3-7 1.5 7 3 7"/><path d="M2 14h12"/></svg>'},
+    line:{labelKey:'assignStyleLine',icon:'<svg class="svi" viewBox="0 0 16 16"><circle cx="3.5" cy="12.5" r="1.5"/><circle cx="12.5" cy="3.5" r="1.5"/><line x1="4.6" y1="11.4" x2="11.4" y2="4.6" stroke-dasharray="2.4 2"/></svg>'},
+    image:{labelKey:'imgItem',icon:'<svg class="svi" viewBox="0 0 16 16"><rect x="2" y="3" width="12" height="10" rx="1.2"/><circle cx="5.6" cy="6.4" r="1.1"/><path d="m3 12 3.4-3.3 2.2 2.1 2.3-2.5L14 11.4"/></svg>'}
   };
-  const setLabel=(el,text)=>{const s=el&&el.querySelector('span:last-child');if(s){s.removeAttribute('data-i18n');s.textContent=text;}};
-  setLabel(controls.mark.action,'クリックした位置にマークを配置（ピーク上は付け外し）'); setLabel(controls.mark.toggle,'マークを表示');
-  setLabel(controls.text.action,'クリックした位置にラベルを追加・編集'); setLabel(controls.text.toggle,'テキストラベルを表示');
-  setLabel(controls.shade.action,'範囲をドラッグして塗りつぶし'); setLabel(controls.shade.del,'クリックして削除'); setLabel(controls.shade.clear,'すべて削除'); setLabel(controls.shade.toggle,'塗りつぶしを表示');
-  setLabel(controls.line.action,'2点をドラッグしてコネクタを作成'); setLabel(controls.line.del,'クリックして削除'); setLabel(controls.line.clear,'すべて削除'); setLabel(controls.line.toggle,'コネクタを表示');
-  setLabel(controls.image.action,'画像をファイルから追加'); setLabel(controls.image.toggle,'画像を表示');
+  const metaLabel=key=>t(meta[key].labelKey);
   controls.mark.clear.classList.add('asg-delete-all');controls.text.clear.classList.add('asg-delete-all');controls.shade.clear.classList.add('asg-delete-all');controls.line.clear.classList.add('asg-delete-all');controls.image.clear.classList.add('asg-delete-all');
   const order=['mark','text','shade','line','image'];
-  const makeSelectRow=(label,value,options,onchange)=>{
+  const makeSelectRow=(labelKey,value,options,onchange)=>{
     const row=document.createElement('div');row.className='tmrow asg-setting-row';
-    const lab=document.createElement('label');lab.textContent=label;
+    const lab=document.createElement('label');lab.dataset.asgLabel=labelKey;lab.textContent=t(labelKey);
     const sel=document.createElement('select');
-    options.forEach(([v,t])=>{const o=document.createElement('option');o.value=v;o.textContent=t;sel.appendChild(o);});
+    options.forEach(([v,key])=>{const o=document.createElement('option');o.value=v;o.dataset.asgOption=key;o.textContent=t(key);sel.appendChild(o);});
     sel.value=value;sel.addEventListener('change',()=>onchange(sel.value));row.append(lab,sel);return {row,input:sel};
   };
-  const makeCheckRow=(label,checked,onchange)=>{
+  const makeCheckRow=(labelKey,checked,onchange)=>{
     const row=document.createElement('div');row.className='tmrow asg-setting-row asg-check-row';
-    const lab=document.createElement('label');lab.textContent=label;
-    const inp=document.createElement('input');inp.type='checkbox';inp.checked=checked;inp.setAttribute('aria-label',label);
+    const lab=document.createElement('label');lab.dataset.asgLabel=labelKey;lab.textContent=t(labelKey);
+    const inp=document.createElement('input');inp.type='checkbox';inp.checked=checked;inp.setAttribute('aria-label',t(labelKey));
     inp.addEventListener('change',()=>onchange(inp.checked));row.append(lab,inp);return {row,input:inp};
   };
-  const makeColorRow=(label,value,oninput)=>{
-    const row=document.createElement('div');row.className='tmrow asg-setting-row';
-    const lab=document.createElement('label');lab.textContent=label;
-    const inp=document.createElement('input');inp.type='color';inp.value=value;inp.setAttribute('aria-label',label);
+  const makeColorRow=(labelKey,value,oninput,presets=[])=>{
+    const row=document.createElement('div');row.className='tmrow asg-setting-row asg-color-row';
+    const lab=document.createElement('label');lab.dataset.asgLabel=labelKey;lab.textContent=t(labelKey);
+    const inp=document.createElement('input');inp.type='color';inp.value=value;inp.setAttribute('aria-label',t(labelKey));
     inp.addEventListener('input',()=>oninput(inp.value));row.append(lab,inp);return {row,input:inp};
   };
-  const makeRangeRow=(label,value,min,max,step,oninput)=>{
+  const makeRangeRow=(labelKey,value,min,max,step,oninput)=>{
     const row=document.createElement('div');row.className='tmrow asg-setting-row';
-    const lab=document.createElement('label');lab.textContent=label;
-    const inp=document.createElement('input');inp.type='range';inp.min=min;inp.max=max;inp.step=step;inp.value=value;inp.setAttribute('aria-label',label);
+    const lab=document.createElement('label');lab.dataset.asgLabel=labelKey;lab.textContent=t(labelKey);
+    const inp=document.createElement('input');inp.type='range';inp.min=min;inp.max=max;inp.step=step;inp.value=value;inp.setAttribute('aria-label',t(labelKey));
     const out=document.createElement('span');out.className='thrval';out.textContent=String(value);
     inp.addEventListener('input',()=>{out.textContent=String(inp.value);oninput(Number(inp.value));});row.append(lab,inp,out);return {row,input:inp};
   };
-  const lineStyles=[['solid','実線'],['dashed','破線'],['dotted','点線'],['dashdot','一点鎖線']];
-  const lineStyleSetting=makeSelectRow('線の種類',S.lineStyle||'dashed',lineStyles,v=>{S.lineStyle=v;persistUI();draw();});
-  const imageBorderSetting=makeCheckRow('枠線を表示',!!S.imageBorder,v=>{S.imageBorder=v;syncImageBorderRows();persistUI();draw();});
-  const imageBorderColorSetting=makeColorRow('枠線の色',S.imageBorderColor||'#3A4750',v=>{S.imageBorderColor=v;persistUI();draw();});
-  const imageBorderWidthSetting=makeRangeRow('枠線の太さ',S.imageBorderWidth||1,.5,6,.5,v=>{S.imageBorderWidth=v;persistUI();draw();});
-  const imageBorderStyleSetting=makeSelectRow('線の種類',S.imageBorderStyle||'solid',lineStyles,v=>{S.imageBorderStyle=v;persistUI();draw();});
+  const annotationColors=['#0E6E7E','#D33A2C','#2F6BCE','#7A4A98','#2D8A56','#C27B00'];
+  const makePresetSwatches=(setting,colors)=>{if(!colors.length)return;const sw=document.createElement('span');sw.className='asg-color-presets';
+    colors.forEach(color=>{const b=document.createElement('button');b.type='button';b.style.background=color;b.title=color;b.setAttribute('aria-label',color);b.onclick=()=>{setting.input.value=color;setting.input.dispatchEvent(new Event('input',{bubbles:true}));};sw.appendChild(b);});setting.row.insertBefore(sw,setting.input);};
+  const lineStyles=[['solid','optSolid'],['dashed','optDashed'],['dotted','optDotted'],['dashdot','optDashDot']];
+  const lineStyleSetting=makeSelectRow('asgLineStyle',S.lineStyle||'dashed',lineStyles,v=>{S.lineStyle=v;persistUI();draw();});
+  const imageBorderSetting=makeCheckRow('asgImageBorder',!!S.imageBorder,v=>{S.imageBorder=v;syncImageBorderRows();persistUI();draw();});
+  const imageBorderColorSetting=makeColorRow('asgImageBorderColor',S.imageBorderColor||'#3A4750',v=>{S.imageBorderColor=v;persistUI();draw();});
+  const imageBorderWidthSetting=makeRangeRow('asgImageBorderWidth',S.imageBorderWidth||1,.5,6,.5,v=>{S.imageBorderWidth=v;persistUI();draw();});
+  const imageBorderStyleSetting=makeSelectRow('asgLineStyle',S.imageBorderStyle||'solid',lineStyles,v=>{S.imageBorderStyle=v;persistUI();draw();});
+  const imageSizeSetting=makeRangeRow('asgImageSize',100,10,300,5,v=>{const sp=typeof A==='function'?A():null,im=sp&&imgsOf(sp)[S.selImg];if(!im)return;im.s=v/100;saveAnnot(sp);draw();});
+  const imageAnchorSetting=makeCheckRow('asgImageAnchor',false,v=>{const sp=typeof A==='function'?A():null,im=sp&&imgsOf(sp)[S.selImg];if(!im)return;const w=im.w*im.s,h=im.h*im.s,pos=imageBoxPosition(sp,im,w,h);if(v)anchorImageToSpectrum(sp,im,pos.x,pos.y);else{im.anchor='canvas';im.x=pos.x;im.y=pos.y;}saveAnnot(sp);draw();});
+  makePresetSwatches({row:controls.mark.color,input:controls.mark.color.querySelector('input[type=color]')},annotationColors);
+  makePresetSwatches({row:controls.shade.color,input:controls.shade.color.querySelector('input[type=color]')},annotationColors);
   const imageDependentSettings=[imageBorderColorSetting,imageBorderWidthSetting,imageBorderStyleSetting];
   function syncImageBorderRows(){
     imageDependentSettings.forEach(s=>{s.input.disabled=!S.imageBorder;s.row.classList.toggle('is-disabled',!S.imageBorder);});
@@ -7641,11 +7683,11 @@ html[data-theme="light"] #toolbar .rsub:not(.on):hover{
     text:[controls.text.color,controls.text.size,controls.text.reset],
     shade:[controls.shade.color],
     line:[controls.line.color,lineStyleSetting.row],
-    image:[imageBorderSetting.row,imageBorderColorSetting.row,imageBorderWidthSetting.row,imageBorderStyleSetting.row]
+    image:[imageSizeSetting.row,imageAnchorSetting.row,imageBorderSetting.row,imageBorderColorSetting.row,imageBorderWidthSetting.row,imageBorderStyleSetting.row]
   };
   const stage=document.createElement('div');stage.className='asg-layout-stage';
   pane.replaceChildren(stage);
-  const heading=key=>{const h=document.createElement('div');h.className='asg-item-heading';h.innerHTML='<span class="tmic">'+meta[key].icon+'</span><span>'+meta[key].label+'</span>';return h;};
+  const heading=key=>{const h=document.createElement('div');h.className='asg-item-heading';h.innerHTML='<span class="tmic">'+meta[key].icon+'</span><span data-asg-heading="'+key+'">'+metaLabel(key)+'</span>';return h;};
   const gearIcon='<svg class="svi" viewBox="0 0 24 24"><path d="M10.3 2.6h3.4l.5 2.3 1.9.8 2-1.3 2.4 2.4-1.3 2 .8 1.9 2.3.5v3.4l-2.3.5-.8 1.9 1.3 2-2.4 2.4-2-1.3-1.9.8-.5 2.3h-3.4l-.5-2.3-1.9-.8-2 1.3-2.4-2.4 1.3-2-.8-1.9-2.3-.5v-3.4l2.3-.5.8-1.9-1.3-2 2.4-2.4 2 1.3 1.9-.8.5-2.3Z"/><circle cx="12" cy="12" r="3.1"/></svg>';
   const trashIcon='<svg class="svi" viewBox="0 0 16 16"><path d="M2.5 4.5h11"/><path d="M6 4.5V3h4v1.5"/><path d="M4.1 4.5l.6 8.2a1 1 0 0 0 1 .9h4.6a1 1 0 0 0 1-.9l.6-8.2"/><path d="M6.6 7.2v3.8M9.4 7.2v3.8"/></svg>';
   const visibilityKey={mark:'showMarks',text:'showText',shade:'showShades',line:'showLines',image:'showInsets'};
@@ -7663,11 +7705,12 @@ html[data-theme="light"] #toolbar .rsub:not(.on):hover{
       eye.classList.toggle('on',used&&visible);
       eye.classList.toggle('has-content',used);
       eye.classList.toggle('is-empty',!used);
-      eye.dataset.tooltip=used?(meta[key].label+(visible?'を非表示にする':'を表示する')):(meta[key].label+'はありません');
+      const label=metaLabel(key);
+      eye.dataset.tooltip=used?`${visible?t('asgHide'):t('asgShow')} ${label}`:t('asgNoItems').replace('{item}',label);
       eye.setAttribute('aria-pressed',String(used&&visible));
       eye.setAttribute('aria-disabled',String(!used));
       clear.classList.toggle('is-empty',!used);
-      clear.dataset.tooltip=used?'すべて削除':'削除する項目はありません';
+      clear.dataset.tooltip=used?t('asgClearAll'):t('asgNothingToDelete');
       clear.setAttribute('aria-disabled',String(!used));
     });
     lineStyleSetting.input.value=S.lineStyle||'dashed';
@@ -7676,9 +7719,29 @@ html[data-theme="light"] #toolbar .rsub:not(.on):hover{
     imageBorderWidthSetting.input.value=String(S.imageBorderWidth||1);
     imageBorderWidthSetting.row.querySelector('.thrval').textContent=String(S.imageBorderWidth||1);
     imageBorderStyleSetting.input.value=S.imageBorderStyle||'solid';
+    const image=sp&&imgsOf(sp)[S.selImg];
+    imageSizeSetting.input.disabled=!image;
+    imageSizeSetting.row.classList.toggle('is-disabled',!image);
+    imageSizeSetting.row.title=image?'':t('asgSelectImage');
+    imageSizeSetting.input.value=String(Math.round((image?.s||1)*100));
+    imageSizeSetting.row.querySelector('.thrval').textContent=image?Math.round((image.s||1)*100)+'%':'—';
+    imageAnchorSetting.input.disabled=!image;
+    imageAnchorSetting.row.classList.toggle('is-disabled',!image);
+    imageAnchorSetting.row.title=image?'':t('asgSelectImage');
+    imageAnchorSetting.input.checked=image?.anchor==='spectrum';
     syncImageBorderRows();
   };
   window.syncAssignHeaderState=syncAssignHeaderState;
+  window.refreshAssignI18n=()=>{
+    panel.querySelectorAll('[data-asg-text]').forEach(el=>el.textContent=t(el.dataset.asgText));
+    panel.querySelectorAll('[data-asg-heading]').forEach(el=>el.textContent=metaLabel(el.dataset.asgHeading));
+    document.querySelectorAll('.asg-gear-popover [data-asg-label]').forEach(el=>{el.textContent=t(el.dataset.asgLabel);const input=el.parentElement?.querySelector('input,select');if(input)input.setAttribute('aria-label',t(el.dataset.asgLabel));});
+    document.querySelectorAll('.asg-gear-popover [data-asg-option]').forEach(el=>el.textContent=t(el.dataset.asgOption));
+    document.querySelectorAll('.asg-gear-popover[data-asg-settings-title]').forEach(box=>{const key=box.dataset.asgSettingsTitle;box.dataset.title=metaLabel(key)+' '+t('assignStyleSettings');});
+    order.forEach(key=>{controls[key].toggle.setAttribute('aria-label',metaLabel(key));controls[key].clear.setAttribute('aria-label',t('asgClearAll')+' '+metaLabel(key));});
+    panel.querySelectorAll('[data-asg-gear]').forEach(g=>{const key=g.dataset.asgGear;g.title=t('assignStyleSettings');g.setAttribute('aria-label',metaLabel(key)+' '+t('assignStyleSettings'));});
+    syncAssignHeaderState();
+  };
   let openSettings=null;
   const closeSettings=()=>{
     if(!openSettings)return;
@@ -7716,22 +7779,22 @@ html[data-theme="light"] #toolbar .rsub:not(.on):hover{
     const headerActions=document.createElement('div');headerActions.className='asg-header-actions';
     const op=document.createElement('div');op.className='asg-item-body';op.appendChild(controls[key].action);if(key==='image')op.appendChild(controls.image.input);
     op.appendChild(controls[key].del);
-    const eye=controls[key].toggle;eye.classList.add('asg-header-eye');eye.removeAttribute('title');eye.setAttribute('aria-label',meta[key].label+'を表示／非表示');
+    const eye=controls[key].toggle;eye.classList.add('asg-header-eye');eye.removeAttribute('title');eye.setAttribute('aria-label',metaLabel(key));
     if(!eye.dataset.asgEmptyGuardBound){eye.dataset.asgEmptyGuardBound='1';eye.addEventListener('click',e=>{if(eye.classList.contains('is-empty')){e.preventDefault();e.stopImmediatePropagation();}},true);}
     headerActions.appendChild(eye);
-    const clear=controls[key].clear;clear.classList.add('asg-header-clear');clear.removeAttribute('title');clear.dataset.tooltip='すべて削除';clear.setAttribute('aria-label',meta[key].label+'をすべて削除');
+    const clear=controls[key].clear;clear.classList.add('asg-header-clear');clear.removeAttribute('title');clear.dataset.tooltip=t('asgClearAll');clear.setAttribute('aria-label',t('asgClearAll')+' '+metaLabel(key));
     const clearIcon=clear.querySelector('.tmic');if(clearIcon)clearIcon.innerHTML=trashIcon;
     if(!clear.dataset.asgConfirmBound){
       clear.dataset.asgConfirmBound='1';
       clear.addEventListener('click',e=>{
         if(clear.classList.contains('is-empty')){e.preventDefault();e.stopImmediatePropagation();return;}
-        if(!window.confirm('「'+meta[key].label+'」をすべて削除します。\n本当に削除してもよろしいですか？')){e.preventDefault();e.stopImmediatePropagation();}
+        if(!window.confirm(t('asgConfirmClear').replace('{item}',metaLabel(key)))){e.preventDefault();e.stopImmediatePropagation();}
       },true);
     }
     headerActions.appendChild(clear);
-    const g=document.createElement('button');g.type='button';g.className='asg-gear-btn';g.title='表示設定';g.setAttribute('aria-label',meta[key].label+'の表示設定');g.setAttribute('aria-expanded','false');g.innerHTML=gearIcon;
+    const g=document.createElement('button');g.type='button';g.className='asg-gear-btn';g.dataset.asgGear=key;g.title=t('assignStyleSettings');g.setAttribute('aria-label',metaLabel(key)+' '+t('assignStyleSettings'));g.setAttribute('aria-expanded','false');g.innerHTML=gearIcon;
     headerActions.appendChild(g);h.appendChild(headerActions);
-    const box=document.createElement('div');box.className='asg-gear-settings asg-gear-popover';box.hidden=true;box.dataset.title=meta[key].label+'の表示設定';const sb=document.createElement('div');sb.className='asg-item-body';displaySettings[key].forEach(el=>sb.appendChild(el));box.appendChild(sb);document.body.appendChild(box);
+    const box=document.createElement('div');box.className='asg-gear-settings asg-gear-popover';box.hidden=true;box.dataset.asgSettingsTitle=key;box.dataset.title=metaLabel(key)+' '+t('assignStyleSettings');const sb=document.createElement('div');sb.className='asg-item-body';displaySettings[key].forEach(el=>sb.appendChild(el));box.appendChild(sb);document.body.appendChild(box);
     box.addEventListener('pointerdown',e=>e.stopPropagation());box.addEventListener('click',e=>e.stopPropagation());
     g.onclick=e=>{e.stopPropagation();if(openSettings&&openSettings.button===g){closeSettings();return;}closeSettings();openSettings={button:g,box};g.classList.add('on');g.setAttribute('aria-expanded','true');placeSettings(g,box);};
     s.append(h,op);return s;
