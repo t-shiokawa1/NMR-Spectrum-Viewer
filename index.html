@@ -12,6 +12,8 @@
   --trace:#5FD3C8; --accent:#E8B04B; --integ:#6FA8DC; --peak:#E8B04B; --mult:#C98BE0; --err:#E06C5A; --axis:#6B7780;
   --mono:ui-monospace,"SF Mono","JetBrains Mono",Menlo,Consolas,monospace;
   --sans:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --font-topspin:Arial,"Helvetica Neue",Helvetica,sans-serif;
+  --font-mnova:"Avenir Next",Avenir,"Helvetica Neue",Arial,sans-serif;
   --lw:1px;
 }
 html[data-theme="light"]{
@@ -27,7 +29,7 @@ button,select,input{font-family:inherit;color:inherit}
 .brand{display:flex;align-items:baseline;gap:9px}
 .brand .mark{font-family:var(--mono);font-weight:600;font-size:15px;letter-spacing:.04em}
 .brand .mark b{color:var(--trace)}
-.brandsect{padding:12px 16px 11px}
+aside .brandsect{height:42px;padding:0 16px;display:flex;align-items:center}
 /* menubar */
 .menubar{display:flex;align-items:center;gap:5px}
 .menu{position:relative}
@@ -68,6 +70,10 @@ input[type=number]:focus,input[type=text]:focus{border-color:var(--trace)}
 .cmp .bgk:hover{color:var(--ink)}
 .cmp .bgk.on{color:var(--trace);opacity:1}
 .cmp .bgk .svi{width:15px;height:15px}
+.cmp .imgpin{background:none;border:none;color:var(--faint);cursor:pointer;padding:0 2px;display:inline-flex;align-items:center;opacity:.9}
+.cmp .imgpin:hover{color:var(--ink)}
+.cmp .imgpin.on{color:var(--trace);opacity:1}
+.cmp .imgpin .svi{width:15px;height:15px}
 .dtog{display:flex;align-items:center;justify-content:space-between;padding:4px 3px;font-size:12px;color:var(--dim);border-bottom:1px solid var(--grid)}
 .dtog:last-child{border-bottom:none}
 .dtog .eye{background:none;border:none;cursor:pointer;padding:0 2px;display:inline-flex;align-items:center;color:var(--dim);opacity:.9}
@@ -220,7 +226,7 @@ tr.rowoff .reye{opacity:.4}
 
 /* main */
 main{grid-row:1;position:relative;display:flex;flex-direction:column;background:var(--bg);min-width:0}
-#toolbar{display:flex;align-items:center;gap:4px;padding:7px 12px;border-bottom:1px solid var(--line);background:var(--panel2);flex-wrap:nowrap;overflow:visible}
+#toolbar{height:42px;display:flex;align-items:center;gap:4px;padding:2px 12px;border-bottom:1px solid var(--line);background:var(--panel2);flex-wrap:nowrap;overflow:visible}
 /* progressive collapse: hide labels (icon-only) from the right when the toolbar runs out of room */
 #toolbar .tbc.iconly .tb-lbl{display:none}
 #toolbar .tbc.iconly.ic-btn,#toolbar .tbc.iconly.mbtn{gap:0;padding-left:8px;padding-right:8px}
@@ -377,7 +383,10 @@ main{grid-row:1;position:relative;display:flex;flex-direction:column;background:
 #tmInteg .integ-organized .peak-work-section .tmitem::before,
 #tmInteg .integ-organized .peak-work-section .tmtog::before{flex-basis:11px;margin-right:3px}
 #tmInteg .integ-organized .peak-settings-section .tmrow{grid-template-columns:11px 150px minmax(0,1fr) auto;column-gap:3px}
-#tmInteg .integ-organized .peak-settings-section .tmstyle{grid-template-columns:11px 150px minmax(0,1fr);column-gap:3px}
+#tmInteg .integ-organized .peak-settings-section .tmstyle{grid-template-columns:11px 82px minmax(0,1fr);column-gap:3px}
+#tmInteg .integ-organized .peak-settings-section .tmstyle>span:first-child{min-width:0;font-size:11px}
+#tmInteg .integ-organized .peak-settings-section .tmstyle .seg{min-width:0}
+#tmInteg .integ-organized .peak-settings-section .tmstyle .seg button{min-width:0;padding-left:2px;padding-right:2px;white-space:nowrap}
 /* Apply the same Assignment-card indentation to Peaks and Multiplets. */
 #tmShift .peak-organized .peak-work-section>.tmitem,
 #tmMult .mult-organized .peak-work-section>.tmitem,
@@ -486,12 +495,12 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
 /* docked: lives inside the sidebar, no float/blur/shadow */
 #results.docked{position:static;width:auto;top:auto;right:auto;left:auto;max-height:none;
   background:none;backdrop-filter:none;box-shadow:none;border:none;
-  border-radius:0;flex:1 1 auto;min-height:0}
+  border-radius:0;flex:0 0 auto;min-height:auto;overflow:visible}
 #results.docked .rgrip{display:none}
-.subbar{display:flex;gap:4px;padding:6px 8px 2px;flex-wrap:wrap}
+.subbar{display:flex;gap:4px;padding:4px 8px 0;flex-wrap:wrap}
 .rsub.toolbtn.armed{color:var(--peak);border-color:var(--peak);background:color-mix(in srgb,var(--peak) 12%,transparent)}
 .rsub.toolbtn.armed[data-tool="tErasePk"]{color:var(--err,#c2410c);border-color:var(--err,#c2410c);background:color-mix(in srgb,#c2410c 12%,transparent)}
-.mkrow{display:flex;align-items:center;gap:8px;padding:4px 10px 2px;font-size:11px;color:var(--dim)}
+.mkrow{display:flex;align-items:center;gap:8px;padding:2px 10px 0;font-size:11px;color:var(--dim)}
 .selbox{width:100%;margin-top:5px;padding:5px 7px;border:1px solid var(--line);border-radius:6px;background:var(--panel2);color:var(--ink);font-size:12px;cursor:pointer}
 .palprev{display:flex;gap:0;margin-top:7px;height:14px;border-radius:4px;overflow:hidden;border:1px solid var(--line)}
 .menu.open>.mpanel.viewpanel{display:flex}
@@ -525,9 +534,13 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
 .rtab{font-size:11px;padding:4px 9px;border-radius:5px;cursor:pointer;color:var(--dim);border:1px solid transparent}
 .rtab.on{color:var(--ink);border-color:var(--line);background:var(--panel2)}
 .rhead .x{margin-left:auto;border:none;background:none;color:var(--faint);cursor:pointer;font-size:15px}
-.rbody{overflow-y:auto;padding:4px 0}
+.rbody{overflow-y:auto;padding:4px 0;min-height:0}
+#results.docked .rbody{overflow:visible;flex:0 0 auto}
 .rbody::-webkit-scrollbar{width:8px}
 .rbody::-webkit-scrollbar-thumb{background:var(--gridw);border-radius:5px}
+td.colorcell{position:relative;white-space:nowrap}
+.colorcode{position:absolute;left:35px;top:50%;z-index:2;transform:translateY(-50%);padding:1px 3px;border-radius:3px;background:var(--panel);color:var(--faint);font-family:var(--mono);font-size:10px;line-height:1.35;opacity:0;visibility:hidden;pointer-events:none;box-shadow:0 1px 4px rgba(0,0,0,.14);transition:opacity .12s}
+td.colorcell .rsw:hover+.colorcode,td.colorcell .rsw:focus-visible+.colorcode{opacity:1;visibility:visible}
 table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:11px}
 th{text-align:left;color:var(--faint);font-weight:500;padding:4px 6px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel);text-transform:uppercase;letter-spacing:.04em;font-size:9.5px}
 th:first-child,td:first-child{text-align:left}
@@ -753,8 +766,8 @@ aside::-webkit-scrollbar-corner{
   text-shadow:0 0 10px color-mix(in srgb,var(--trace) 28%,transparent);
 }
 .brand-logo02 .nmr-logo{
-  width:30px;
-  height:30px;
+  width:24px;
+  height:24px;
   flex:0 0 auto;
   display:inline-flex;
   align-items:center;
@@ -1005,9 +1018,6 @@ html[data-theme="light"] .toolmenu.open .tmpanel{
       </div>
       <div class="ctl"><label style="margin-bottom:0"><input type="checkbox" id="gdc" checked style="vertical-align:-2px;margin-right:6px;accent-color:var(--trace)"><span data-i18n="lblGdc">Group-delay correction</span></label></div>
     </div>
-    <div class="sect" id="imgSect">
-      <div class="cmplist" id="imgList"></div>
-    </div>
     <div class="sect" id="resultsDock" style="display:none;flex:1 1 auto;min-height:0;display:flex;flex-direction:column;padding:0"></div>
   </aside>
   <div id="dragbar"></div>
@@ -1139,7 +1149,7 @@ html[data-theme="light"] .toolmenu.open .tmpanel{
             </div>
             <div class="ctl">
               <label data-i18n="lblFontFamily">Plot font</label>
-              <div class="seg" id="segFont"><button data-v="mono" class="on" data-i18n="optMono">Mono</button><button data-v="sans" data-i18n="optSans">Sans</button><button data-v="serif" data-i18n="optSerif">Serif</button></div>
+              <select id="plotFont"><option value="mono" data-i18n="optMono">Mono</option><option value="sans" data-i18n="optSans">Sans</option><option value="serif" data-i18n="optSerif">Serif</option><option value="topspin" data-i18n="optTopSpin">TopSpin-like</option><option value="mnova" data-i18n="optMNova">MNova-like</option></select>
             </div>
             <div class="ctl">
               <label><span data-i18n="lblAxisDigits">δ-axis decimals</span> <span class="val" id="digv">2</span></label>
@@ -1435,6 +1445,7 @@ html[data-theme="light"] .toolmenu.open .tmpanel{
           <button class="rtab" data-tab="integ" data-i18n="tabInteg">Integrals</button>
           <button class="rtab" data-tab="mult" data-i18n="tabMult">Multiplets</button>
           <button class="rtab" data-tab="assign" data-i18n="tabAssign">Assign</button>
+          <button class="rtab" data-tab="images" data-i18n="tabImages">Images</button>
           <button class="rdock" id="resDock" title="">⤢</button>
           <button class="x" id="resClose">×</button>
         </div>
@@ -1472,7 +1483,7 @@ const I18N={
   lblRange:"δ range", btnApply:"Apply", hdViewVis:"Show / hide",
   secImages:"Images", btnAddImg:"＋ Add image from file", imgItem:"Image",
   imgHint:"Paste a screenshot (Ctrl+V) or add a PNG. New images stay anchored to the spectrum; use their settings to change this. Click to select · drag its corner or use Image size to resize · Del to remove (when no tool is active).",
-  ttImgEye:"Show this image on the spectrum", ttImgBg:"Make background transparent (toggle)", secDisplay:"Display", secData:"Data", ttShowHide:"Show / hide", cpCustom:"Custom", cpOk:"OK", cpCancel:"Cancel",
+  ttImgEye:"Show this image on the spectrum", ttImgBg:"Make background transparent (toggle)", ttImgPin:"Keep this image fixed to the spectrum position", secDisplay:"Display", secData:"Data", ttShowHide:"Show / hide", cpCustom:"Custom", cpOk:"OK", cpCancel:"Cancel",
   lblInsets:"Images", lblNames:"File names", lblTitle:"Title", lblTitleText:"Title text", lblTitleSize:"Title size", lblTitleWeight:"Title weight", optThin:"Thin", optBold:"Bold", lblCutStyle:"Style", optCutWave:"Wave", optCutZig:"Zigzag", optCutSlash:"Solid", lblShowPeaks:"Peaks", lblShowIntegs:"Integrals", lblShowShades:"Shades", lblJTree:"Coupling tree",
   lblPalette:"Color palette", lblApplyPalette:"Re-apply to all", lblMonoBase:"Base color", lblSigDigits:"δ decimal places",
   btnResetDisp:"Reset display defaults", lblCustomPal:"Custom colors", lblAddColor:"+ Add color",
@@ -1489,7 +1500,7 @@ const I18N={
   actCalManual:"Manual (click a peak)", hdSolvent:"Residual solvent → auto", actCalReset:"Reset calibration",
   expCopy:"Copy image to clipboard", expSession:"Export analysis data (JSON)", expLoadSession:"Import analysis data (JSON)",
   lblMinimap:"Minimap", lblZoomLeaders:"Zoom leaders", lblFontScale:"Annotation size (peaks, ∫, …)", lblNameScale:"File-name size", lblAxisScale:"δ-axis text size", lblMarkSize:"Size", lblFontFamily:"Font",
-  optMono:"Mono", optSans:"Sans", optSerif:"Serif",
+  optMono:"Mono", optSans:"Sans", optSerif:"Serif", optTopSpin:"TopSpin-like", optMNova:"MNova-like",
   msgCopied:"Image copied to clipboard", msgCopyFail:"Copy failed — try PNG export", msgBgFail:"Could not process image background", msgCalOk:"Calibrated", msgCalNone:"No peak found near that position to calibrate", msgCalApprox:"No picked peak nearby — calibrated to the strongest point", msgSessionLoaded:"Analysis data imported", msgBadSession:"Could not import analysis data",
   actLine:"Connector (2-pt drag)", actDelLine:"Delete connector", actClearLines:"Clear all connectors",
   kbCalib:"Calibrate", kbPeaks:"Pick peaks", kbErasePk:"Erase peaks", kbInteg:"Integrate",
@@ -1533,7 +1544,7 @@ const I18N={
     "<b>scroll over spectrum</b> = intensity · <b>scroll over δ-axis</b> = zoom · <b>drag δ-axis</b> = pan · <b>drag</b> = zoom region · <b>right/⇧+drag</b> = pan · <b>double-click</b> = full<br>"+
     "<b>zoom inset</b>: click to select · <b>drag source box</b> = move / resize δ · <b>drag its top edge</b> = vertical magnify (reveals weak peaks) · <b>scroll</b> = δ-width",
   dropTitle:"Drop Bruker folder(s)", dropSub:"reads fid + acqus, and pdata/ if present",
-  tabPeaks:"Peaks", tabInteg:"Integrals", tabMult:"Multiplets", tabAssign:"Assignments", tabPaper:"Paper", tabShade:"Shade", markColorLbl:"Color", textColorLbl:"Color", lblTextSize:"Size",
+  tabPeaks:"Peaks", tabInteg:"Integrals", tabMult:"Multiplets", tabAssign:"Assignments", tabImages:"Images", tabPaper:"Paper", tabShade:"Shade", markColorLbl:"Color", textColorLbl:"Color", lblTextSize:"Size",
   assignTabAnnot:"Annotations", assignTabImp:"Impurities", assignGroupAdd:"Add / edit annotations", assignGroupDelete:"Delete annotations", assignGroupDisplay:"Display settings", assignStyleSettings:"Style settings",
   assignMarkAction:"Mark a peak", assignTextAction:"Add a text label", assignShadeAction:"Shade a range", assignLineAction:"Draw a connector", assignImageAction:"Add an image from file",
   assignShowMark:"Show marks", assignShowText:"Show text labels", assignShowShade:"Show shaded regions", assignShowLine:"Show connectors", assignShowImage:"Show images",
@@ -1583,7 +1594,7 @@ const I18N={
   lblRange:"δ 表示範囲", btnApply:"適用", hdViewVis:"表示・非表示",
   secImages:"画像", btnAddImg:"＋ 画像をファイルから追加", imgItem:"画像",
   imgHint:"スクリーンショットを貼り付け（Ctrl+V）またはPNGを追加。新しい画像はスペクトル上の位置に固定されます（設定で変更可）。クリックで選択し、角ドラッグまたは設定内の［画像の大きさ］で拡縮・Delで削除（ツール未選択時）。",
-  ttImgEye:"この画像をスペクトル上に表示", ttImgBg:"背景を透過（クリックで切替）", secDisplay:"表示", secData:"データ", ttShowHide:"表示 / 非表示", cpCustom:"カスタム", cpOk:"OK", cpCancel:"キャンセル",
+  ttImgEye:"この画像をスペクトル上に表示", ttImgBg:"背景を透過（クリックで切替）", ttImgPin:"この画像をスペクトル上の位置に固定", secDisplay:"表示", secData:"データ", ttShowHide:"表示 / 非表示", cpCustom:"カスタム", cpOk:"OK", cpCancel:"キャンセル",
   lblInsets:"画像を表示", lblNames:"ファイル名", lblTitle:"タイトル", lblTitleText:"タイトル文字", lblTitleSize:"タイトルの大きさ", lblTitleWeight:"タイトルの太さ", optThin:"細字", optBold:"太字", lblCutStyle:"スタイル", optCutWave:"波線", optCutZig:"ジグザグ", optCutSlash:"実線", lblShowPeaks:"ピーク", lblShowIntegs:"積分", lblShowShades:"塗りつぶし", lblJTree:"カップリングツリー",
   lblPalette:"カラーパレット", lblApplyPalette:"全てに再適用", lblMonoBase:"基準色", lblSigDigits:"δ 小数桁数",
   btnResetDisp:"表示設定をリセット", lblCustomPal:"カスタムカラー", lblAddColor:"+ 色を追加",
@@ -1600,7 +1611,7 @@ const I18N={
   actCalManual:"手動（ピークをクリック）", hdSolvent:"残留溶媒 → 自動", actCalReset:"校正をリセット",
   expCopy:"画像をクリップボードにコピー", expSession:"解析データを書き出す（JSON）", expLoadSession:"解析データを読み込む（JSON）",
   lblMinimap:"ミニマップ", lblZoomLeaders:"拡大引き出し線", lblFontScale:"注釈のサイズ（ピーク・積分など）", lblNameScale:"ファイル名のサイズ", lblAxisScale:"δ軸テキストのサイズ", lblMarkSize:"大きさ", lblFontFamily:"フォント",
-  optMono:"等幅", optSans:"ゴシック", optSerif:"明朝",
+  optMono:"等幅", optSans:"ゴシック", optSerif:"明朝", optTopSpin:"TopSpin風", optMNova:"MNova風",
   msgCopied:"画像をコピーしました", msgCopyFail:"コピー失敗 — PNG出力をお試しください", msgBgFail:"画像の背景を処理できませんでした", msgCalOk:"校正しました", msgCalNone:"近くに校正できるピークが見つかりませんでした", msgCalApprox:"近くにピーク未検出のため最大強度点で校正しました", msgSessionLoaded:"解析データを読み込みました", msgBadSession:"解析データを読み込めません",
   actLine:"コネクタ（2点をドラッグ）", actDelLine:"コネクタを削除", actClearLines:"コネクタを全て削除",
   kbCalib:"校正", kbPeaks:"ピーク検出", kbErasePk:"ピーク消去", kbInteg:"積分",
@@ -1644,7 +1655,7 @@ const I18N={
     "<b>スペクトル上でスクロール</b>＝強度 ・ <b>δ軸上でスクロール</b>＝ズーム ・ <b>δ軸をドラッグ</b>＝移動 ・ <b>ドラッグ</b>＝範囲ズーム ・ <b>右/⇧+ドラッグ</b>＝移動 ・ <b>ダブルクリック</b>＝全体<br>"+
     "<b>拡大図</b>：クリックで選択 ・ <b>元範囲の枠をドラッグ</b>＝移動/δ幅・<b>上辺をドラッグ</b>＝縦拡大（弱いピークを拡大）・ <b>スクロール</b>＝δ幅",
   dropTitle:"Bruker フォルダをドロップ", dropSub:"fid + acqus、あれば pdata/ も読みます",
-  tabPeaks:"ピーク", tabInteg:"積分", tabMult:"多重線", tabAssign:"帰属", tabPaper:"論文", tabShade:"塗りつぶし", markColorLbl:"色", textColorLbl:"色", lblTextSize:"大きさ",
+  tabPeaks:"ピーク", tabInteg:"積分", tabMult:"多重線", tabAssign:"帰属", tabImages:"画像", tabPaper:"論文", tabShade:"塗りつぶし", markColorLbl:"色", textColorLbl:"色", lblTextSize:"大きさ",
   assignTabAnnot:"注釈", assignTabImp:"不純物", assignGroupAdd:"注釈を追加・編集する", assignGroupDelete:"注釈を削除する", assignGroupDisplay:"表示設定", assignStyleSettings:"スタイル設定",
   assignMarkAction:"ピークにマークを付ける", assignTextAction:"テキストラベルを付ける", assignShadeAction:"範囲を塗りつぶす", assignLineAction:"コネクタを引く", assignImageAction:"画像をファイルから追加する",
   assignShowMark:"マークを表示", assignShowText:"テキストラベルを表示", assignShowShade:"塗りつぶしを表示", assignShowLine:"コネクタを表示", assignShowImage:"画像を表示",
@@ -1869,11 +1880,11 @@ const DEFAULTS={lineW:1, wheelSens:1, wheelInertia:false, wheelInvert:false, hsc
   fontScale:1, nameScale:1, axisScale:1, markSize:4.6, markColor:'#0E6E7E', shadeColor:'#D33A2C', textColor:null, textSize:10.5, lineColor:null, lineStyle:'dashed', imageBorder:false, imageBorderColor:'#3A4750', imageBorderWidth:1, imageBorderStyle:'solid', integDigits:3, multColor:null, multDigits:2, multJStyle:'full', multStyle:'style1', plotFont:'mono', ppmDigits:2, pkDigits:2,
   zoomBorderColor:null, zoomBorderWidth:1, zoomLeaderStyle:'dashed', peakStyle:'style1', integStyle:'style1', showIntegCurve:true,
   showTitle:false, figTitle:null, titleSize:15, titleBold:false, cutStyle:'wave', cutColor:null, cutWidth:1.3, cutWave:6, cutSpan:2, cutGap:10, cutOpacity:0.9};
-const S={ spectra:[], active:-1, view:{pHi:1,pLo:0}, yscale:1, tool:null,
+const S={ spectra:[], active:-1, view:{pHi:1,pLo:0}, spectrumViews:{}, yscale:1, tool:null,
   lineW:1, wheelSens:1, wheelInertia:false, wheelInvert:false, hscroll:true, limitView:true, selInteg:-1, selImg:-1, selZoom:-1,
   selPeak:-1, selPeaks:[], selMults:[], thr:0.05, axisPad:56, baseGap:0.035, integShift:0,
   peakColor:null, integColor:null, peakStyle:'style1', integStyle:'style1', showIntegCurve:true, multColor:null, multDigits:2, multJStyle:'full', multStyle:'style1', showMultSources:false,
-  markColor:'#0E6E7E', shadeColor:'#D33A2C', markSize:4.6, textColor:null, textSize:10.5, lineColor:null, lineStyle:'dashed', imageBorder:false, imageBorderColor:'#3A4750', imageBorderWidth:1, imageBorderStyle:'solid', integDigits:3, showInsets:true, showNames:true, showPeaks:true, showIntegs:true, showShades:true, showMarks:true, showText:true,
+  markColor:'#0E6E7E', shadeColor:'#D33A2C', markSize:4.6, textColor:null, textSize:10.5, lineColor:null, lineStyle:'dashed', imageDefaultScale:1, imageBorder:false, imageBorderColor:'#3A4750', imageBorderWidth:1, imageBorderStyle:'solid', integDigits:3, showInsets:true, showNames:true, showPeaks:true, showIntegs:true, showShades:true, showMarks:true, showText:true,
   resTab:'peaks', asgSub:'text', docked:true, nextColor:0, layout:'stack', palette:'wbHC', paletteReverse:false, monoBase:'#0E6E7E', ppmDigits:2,
   pkDigits:2, showMults:true, showJTree:true, showThresholdLine:true, showLanes:false, laneOverflow:false, showLines:true, showZooms:true, lines:[], zooms:[],
   fontScale:1, nameScale:1, axisScale:1, plotFont:'mono', showMinimap:false, zoomLeaders:true,
@@ -1882,6 +1893,10 @@ const S={ spectra:[], active:-1, view:{pHi:1,pLo:0}, yscale:1, tool:null,
   impSolvent:'cdcl3', impTol:0.03, impTolC:0.3, showImpurities:false, impPins:[], impFilter:'',
   showTitle:false, figTitle:null, titleSize:15, titleBold:false, cutStyle:'wave', cutColor:null, cutWidth:1.3, cutWave:6, cutSpan:2, cutGap:10, cutOpacity:0.9 };
 function A(){ return S.spectra[S.active]||null; }
+let _viewOwner=null;
+function validSavedView(v){ return !!(v&&isFinite(v.pHi)&&isFinite(v.pLo)&&v.pHi>v.pLo); }
+function saveViewFor(sp){ if(!sp||!validSavedView(S.view)) return; const v={pHi:S.view.pHi,pLo:S.view.pLo};sp.view=v;S.spectrumViews[sigKey(sp)]=v; }
+function restoreViewFor(sp){ if(!sp) return; const v=validSavedView(sp.view)?sp.view:S.spectrumViews[sigKey(sp)];if(validSavedView(v))S.view={pHi:v.pHi,pLo:v.pLo}; }
 // Platform modifier key for display (Ctrl on Windows/Linux, ⌘ on Mac; default ⌘ if unknown)
 const IS_MAC=(function(){ try{
     const p=(navigator.userAgentData&&navigator.userAgentData.platform)||navigator.platform||navigator.userAgent||'';
@@ -2309,7 +2324,7 @@ function anchorImageToSpectrum(sp,rec,x,y){
 function addImage(dataURL,w,h){
   const sp=A(); if(!sp||!w||!h) return null;
   const im=imgsOf(sp);
-  const s=Math.min(1,280/w,220/h), x=PADL+60+(im.length%3)*80, y=PADT+70+(im.length%3)*60;
+  const s=Math.max(.1,Math.min(2,Math.min(1,280/w,220/h)*(S.imageDefaultScale||1))), x=PADL+60+(im.length%3)*80, y=PADT+70+(im.length%3)*60;
   const rec={id:newImgId(), src:dataURL, w, h, on:true,
     s, x, y};
   anchorImageToSpectrum(sp,rec,x,y);
@@ -2466,29 +2481,7 @@ function eyeSvg(on){
 }
 function assignVisible(){ return S.showMarks||S.showText||S.showShades||S.showLines; }
 function renderImgs(){
-  const el=document.getElementById('imgList'); if(!el) return;
-  const sp=A(), im=imgsOf(sp);
-  const sect=document.getElementById('imgSect');
-  if(sect) sect.style.display = (S.spectra.length>0 && im.length>0) ? '' : 'none';
-  el.innerHTML='';
-  im.forEach((rec,k)=>{
-    const row=document.createElement('div');
-    row.className='cmp';
-    const off=rec.on===false;
-    const eye = eyeSvg(!off);
-    row.innerHTML=`<img class="thumb" src="${rec.src}">`+
-      `<span class="cn">${t('imgItem')} ${k+1}</span>`+
-      `<span class="cs">${rec.w}×${rec.h}</span>`+
-      `<button class="bgk${rec.bgRemoved?' on':''}" title="${t('ttImgBg')}"><svg class="svi" viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" rx="1.5"/><rect x="2" y="2" width="6" height="6" fill="currentColor" stroke="none"/><rect x="8" y="8" width="6" height="6" fill="currentColor" stroke="none"/></svg></button>`+
-      `<button class="eye${off?' off':''}" title="" aria-label="${t('ttImgEye')}" aria-pressed="${String(!off)}" data-tooltip="${t('ttImgEye')}">${eye}</button>`+
-      `<button class="rrm" title="">×</button>`;
-    row.querySelector('.eye').title='';
-    row.querySelector('.eye').onclick=e=>{ e.stopPropagation();
-      rec.on=rec.on===false; saveAnnot(sp); renderImgs(); draw(); };
-    row.querySelector('.bgk').onclick=e=>{ e.stopPropagation(); toggleImgBg(sp,k); };
-    row.querySelector('.rrm').onclick=e=>{ e.stopPropagation(); removeImage(k); };
-    el.appendChild(row);
-  });
+  if(S.resTab==='images' && typeof renderResults==='function') renderResults();
 }
 
 /* ===================== canvas ===================== */
@@ -2518,14 +2511,18 @@ window.addEventListener('resize',resize);
   bar.addEventListener('dblclick',()=>{ setW(DEFW); resize(); try{ localStorage.setItem('nmrSidebarW',String(DEFW)); }catch(_){} });
 })();
 function css(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim();}
+function plotFontFamily(){
+  return S.plotFont==='sans' ? css('--sans')
+       : S.plotFont==='serif' ? 'Georgia, "Times New Roman", serif'
+       : S.plotFont==='topspin' ? css('--font-topspin')
+       : S.plotFont==='mnova' ? css('--font-mnova')
+       : css('--mono');
+}
 function plotFont(size, weight){
-  const fam = S.plotFont==='sans' ? css('--sans')
-            : S.plotFont==='serif' ? 'Georgia, "Times New Roman", serif'
-            : css('--mono');
+  const fam=plotFontFamily();
   return (weight?weight+' ':'')+ (Math.round(size*(S.fontScale||1)*10)/10) +'px '+fam;
 }
-function fontFam(){ return S.plotFont==='sans' ? css('--sans')
-            : S.plotFont==='serif' ? 'Georgia, "Times New Roman", serif' : css('--mono'); }
+function fontFam(){ return plotFontFamily(); }
 // independent scales for the file-name label and the δ-axis text
 function nameFont(size, weight){ return (weight?weight+' ':'')+(Math.round(size*(S.nameScale||1)*10)/10)+'px '+fontFam(); }
 function axisFont(size, weight){ return (weight?weight+' ':'')+(Math.round(size*(S.axisScale||1)*10)/10)+'px '+fontFam(); }
@@ -4599,7 +4596,7 @@ function eraseMultRegion(sp,pA,pB){ const lo=Math.min(pA,pB), hi=Math.max(pA,pB)
    Per-dataset analysis/annotation state is persisted in nmrspectrumviewer.json.
    localStorage is reserved for application preferences and the lightweight
    multi-spectrum workspace (layout/order/view), never spectral arrays. */
-const PERSISTENCE_VERSION=32;
+const PERSISTENCE_VERSION=33;
 function sigKey(sp){ let h=2166136261>>>0;
   const src = sp.haveFid? sp.cplxRe : sp.procReal;
   const n=Math.min(src?src.length:0, 4096);
@@ -4612,7 +4609,7 @@ function sigKey(sp){ let h=2166136261>>>0;
    undoable as well as the original calibration / peak / integral operations. */
 const APP_UNDO=[], APP_REDO=[];
 const HIST_SP_KEYS=['name','origName','color','colorLocked','visible','vzoom','source','mode','wdw','lb','zf','gdc','ph0','ph1','phSet','sr','yscale',
-  'peaks','integrals','multiplets','shades','images','markPos','freeMarks','freeTexts','cuts'];
+  'peaks','integrals','multiplets','shades','images','markPos','freeMarks','freeTexts','cuts','view'];
 let _histId=0, _historyApplying=false;
 function histClone(v){
   if(typeof structuredClone==='function') return structuredClone(v);
@@ -4694,7 +4691,7 @@ function refreshUndoUI(){
 function annotDataOf(sp){ return {v:PERSISTENCE_VERSION, sig:sigKey(sp), name:sp.name, sr:sp.sr||0, mode:sp.mode, ph0:sp.ph0, ph1:sp.ph1, phSet:!!sp.phSet,
     source:sp.source, wdw:sp.wdw, lb:sp.lb, zf:sp.zf, gdc:!!sp.gdc,
     images:sp.images||[], markPos:sp.markPos||{}, freeMarks:sp.freeMarks||[], freeTexts:sp.freeTexts||[],
-    peaks:sp.peaks||[], integrals:sp.integrals||[], multiplets:sp.multiplets||[], shades:sp.shades||[], cuts:sp.cuts||[]}; }
+    peaks:sp.peaks||[], integrals:sp.integrals||[], multiplets:sp.multiplets||[], shades:sp.shades||[], cuts:sp.cuts||[], view:sp.view||null}; }
 function saveAnnot(sp){
   if(typeof scheduleFolderJson==='function') scheduleFolderJson();
   if(typeof persistUI==='function') persistUI(); }
@@ -4731,6 +4728,7 @@ function applyAnnotData(sp, d){ try{
   if(Array.isArray(d.freeMarks)) sp.freeMarks=d.freeMarks;
   if(Array.isArray(d.freeTexts)) sp.freeTexts=d.freeTexts;
   if(Array.isArray(d.cuts)) sp.cuts=d.cuts.filter(c=>c&&isFinite(c.a)&&isFinite(c.b)).map(c=>({a:Math.max(c.a,c.b),b:Math.min(c.a,c.b)}));
+  if(d.view&&isFinite(d.view.pHi)&&isFinite(d.view.pLo)&&d.view.pHi>d.view.pLo) sp.view={pHi:d.view.pHi,pLo:d.view.pLo};
   return true; }catch(e){ return false; } }
 
 /* ===================== results panel (dock ⇆ float) ===================== */
@@ -4755,7 +4753,7 @@ function applyDock(){
     document.getElementById('resClose').title=t('ttDockBack');
   }
 }
-function openResults(){ const panel=document.getElementById('results');
+function openResults(){ if(!S.spectra.length){ closeResults(); return; } const panel=document.getElementById('results');
   panel.classList.add('open');
   const lb=document.getElementById('btnResultsView'); if(lb) lb.classList.add('on');
   applyDock();
@@ -4806,7 +4804,8 @@ function renderResults(){
     peaks:!!(sp.peaks||[]).length,
     integ:!!(sp.integrals||[]).length,
     mult:!!(sp.multiplets||[]).length,
-    assign:!!((sp.freeMarks||[]).length||(sp.freeTexts||[]).length||(sp.shades||[]).length||imgsOf(sp).length||(sp.peaks||[]).some(p=>p.mark||p.label)||(S.lines||[]).length)
+    assign:!!((sp.freeMarks||[]).length||(sp.freeTexts||[]).length||(sp.shades||[]).length||(sp.peaks||[]).some(p=>p.mark||p.label)||(S.lines||[]).length),
+    images:!!imgsOf(sp).length
   };
   const available=Object.keys(hasTab).filter(k=>hasTab[k]);
   if(available.length&&!hasTab[S.resTab]) S.resTab=available[0];
@@ -4842,23 +4841,28 @@ function renderResults(){
       saveAnnot(sp); renderResults(); draw();
     });
   } else if(S.resTab==='assign'){
-    const sub=S.asgSub||'mark';
-    const subbar=`<div class="subbar">`+
-      `<button class="rsub toolbtn${sub==='mark'?' on':''}${S.tool==='tMark'?' armed':''}" data-sub="mark" data-tool="tMark">${t('subMark')}</button>`+
-      `<button class="rsub toolbtn${sub==='text'?' on':''}${S.tool==='tAssign'?' armed':''}" data-sub="text" data-tool="tAssign">${t('subText')}</button>`+
-      `<button class="rsub toolbtn${sub==='shade'?' on':''}${S.tool==='tShade'?' armed':''}" data-sub="shade" data-tool="tShade">${t('subShade')}</button>`+
-      `<button class="rsub toolbtn${sub==='conn'?' on':''}${S.tool==='tLine'?' armed':''}" data-sub="conn" data-tool="tLine">${t('subConn')}</button></div>`;
+    const assignSubs=[
+      {id:'mark',tool:'tMark',label:'subMark',used:(sp.peaks||[]).some(p=>p.mark)||(sp.freeMarks||[]).length},
+      {id:'text',tool:'tAssign',label:'subText',used:(sp.peaks||[]).some(p=>p.label)||(sp.freeTexts||[]).length},
+      {id:'shade',tool:'tShade',label:'subShade',used:(sp.shades||[]).length},
+      {id:'conn',tool:'tLine',label:'subConn',used:(S.lines||[]).length}
+    ].filter(x=>x.used);
+    if(assignSubs.length&&!assignSubs.some(x=>x.id===S.asgSub)) S.asgSub=assignSubs[0].id;
+    const sub=S.asgSub||assignSubs[0]?.id||'mark';
+    const subbar=`<div class="subbar">`+assignSubs.map(x=>
+      `<button class="rsub toolbtn${sub===x.id?' on':''}${S.tool===x.tool?' armed':''}" data-sub="${x.id}" data-tool="${x.tool}">${t(x.label)}</button>`
+    ).join('')+`</div>`;
     if(sub==='mark'){
       const rows=[]; (sp.peaks||[]).forEach((p,k)=>{ if(p.mark) rows.push({p,k}); });
       const frows=sp.freeMarks||[];
       const cpick=`<div class="mkrow"><label>${t('markColorLbl')}</label><input type="color" id="rMarkColor" value="${S.markColor}"></div>`;
       body.innerHTML = subbar + cpick + ((rows.length||frows.length)? `<table><thead><tr><th>#</th><th>${t('thPpm')}</th><th>${t('thColor')}</th><th></th><th></th></tr></thead><tbody>`+
         rows.map((r,j)=>`<tr${r.p.markHidden?' class="rowoff"':''}><td>${j+1}</td><td>${fmtPpm(r.p.ppm)}</td>`+
-          `<td>${swC(r.p.mark,'mark',r.k)} <span style="color:var(--faint);font-size:10px">${r.p.mark}</span></td>`+
+          `<td class="colorcell">${swC(r.p.mark,'mark',r.k)}<span class="colorcode">${r.p.mark}</span></td>`+
           eyeC(!r.p.markHidden,'mark',r.k)+
           `<td><button class="rrm" data-del="mark" data-k="${r.k}">×</button></td></tr>`).join('')+
         frows.map((fm,k)=>`<tr${fm.hidden?' class="rowoff"':''}><td>${rows.length+k+1}</td><td>${fmtPpm(fm.ppm)}</td>`+
-          `<td>${swC(fm.color,'freeMarks',k)} <span style="color:var(--faint);font-size:10px">${fm.color}</span></td>`+
+          `<td class="colorcell">${swC(fm.color,'freeMarks',k)}<span class="colorcode">${fm.color}</span></td>`+
           eyeC(!fm.hidden,'freeMarks',k)+
           `<td><button class="rrm" data-del="freeMarks" data-k="${k}">×</button></td></tr>`).join('')+`</tbody></table>`
         : `<div class="rempty">${t('emptyMark')}</div>`);
@@ -4897,7 +4901,7 @@ function renderResults(){
       body.innerHTML = subbar + cpick + (sh.length? `<table><thead><tr><th>#</th><th>${t('thRange')}</th>${multi?`<th>${t('thSpectrum')}</th>`:''}<th>${t('thColor')}</th><th></th><th></th></tr></thead><tbody>`+
         sh.map((s,k)=>`<tr${s.hidden?' class="rowoff"':''}><td>${k+1}</td><td>${fmtPpm(Math.max(s.a,s.b))}–${fmtPpm(Math.min(s.a,s.b))}</td>`+
           (multi?`<td style="color:${sp.color};font-size:10px">${(sp.name||'').replace(/</g,'&lt;')}</td>`:'')+
-          `<td>${swC(s.color,'shades',k)} <span style="color:var(--faint);font-size:10px">${s.color}</span></td>`+
+          `<td class="colorcell">${swC(s.color,'shades',k)}<span class="colorcode">${s.color}</span></td>`+
           eyeC(!s.hidden,'shades',k)+
           `<td><button class="rrm" data-del="shades" data-k="${k}">×</button></td></tr>`).join('')+`</tbody></table>`
         : `<div class="rempty">${t('emptyShade')}</div>`);
@@ -4912,6 +4916,22 @@ function renderResults(){
       else setTool(b.dataset.tool);
       renderResults();
     });
+  } else if(S.resTab==='images'){
+    const images=imgsOf(sp);
+    const pinIcon='<svg class="svi" viewBox="0 0 16 16"><path d="m10.9 2.3 2.8 2.8-1.4 1.4-.8-.2-2.1 2.1.2.8-1.4 1.4-2.8-2.8 1.4-1.4.8.2 2.1-2.1-.2-.8z"/><path d="m6.2 9.8-3.7 3.7"/></svg>';
+    const bgIcon='<svg class="svi" viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" rx="1.5"/><rect x="2" y="2" width="6" height="6" fill="currentColor" stroke="none"/><rect x="8" y="8" width="6" height="6" fill="currentColor" stroke="none"/></svg>';
+    body.innerHTML=`<div class="subbar"><button class="rsub" id="rAddImage">${t('btnAddImg')}</button></div><div class="cmplist">`+
+      images.map((rec,k)=>{const off=rec.on===false;return `<div class="cmp${k===S.selImg?' on':''}" data-image-row="${k}">`+
+        `<img class="thumb" src="${rec.src}"><span class="cn">${t('imgItem')} ${k+1}</span><span class="cs">${rec.w}×${rec.h}</span>`+
+        `<button class="imgpin${rec.anchor==='spectrum'?' on':''}" data-image-pin="${k}" title="${t('ttImgPin')}" aria-pressed="${String(rec.anchor==='spectrum')}">${pinIcon}</button>`+
+        `<button class="bgk${rec.bgRemoved?' on':''}" data-image-bg="${k}" title="${t('ttImgBg')}">${bgIcon}</button>`+
+        `<button class="eye${off?' off':''}" data-image-eye="${k}" title="" aria-label="${t('ttImgEye')}" aria-pressed="${String(!off)}" data-tooltip="${t('ttImgEye')}">${eyeSvg(!off)}</button>`+
+        `<button class="rrm" data-del="images" data-k="${k}" title="${t('ttRemove')}">×</button></div>`;}).join('')+`</div>`;
+    const add=document.getElementById('rAddImage'); if(add) add.onclick=()=>document.getElementById('imgIn').click();
+    body.querySelectorAll('[data-image-row]').forEach(row=>row.onclick=e=>{if(e.target.closest('button'))return;S.selImg=+row.dataset.imageRow;renderResults();if(typeof window.syncAssignHeaderState==='function')window.syncAssignHeaderState();draw();});
+    body.querySelectorAll('[data-image-pin]').forEach(b=>b.onclick=e=>{e.stopPropagation();const rec=images[+b.dataset.imagePin];if(!rec)return;const w=rec.w*rec.s,h=rec.h*rec.s,pos=imageBoxPosition(sp,rec,w,h);if(rec.anchor==='spectrum'){rec.anchor='canvas';rec.x=pos.x;rec.y=pos.y;}else anchorImageToSpectrum(sp,rec,pos.x,pos.y);saveAnnot(sp);renderResults();draw();});
+    body.querySelectorAll('[data-image-bg]').forEach(b=>b.onclick=e=>{e.stopPropagation();toggleImgBg(sp,+b.dataset.imageBg);});
+    body.querySelectorAll('[data-image-eye]').forEach(b=>b.onclick=e=>{e.stopPropagation();const rec=images[+b.dataset.imageEye];if(!rec)return;rec.on=rec.on===false;saveAnnot(sp);renderResults();draw();});
   } else if(S.resTab==='mult'){
     const ms=sp.multiplets||[];
     S.selMults=(S.selMults||[]).filter(k=>k<ms.length);
@@ -4936,6 +4956,7 @@ function renderResults(){
   }
   body.querySelectorAll('.rrm').forEach(b=>b.onclick=()=>{
     if(b.dataset.del==='conn'){ (S.lines||[]).splice(+b.dataset.k,1); renderResults(); draw(); return; }
+    if(b.dataset.del==='images'){ removeImage(+b.dataset.k); renderResults(); return; }
     if(b.dataset.del==='label'){ const p=(sp.peaks||[])[+b.dataset.k];
       if(p){ pushUndo(sp); delete p.label; } saveAnnot(sp); renderResults(); draw(); return; }
     if(b.dataset.del==='mark'){ const p=(sp.peaks||[])[+b.dataset.k];
@@ -5137,11 +5158,11 @@ function renderList(){
         sp.vzoom=(sp.vzoom===false); renderList(); }; }
     { const nr=row.querySelector('.nmrestore'); if(nr) nr.onclick=e=>{ e.stopPropagation();
         if(sp.origName){ sp.name=sp.origName; saveAnnot(sp); renderList(); draw(); } }; }
-    row.querySelector('.rm').onclick=()=>{ S.spectra.splice(k,1);
+    row.querySelector('.rm').onclick=()=>{ saveViewFor(S.spectra[k]); saveAnnot(S.spectra[k]); S.spectra.splice(k,1);
       if(S.active>=S.spectra.length) S.active=S.spectra.length-1;
       if(!S.spectra.length){ document.getElementById('hint').style.display=''; closeResults(); }
       applyPalette();
-      refreshActive(); };
+      refreshActive(); persistUI(); };
     el.appendChild(row);
   });
   refreshVzoomBtn();
@@ -5177,13 +5198,17 @@ function syncControls(){
 function applyEmptyState(){
   // before any data is loaded, hide spectrum-operation sections to keep the home screen clean
   const has=S.spectra.length>0;
-  ['acqSect','phaseSect','procSect','imgSect'].forEach(id=>{
+  ['acqSect','phaseSect','procSect'].forEach(id=>{
     const el=document.getElementById(id); if(el) el.style.display = has?'' : 'none';
   });
+  if(!has) closeResults();
 }
 function refreshActive(){
-  updateToolAvail(); S.selInteg=-1; S.selImg=-1;
   const sp=A();
+  if(_viewOwner&&_viewOwner!==sp) saveViewFor(_viewOwner);
+  if(sp&&_viewOwner!==sp) restoreViewFor(sp);
+  _viewOwner=sp||null;
+  updateToolAvail(); S.selInteg=-1; S.selImg=-1;
   applyEmptyState();
   if(sp){ setMeta(sp.par||{}); syncControls(); document.getElementById('hint').style.display='none'; }
   renderList(); renderResults(); renderImgs(); refreshUndoUI();
@@ -5328,7 +5353,7 @@ document.getElementById('integDigits').oninput=e=>{ S.integDigits=+e.target.valu
 document.getElementById('multDigits').oninput=e=>{ S.multDigits=+e.target.value;
   document.getElementById('mdgv').textContent=String(S.multDigits); persistUI(); renderResults(); draw(); };
 document.getElementById('multJStyle').onchange=e=>{ S.multJStyle=e.target.value; persistUI(); draw(); };
-segWire('segFont',v=>{ S.plotFont=v; persistUI(); draw(); });
+document.getElementById('plotFont').onchange=e=>{ S.plotFont=e.target.value; persistUI(); draw(); };
 document.getElementById('btnResetSet').onclick=()=>{
   S.lineW=DEFAULTS.lineW; S.wheelSens=DEFAULTS.wheelSens;
   S.wheelInertia=DEFAULTS.wheelInertia; S.wheelInvert=DEFAULTS.wheelInvert; S.hscroll=DEFAULTS.hscroll; S.limitView=DEFAULTS.limitView; mom.v=0;
@@ -5358,7 +5383,7 @@ document.getElementById('btnResetSet').onclick=()=>{
   S.ppmDigits=DEFAULTS.ppmDigits;
   { const pd=document.getElementById('ppmDigits'); if(pd){ pd.value=DEFAULTS.ppmDigits;
       const v=document.getElementById('digv'); if(v) v.textContent=String(DEFAULTS.ppmDigits); } }
-  { const sf=document.getElementById('segFont'); if(sf) sf.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===DEFAULTS.plotFont)); }
+  { const sf=document.getElementById('plotFont'); if(sf) sf.value=DEFAULTS.plotFont; }
   document.documentElement.style.removeProperty('--bg');
   document.getElementById('bgColor').value=css('--bg');
   persistUI(); resize(); draw(); };
@@ -5646,7 +5671,7 @@ segWire('segLang',v=>setLang(v));
 /* ===================== loading (multi) ===================== */
 function newSpectrum(name){ const c=PALETTE[S.nextColor++ % PALETTE.length];
   return { name, origName:name, color:c, visible:true, source:'fid', sr:0, mode:'mag', zf:1, wdw:'em', lb:0.3, gdc:true, ph0:0, ph1:0, yscale:1, vzoom:true,
-    peaks:[], integrals:[], multiplets:[], shades:[], cuts:[], haveFid:false, haveProc:false, colorLocked:false, phSet:false, procMissing:false }; }
+    peaks:[], integrals:[], multiplets:[], shades:[], cuts:[], view:null, haveFid:false, haveProc:false, colorLocked:false, phSet:false, procMissing:false }; }
 // assign palette colors to spectra in display order (skips manually-locked ones)
 function applyPalette(force){
   const list=S.spectra; if(!list.length) return;
@@ -6172,13 +6197,13 @@ document.getElementById('btnCopyImg').onclick=()=>{ closeMenus(); if(!visibleSpe
 /* ---------- portable work file (dataset states + workspace) as JSON ---------- */
 const SHOW_FLAGS=['showInsets','showNames','showPeaks','showIntegs','showShades','showMarks','showText','showMults','showMultSources','showThresholdLine','showLanes','showLines','showZooms','showMinimap','zoomLeaders','laneOverflow','showTitle'];
 function uiState(){ const o={
-    view:{pHi:S.view.pHi,pLo:S.view.pLo}, layout:S.layout, palette:S.palette, monoBase:S.monoBase,
+    view:{pHi:S.view.pHi,pLo:S.view.pLo}, spectrumViews:S.spectrumViews||{}, layout:S.layout, palette:S.palette, monoBase:S.monoBase,
     lineW:S.lineW, ppmDigits:S.ppmDigits, pkDigits:S.pkDigits, fontScale:S.fontScale, nameScale:S.nameScale, axisScale:S.axisScale, markSize:S.markSize, plotFont:S.plotFont,
     axisPad:S.axisPad, baseGap:S.baseGap, thr:S.thr,
     zoomBorderColor:S.zoomBorderColor, zoomBorderWidth:S.zoomBorderWidth, zoomLeaderStyle:S.zoomLeaderStyle,
     peakColor:S.peakColor, integColor:S.integColor, peakStyle:S.peakStyle, integStyle:S.integStyle, showIntegCurve:S.showIntegCurve,
     multColor:S.multColor, multDigits:S.multDigits, multJStyle:S.multJStyle, multStyle:S.multStyle, markColor:S.markColor, shadeColor:S.shadeColor, textColor:S.textColor, textSize:S.textSize, lineColor:S.lineColor, lineStyle:S.lineStyle,
-    imageBorder:S.imageBorder, imageBorderColor:S.imageBorderColor, imageBorderWidth:S.imageBorderWidth, imageBorderStyle:S.imageBorderStyle, integDigits:S.integDigits,
+    imageDefaultScale:S.imageDefaultScale, imageBorder:S.imageBorder, imageBorderColor:S.imageBorderColor, imageBorderWidth:S.imageBorderWidth, imageBorderStyle:S.imageBorderStyle, integDigits:S.integDigits,
     customPalette:S.customPalette||[],
     impSolvent:S.impSolvent, impTol:S.impTol, impTolC:S.impTolC, showImpurities:S.showImpurities, impPins:S.impPins||[],
     lines:S.lines||[], zooms:S.zooms||[],
@@ -6187,6 +6212,9 @@ function uiState(){ const o={
   SHOW_FLAGS.forEach(f=>o.flags[f]=S[f]); return o; }
 function applyUIState(o, withView){
   if(!o) return;
+  if(o.spectrumViews&&typeof o.spectrumViews==='object'){
+    S.spectrumViews={};Object.entries(o.spectrumViews).forEach(([k,v])=>{if(validSavedView(v))S.spectrumViews[k]={pHi:v.pHi,pLo:v.pLo};});
+  }
   if(o.flags) SHOW_FLAGS.forEach(f=>{ if(typeof o.flags[f]==='boolean') S[f]=o.flags[f]; });
   if(o.layout) S.layout=o.layout;
   if(typeof o.lineW==='number') S.lineW=o.lineW;
@@ -6202,7 +6230,7 @@ function applyUIState(o, withView){
   if('zoomBorderColor' in o) S.zoomBorderColor=o.zoomBorderColor;
   if(typeof o.zoomBorderWidth==='number') S.zoomBorderWidth=o.zoomBorderWidth;
   if(o.zoomLeaderStyle) S.zoomLeaderStyle=o.zoomLeaderStyle;
-  if(o.plotFont) S.plotFont=o.plotFont;
+  if(['mono','sans','serif','topspin','mnova'].includes(o.plotFont)) S.plotFont=o.plotFont;
   if('peakColor' in o) S.peakColor=o.peakColor;
   if('integColor' in o) S.integColor=o.integColor;
   if(o.peakStyle==='style1'||o.peakStyle==='style2') S.peakStyle=o.peakStyle;
@@ -6219,6 +6247,7 @@ function applyUIState(o, withView){
   if('multColor' in o) S.multColor=o.multColor;
   if('lineColor' in o) S.lineColor=o.lineColor;
   if(['solid','dashed','dotted','dashdot'].includes(o.lineStyle)) S.lineStyle=o.lineStyle;
+  if(typeof o.imageDefaultScale==='number') S.imageDefaultScale=Math.max(.1,Math.min(3,o.imageDefaultScale));
   if(typeof o.imageBorder==='boolean') S.imageBorder=o.imageBorder;
   if(o.imageBorderColor) S.imageBorderColor=o.imageBorderColor;
   if(typeof o.imageBorderWidth==='number') S.imageBorderWidth=Math.max(.5,Math.min(8,o.imageBorderWidth));
@@ -6249,7 +6278,7 @@ function applyUIState(o, withView){
 }
 function workspaceSpectrumState(sp){ return {
   sig:sigKey(sp), color:sp.color, colorLocked:!!sp.colorLocked,
-  visible:sp.visible!==false, yscale:sp.yscale||1, vzoom:sp.vzoom!==false
+  visible:sp.visible!==false, yscale:sp.yscale||1, vzoom:sp.vzoom!==false, view:sp.view||S.spectrumViews[sigKey(sp)]||null
 }; }
 function workspaceState(){ const o=uiState();
   o.kind='nmr-spectrum-workspace'; o.version=PERSISTENCE_VERSION;
@@ -6273,6 +6302,7 @@ function applyWorkspaceState(o, withView){
       if(typeof e.visible==='boolean') sp.visible=e.visible;
       if(typeof e.yscale==='number'&&isFinite(e.yscale)) sp.yscale=e.yscale;
       if(typeof e.vzoom==='boolean') sp.vzoom=e.vzoom;
+      if(validSavedView(e.view)){ sp.view={pHi:e.view.pHi,pLo:e.view.pLo}; S.spectrumViews[sigKey(sp)]=sp.view; }
     });
     let active=-1;
     if(o.activeSig) active=S.spectra.findIndex(sp=>sigKey(sp)===o.activeSig);
@@ -6280,7 +6310,7 @@ function applyWorkspaceState(o, withView){
     if(active>=0) S.active=active;
   }
   if(Number.isInteger(o.nextColor)&&o.nextColor>=0) S.nextColor=o.nextColor;
-  if(['peaks','integ','mult','assign'].includes(o.resTab)) S.resTab=o.resTab;
+  if(['peaks','integ','mult','assign','images'].includes(o.resTab)) S.resTab=o.resTab;
   if(['text','mark','shade','conn','img'].includes(o.asgSub)) S.asgSub=o.asgSub;
   if(typeof o.docked==='boolean') S.docked=o.docked;
   if(typeof o.showJTree==='boolean') S.showJTree=o.showJTree;
@@ -6336,7 +6366,7 @@ const WORKSPACE_KEY='nmrviewer:workspace';
 let _storedWorkspace=null;
 let _persistT=null;
 function persistUI(){ clearTimeout(_persistT); _persistT=setTimeout(()=>{
-  try{ _storedWorkspace=workspaceState(); localStorage.setItem(WORKSPACE_KEY, JSON.stringify(_storedWorkspace)); }catch(_){}
+  try{ saveViewFor(A()); _storedWorkspace=workspaceState(); localStorage.setItem(WORKSPACE_KEY, JSON.stringify(_storedWorkspace)); }catch(_){}
 },250); }
 function restoreUI(){ try{
   // nmrviewer:ui is the <=1.11 global-UI key; reading it keeps existing users' settings.
@@ -6344,7 +6374,7 @@ function restoreUI(){ try{
   _storedWorkspace=JSON.parse(raw); applyWorkspaceState(_storedWorkspace,false);
 }catch(_){} }
 function applyStoredWorkspace(withView){ if(_storedWorkspace) applyWorkspaceState(_storedWorkspace,!!withView); }
-window.addEventListener('beforeunload',()=>{ try{ _storedWorkspace=workspaceState(); localStorage.setItem(WORKSPACE_KEY, JSON.stringify(_storedWorkspace)); }catch(_){} });
+window.addEventListener('beforeunload',()=>{ try{ saveViewFor(A()); _storedWorkspace=workspaceState(); localStorage.setItem(WORKSPACE_KEY, JSON.stringify(_storedWorkspace)); }catch(_){} });
 
 // reflect S display-state into the various sidebar/menu controls
 function syncUIControls(){
@@ -6375,7 +6405,7 @@ function syncUIControls(){
   const lcb=document.getElementById('lineColor'); if(lcb) setColorBtn('lineColor', S.lineColor||css('--axis'));
   const ax=document.getElementById('axisPad'); if(ax){ ax.value=S.axisPad; const v=document.getElementById('axv'); if(v) v.textContent=String(S.axisPad); }
   const bg=document.getElementById('baseGap'); if(bg){ const pct=(S.baseGap==null?0.035:S.baseGap)*100; bg.value=String(pct); const v=document.getElementById('bgv'); if(v) v.textContent=pct.toFixed(1)+'%'; }
-  const ff=document.getElementById('segFont'); if(ff) ff.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===S.plotFont));
+  const ff=document.getElementById('plotFont'); if(ff) ff.value=S.plotFont;
   if(typeof syncColorPickers==='function') syncColorPickers();
   const lay=document.getElementById('segLayout'); if(lay) lay.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===S.layout));
   const ps=document.getElementById('segPeakStyle'); if(ps) ps.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===S.peakStyle));
@@ -7396,8 +7426,8 @@ refreshUndoUI();
 // initialize dock toggle label/title
 document.getElementById('resDock').textContent = S.docked?'⤢':'⤡';
 document.getElementById('resDock').title = t(S.docked?'ttFloat':'ttDock');
-// results list is on by default
-openResults();
+// Results are only meaningful after at least one spectrum has been loaded.
+if(S.spectra.length) openResults(); else closeResults();
 </script>
 
 
@@ -7569,9 +7599,10 @@ html[data-theme="light"] #toolbar .rsub:not(.on):hover{
 .asg-gear-settings .asg-item-body .tmrow>label{grid-column:2;color:var(--ink)}
 .asg-gear-settings .asg-item-body .tmrow>select{grid-column:3/5;min-width:0;padding:5px 7px;font-size:12px}
 .asg-gear-settings .asg-item-body .tmrow.asg-check-row>input{grid-column:4;width:15px;height:15px;margin:0;accent-color:var(--trace);cursor:pointer}
-.asg-gear-settings .asg-item-body .tmrow.asg-color-row{grid-template-columns:13px 72px minmax(0,1fr) 28px}
+.asg-gear-settings .asg-item-body .tmrow.asg-color-row{grid-template-columns:13px 42px minmax(0,1fr) 28px}
+.asg-gear-settings .asg-item-body .tmrow.asg-color-row>span[data-i18n]{grid-column:2}
 .asg-gear-settings .asg-item-body .tmrow.asg-color-row .asg-color-presets{grid-column:3;display:flex;align-items:center;justify-content:flex-start;gap:3px;min-width:0}
-.asg-gear-settings .asg-item-body .tmrow.asg-color-row .asg-color-presets button{width:13px;height:13px;flex:none;border:1px solid var(--line);border-radius:50%;padding:0;cursor:pointer;background-clip:padding-box}
+.asg-gear-settings .asg-item-body .tmrow.asg-color-row .asg-color-presets button{width:17px;height:17px;flex:none;border:1px solid var(--line);border-radius:50%;padding:0;cursor:pointer;background-clip:padding-box}
 .asg-gear-settings .asg-item-body .tmrow.asg-color-row .asg-color-presets button:hover,.asg-gear-settings .asg-item-body .tmrow.asg-color-row .asg-color-presets button:focus-visible{outline:2px solid var(--trace);outline-offset:1px}
 .asg-gear-settings .asg-item-body .tmrow.is-disabled{opacity:.45}
 .asg-gear-settings .asg-item-body .tmitem{padding:4px 7px}
@@ -7661,7 +7692,7 @@ html[data-theme="light"] #toolbar .rsub:not(.on):hover{
     inp.addEventListener('input',()=>{out.textContent=String(inp.value);oninput(Number(inp.value));});row.append(lab,inp,out);return {row,input:inp};
   };
   const annotationColors=['#0E6E7E','#D33A2C','#2F6BCE','#7A4A98','#2D8A56','#C27B00'];
-  const makePresetSwatches=(setting,colors)=>{if(!colors.length)return;const sw=document.createElement('span');sw.className='asg-color-presets';
+  const makePresetSwatches=(setting,colors)=>{if(!colors.length)return;setting.row.classList.add('asg-color-row');const sw=document.createElement('span');sw.className='asg-color-presets';
     colors.forEach(color=>{const b=document.createElement('button');b.type='button';b.style.background=color;b.title=color;b.setAttribute('aria-label',color);b.onclick=()=>{setting.input.value=color;setting.input.dispatchEvent(new Event('input',{bubbles:true}));};sw.appendChild(b);});setting.row.insertBefore(sw,setting.input);};
   const lineStyles=[['solid','optSolid'],['dashed','optDashed'],['dotted','optDotted'],['dashdot','optDashDot']];
   const lineStyleSetting=makeSelectRow('asgLineStyle',S.lineStyle||'dashed',lineStyles,v=>{S.lineStyle=v;persistUI();draw();});
@@ -7669,8 +7700,7 @@ html[data-theme="light"] #toolbar .rsub:not(.on):hover{
   const imageBorderColorSetting=makeColorRow('asgImageBorderColor',S.imageBorderColor||'#3A4750',v=>{S.imageBorderColor=v;persistUI();draw();});
   const imageBorderWidthSetting=makeRangeRow('asgImageBorderWidth',S.imageBorderWidth||1,.5,6,.5,v=>{S.imageBorderWidth=v;persistUI();draw();});
   const imageBorderStyleSetting=makeSelectRow('asgLineStyle',S.imageBorderStyle||'solid',lineStyles,v=>{S.imageBorderStyle=v;persistUI();draw();});
-  const imageSizeSetting=makeRangeRow('asgImageSize',100,10,300,5,v=>{const sp=typeof A==='function'?A():null,im=sp&&imgsOf(sp)[S.selImg];if(!im)return;im.s=v/100;saveAnnot(sp);draw();});
-  const imageAnchorSetting=makeCheckRow('asgImageAnchor',false,v=>{const sp=typeof A==='function'?A():null,im=sp&&imgsOf(sp)[S.selImg];if(!im)return;const w=im.w*im.s,h=im.h*im.s,pos=imageBoxPosition(sp,im,w,h);if(v)anchorImageToSpectrum(sp,im,pos.x,pos.y);else{im.anchor='canvas';im.x=pos.x;im.y=pos.y;}saveAnnot(sp);draw();});
+  const imageSizeSetting=makeRangeRow('asgImageSize',100,10,300,5,v=>{const sp=typeof A==='function'?A():null,im=sp&&imgsOf(sp)[S.selImg];S.imageDefaultScale=v/100;if(im){im.s=v/100;saveAnnot(sp);}persistUI();draw();});
   makePresetSwatches({row:controls.mark.color,input:controls.mark.color.querySelector('input[type=color]')},annotationColors);
   makePresetSwatches({row:controls.shade.color,input:controls.shade.color.querySelector('input[type=color]')},annotationColors);
   const imageDependentSettings=[imageBorderColorSetting,imageBorderWidthSetting,imageBorderStyleSetting];
@@ -7683,7 +7713,7 @@ html[data-theme="light"] #toolbar .rsub:not(.on):hover{
     text:[controls.text.color,controls.text.size,controls.text.reset],
     shade:[controls.shade.color],
     line:[controls.line.color,lineStyleSetting.row],
-    image:[imageSizeSetting.row,imageAnchorSetting.row,imageBorderSetting.row,imageBorderColorSetting.row,imageBorderWidthSetting.row,imageBorderStyleSetting.row]
+    image:[imageSizeSetting.row,imageBorderSetting.row,imageBorderColorSetting.row,imageBorderWidthSetting.row,imageBorderStyleSetting.row]
   };
   const stage=document.createElement('div');stage.className='asg-layout-stage';
   pane.replaceChildren(stage);
@@ -7720,15 +7750,9 @@ html[data-theme="light"] #toolbar .rsub:not(.on):hover{
     imageBorderWidthSetting.row.querySelector('.thrval').textContent=String(S.imageBorderWidth||1);
     imageBorderStyleSetting.input.value=S.imageBorderStyle||'solid';
     const image=sp&&imgsOf(sp)[S.selImg];
-    imageSizeSetting.input.disabled=!image;
-    imageSizeSetting.row.classList.toggle('is-disabled',!image);
-    imageSizeSetting.row.title=image?'':t('asgSelectImage');
-    imageSizeSetting.input.value=String(Math.round((image?.s||1)*100));
-    imageSizeSetting.row.querySelector('.thrval').textContent=image?Math.round((image.s||1)*100)+'%':'—';
-    imageAnchorSetting.input.disabled=!image;
-    imageAnchorSetting.row.classList.toggle('is-disabled',!image);
-    imageAnchorSetting.row.title=image?'':t('asgSelectImage');
-    imageAnchorSetting.input.checked=image?.anchor==='spectrum';
+    const size=image?.s??S.imageDefaultScale??1;
+    imageSizeSetting.input.value=String(Math.round(size*100));
+    imageSizeSetting.row.querySelector('.thrval').textContent=Math.round(size*100)+'%';
     syncImageBorderRows();
   };
   window.syncAssignHeaderState=syncAssignHeaderState;
