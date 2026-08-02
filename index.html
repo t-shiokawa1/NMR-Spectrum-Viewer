@@ -6433,6 +6433,15 @@ function toast(msg, ms){ let el=document.getElementById('toast');
    a large rework bumps the major (→ 2.0). Badge shows v + CHANGELOG[0].v.
    Fields: v (version string), date (YYYY-MM-DD), en[] / ja[] bullet lists. */
 const CHANGELOG=[
+  { v:'1.15', date:'2026-08-03',
+    en:['Made Cut regions and the horizontal δ view independent for every spectrum. Each spectrum now saves and restores its own cuts and last display range, preventing a cut or viewport from another dataset from appearing after switching or reopening.',
+        'Reworked the results sidebar: empty result tabs and empty Assignment sub-tabs are hidden, images have their own Images tab, and colour codes appear only while their swatch is hovered or keyboard-focused. The docked results list now grows naturally instead of showing an unnecessary nested scrollbar.',
+        'Improved image annotations with a size setting available even when no image is selected, six preset colours for marks and shading, and a pin control that anchors an image to its spectrum position during zooming and panning.',
+        'Refined the interface: fixed untranslated Assignment controls, removed the integral reference badge, ensured Integral Style 3 remains selectable, added TopSpin-like and MNova-like plot-font choices, and aligned the sidebar and toolbar header rules.'],
+    ja:['カット範囲と横方向の δ 表示範囲をスペクトルごとに独立して保存・復元するようにしました。スペクトルの切り替えや再読込時に、別データのカットや表示範囲が混ざらないようにしています。',
+        '結果サイドバーを再編しました。データのない結果タブ／帰属サブタブは非表示にし、画像は専用の［画像］タブへ移動しました。色コードはスウォッチにホバーまたはキーボードフォーカスした時だけ表示され、ドック時の不要な内側スクロールもなくなりました。',
+        '画像注釈を改善しました。画像未選択時にも既定の大きさを設定でき、マーク・塗りつぶしには6色のプリセットを追加しました。ピンを有効にした画像は、拡大・パン中もスペクトル上の位置に固定されます。',
+        '帰属まわりの未翻訳を修正し、積分の基準バッジを削除、積分スタイル3が常に選べるようにしました。TopSpin風／MNova風のスペクトル表示フォントを追加し、左サイドバーとツールバーの見出し罫線も揃えました。'] },
   { v:'1.14', date:'2026-07-28',
     en:['Added automatic phase correction. A new “Auto phase” button next to the PH0 / PH1 sliders fits both from the peak shapes, and “Reset” puts them back to 0°. The sliders now step in 0.1°.',
         'Datasets whose pdata folder has no 1r are now phased automatically on load and shown as the real spectrum, instead of silently falling back to the magnitude spectrum.',
