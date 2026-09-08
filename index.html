@@ -59,10 +59,16 @@ aside .brandsect{height:42px;padding:0 16px;display:flex;align-items:center}
 input[type=number],input[type=text]{background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:6px 8px;font-size:12px;width:100%;font-family:var(--sans);outline:none}
 input[type=number]:focus,input[type=text]:focus{border-color:var(--trace)}
 /* H sites (structure) */
-.cmplist{display:flex;flex-direction:column;gap:4px;margin-bottom:7px}
-.cmp{display:flex;align-items:center;gap:4px;padding:5px 8px;border:1px solid var(--line);border-radius:6px;cursor:pointer;font-size:11px;background:var(--panel2);transition:.12s}
-.cmp:hover{border-color:var(--gridw)}
-.cmp.on{border-color:var(--trace);box-shadow:inset 0 0 0 1px var(--trace)}
+/* 画像の一覧。帰属タブの他の節が表（tr/td）なのに対しここだけ div の並びだが、
+   見た目は表の行に合わせる（2026-09-08）：枠と角丸と地色をやめ、下罫線 1 本で区切り、
+   余白は td（3px 6px、右端の列だけ 7px）と同じ。カードのままだと、枠を外した他の節の
+   中でここだけ箱が残る。ホバーと選択も tr:hover / tr.pkrow.rsel と同じ塗りにする。 */
+.cmplist{display:flex;flex-direction:column;gap:0;margin-bottom:0}
+.cmp{display:flex;align-items:center;gap:4px;padding:3px 7px 3px 6px;border:none;
+  border-bottom:1px solid var(--grid);border-radius:0;background:none;cursor:pointer;font-size:11px}
+.cmp:last-child{border-bottom:none}
+.cmp:hover{background:var(--ui-hover)}
+.cmp.on{background:color-mix(in srgb,var(--trace) 10%,transparent)}
 .cmp .swatch{width:16px;height:16px;border:none;background:none;padding:0;cursor:pointer;flex:none}
 .cmp .cn{color:var(--ink);white-space:nowrap;font-weight:600}
 .cmp .cs{color:var(--faint);font-family:var(--sans);font-size:10px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -84,7 +90,30 @@ input[type=number]:focus,input[type=text]:focus{border-color:var(--trace)}
 .item .eye{background:none;border:none;cursor:pointer;padding:0 1px;display:inline-flex;align-items:center;color:var(--dim);opacity:.9;flex:0 0 auto}
 .item .eye .svi{width:15px;height:15px}
 .item .eye.off{opacity:.4;color:var(--faint)}
-.cmp .thumb{height:20px;max-width:34px;border-radius:3px;border:1px solid var(--line);object-fit:cover;flex:none}
+/* サムネイル（2026-09-09）。以前は 20px・object-fit:cover だった。cover は枠に
+   合わせて中央を切り抜くので、構造式のように「広い余白の中に細い線」という画像は
+   余白だけが残り、2 枚並べても見分けられなかった。全体を入れる contain にし、
+   高さを 40px に上げ、余白は imgMakeThumb() が読み込み時に落とす。
+   地を白で固定するのは、構造式が透過 PNG で来ることが多く、地が無いとダークテーマで
+   黒い線ごと消えるため（画像の地が透明でも、一覧では白い紙の上に見せる）。 */
+.cmp .thumb{height:40px;max-width:52px;border-radius:3px;border:1px solid var(--line);
+  object-fit:contain;background:#fff;flex:none}
+/* 行が 40px になったぶん、名前と寸法を 2 段にする。名前に幅を与えるため。 */
+.cmp .cmeta{display:flex;flex-direction:column;gap:1px;flex:1;min-width:0}
+.cmp .cmeta .cs{flex:none}
+/* 名前は押すと書き換えられる。見た目は太字のまま、押せることはホバーで示す
+   （積分の .editrange と同じ作法）。 */
+.cmp .imgname{display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  font:inherit;font-weight:600;color:var(--ink);background:none;border:none;border-bottom:1px dashed transparent;
+  padding:0;text-align:left;cursor:text}
+.cmp .imgname:hover{color:var(--trace);border-bottom-color:var(--trace)}
+.cmp .imgnamein{width:100%;max-width:120px}
+/* ホバーの下見。fixed で body 直下に出すので、パネルやサイドバーに切られない。 */
+#imgpv{position:fixed;left:0;top:0;z-index:200;padding:5px;border-radius:8px;background:var(--panel);
+  border:1px solid var(--button-line);box-shadow:0 8px 26px rgba(0,0,0,.28);
+  pointer-events:none;opacity:0;visibility:hidden;transition:opacity .12s}
+#imgpv.show{opacity:1;visibility:visible}
+#imgpv img{display:block;max-width:220px;max-height:220px;background:#fff;border-radius:4px}
 .tmrow input[type=color]{width:26px;height:20px;border:1px solid var(--line);border-radius:5px;background:var(--panel2);padding:2px;cursor:pointer;flex:none}
 .tmrow input[type=color]::-webkit-color-swatch-wrapper{padding:0}
 .tmrow input[type=color]::-webkit-color-swatch{border:none;border-radius:3px}
@@ -146,6 +175,11 @@ input[type=number]:focus,input[type=text]:focus{border-color:var(--trace)}
 #floattip{position:fixed;z-index:300;max-width:280px;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:7px;padding:7px 9px;font-size:11px;line-height:1.55;box-shadow:0 6px 22px rgba(0,0,0,.30);pointer-events:none;opacity:0;transition:opacity .12s;white-space:normal}
 #floattip.show{opacity:1}
 .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px}
+/* 動作のボタン（拡大・縮小・全体／÷2・×2・自動）はアイコン＋語で示す（2026-09-08）。
+   状態を選ぶ .seg にはアイコンを付けない。この対比で「押すと何かが起きる」ものと
+   「今どちらを選んでいるか」を形で見分ける。⊕ ⊖ の文字グリフはここで廃止した。 */
+.row3 .tbtn{display:inline-flex;align-items:center;justify-content:center;gap:5px}
+.row3 .tbtn .svi{width:14px;height:14px;flex:none}
 /* スクロールバーは幅を持たせない。持たせるとスクロールコンテナの内容幅が縮み、
    中の .sect の区切り線が右端まで届かなくなる（ガター領域には描画できないため）。 */
 aside{grid-row:1;background:var(--panel);overflow-y:auto;overflow-x:hidden;scrollbar-width:none}
@@ -163,13 +197,19 @@ aside::-webkit-scrollbar{display:none}
 .sect h3 .h3l{display:inline-flex;align-items:center;gap:8px;flex:1 1 auto;min-width:0}
 /* --- 折りたたみ（スペクトル / 測定条件 / 解析結果） --- */
 .sect h3[role="button"]{cursor:pointer;user-select:none}
-.sect h3 .secchev{display:inline-flex;flex:none;color:var(--faint);transition:transform .15s}
-.sect h3 .secchev .svi{width:13px;height:13px;stroke-width:2}
+/* 開閉のシェブロンはアプリ全体で 1 種類。サイドバーの節・解析結果（帰属）の節・
+   帰属パネルの「表示スタイル」で、形も大きさも太さも別々に書かれていたため、
+   同じ `>` が場所によって 14px/1px・12px/2px・文字の '›' と 3 通りに見えていた。
+   大きさと線の太さは末尾の <style id="icon-button-tokens"> の --ic-sm / --ic-sw が持つ。
+   向きの規則も 3 か所で共通：閉じている＝右（-90°）／開いている＝下（0°）。 */
+.secchev{display:inline-flex;flex:none;color:var(--faint);transition:transform .15s}
 .sect h3[role="button"]:hover{color:var(--ink)}
 .sect h3[role="button"]:hover .secchev{color:var(--dim)}
 .sect h3:focus-visible{outline:2px solid var(--trace);outline-offset:2px;border-radius:4px}
 .sect.collapsed>h3{margin-bottom:0}
-.sect.collapsed>h3 .secchev{transform:rotate(-90deg)}
+.sect.collapsed>h3 .secchev,
+.racc:not(.open) .racch .secchev,
+.assign-style-details:not([open]) summary .secchev{transform:rotate(-90deg)}
 .sect.collapsed>*:not(h3){display:none!important}
 .sect.collapsed{flex:0 0 auto!important}
 .sect h3 .vzall{border:1px solid var(--line);background:none;color:var(--faint);cursor:pointer;border-radius:5px;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;padding:2px}
@@ -201,8 +241,13 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;heigh
 .phbtns .mini:focus{outline:none}
 .phbtns .mini:focus-visible{outline:2px solid var(--trace);outline-offset:-2px}
 .phbtns .mini.busy{opacity:.55;cursor:progress}
-.seg{display:flex;border-radius:7px;overflow:hidden;background:var(--panel2);padding:2px;gap:2px;border:1px solid var(--line)}
-.seg button{flex:1;background:transparent;border:none;border-radius:5px;padding:6px 4px;font-size:11px;color:var(--dim);cursor:pointer;transition:.12s}
+/* 切替選択（実線/破線/点線、スタイル1/2 など）。高さは --seg-h の1本で決める。
+   中のボタンは伸ばして字を中央に置くので、上下 padding は高さに効かない。
+   詳しくは icon-button-tokens の「18. 切替選択の高さ」。 */
+.seg{display:flex;align-items:stretch;height:var(--seg-h);box-sizing:border-box;
+  border-radius:7px;overflow:hidden;background:var(--panel2);padding:2px;gap:2px;border:1px solid var(--line)}
+.seg button{flex:1;display:flex;align-items:center;justify-content:center;line-height:1;white-space:nowrap;
+  background:transparent;border:none;border-radius:5px;padding:0 4px;font-size:var(--seg-fs);color:var(--dim);cursor:pointer;transition:.12s}
 .seg button.on{background:var(--trace);color:var(--bg);font-weight:600}
 .seg button:hover:not(.on){color:var(--ink)}
 /* 無効なセグメントボタンにも他と同じ薄さを与える。以前は不透明度が変わらず、
@@ -224,7 +269,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;heigh
 .tmstyle{display:flex;align-items:center;gap:8px;padding:4px 9px;font-size:11px;color:var(--dim);white-space:nowrap}
 .tmstyle>span:first-child{min-width:74px}
 .tmstyle .seg{flex:1;min-width:142px}
-.tmstyle .seg button{padding:4px 7px;font-size:10.5px}
+.tmstyle .seg button{padding:0 7px}
 select{width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:7px 9px;font-size:12px;cursor:pointer}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .muted{color:var(--faint);font-size:10.5px;line-height:1.6;margin-top:7px}
@@ -303,7 +348,9 @@ main{grid-row:1;position:relative;display:flex;flex-direction:column;background:
 #toolbar .tbc.iconly .mi{margin:0}
 .tbtn{background:transparent;border:1px solid var(--button-line);color:var(--dim);padding:5px 10px;border-radius:6px;cursor:pointer;font-size:11.5px;transition:.12s;white-space:nowrap}
 #btnInertia,#btnInvert{white-space:normal;line-height:1.2;padding-left:6px;padding-right:6px;overflow:hidden;text-overflow:ellipsis}
-.tbtn:hover{color:var(--ink);border-color:var(--gridw)}
+/* .tbtn のホバーは icon-button-tokens の「--- 4.」が唯一の定義元（2026-09-08）。
+   ここにあった .tbtn:hover{color:var(--ink);border-color:var(--gridw)} は
+   後ろの規則に完全に上書きされる死んだ重複だったので削除した。 */
 .tbtn:disabled{opacity:var(--ui-disabled);cursor:default;pointer-events:none}
 .tbtn.on{border-color:var(--accent);color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,transparent)}
 /* tool dropdowns (main button + caret + panel) */
@@ -378,6 +425,11 @@ html:not([data-panelfloat="on"]) .toolmenu:not(.floating) .tmpanel2{padding-top:
 .tmrow{display:flex;align-items:center;gap:9px;padding:3px 9px;font-size:12px;color:var(--ink);white-space:nowrap}
 .tmrow>span[data-i18n]{flex:none}
 .tmrow.indent{padding-left:30px}
+/* 今の設定では効かない行（例：引き出し線の縦幅はスタイル2 専用）。
+   .asg-gear-settings 側にも同じ淡色化があるが、あちらは歯車ポップオーバー限定の
+   複合セレクタなのでツールパネルには当たらない。ここで .tmrow 全体に効かせる。 */
+.tmrow.is-disabled{opacity:var(--ui-disabled)}
+.tmrow.is-disabled input{cursor:default}
 /* 他のメニュー項目は「左余白22px + 中黒13px + 余白4px」で文字が始まるので、
    中黒を持たないこの行はその合計 39px を直接指定して字下げを揃える。 */
 #pngScaleRow{cursor:default;padding-left:39px}
@@ -439,7 +491,8 @@ html:not([data-panelfloat="on"]) .toolmenu:not(.floating) .tmpanel2{padding-top:
 .uset-reset:hover,.tmitem.uset-reset:hover{
   color:color-mix(in srgb,var(--ink) 88%,var(--dim) 12%)!important;
   border-color:color-mix(in srgb,var(--line) 72%,var(--gridw) 28%)!important;
-  background:color-mix(in srgb,var(--panel2) 86%,var(--trace) 4%)!important;
+  /* 下地は --ui-hover（--ink を7%重ねる）。以前の --panel2 混色は3つ目の変種だった。 */
+  background:var(--ui-hover)!important;
   box-shadow:none!important;transform:none!important}
 /* 拡大図・ミニマップ・区切り線のポップオーバーは同じ行の組み方。
    ID を並べていくと新しいポップオーバーごとに10行書き足すことになるので、
@@ -466,8 +519,12 @@ html:not([data-panelfloat="on"]) .toolmenu:not(.floating) .tmpanel2{padding-top:
 /* 区切り線の行（ラベル＋目＋歯車）。組み方は .lblgear-row が持っているので、
    ここは「対象が無いときの淡色化」だけ足す。 */
 .lane-row.is-disabled{opacity:var(--ui-disabled)}
-.lblgear-row{display:flex;align-items:center;gap:6px}
-.lblgear-row>label{flex:1;min-width:0}
+.lblgear-row{display:flex;align-items:center;gap:var(--btn-gap,4px)}
+/* 項目名の見た目は `.ctl label`（11px / --dim）にそろえる。タイトル文字の行は
+   .ctl の中にあるのでその指定が当たっていたが、区切り線の行は .uset-toggle-list の
+   中（.ctl の外）にあるため素通りし、パネルの地の文字 13px / --ink のまま
+   1行だけ大きく濃く出ていた。ここで .lblgear-row 自身に持たせて両方をそろえる。 */
+.lblgear-row>label{flex:1;min-width:0;font-size:11px;color:var(--dim)}
 /* 歯車の左に置くアイコンだけの表示/非表示トグル。
    .vistog の .eyeic がすでに 22×22 の枠付きなので、ボタン自身は枠なしで文字だけ隠す
    （二重枠にしないため）。.vis-row-unified の width:100% はここで打ち消す。 */
@@ -480,11 +537,6 @@ html:not([data-panelfloat="on"]) .toolmenu:not(.floating) .tmpanel2{padding-top:
 .vistog.iconvis:hover .eyeic{background:var(--ui-hover)}
 .vistog.iconvis.on:hover .eyeic{background:color-mix(in srgb,var(--trace) 16%,transparent)}
 .vistog.iconvis+.asg-gear-btn{margin-left:0}
-#titleStyleSettings{width:230px}
-#titleStyleSettings .title-style-body{display:flex;flex-direction:column}
-#titleStyleSettings .title-style-body>label{display:flex;justify-content:space-between;align-items:baseline;font-size:12px;color:var(--ink);margin:0 0 4px}
-#titleStyleSettings .title-style-body>input[type=range]{width:100%;margin:0}
-#titleStyleSettings .title-style-body .seg{margin-top:4px}
 /* organized peak menu */
 #tmShift .tmpanel.peak-organized{min-width:min(334px,calc(100vw - 20px));max-width:calc(100vw - 20px);padding:7px;gap:2px}
 #tmInteg .tmpanel.integ-organized{min-width:min(376px,calc(100vw - 20px));max-width:calc(100vw - 20px);padding:7px;gap:2px}
@@ -584,10 +636,9 @@ html:not([data-panelfloat="on"]) .toolmenu:not(.floating) .tmpanel2{padding-top:
 .assign-display-list .tmtog .eyeic{order:3;margin-left:auto}
 .assign-display-list .tmtog>span:last-child{order:2}
 .assign-style-details{margin:2px 4px 3px;border-top:1px solid var(--line)}
-.assign-style-details summary{list-style:none;cursor:pointer;padding:7px 4px 4px;color:var(--dim);font-size:11.5px;font-weight:600}
+.assign-style-details summary{list-style:none;cursor:pointer;padding:7px 4px 4px;color:var(--dim);font-size:11.5px;font-weight:600;
+  display:flex;align-items:center;gap:5px}
 .assign-style-details summary::-webkit-details-marker{display:none}
-.assign-style-details summary::before{content:'›';display:inline-block;width:14px;color:var(--faint);transition:transform .12s}
-.assign-style-details[open] summary::before{transform:rotate(90deg)}
 .assign-style-body{display:flex;flex-direction:column;gap:5px;padding:2px 0 5px}
 .assign-style-group{padding:2px 4px 4px;border-radius:6px;background:color-mix(in srgb,var(--panel2) 45%,transparent)}
 .assign-style-subhead{padding:3px 8px 1px;font-size:10px;font-weight:650;color:var(--dim)}
@@ -679,16 +730,28 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
   box-shadow:0 8px 30px rgba(0,0,0,.28);z-index:20;overflow:hidden}
 #results.open{display:flex}
 /* docked: lives inside the sidebar, no float/blur/shadow */
-#results.docked{position:static;width:auto;top:auto;right:auto;left:auto;max-height:none;
+/* z-index を戻すのを忘れないこと。#resultsDock は display:flex なので #results は
+   フレックス項目になり、そのとき z-index は position:static でも効いて重なりの層を作る。
+   浮いていたときの 20 が残ると、その層ごと見出し（h3, z-index:4）より上に来て、
+   sticky で残した見出しの上を表の行が素通りする。 */
+#results.docked{position:static;width:auto;top:auto;right:auto;left:auto;max-height:none;z-index:auto;
   background:none;backdrop-filter:none;box-shadow:none;border:none;
   border-radius:0;flex:0 0 auto;min-height:auto;overflow:visible}
 /* ドックした結果パネルは「測定条件」と同じ .sect の中に入る。見出しは .sect h3、
    パネル自身は左右の padding を持たないので、タブ行だけ内側に寄せる。 */
 #resultsDock{padding-bottom:13px}
-/* 一覧が自前の枠を持つので、タブ行の下線は枠の上辺と二重になる。ドック中は引かない
-   （フロート中は一覧に枠が付かないので、タブと本文の境目としてそのまま残す）。 */
-#results.docked .rhead{padding:0 0 7px;border-bottom:none}
-.subbar{display:flex;gap:4px;padding:4px 8px 0;flex-wrap:wrap}
+/* ドック中のタブ行。帯としての下線は引かない（下線は .rtabs-segment 自身が持つ）。
+   スクロールするのは aside だけなので、この行は sticky で見出しの下に貼り付ける。
+   top は段の高さぶん下げる必要があり、syncResultsSticky() が実測して入れる。 */
+#results.docked .rhead{padding:0 0 7px;border-bottom:none;
+  position:sticky;top:var(--rhead-top,45px);z-index:3;background:var(--panel)}
+/* 見出し「解析結果」も一緒に残す。切り離しの矢印がこの中に居るので、流れて消えると
+   フロートへ戻す手段が画面から無くなる。上下の余白は .sect の padding（13px）と
+   .sect h3 の margin-bottom（10px）を自分の padding に付け替えたもの：流れの中では
+   負の margin-top で相殺して見た目は元のまま、貼り付いたときは 45px すべてが
+   地色で塗られるので、行が隙間を通り抜けない。 */
+#resultsDock:not(.collapsed)>h3{position:sticky;top:0;z-index:4;background:var(--panel);
+  padding:13px 0 10px;margin:-13px 0 0}
 .rsub.toolbtn.armed{color:var(--peak);border-color:var(--peak);background:color-mix(in srgb,var(--peak) 12%,transparent)}
 .rsub.toolbtn.armed[data-tool="tErasePk"]{color:var(--err,#c2410c);border-color:var(--err,#c2410c);background:color-mix(in srgb,#c2410c 12%,transparent)}
 .mkrow{display:flex;align-items:center;gap:8px;padding:2px 10px 0;font-size:11px;color:var(--dim)}
@@ -729,12 +792,16 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
 .rtab.on{color:var(--ink);border-color:var(--line);background:var(--panel2)}
 .rhead .x{margin-left:auto;border:none;background:none;color:var(--faint);cursor:pointer;font-size:15px}
 .rbody{overflow-y:auto;padding:4px 0;min-height:0}
-/* ドックしていても表は自前のスクロール枠を持つ。上限は syncResultsHeight() が
-   サイドバーの残り高さから --rbody-max に入れる。max-height なので中身が少ない
-   ときは中身なりに縮む。枠を持って初めて th の sticky が「表の直上」で効く。 */
-#results.docked .rbody{overflow-y:auto;flex:0 1 auto;min-height:0;padding:0;
-  max-height:var(--rbody-max,52vh);border:1px solid var(--button-line);border-radius:6px;background:var(--panel2)}
-#results.docked .rbody th{background:var(--panel2)}
+/* ドック中は入れ子のスクロールを作らない（2026-09-08）。以前は一覧自身が枠と
+   max-height（syncResultsHeight）を持ち、サイドバーの中でもう一段スクロールしていた。
+   上のセクションを開くと枠が下限の 160px まで潰れ、しかも高さの計算がサイドバーの
+   中身側の座標なので、送っても広がらないのが難点だった。いまはスクロールするのは
+   aside だけで、見出し → タブ行 → 表の見出し行の順に sticky で積んで残す。 */
+#results.docked .rbody{overflow:visible;flex:0 0 auto;min-height:0;padding:0;
+  max-height:none;border:none;border-radius:0;background:none}
+/* 表の見出し行が貼り付く先も aside になったので、上の段ぶん下げる。
+   帰属タブは節の見出しがもう 1 段入るので、別の変数（--asg-th-top）で下げる。 */
+#results.docked .rbody:not(.cards) th{top:var(--th-top,82px);z-index:2}
 /* 一覧のスクロールバー。実測（macOS / Chromium）で、指定なし＝15px の旧式バー、
    scrollbar-width:thin＝11px、::-webkit-scrollbar で 8px。いちばん細いのは
    webkit 指定なので、幅は 8px のまま「見せ方」を変える：溝は透明、つまみは
@@ -790,33 +857,29 @@ tr.pkrow.rsel td{background:color-mix(in srgb,var(--trace) 10%,transparent)}
 .racch{display:flex;align-items:center;gap:7px;width:100%;background:none;border:none;
   font-family:var(--sans);font-size:11.5px;color:var(--ink);padding:6px 8px;cursor:pointer;text-align:left}
 .racch:hover{background:var(--ui-hover)}
-.racch .rchev{display:inline-flex;flex:none;color:var(--faint);transition:transform .14s}
-.racch .rchev .svi{width:12px;height:12px;stroke-width:2}
-.racc.open .racch .rchev{transform:rotate(90deg)}
+.racch:hover .secchev{color:var(--dim)}
 .racch .rcnt{margin-left:auto;flex:none;font-size:9.5px;padding:2px 6px;border-radius:999px;
   background:var(--grid);color:var(--dim)}
 .racc .raccb{display:none}
 .racc.open .raccb{display:block}
 .racc .rempty{padding:12px}
-/* 帰属タブだけは中身が「5 つの項目」なので、スペクトル一覧と同じく
-   節ごとに 1 枚のカードにする（.splist gap:5px / .sprow の枠と同じ）。
-   表を出すタブは 1 つの連続した表なので、外枠 1 枚のまま。 */
-/* カードの右端は「スペクトル」欄の .sprow と揃える。表を出すタブと違って .rbody 自身に
-   枠が無いので、見えている縦線はカードの枠だけ。素のままだと一覧がスクロールし始めた
-   瞬間だけ 8px のスクロールバーが幅を食い、カードが .sprow より 8px 内側にずれる。
-   scrollbar-gutter で溝を常に確保し、その 8px は負のマージンで .sect の右 padding
-   （16px）へ逃がす。これでスクロールの有無に関わらずカードの右端は .sprow と同じ位置、
-   バーはカードの外側に立つ。 */
-#results.docked .rbody.cards{border:none;background:none;border-radius:0;
-  display:flex;flex-direction:column;gap:5px;
-  scrollbar-gutter:stable;margin-right:-8px}
-.rbody.cards .racc,
-.rbody.cards .racc:last-child{border:1px solid var(--button-line);border-radius:6px;
-  background:var(--panel2);overflow:hidden;
-  /* flex の既定（flex-shrink:1）だと、入りきらないときに外側がスクロールする前に
-     カード自身が潰れ、overflow:hidden で中身が途中で切れる。縮ませない。 */
-  flex:none}
+/* 帰属タブも入れ子をやめた（2026-09-08）。2026-09-07 から 5 つの節を枠付きカードに
+   していたが、他のタブが枠を失ったあとはここだけ「サイドバーの欄 → 解析結果 → カード」の
+   3 重になる。加えてカードの `overflow:hidden`（角丸で中身を切るため）が節ごとに独立した
+   スクロール領域を作るので、**タブ行の下に何ひとつ留められない**という実害があった。
+   枠を外すと `.racc` は上の素の指定（罫線 1 本）に戻り、`overflow` も消えるので、
+   節の見出しと列見出しを aside に対して貼り付けられる。
+   `.rbody.cards` 側の指定は「無くす」のが答なので、丸ごと置いていない：
+   ・display:flex / gap:5px …… カードを離して並べるためのものだった
+   ・scrollbar-gutter / margin-right:-8px …… 自前スクロール時代の右端合わせ（v1.20 で削除済）
+   残すのは、節の最後の行の罫線を消す指定だけ（`.racc` の区切り線と二重になるため）。 */
 .rbody.cards .racc table tr:last-child td{border-bottom:none}
+/* 帰属タブの段：タブ行 → 節の見出し（.racch）→ 列見出し（th）。
+   .racch の高さは syncResultsSticky() が実測して --asg-th-top に足す。
+   z-index は上から rhead:3 > racch:2 > th:1。行は positioned でないのでこれで全部の上。 */
+#results.docked .rbody.cards .racch{position:sticky;top:var(--th-top,82px);z-index:2;
+  background:var(--panel)}
+#results.docked .rbody.cards th{top:var(--asg-th-top,112px);z-index:1;background:var(--panel)}
 /* --- 積分の相対値をその場で編集する入力 --- */
 .intin{width:60px;font-family:var(--sans);font-size:11px;padding:1px 4px;border:1px solid var(--trace);
   border-radius:4px;background:var(--bg);color:var(--ink)}
@@ -998,21 +1061,19 @@ html[data-theme=light] .manmodal{background:rgba(40,44,48,.36)}
 .paperprev i{font-style:italic}
 
 /* === Variant B: Button / menu motion === */
-.tbtn,.rsub,.seg button,.vistog,.tmitem,.sprow,.cmp{
+.tbtn,.rsub,.seg button,.vistog,.tmitem,.sprow{
   transition: color .16s ease, border-color .16s ease, background .16s ease, box-shadow .16s ease, transform .16s ease;
 }
-.tbtn:hover,.rsub:hover{
-  transform: translateY(-1px);
-  box-shadow:
-    0 0 0 1px color-mix(in srgb,var(--trace) 10%,transparent),
-    0 8px 18px rgba(0,0,0,.16);
-}
-.tbtn:active,.rsub:active{ transform: translateY(0); }
+/* ホバーの「浮き上がり」は廃止（2026-09-08）。以前はここで .tbtn / .rsub だけが
+   translateY(-1px) ＋ 影で持ち上がり、同じ場所に並ぶ「デフォルトに戻す」(.uset-reset)
+   やメニューの行 (.tmitem) は平らなままだったので、押せるものの反応が2通りに割れていた。
+   平らなホバーの値は icon-button-tokens の「--- 4.」が1か所で決める。 */
+.tbtn:active,.rsub:active{ transform:none; }
 /* (menu rows and their icons intentionally have no hover motion — the muted
    #toolbar/.asg-gear-popover rules below provide the flat-tint hover look) */
 .svi{ transition: transform .16s ease, filter .16s ease; }
 @media (prefers-reduced-motion: reduce){
-  .tbtn,.rsub,.seg button,.vistog,.tmitem,.sprow,.cmp,.svi{ transition:none; }
+  .tbtn,.rsub,.seg button,.vistog,.tmitem,.sprow,.svi{ transition:none; }
   .tbtn:hover,.rsub:hover,.tmitem:hover,.vistog:hover,.tbtn:hover .svi,.tmitem:hover .svi{ transform:none; }
 }
 
@@ -1344,19 +1405,21 @@ html[data-theme="light"] .toolmenu.open .tmpanel{
             <div class="tmhead" data-i18n="secRegion">Region</div>
             <div class="ctl">
               <label data-i18n="lblRange">δ range</label>
-              <div class="row3" style="grid-template-columns:1fr auto 1fr;align-items:center;gap:6px">
-                <input type="number" id="rangeHi" value="12" step="0.5">
-                <span style="color:var(--faint)">–</span>
-                <input type="number" id="rangeLo" value="-1" step="0.5">
+              <div class="range-control">
+                <div class="range-fields">
+                  <input type="number" id="rangeHi" value="12" step="0.5">
+                  <span aria-hidden="true">–</span>
+                  <input type="number" id="rangeLo" value="-1" step="0.5">
+                </div>
+                <button class="tbtn range-apply" id="btnRangeApply" data-i18n="btnApply">Apply</button>
               </div>
-              <button class="tbtn" id="btnRangeApply" style="width:100%;margin-top:7px" data-i18n="btnApply">Apply</button>
             </div>
             <div class="ctl">
               <label data-i18n="lblZoom">Zoom</label>
               <div class="row3">
-                <button class="tbtn" id="zoomIn" data-i18n="mZoomIn" title="">⊕ In</button>
-                <button class="tbtn" id="zoomOut" data-i18n="mZoomOut" title="">⊖ Out</button>
-                <button class="tbtn" id="zoomReset" data-i18n="tbFull" title="">Full</button>
+                <button class="tbtn" id="zoomIn" title=""><svg class="svi" viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="4.2"/><path d="M10.1 10.1 13.8 13.8"/><path d="M5 7h4M7 5v4"/></svg><span data-i18n="mZoomIn">In</span></button>
+                <button class="tbtn" id="zoomOut" title=""><svg class="svi" viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="4.2"/><path d="M10.1 10.1 13.8 13.8"/><path d="M5 7h4"/></svg><span data-i18n="mZoomOut">Out</span></button>
+                <button class="tbtn" id="zoomReset" title=""><svg class="svi" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h12"/><path d="m4.6 5.4L2 8l2.6 2.6M11.4 5.4 14 8l-2.6 2.6"/></svg><span data-i18n="tbFull">Full</span></button>
               </div>
             </div>
             <div class="msep"></div>
@@ -1364,9 +1427,9 @@ html[data-theme="light"] .toolmenu.open .tmpanel{
             <div class="ctl">
               <label data-i18n="tbIntensity">Spectrum intensity</label>
               <div class="row3">
-                <button class="tbtn" id="intDown" title="">÷2</button>
-                <button class="tbtn" id="intUp" title="">×2</button>
-                <button class="tbtn" id="intAuto" data-i18n="tbAuto" title="">Auto</button>
+                <button class="tbtn" id="intDown" title=""><svg class="svi" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2.8v10.4"/><path d="M4.6 9.8 8 13.2l3.4-3.4"/></svg><span>÷2</span></button>
+                <button class="tbtn" id="intUp" title=""><svg class="svi" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 13.2V2.8"/><path d="M4.6 6.2 8 2.8l3.4 3.4"/></svg><span>×2</span></button>
+                <button class="tbtn" id="intAuto" title=""><svg class="svi" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 2.2 7 5.2 10 6.2 7 7.2 6 10.2 5 7.2 2 6.2 5 5.2z"/><path d="M11.6 8.8l.6 1.8 1.8.6-1.8.6-.6 1.8-.6-1.8-1.8-.6 1.8-.6z"/></svg><span data-i18n="tbAuto">Auto</span></button>
               </div>
               <button class="tbtn" id="btnLinkY" style="width:100%;margin-top:6px" data-i18n="lblLinkY">Link all spectra</button>
             </div>
@@ -1408,12 +1471,15 @@ html[data-theme="light"] .toolmenu.open .tmpanel{
               <div class="lblgear-row"><label data-i18n="lblTitleText" style="margin:0">Title text</label><button class="vistog iconvis" id="btnShowTitle" data-i18n-title="lblTitle" title=""><span class="eyeic"><svg class="svi" viewBox="0 0 16 16"><path d="M1.5 8S4 3.8 8 3.8 14.5 8 14.5 8 12 12.2 8 12.2 1.5 8 1.5 8z"/><circle cx="8" cy="8" r="2"/><line class="eyeslash" x1="2.5" y1="13.5" x2="13.5" y2="2.5"/></svg></span><span data-i18n="lblTitle">Title</span></button><button type="button" class="asg-gear-btn" id="titleStyleGear" data-i18n-title="titleStyleSettings" title=""><svg class="svi" viewBox="0 0 24 24"><path d="M10.3 1.7h3.4l.5 2.3 1.9.8 2-1.3 2.4 2.4-1.3 2 .8 1.9 2.3.5v3.4l-2.3.5-.8 1.9 1.3 2-2.4 2.4-2-1.3-1.9.8-.5 2.3h-3.4l-.5-2.3-1.9-.8-2 1.3-2.4-2.4 1.3-2-.8-1.9-2.3-.5v-3.4l2.3-.5.8-1.9-1.3-2 2.4-2.4 2 1.3 1.9-.8.5-2.3Z"/><circle cx="12" cy="12" r="3.1"/></svg></button></div>
               <input type="text" id="figTitleInput" placeholder="¹H NMR (CDCl₃)">
             </div>
-            <div id="titleStyleSettings" class="asg-gear-settings title-gear-popover" hidden data-i18n-popover-title="titleStyleSettings">
-              <div class="title-style-body">
-                <label><span data-i18n="lblTitleSize">Title size</span> <span class="val" id="tszv">15 pt</span></label>
-                <input type="range" id="titleSize" min="9" max="30" step="0.5" value="15">
-                <label style="margin-top:6px" data-i18n="lblTitleWeight">Title weight</label>
-                <div class="seg" id="segTitleWeight"><button data-v="normal" class="on" data-i18n="optThin">Thin</button><button data-v="bold" data-i18n="optBold">Bold</button></div>
+            <!-- 組み方は他の歯車ポップオーバー（拡大図・ミニマップ・区切り線・カーソル）と同じ
+                 .zoom-style-body ＝ 中黒＋ラベル＋操作を1行に組む形式にそろえてある。
+                 独自の .title-style-body は、中黒が無い・行の余白が無い・スライダーと
+                 セグメントが端から端まで伸びる、と3点ずれていたので廃止した。 -->
+            <div id="titleStyleSettings" class="asg-gear-settings zoom-gear-popover" hidden data-i18n-popover-title="titleStyleSettings">
+              <div class="zoom-style-body">
+                <div class="tmrow"><label data-i18n="lblTitleSize">Title size</label><input type="range" id="titleSize" min="9" max="30" step="0.5" value="15"><span class="thrval" id="tszv">15 pt</span></div>
+                <div class="zoom-style-row"><label data-i18n="lblTitleWeight">Title weight</label><div class="seg" id="segTitleWeight"><button data-v="normal" class="on" data-i18n="optThin">Thin</button><button data-v="bold" data-i18n="optBold">Bold</button></div></div>
+                <button class="tmitem tbtn uset-reset" data-act="resetTitle"><svg class="svi" viewBox="0 0 16 16" aria-hidden="true"><path d="M13 5.6A5.8 5.8 0 1 0 13.6 9"/><path d="M13 2.7v3h-3"/></svg><span data-i18n="btnResetDef">Reset to defaults</span></button>
               </div>
             </div>
             <div class="msep"></div>
@@ -1434,11 +1500,11 @@ html[data-theme="light"] .toolmenu.open .tmpanel{
               <select id="plotFont"><option value="topspin" data-i18n="optTopSpin">Arial</option><option value="mnova" data-i18n="optMNova">Avenir Next</option><option value="sans" data-i18n="optSans">Sans</option><option value="serif" data-i18n="optSerif">Serif</option><option value="mono" data-i18n="optMono">Mono</option></select>
             </div>
             <div class="ctl">
-              <label><span data-i18n="lblAxisDigits">δ-axis decimals</span> <span class="val" id="digv">2</span></label>
+              <label><span data-i18n="lblAxisDigits">δ-axis decimals</span> <span class="val" id="digv">2 桁</span></label>
               <input type="range" id="ppmDigits" min="1" max="6" step="1" value="2">
             </div>
             <div class="ctl">
-              <label><span data-i18n="lblAxisTicks">δ-axis major ticks</span> <span class="val" id="atv">8</span></label>
+              <label><span data-i18n="lblAxisTicks">δ-axis major ticks</span> <span class="val" id="atv">8 本</span></label>
               <input type="range" id="axisTicks" min="3" max="30" step="1" value="15">
             </div>
             <div class="ctl">
@@ -1563,8 +1629,10 @@ html[data-theme="light"] .toolmenu.open .tmpanel{
             <div class="peak-work-heading"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M3 3.5h10M3 8h10M3 12.5h10"/><circle class="display-settings-knob" cx="6" cy="3.5" r="1.7"/><circle class="display-settings-knob" cx="10" cy="8" r="1.7"/><circle class="display-settings-knob" cx="7" cy="12.5" r="1.7"/></svg></span><span data-i18n="peakGroupDisplay">Display settings</span></div>
             <div class="tmtoggles"><button class="tmtog" id="tgPeaks"><span class="eyeic"><svg class="svi" viewBox="0 0 16 16"><path d="M1.5 8S4 3.8 8 3.8 14.5 8 14.5 8 12 12.2 8 12.2 1.5 8 1.5 8z"/><circle cx="8" cy="8" r="2"/><line class="eyeslash" x1="2.5" y1="13.5" x2="13.5" y2="2.5"/></svg></span><span data-i18n="lblShowPeaksMenu">Show peaks</span></button></div>
             <div class="tmrow"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><rect x="2.5" y="2.5" width="11" height="11" rx="2.2"/><path d="M2.5 10l3-3 2.5 2.5L11 6l2.5 2.5"/></svg></span><span data-i18n="lblPeakColor">Peak color</span><input type="color" id="peakColor" value="#B5562A"></div>
-            <div class="tmrow"><span class="tmic">.0</span><span data-i18n="lblPeakDigits">Label decimals</span><input type="range" id="pkDigits" min="1" max="6" step="1" value="2"><span class="thrval" id="pkdigv">2</span></div>
+            <div class="tmrow"><span class="tmic">.0</span><span data-i18n="lblPeakDigits">Label decimals</span><input type="range" id="pkDigits" min="1" max="6" step="1" value="2"><span class="thrval" id="pkdigv">2 桁</span></div>
+            <div class="tmrow" id="rowPeakVScale"><span class="tmic"></span><span data-i18n="lblPeakVScale">Leader height</span><input type="range" id="peakVScale" min="50" max="200" step="5" value="100"><span class="thrval" id="pvsv">100%</span></div>
             <div class="tmstyle"><span data-i18n="lblDisplayStyle">Display style</span><div class="seg" id="segPeakStyle"><button class="on" data-v="style1" data-i18n="optStyle1">Style 1</button><button data-v="style2" data-i18n="optStyle2">Style 2</button></div></div>
+            <button class="tmitem tbtn uset-reset" data-act="resetPeak"><svg class="svi" viewBox="0 0 16 16" aria-hidden="true"><path d="M13 5.6A5.8 5.8 0 1 0 13.6 9"/><path d="M13 2.7v3h-3"/></svg><span data-i18n="btnResetDef">Reset to defaults</span></button>
           </section>
         </div>
       </span>
@@ -1591,8 +1659,10 @@ html[data-theme="light"] .toolmenu.open .tmpanel{
             </div>
             <div class="tmrow"><span class="tmic"></span><span data-i18n="lblIntegColor">Integral color</span><input type="color" id="integColor" value="#2E6FA8"></div>
             <div class="tmrow"><span class="tmic"></span><span data-i18n="lblIntegPos">Height</span><input type="range" id="integShift" min="-30" max="40" step="2" value="0"><span class="thrval" id="ishv">0%</span></div>
-            <div class="tmrow"><span class="tmic"></span><span data-i18n="lblIntegDigits">Decimals</span><input type="range" id="integDigits" min="0" max="4" step="1" value="3"><span class="thrval" id="idgv">3</span></div>
+            <div class="tmrow"><span class="tmic"></span><span data-i18n="lblIntegCurveH">Curve height</span><input type="range" id="integCurveH" min="20" max="100" step="5" value="100"><span class="thrval" id="ichv">100%</span></div>
+            <div class="tmrow"><span class="tmic"></span><span data-i18n="lblIntegDigits">Decimals</span><input type="range" id="integDigits" min="0" max="4" step="1" value="3"><span class="thrval" id="idgv">3 桁</span></div>
             <div class="tmstyle"><span data-i18n="lblDisplayStyle">Display style</span><div class="seg" id="segIntegStyle"><button class="on" data-v="style1" data-i18n="optStyle1">Style 1</button><button data-v="style2" data-i18n="optStyle2">Style 2</button><button data-v="style3" data-i18n="optStyle3">Style 3</button></div></div>
+            <button class="tmitem tbtn uset-reset" data-act="resetInteg"><svg class="svi" viewBox="0 0 16 16" aria-hidden="true"><path d="M13 5.6A5.8 5.8 0 1 0 13.6 9"/><path d="M13 2.7v3h-3"/></svg><span data-i18n="btnResetDef">Reset to defaults</span></button>
           </section>
         </div>
       </span>
@@ -1619,9 +1689,12 @@ html[data-theme="light"] .toolmenu.open .tmpanel{
             <button class="tmtog" id="tgMultSources"><span class="eyeic"><svg class="svi" viewBox="0 0 16 16"><path d="M1.5 8S4 3.8 8 3.8 14.5 8 14.5 8 12 12.2 8 12.2 1.5 8 1.5 8z"/><circle cx="8" cy="8" r="2"/><line class="eyeslash" x1="2.5" y1="13.5" x2="13.5" y2="2.5"/></svg></span><span data-i18n="lblMultSourcesMenu">Show source peak δ</span></button>
           </div>
           <div class="tmrow"><span class="tmic"></span><span data-i18n="lblMultColor">Multiplet color</span><input type="color" id="multColor" value="#7A4A98"></div>
-          <div class="tmrow"><span class="tmic"></span><span data-i18n="lblMultDigits">J decimals</span><input type="range" id="multDigits" min="0" max="3" step="1" value="2"><span class="thrval" id="mdgv">2</span></div>
-          <div class="tmrow"><span class="tmic"></span><span data-i18n="lblMultJStyle">Label display</span><select id="multJStyle"><option value="full" data-i18n="optMultJFull">d + J = X Hz</option><option value="inline" data-i18n="optMultJInline">J = X Hz (d)</option><option value="jonly" data-i18n="optMultJOnly">J = X Hz</option><option value="value" data-i18n="optMultJValue">d + X (number only)</option></select></div>
+          <div class="tmrow"><span class="tmic"></span><span data-i18n="lblMultDigits">J decimals</span><input type="range" id="multDigits" min="0" max="3" step="1" value="2"><span class="thrval" id="mdgv">2 桁</span></div>
+          <div class="tmrow"><span class="tmic"></span><span data-i18n="lblMultPos">Height</span><input type="range" id="multShift" min="-20" max="60" step="2" value="0"><span class="thrval" id="mshv">0%</span></div>
+          <div class="tmrow"><span class="tmic"></span><span data-i18n="lblMultSpan">Tree depth</span><input type="range" id="multVScale" min="40" max="120" step="5" value="100"><span class="thrval" id="mvsv">100%</span></div>
+          <div class="tmrow"><span class="tmic"></span><span data-i18n="lblMultJStyle">Label display</span><select id="multJStyle"><option value="full" data-i18n="optMultJFull">d + J = X Hz</option><option value="inline" data-i18n="optMultJInline">J = X Hz (d)</option><option value="jonly" data-i18n="optMultJOnly">J = X Hz</option><option value="value" data-i18n="optMultJValue">d + X (number only)</option><option value="boxed" data-i18n="optMultJBox">A (d) / δ / J  (boxed)</option></select></div>
           <div class="tmstyle"><span data-i18n="lblTreeStyle">Tree style</span><div class="seg" id="segMultStyle"><button class="on" data-v="style1" data-i18n="optStyle1">Style 1</button><button data-v="style2" data-i18n="optStyle2">Style 2</button></div></div>
+          <button class="tmitem tbtn uset-reset" data-act="resetMult"><svg class="svi" viewBox="0 0 16 16" aria-hidden="true"><path d="M13 5.6A5.8 5.8 0 1 0 13.6 9"/><path d="M13 2.7v3h-3"/></svg><span data-i18n="btnResetDef">Reset to defaults</span></button>
           </section>
         </div>
       </span>
@@ -1698,7 +1771,7 @@ html[data-theme="light"] .toolmenu.open .tmpanel{
               <div class="zoom-style-row" id="minimapPosRow"><label data-i18n="lblMinimapPos">Position</label><div class="seg" id="segMinimapPos"><button class="on" data-v="top" data-i18n="optMinimapTop">Top</button><button data-v="bottom" data-i18n="optMinimapBottom">Bottom</button></div></div>
               <div class="tmrow" id="minimapHRow"><label data-i18n="lblMinimapH">Height</label><input type="range" id="minimapH" min="28" max="200" step="2" value="110"><span class="thrval" id="mmhv">110 px</span></div>
               <div class="zoom-style-row seg-own-row" id="minimapStyleRow"><label data-i18n="lblMinimapStyle">View marker</label><div class="seg" id="segMinimapStyle"><button class="on" data-v="mask" data-i18n="optMinimapMask">Mask</button><button data-v="window" data-i18n="optMinimapWindow">Highlight</button></div></div>
-              <div class="tmrow" id="minimapOpacityRow"><label data-i18n="lblMinimapAlpha">Transparency</label><input type="range" id="minimapAlpha" min="0" max="100" step="1" value="38"><span class="thrval" id="mmav">38 %</span></div>
+              <div class="tmrow" id="minimapOpacityRow"><label data-i18n="lblMinimapAlpha">Transparency</label><input type="range" id="minimapAlpha" min="0" max="100" step="1" value="38"><span class="thrval" id="mmav">38%</span></div>
               <div class="zoom-style-row seg-own-row" id="minimapFrameStyleRow"><label data-i18n="lblMinimapFrame">Frame line</label><div class="seg" id="segMinimapFrame"><button class="on" data-v="solid" data-i18n="optSolid">Solid</button><button data-v="dashed" data-i18n="optDashed">Dashed</button><button data-v="dotted" data-i18n="optDotted">Dotted</button></div></div>
               <div class="tmrow" id="minimapFrameWRow"><label data-i18n="lblMinimapFrameW">Frame width</label><input type="range" id="minimapFrameW" min="0.5" max="4" step="0.1" value="1"><span class="thrval" id="mmfwv">1.0 px</span></div>
               <div class="tmrow" id="minimapColorRow"><label data-i18n="lblMinimapColor">Frame color</label><input type="color" id="minimapColor" value="#3A4750"></div>
@@ -1808,10 +1881,14 @@ html[data-theme="light"] .toolmenu.open .tmpanel{
       <div id="results">
         <div class="rhead" id="rhead">
           <div class="rtitle" id="rtitle"><span class="rtic"><svg class="svi" viewBox="0 0 16 16"><rect x="2" y="2.5" width="12" height="11" rx="1.6"/><path d="M2 6.1h12M6.2 6.1v7.4"/></svg></span><span data-i18n="secResults">Results</span></div>
-          <button class="rtab on" data-tab="peaks"><span data-i18n="tabPeaks">Peaks</span><span class="rcnt"></span></button>
-          <button class="rtab" data-tab="integ"><span data-i18n="tabInteg">Integrals</span><span class="rcnt"></span></button>
-          <button class="rtab" data-tab="mult"><span data-i18n="tabMult">Multiplets</span><span class="rcnt"></span></button>
-          <button class="rtab" data-tab="assign"><span data-i18n="tabAssign">Assign</span><span class="rcnt"></span></button>
+          <!-- タブの絵はツールバーの同じ操作のボタンと同一（覚え直しが要らない）。
+               幅が足りるあいだは非表示で、syncResultsTabMode() が字と入れ替える。 -->
+          <div class="rtabs-segment">
+            <button class="rtab on" data-tab="peaks"><span class="rtic-t" aria-hidden="true"><svg class="svi" viewBox="0 0 24 24"><path d="M3 17h4l2.3-9.5L11.6 17h3.1l2.1-5.2L18.8 17H21"/></svg></span><span class="rtlbl" data-i18n="tabPeaks">Peaks</span><span class="rcnt"></span></button>
+            <button class="rtab" data-tab="integ"><span class="rtic-t" aria-hidden="true"><svg class="svi" viewBox="0 0 24 24"><path d="M15.7 4.3c-.5-1.5-2.2-2.1-3.4-.9-1.1 1-1.1 3.1-1.2 5.3-.1 3.8-.2 7.4-1.5 8.9-1.1 1.3-2.9.6-3.5-.9"/></svg></span><span class="rtlbl" data-i18n="tabInteg">Integrals</span><span class="rcnt"></span></button>
+            <button class="rtab" data-tab="mult"><span class="rtic-t" aria-hidden="true"><svg class="svi" viewBox="0 0 24 24"><line x1="12" y1="3" x2="12" y2="10"/><line x1="12" y1="10" x2="6" y2="14"/><line x1="12" y1="10" x2="18" y2="14"/><line x1="6" y1="14" x2="6" y2="21"/><line x1="18" y1="14" x2="18" y2="21"/></svg></span><span class="rtlbl" data-i18n="tabMult">Multiplets</span><span class="rcnt"></span></button>
+            <button class="rtab" data-tab="assign"><span class="rtic-t" aria-hidden="true"><svg class="svi" viewBox="0 0 24 24"><path d="M20.59 13.41 13.42 20.58a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><circle cx="7" cy="7" r="2.3"/></svg></span><span class="rtlbl" data-i18n="tabAssign">Assign</span><span class="rcnt"></span></button>
+          </div>
           <button class="rdock" id="resDock" title=""></button>
         </div>
         <div class="rselwrap" id="rselwrap" hidden></div>
@@ -1844,10 +1921,10 @@ const I18N={
   manual:"Manual", manualTitle:"Manual — how to use",
   actOpenFolder:"Open folder", actReopenLast:"Reopen last folder", hintDropFolder:"Tip: drag several dataset folders (or one parent folder) onto the window to import them all at once — no prompt.", hintAnalysisState:"Analysis and annotations are saved automatically to each data folder in Chrome or Edge. Use this analysis-data JSON to share, move or explicitly back up the state; open the original data before importing it.",
   lblLang:"Language", lblTheme:"Theme", optDark:"Dark", optLight:"Light",
-  lblZoom:"Zoom", mZoomIn:"⊕ In", mZoomOut:"⊖ Out", lblWheel:"Wheel sensitivity", lblAxisH:"Axis height", lblAxisTicks:"Major ticks", lblAxisMinorTicks:"Minor ticks between majors", lblBaseGap:"Gap to spectrum",
+  lblZoom:"Zoom", mZoomIn:"In", mZoomOut:"Out", lblWheel:"Wheel sensitivity", lblAxisH:"Axis height", lblAxisTicks:"Major ticks", lblAxisMinorTicks:"Minor ticks between majors", lblBaseGap:"Gap to spectrum",
   lblInertia:"Inertia", lblInvert:"Invert", lblHscroll:"H-scroll = pan δ", lblLimitView:"Hide out-of-range",
   lblRange:"δ range", btnApply:"Apply", hdViewVis:"Show / hide",
-  secImages:"Images", btnAddImg:"＋ Insert image", imgItem:"Image",
+  secImages:"Images", imgItem:"Image", ttImgRename:"Click to rename",
   imgHint:"Paste a screenshot (Ctrl+V) or add a PNG. New images stay anchored to the spectrum; use their settings to change this. Click to select · drag its corner or use Image size to resize · Del to remove (when no tool is active).",
   ttImgEye:"Show this image on the spectrum", ttImgBg:"Make background transparent (toggle)", ttImgPin:"Keep this image fixed to the spectrum position", secDisplay:"Display", secData:"Data", ttShowHide:"Show / hide", cpCustom:"Custom", cpOk:"OK", cpCancel:"Cancel",
   lblInsets:"Images", lblNames:"File names", lblTitle:"Title", lblTitleText:"Title text", lblTitleSize:"Title size", lblTitleWeight:"Title weight", optThin:"Thin", optBold:"Bold", lblCutStyle:"Style", optCutWave:"Wave", optCutZig:"Zigzag", optCutSlash:"Solid", lblShowPeaks:"Peaks", lblShowIntegs:"Integrals", lblShowShades:"Shades", lblJTree:"Coupling tree",
@@ -1859,7 +1936,8 @@ const I18N={
   emptyImages:"No images yet. Insert a structure drawing or any picture to place on the plot.",
   thConnFrom:"From δ", thConnTo:"To δ", emptyConn:"No connectors yet. Use the connector tool to drag between two points.", connHint:"Drag two points to add · drag the line itself to move it · Shift-drag an end to change only its length · the two pins fix the height and the δ position (click a row to set each end separately) · click a row × to delete.",
   tAssignGrp:"Assign", lblShowMarks:"Marks", lblShowText:"Text",
-  lblAxisDigits:"Decimals", lblPeakDigits:"Label decimals", lblAxisLineW:"Line width", optAxisWAuto:"Match trace",
+  lblAxisDigits:"Decimals", lblPeakDigits:"Label decimals", lblPeakVScale:"Leader height", lblAxisLineW:"Line width", optAxisWAuto:"Match trace",
+  unitDigits:"{n} dp", unitTicks:"{n} ticks",
   lblAnnotWhere:"Annotations", optAnnotZoom:"Inset", optAnnotMain:"Spectrum", optAnnotBoth:"Both",
   lblShowLines:"Connectors", lblShowZooms:"Zoom views", lblShowLanes:"Dividers between spectra",
   tZoomTxt:"Zoom view", tLineTxt:"Connector", ttZoom:"Drag a δ window → floating magnified view (× to remove)", ttZoomSingle:"Zoom view works with a single spectrum only",
@@ -1921,8 +1999,8 @@ const I18N={
   integGroupCreate:"Create integrals", integGroupDelete:"Delete integrals", actClearAllIntegs:"Delete all integrals", lblShowIntegsMenu:"Show integrals", lblIntegCurveMenu:"Show stair curve",
   multGroupCreate:"Create multiplets", multGroupDelete:"Delete multiplets", actClearAllMults:"Delete all multiplets", lblShowMultsMenu:"Show multiplets", lblMultSourcesMenu:"Show source peak δ",
   actIntegrate:"Integrate (drag range)", actDelSel:"Delete selected", actMark:"Mark", actText:"Text label",
-  actMultPick:"Select peaks (click) / drag range", actMultDefine:"From selected peaks", actMultClearSel:"Clear selection", lblMultColor:"Multiplet color", lblMultDigits:"J decimals", lblMultJStyle:"Label display", optMultJFull:"d + J = X Hz", optMultJInline:"J = X Hz (d)", optMultJOnly:"J = X Hz", optMultJValue:"d + X (number only)", lblTreeStyle:"Tree style", lblMultSources:"Source peak δ", ttEraseMult:"Drag a region to remove multiplets there", msgMultSplit:"Excluded distant peaks; analyzed the largest cluster", msgMultBigJ:"Coupling looks too large — the range may span separate signals",
-  lblPeakColor:"Peak color", lblIntegColor:"Integral color", lblIntegPos:"Height", lblIntegDigits:"Decimals", lineColorLbl:"Color",
+  actMultPick:"Select peaks (click) / drag range", actMultDefine:"From selected peaks", actMultClearSel:"Clear selection", lblMultColor:"Multiplet color", lblMultDigits:"J decimals", lblMultPos:"Height", lblMultSpan:"Tree depth", lblMultJStyle:"Label display", optMultJFull:"d + J = X Hz", optMultJInline:"J = X Hz (d)", optMultJOnly:"J = X Hz", optMultJValue:"d + X (number only)", optMultJBox:"A (d) / δ / J  (boxed)", lblTreeStyle:"Tree style", lblMultSources:"Source peak δ", ttEraseMult:"Drag a region to remove multiplets there", msgMultSplit:"Excluded distant peaks; analyzed the largest cluster", msgMultBigJ:"Coupling looks too large — the range may span separate signals",
+  lblPeakColor:"Peak color", lblIntegColor:"Integral color", lblIntegPos:"Height", lblIntegCurveH:"Curve height", lblIntegDigits:"Decimals", lineColorLbl:"Color",
   lblDisplayStyle:"Display style", optStyle1:"Style 1", optStyle2:"Style 2", optStyle3:"Style 3", lblIntegCurve:"Stair curve",
   tErasePk:"⌫⋀ Reset peaks", tEraseInt:"⌫∫ Reset integrals", btnResetDef:"Reset to defaults",
   optOverlay:"Overlay", optStacked:"Stacked", lblLayout:"Layout", lblOverflow:"Allow peak overflow", lblModeHint:"Real = phased absorption (normal) · Magnitude = phase-independent, always positive", toolNeedOne:"No spectrum visible",
@@ -1979,10 +2057,10 @@ const I18N={
   manual:"マニュアル", manualTitle:"マニュアル（使い方）",
   actOpenFolder:"フォルダを開く", actReopenLast:"前のフォルダを再読み込み", hintDropFolder:"ヒント：複数のデータフォルダ（または親フォルダ）をまとめてウィンドウにドラッグ&ドロップすれば、確認なしで一度に読み込めます。", hintAnalysisState:"Chrome / Edge では、解析・注釈状態は各データフォルダへ自動保存されます。この解析データJSONは共有・別PCへの移動・明示的なバックアップ用です。元データを開いた後に読み込んでください。",
   lblLang:"言語", lblTheme:"テーマ", optDark:"ダーク", optLight:"ライト",
-  lblZoom:"ズーム", mZoomIn:"⊕ 拡大", mZoomOut:"⊖ 縮小", lblWheel:"ホイール感度", lblAxisH:"軸の高さ", lblAxisTicks:"主目盛の数", lblAxisMinorTicks:"補助目盛の数", lblBaseGap:"スペクトルとの間隔",
+  lblZoom:"ズーム", mZoomIn:"拡大", mZoomOut:"縮小", lblWheel:"ホイール感度", lblAxisH:"軸の高さ", lblAxisTicks:"主目盛の数", lblAxisMinorTicks:"補助目盛の数", lblBaseGap:"スペクトルとの間隔",
   lblInertia:"ホイール慣性", lblInvert:"向きを反転", lblHscroll:"横スクロールでδ移動", lblLimitView:"データ範囲外を表示しない",
   lblRange:"δ 表示範囲", btnApply:"適用", hdViewVis:"表示・非表示",
-  secImages:"画像", btnAddImg:"＋ 画像を挿入", imgItem:"画像",
+  secImages:"画像", imgItem:"画像", ttImgRename:"クリックして名前を変える",
   imgHint:"スクリーンショットを貼り付け（Ctrl+V）またはPNGを追加。新しい画像はスペクトル上の位置に固定されます（設定で変更可）。クリックで選択し、角ドラッグまたは設定内の［画像の大きさ］で拡縮・Delで削除（ツール未選択時）。",
   ttImgEye:"この画像をスペクトル上に表示", ttImgBg:"背景を透過（クリックで切替）", ttImgPin:"この画像をスペクトル上の位置に固定", secDisplay:"表示", secData:"データ", ttShowHide:"表示 / 非表示", cpCustom:"カスタム", cpOk:"OK", cpCancel:"キャンセル",
   lblInsets:"画像を表示", lblNames:"ファイル名", lblTitle:"タイトル", lblTitleText:"タイトル文字", lblTitleSize:"タイトルの大きさ", lblTitleWeight:"タイトルの太さ", optThin:"細字", optBold:"太字", lblCutStyle:"スタイル", optCutWave:"波線", optCutZig:"ジグザグ", optCutSlash:"実線", lblShowPeaks:"ピーク", lblShowIntegs:"積分", lblShowShades:"塗りつぶし", lblJTree:"カップリングツリー",
@@ -1994,7 +2072,8 @@ const I18N={
   emptyImages:"画像はまだありません。構造式などを挿入するとプロット上に置けます。",
   thConnFrom:"始点 δ", thConnTo:"終点 δ", emptyConn:"コネクタはまだありません。破線コネクタツールで2点をドラッグして追加します。", connHint:"2点をドラッグで追加・線をつまんで移動・端点を Shift+ドラッグで角度そのまま長さだけ変更・2つのピンで高さと δ位置を固定（行をクリックすると端点ごとに指定）・行の×で個別削除。",
   tAssignGrp:"帰属", lblShowMarks:"マーク", lblShowText:"テキスト",
-  lblAxisDigits:"小数桁", lblPeakDigits:"ラベルの小数桁", lblAxisLineW:"線の太さ", optAxisWAuto:"トレースに連動",
+  lblAxisDigits:"小数桁", lblPeakDigits:"ラベルの小数桁", lblPeakVScale:"引き出し線の縦幅", lblAxisLineW:"線の太さ", optAxisWAuto:"トレースに連動",
+  unitDigits:"{n} 桁", unitTicks:"{n} 本",
   lblAnnotWhere:"注釈の表示先", optAnnotZoom:"拡大図", optAnnotMain:"元スペクトル", optAnnotBoth:"両方",
   lblShowLines:"破線コネクタ", lblShowZooms:"拡大図", lblShowLanes:"スペクトル間の区切り線",
   tZoomTxt:"拡大図", tLineTxt:"破線コネクタ", ttZoom:"δ範囲をドラッグ→拡大図をフロート配置（×で削除）", ttZoomSingle:"拡大図は単一スペクトルのときのみ使えます",
@@ -2056,8 +2135,8 @@ const I18N={
   integGroupCreate:"積分する", integGroupDelete:"積分を削除する", actClearAllIntegs:"すべての積分を削除", lblShowIntegsMenu:"積分を表示", lblIntegCurveMenu:"階段カーブを表示",
   multGroupCreate:"多重線を作成する", multGroupDelete:"多重線を削除する", actClearAllMults:"すべての多重線を削除", lblShowMultsMenu:"多重線を表示", lblMultSourcesMenu:"元ピークの δ を表示",
   actIntegrate:"範囲選択で積分", actDelSel:"選択した積分を削除", actMark:"マーク", actText:"テキストラベル",
-  actMultPick:"ピークを選択（クリック）／範囲ドラッグ", actMultDefine:"選択したピークから作成", actMultClearSel:"選択をクリア", lblMultColor:"多重線の色", lblMultDigits:"J小数桁", lblMultJStyle:"ラベルの表示", optMultJFull:"d と J = X Hz", optMultJInline:"J = X Hz (d)", optMultJOnly:"J = X Hz", optMultJValue:"d と X（数値のみ）", lblTreeStyle:"ツリーの形状", lblMultSources:"元ピークの δ", ttEraseMult:"範囲をドラッグして多重線を消去", msgMultSplit:"離れたピークを除外し、最も大きな一群で解析しました", msgMultBigJ:"結合定数が大きすぎます。別シグナルをまたいだ範囲かもしれません",
-  lblPeakColor:"ピークの色", lblIntegColor:"積分の色", lblIntegPos:"高さ", lblIntegDigits:"小数桁", lineColorLbl:"色",
+  actMultPick:"ピークを選択（クリック）／範囲ドラッグ", actMultDefine:"選択したピークから作成", actMultClearSel:"選択をクリア", lblMultColor:"多重線の色", lblMultDigits:"J小数桁", lblMultPos:"高さ", lblMultSpan:"縦幅", lblMultJStyle:"ラベルの表示", optMultJFull:"d と J = X Hz", optMultJInline:"J = X Hz (d)", optMultJOnly:"J = X Hz", optMultJValue:"d と X（数値のみ）", optMultJBox:"A (d) / δ / J（枠つき）", lblTreeStyle:"ツリーの形状", lblMultSources:"元ピークの δ", ttEraseMult:"範囲をドラッグして多重線を消去", msgMultSplit:"離れたピークを除外し、最も大きな一群で解析しました", msgMultBigJ:"結合定数が大きすぎます。別シグナルをまたいだ範囲かもしれません",
+  lblPeakColor:"ピークの色", lblIntegColor:"積分の色", lblIntegPos:"高さ", lblIntegCurveH:"縦幅", lblIntegDigits:"小数桁", lineColorLbl:"色",
   lblDisplayStyle:"表示スタイル", optStyle1:"スタイル1", optStyle2:"スタイル2", optStyle3:"スタイル3", lblIntegCurve:"階段カーブ",
   tErasePk:"⌫⋀ ピーク消去", tEraseInt:"⌫∫ 積分消去", btnResetDef:"デフォルトに戻す",
   optOverlay:"重ね", optStacked:"並べる", lblLayout:"レイアウト", lblOverflow:"ピークの貫通を許可", lblModeHint:"実部＝位相補正した通常の表示／絶対値＝位相に依存せず常に正（線幅は広め）", toolNeedOne:"スペクトルが表示されていません",
@@ -2118,6 +2197,7 @@ function applyI18n(){
     if(el.classList.contains('grphint')){ el.setAttribute('data-tip',txt); el.removeAttribute('title'); }
     else el.title=txt; });
   document.querySelectorAll('[data-i18n-popover-title]').forEach(el=>el.dataset.title=t(el.getAttribute('data-i18n-popover-title')));
+  if(typeof syncResultsTabMode==='function') syncResultsTabMode();   // ja/en でラベルの長さが変わる
   const tt={tCalib:'ttCalib',tPeaks:'ttPeaks',tInteg:'ttInteg',tMult:'ttMult',intDown:'ttIntDown',
     intUp:'ttIntUp',intAuto:'ttAuto',zoomIn:'ttZoomIn',zoomOut:'ttZoomOut',zoomReset:'ttFull',
     btnUndo:'ttUndo',btnRedo:'ttRedo',tMark:'ttMark',tAssign:'ttAssign',
@@ -2125,6 +2205,10 @@ function applyI18n(){
   for(const id in tt){const el=document.getElementById(id);if(el)el.title=t(tt[id]);}
   document.documentElement.lang=LANG;
   if(A()){ setMeta(A().par||{}); syncControls(); }
+  /* スライダーの「値」には語が入るものがある（「2 桁」「15 本」「なし」「トレースに連動」）。
+     data-i18n が付いているのはラベル側だけなので、値は syncUIControls に引き直させる。
+     これを呼ばないと、言語を切り替えても値だけ前の言語のまま残る。 */
+  if(typeof syncUIControls==='function') syncUIControls();
   renderResults(); renderList();
   if(typeof renderChangelog==='function'){ const m=document.getElementById('clogModal');
     if(m&&m.classList.contains('show')) renderChangelog(); }
@@ -2140,7 +2224,9 @@ function applyI18n(){
   let cur=null;
   function show(el){
     const txt=el.getAttribute('data-tip'); if(!txt){hide();return;}
-    tip.textContent=txt; tip.style.left='0px'; tip.style.top='0px'; tip.classList.add('show');
+    /* data-tip は訳し終えた文を入れる決まりだが、i18n の見出し語が紛れても
+       「ttClose」と生で出さないよう、辞書に載っている語だけは引き直す。 */
+    tip.textContent=(I18N.en&&I18N.en[txt])?t(txt):txt; tip.style.left='0px'; tip.style.top='0px'; tip.classList.add('show');
     const r=el.getBoundingClientRect(), tr=tip.getBoundingClientRect();
     let left=r.left+r.width/2-tr.width/2;
     left=Math.max(6,Math.min(left,innerWidth-tr.width-6));
@@ -2291,17 +2377,17 @@ function paletteColors(name, n){
 // preview swatch strip (6 samples) for a palette name
 function paletteSwatch(name){ return paletteColors(name,6); }
 const UI_REV=3;              // 既定値を変えたら上げる（古い保存状態の移行に使う）
-const DEFAULTS={lineW:0.5, wheelSens:1, wheelInertia:false, wheelInvert:false, hscroll:true, limitView:true, axisPad:50, axisTicks:15, axisMinorTicks:4, axisW:null, baseGap:0.035, annotWhere:'zoom', minimapH:110, minimapStyle:'mask', minimapPos:'top', minimapColor:null, minimapMaskT:38, minimapWinT:88, minimapFrameStyle:'solid', minimapFrameW:1,
-  fontScale:1, nameScale:1, axisScale:1, markSize:4.6, markColor:'#0E6E7E', shadeColor:'#D33A2C', textColor:'#000000', textSize:10.5, textBold:false, textItalic:false, textUnderline:false, textFontFam:'', lineColor:null, lineStyle:'dashed', connW:0.5, lineArrow:'none', imageBorder:false, imageBorderColor:'#3A4750', imageBorderWidth:1, imageBorderStyle:'solid', integDigits:3, multColor:null, multDigits:2, multJStyle:'full', multStyle:'style1', plotFont:'topspin', ppmDigits:2, pkDigits:2,
+const DEFAULTS={lineW:0.5, wheelSens:1, wheelInertia:false, wheelInvert:false, hscroll:true, limitView:true, cursorGuide:true, cursorColor:null, cursorStyle:'dashed', cursorWidth:1, cursorOpacity:.55, axisPad:50, axisTicks:15, axisMinorTicks:4, axisW:null, baseGap:0.035, annotWhere:'zoom', minimapH:110, minimapStyle:'mask', minimapPos:'top', minimapColor:null, minimapMaskT:38, minimapWinT:88, minimapFrameStyle:'solid', minimapFrameW:1,
+  fontScale:1, nameScale:1, axisScale:1, markSize:4.6, markColor:'#0E6E7E', shadeColor:'#D33A2C', textColor:'#000000', textSize:10.5, textBold:false, textItalic:false, textUnderline:false, textFontFam:'', lineColor:null, lineStyle:'dashed', connW:0.5, lineArrow:'none', imageBorder:false, imageBorderColor:'#3A4750', imageBorderWidth:1, imageBorderStyle:'solid', integDigits:3, integShift:0, integCurveH:1, peakColor:null, peakVScale:1, integColor:null, multColor:null, multDigits:2, multJStyle:'full', multStyle:'style1', multShift:0, multVScale:1, plotFont:'topspin', ppmDigits:2, pkDigits:2,
   zoomBorderColor:null, zoomBorderWidth:1, zoomLeaderStyle:'dashed', peakStyle:'style1', integStyle:'style1', showIntegCurve:true,
   showTitle:false, figTitle:null, titleSize:15, titleBold:false, cutStyle:'wave', cutColor:null, cutWidth:0.5, cutWave:6, cutSpan:2, cutGap:10, cutOpacity:0.9,
   laneStyle:'solid', laneColor:'#000000', laneWidth:0.5, laneTransp:0,
   floatPanels:false,
   pngScale:2};
 const S={ spectra:[], active:-1, view:{pHi:1,pLo:0}, spectrumViews:{}, yscale:1, tool:null,
-  lineW:0.5, wheelSens:1, wheelInertia:false, wheelInvert:false, hscroll:true, limitView:true, selInteg:-1, selImg:-1, selZoom:-1, selLine:-1,
-  selPeak:-1, selPeaks:[], selMults:[], thr:0.05, axisPad:50, axisTicks:15, axisMinorTicks:4, axisW:null, baseGap:0.035, annotWhere:'zoom', integShift:0,
-  peakColor:null, integColor:null, peakStyle:'style1', integStyle:'style1', showIntegCurve:true, multColor:null, multDigits:2, multJStyle:'full', multStyle:'style1', showMultSources:false,
+  lineW:0.5, wheelSens:1, wheelInertia:false, wheelInvert:false, hscroll:true, limitView:true, cursorGuide:true, cursorColor:null, cursorStyle:'dashed', cursorWidth:1, cursorOpacity:.55, selInteg:-1, selImg:-1, selZoom:-1, selLine:-1,
+  selPeak:-1, selPeaks:[], selMults:[], thr:0.05, axisPad:50, axisTicks:15, axisMinorTicks:4, axisW:null, baseGap:0.035, annotWhere:'zoom', integShift:0, integCurveH:1, peakVScale:1,
+  peakColor:null, integColor:null, peakStyle:'style1', integStyle:'style1', showIntegCurve:true, multColor:null, multDigits:2, multJStyle:'full', multStyle:'style1', multShift:0, multVScale:1, showMultSources:false,
   markColor:'#0E6E7E', shadeColor:'#D33A2C', markSize:4.6, textColor:'#000000', textSize:10.5, textBold:false, textItalic:false, textUnderline:false, textFontFam:'', lineColor:null, lineStyle:'dashed', connW:0.5, lineArrow:'none', imageDefaultScale:1, imageBorder:false, imageBorderColor:'#3A4750', imageBorderWidth:1, imageBorderStyle:'solid', integDigits:3, showInsets:true, showNames:true, showPeaks:true, showIntegs:true, showShades:true, showMarks:true, showText:true,
   resTab:'peaks', asgSub:'text', asgOpen:{}, docked:true, secOpen:{}, floatPanels:false, floatPos:{}, nextColor:0, layout:'stack', palette:'wbHC', paletteReverse:false, monoBase:'#0E6E7E', ppmDigits:2,
   pkDigits:2, showMults:true, showJTree:true, showThresholdLine:true, showLanes:false, laneOverflow:false, showLines:true, showZooms:true, lines:[], zooms:[],
@@ -2733,6 +2819,80 @@ function analyzeMultiplet(sp,pA,pB){
 
 /* ===================== image insets (pasted pictures on the canvas) ===================== */
 let IMGCACHE={};      // image id → HTMLImage
+let IMGTHUMB={};      // image id → 余白を落としたサムネイルの dataURL（'' = 作れなかった）
+/* 一覧のサムネイルは、元画像をそのまま縮めると使いものにならない。構造式は
+   「広い余白の中に細い線」なので、40px の枠のほとんどが余白で埋まる。
+   四隅の色を地とみなし、そこから離れた画素の外接矩形で切ってから縮める。
+   結果は id で憶える（描き直しのたびに走らせない）。src を差し替える
+   toggleImgBg() と、画像を消すところで、IMGCACHE と一緒にこの記憶も捨てる。 */
+function imgThumbSrc(rec){
+  if(!rec||!rec.src) return '';
+  const hit=IMGTHUMB[rec.id];
+  if(hit!==undefined) return hit||rec.src;   // null＝作成中、''＝作れなかった → 元画像
+  IMGTHUMB[rec.id]=null;
+  const im=new Image();
+  im.onload=()=>{ IMGTHUMB[rec.id]=imgMakeThumb(im);
+    if(S.resTab==='assign'&&typeof renderResults==='function') renderResults(); };
+  im.onerror=()=>{ IMGTHUMB[rec.id]=''; };
+  im.src=rec.src;
+  return rec.src;
+}
+function imgMakeThumb(im){
+  try{
+    const w=im.naturalWidth, h=im.naturalHeight; if(!w||!h) return '';
+    const cv=document.createElement('canvas'); cv.width=w; cv.height=h;
+    const x=cv.getContext('2d',{willReadFrequently:true}); x.drawImage(im,0,0);
+    const d=x.getImageData(0,0,w,h).data;
+    const at=(i,j)=>{ const k=(j*w+i)*4; return [d[k],d[k+1],d[k+2],d[k+3]]; };
+    const bg=at(0,0);
+    /* 透明は地。地が透明なら、不透明な画素はすべて中身とみなす。 */
+    const isBg=(i,j)=>{ const q=at(i,j);
+      if(q[3]<16) return true;
+      if(bg[3]<16) return false;
+      return Math.abs(q[0]-bg[0])+Math.abs(q[1]-bg[1])+Math.abs(q[2]-bg[2])<36; };
+    let x0=w,y0=h,x1=-1,y1=-1;
+    const st=Math.max(1,Math.round(Math.min(w,h)/400));   // 端から端まで見ない（間引く）
+    for(let j=0;j<h;j+=st) for(let i=0;i<w;i+=st)
+      if(!isBg(i,j)){ if(i<x0)x0=i; if(i>x1)x1=i; if(j<y0)y0=j; if(j>y1)y1=j; }
+    if(x1<0) return '';                                   // 一色。切らずに元画像を使う
+    const m=Math.round(Math.max(w,h)*0.02);               // 間引きの取りこぼしぶんの余裕
+    x0=Math.max(0,x0-m); y0=Math.max(0,y0-m);
+    x1=Math.min(w-1,x1+m); y1=Math.min(h-1,y1+m);
+    /* 40px の枠と 220px の下見の両方をこの 1 枚でまかなう（下見も余白を落としたい）。
+       画面の倍率ぶんを見て長辺 440px。持つのはメモリの上だけで、保存はしない。 */
+    const cw=x1-x0+1, ch=y1-y0+1, sc=Math.min(1,440/Math.max(cw,ch));
+    const out=document.createElement('canvas');
+    out.width=Math.max(1,Math.round(cw*sc)); out.height=Math.max(1,Math.round(ch*sc));
+    const ox=out.getContext('2d');
+    ox.fillStyle='#fff'; ox.fillRect(0,0,out.width,out.height);   // 透過は白地に落とす
+    ox.imageSmoothingQuality='high';
+    ox.drawImage(im,x0,y0,cw,ch,0,0,out.width,out.height);
+    return out.toDataURL();
+  }catch(_){ return ''; }        // getImageData が使えない場合など
+}
+/* 行にホバーしたときの下見。position:fixed で body 直下に出す。行の中に absolute で
+   置くと、サイドバー（overflow-x:hidden）やフロートのパネル（overflow:hidden）に
+   切られて端が欠ける。 */
+let IMGPV=null;
+function showImgPreview(rec,el){
+  if(!rec||!rec.src||!el) return;
+  if(!IMGPV){ IMGPV=document.createElement('div'); IMGPV.id='imgpv';
+    IMGPV.innerHTML='<img alt="">'; document.body.appendChild(IMGPV); }
+  const im=IMGPV.querySelector('img');
+  /* 下見も余白を落とした側を出す。落とせなかった画像は元のまま。 */
+  const src=IMGTHUMB[rec.id]||rec.src;
+  if(im.getAttribute('src')!==src) im.setAttribute('src',src);
+  IMGPV.classList.add('show');
+  const place=()=>{
+    if(!IMGPV.classList.contains('show')) return;
+    const r=el.getBoundingClientRect(), b=IMGPV.getBoundingClientRect();
+    let x=r.right+10; if(x+b.width>innerWidth-8) x=Math.max(8,r.left-b.width-10);
+    let y=Math.min(Math.max(8,r.top-8), Math.max(8,innerHeight-b.height-8));
+    IMGPV.style.left=Math.round(x)+'px'; IMGPV.style.top=Math.round(y)+'px';
+  };
+  place(); im.onload=place;      // 縦横が分かってから置き直す
+}
+function hideImgPreview(){ if(IMGPV) IMGPV.classList.remove('show'); }
 let IMGBOXES=[];      // rebuilt each draw: {ki,x,y,w,h}
 let MARKBOXES=[];     // rebuilt each draw: {sp,mkey,cx,yD,lt,lh} (free ● entries carry .free instead of mkey/pks)
 let TEXTBOXES=[];     // rebuilt each draw: free text labels {sp,ti,cx,yD,w,lt,lh}
@@ -2781,7 +2941,7 @@ function loadImageFile(blob){
 }
 function removeImage(k){ const sp=A(); if(!sp) return;
   const im=imgsOf(sp); if(!im[k]) return;
-  delete IMGCACHE[im[k].id];
+  delete IMGCACHE[im[k].id]; delete IMGTHUMB[im[k].id];
   im.splice(k,1);
   if(S.selImg===k) S.selImg=-1; else if(S.selImg>k) S.selImg--;
   saveAnnot(sp); renderImgs(); draw(); }
@@ -2813,12 +2973,13 @@ async function toggleImgBg(sp,k){
   pushUndo();
   if(rec.bgRemoved){                                  // revert to the original
     if(rec.origSrc){ rec.src=rec.origSrc; delete rec.origSrc; }
-    rec.bgRemoved=false; delete IMGCACHE[rec.id]; saveAnnot(sp); renderImgs(); draw(); return;
+    rec.bgRemoved=false; delete IMGCACHE[rec.id]; delete IMGTHUMB[rec.id];
+    saveAnnot(sp); renderImgs(); draw(); return;
   }
   const orig=rec.src, out=await keyOutBg(orig, rec.bgTol||50);
   if(!out){ toast(t('msgBgFail')); return; }
   rec.origSrc=orig; rec.src=out; rec.bgRemoved=true;
-  delete IMGCACHE[rec.id]; saveAnnot(sp); renderImgs(); draw();
+  delete IMGCACHE[rec.id]; delete IMGTHUMB[rec.id]; saveAnnot(sp); renderImgs(); draw();
 }
 function drawInsets(){
   IMGBOXES=[];
@@ -3381,7 +3542,9 @@ function geomFor(sp, li){
     //           baseline→目盛 8 ＋ (目盛7+リーダー9+パッド6+下余白4) ＋ ラベル長
     return Math.min(Math.max(24, 8+(7+9+6+4)*k+tw), laneH*0.45); };
   if(li.mode==='stack'){ const k=li.vs.indexOf(sp), laneH=li.laneH, top=top0+k*laneH, bottom=top+laneH;
-    const peakBand=style2Peak?Math.min(82,laneH*0.32):0;
+    const peakBand0=style2Peak?Math.min(82,laneH*0.32):0;
+    // 引き出し線の縦幅スライダー。帯そのものを伸縮させるので、折れ点も先端も比例して動く。
+    const peakBand=peakBand0?Math.min(laneH*0.55, peakBand0*peakVScale()):0;
     const integBand=style2Integ?integ2Band(laneH):style3Integ?integ3Band(laneH):0;
     const head=headroomFor(sp);
     // 「δ軸とスペクトルの間隔」と積分バンドは、どちらもトレースを δ軸 から離すための
@@ -3390,17 +3553,25 @@ function geomFor(sp, li){
     const base=bandInteg?bottom-Math.max(integBand,gapPx):bottom-Math.max(LANE_GAP,gapPx);
     const full=(style2Peak||bandInteg)?Math.max(12,Math.min(laneH*0.78,base-top-peakBand-6))
                                       :Math.max(12, base-top-head);
-    return {top, bottom, base, full, peakBand, integBand}; }
+    return {top, bottom, base, full, peakBand, peakBand0, integBand}; }
   // single spectrum (overlay): pull baseline up off the δ-axis so it isn't cramped
   const laneH=plotH(), bottom=top0+laneH, gap=(S.baseGap==null?0.035:S.baseGap);
-  const peakBand=style2Peak?Math.min(88,laneH*0.28):0;
+  const peakBand0=style2Peak?Math.min(88,laneH*0.28):0;
+  const peakBand=peakBand0?Math.min(laneH*0.5, peakBand0*peakVScale()):0;
   const integBand=style2Integ?integ2Band(laneH):style3Integ?integ3Band(laneH):0;
   // 積分バンドと「δ軸との間隔」は同じ役目なので大きい方を採る（足すと空白が二重になる）
   const gapPx=laneH*gap;
   const base=bottom-(bandInteg?Math.max(integBand,gapPx):gapPx);
   const full=(style2Peak||bandInteg)?Math.max(20,Math.min(laneH*0.88,base-top0-peakBand-8)):laneH*0.88;
-  return {top:top0, bottom, base, full, peakBand, integBand};
+  return {top:top0, bottom, base, full, peakBand, peakBand0, integBand};
 }
+/* 積分の階段カーブの縦幅（0.2〜1、1 が従来の高さ）。描画とリセット判定の両方が読む。 */
+function integCurveH(){ const v=S.integCurveH; return (typeof v==='number'&&isFinite(v))?Math.max(.2,Math.min(1,v)):1; }
+/* スタイル2 のピーク引き出し線（縦→斜め→縦）の縦幅（0.5〜2、1 が従来の高さ）。
+   多重線の multVScale と同じく、3 本の線が 1 本の帯を分け合っているので倍率は 1 つだけ。
+   書体の大小は「帯が狭いか」で決まるが、その判定には倍率をかける前の peakBand0 を使う。
+   ここに倍率後の値を渡すと、縦幅を詰めただけでラベルまで小さくなってしまう。 */
+function peakVScale(){ const v=S.peakVScale; return (typeof v==='number'&&isFinite(v))?Math.max(.5,Math.min(2,v)):1; }
 function ysc(sp){ const base=(sp&&sp.yscale)||1; return (VP&&VP.vmul)?base*VP.vmul:base; }
 function valueAtY(sp,y){ const g=geomFor(sp,laneInfo());
   return (g.base-y)/(g.full*ysc(sp))*sp.gmax; }
@@ -3425,6 +3596,18 @@ function strokeDash(style){
   if(style==='dashdot') return [7,3,1.5,3];
   if(style==='dashed') return [6,4];
   return [];
+}
+/* The cursor guide needs a tighter dash than annotation connectors so it remains
+   readable without competing with fine NMR peaks. */
+function cursorDash(style){
+  if(style==='dotted') return [1,3];
+  if(style==='dashdot') return [5,3,1,3];
+  if(style==='dashed') return [3,3];
+  return [];
+}
+function cursorGuideColor(){
+  const color=S.cursorColor || css('--axis') || '#3A4750';
+  return /^#[0-9a-f]{3}(?:[0-9a-f]{3})?$/i.test(color)?color:'#3A4750';
 }
 /* sigKey は生データを 4096 点舐めるので、その配列が挿し替わらない限り使い回す */
 function spKey(sp){ if(!sp) return null;
@@ -3587,7 +3770,31 @@ function lineHit(x,y){ // returns index of a connector whose body is near (x,y)
    第1候補（右・移動0）で重なりが 0 ならそのまま置くので、干渉もピーク被りも
    ない多重線は従来と同じ位置に描かれる。
    検証は mult-label-overlap-verify.html（現行移植と並べて重なり面積を測る）。 */
-const JW={text:3, line:1, peak:1.8, side:0.06, move:0.10, dyMax:6, padX:8, padY:2};
+const JW={text:3, line:1, peak:1.8, side:0.06, move:0.10, hold:3, jump:0.10, dwell:350, dyMax:6, padX:8, padY:2};
+/* 直前に選んだ置き方を覚えておく（チカチカ止め）。候補のスコアは毎フレーム作り直すので、
+   放っておくとパンのたびに左右の勝敗が入れ替わり、J 値ブロックが行ったり来たりする
+   （2026-09-08 のユーザー指摘）。
+   **閾値（前回位置に下駄を履かせるヒステリシス）では直らない。** 実測すると、勝敗が
+   1 コマごとに入れ替わる場面での揺れ幅が、本当に乗り換えるべき場面の差より大きい。
+   つまりノイズ > 信号なので、閾値をどこに置いても「チカチカが残る」か「悪い側に
+   居座る」かのどちらかにしかならない（実際、下駄 4% で J 値が溶媒ピークの上に
+   居座った）。
+   そこで **持続で決める**。挑戦者が勝ったコマで +1、前回位置が勝ったコマで −1 する
+   漏れ積分を持ち、+JW.hold に達したときだけ乗り換える。1 コマおきに勝ったり負けたり
+   する震えは差し引き 0 で永久に乗り換えず、一貫して良い置き方だけが数コマで通る。
+   前回位置が今フレームでは置けない（枠外）ときだけ即座に移す。差が JW.jump×矩形面積 を
+   超えてはっきり良いときは積分を待たずに確定してよいが、それでも次の JW.dwell(ms) が
+   経つまでは動かさない。**この最短間隔が「速く切り替わる」への直接の歯止め**で、
+   積分をすり抜けるゆっくりした揺れ（2:1 くらいの偏り）が残っても、見た目の
+   ちらつきにはならない。
+   **数えるのは「表示が実際に動いたコマ」だけ**（`sig`）。ここを見ないと、カーソル線の
+   引き直しのように表示が同じままの再描画でも積分が進み、ゆっくり操作したときに
+   一瞬で乗り換えてしまう（2026-09-08、hold 方式の初版がこれで素通りしていた）。
+   表示が同じなら選び直さず前回の位置をそのまま使う＝静止画面では絶対に動かない。
+   多重線オブジェクトをキーにした WeakMap なので、消した多重線の記憶は自動で落ちる。
+   本図と各拡大図は幾何が違うので、描画先（JT_CTX）ごとに別々に覚える。 */
+const JT_PICK=new WeakMap();
+let JT_CTX='main';
 function jtOv(a,b){ const w=Math.min(a.x1,b.x1)-Math.max(a.x0,b.x0), h=Math.min(a.y1,b.y1)-Math.max(a.y0,b.y0);
   return (w>0&&h>0)?w*h:0; }
 function jtArea(r){ return Math.max(0,r.x1-r.x0)*Math.max(0,r.y1-r.y0); }
@@ -3631,16 +3838,40 @@ function jtEnvArea(r, E){
 }
 /* ツリー1本ぶんの幾何とラベルを組み立てる（描画はまだしない）。
    高さの決め方（labelRoom / leavesY / levelH / topY）は従来と同じ式。 */
+/* 多重線の見出し記号（A, B, C, …）。低磁場側（δ の大きい側）から順に振る。
+   枠つきラベル（multJStyle='boxed'、MestReNova の表示を参考にしたもの）で使う。
+   26 本を超えたら AA, AB … と桁を増やす。 */
+function multLetter(i){
+  let s=''; i=Math.max(0, i|0);
+  do { s=String.fromCharCode(65+(i%26))+s; i=Math.floor(i/26)-1; } while(i>=0);
+  return s;
+}
+/* 記号の割り当ては表示範囲に依存させない（パンやズームで A/B が入れ替わると読めない）。
+   非表示の多重線は飛ばして、残りに連番で振る。 */
+function multLetters(sp){
+  const map=new WeakMap();
+  (sp.multiplets||[]).filter(m=>!m.hidden).slice()
+    .sort((a,b)=>b.center-a.center)
+    .forEach((m,i)=>map.set(m, multLetter(i)));
+  return map;
+}
 function jtBuild(sp, li){
   const trees=[], VW=curView(), mhz=refMHz(sp)||500;
   const railList=RAILHEAD.filter(r=>r.sp===sp);   // ピーク列の中で見出しに割り当たった位置
   const g=geomFor(sp,li), d=dispOf(sp);
   const fsc=(S.fontScale||1), fpx=11*fsc, cpx=9.5*fsc, jpx=9.5*fsc;
   const st2=S.multStyle==='style2';
-  const labelStyle=['full','inline','jonly','value'].includes(S.multJStyle)?S.multJStyle:'full';
+  /* ツリーの縦の丈をまとめて縮める倍率（「縦幅」スライダー）。段・幹・足の 3 つは
+     ツリー1本の縦を分け合っているので、別々に持たせず 1 つの倍率で比例させる。
+     こうしないと「段だけ詰めたのに足が長くて薄く見えない」が起きる。 */
+  const vsc=Math.max(.4, Math.min(1.2, S.multVScale||1));
+  const LEVEL_H=20*vsc, STEM_H=6*vsc;
+  const labelStyle=['full','inline','jonly','value','boxed'].includes(S.multJStyle)?S.multJStyle:'full';
+  const boxed=(labelStyle==='boxed');
+  const LETTERS=boxed?multLetters(sp):null;
   // ピーク検出の δ ラベルとまったく同じ書体（style2 で帯が狭いときだけ 8.5px）。
   // 列を共有するときは、混雑で縮んだ実際の書体（rh.font）をそのまま使う。
-  const dFont0=plotFont(Math.max(22, g.peakBand||64)<48 ? 8.5 : 10);
+  const dFont0=plotFont(Math.max(22, g.peakBand0||g.peakBand||64)<48 ? 8.5 : 10);
   const jFont=plotFont(9.5);
   (sp.multiplets||[]).forEach((m,mi)=>{
     if(m.hidden || !annotAt(m.center)) return;
@@ -3664,13 +3895,14 @@ function jtBuild(sp, li){
        同じ字種・同じ色のラベルが片方だけ横書きだと揃わないため。多重度は d/dd/t と
        1〜3 字しかなく、回すと「回っていること」だけが目立つので横書きのまま残す。
        並びは上から δ（回転・上→下に読む）→ 多重度（横書き）→ 幹 で、読み順は従来と同じ。 */
-    const rotHead = S.peakStyle==='style2';
+    /* 枠つきは δ も枠の中なので回さない（回すと枠だけ縦長になって読めない）。 */
+    const rotHead = !boxed && S.peakStyle==='style2';
     /* ピーク側がこの見出しのために列を確保してくれていれば、その位置（x も高さも
        書体も）をそのまま使う。ここで自分で場所を探し直すと、せっかく揃えた列から外れる。 */
     const rh = railList.find(r=>r.mi===mi) || null;
     // 見出し（δ＋多重度）の実測サイズ。矩形で当たり判定するので実測でとる。
     // ジオメトリより先に測る：δ を回すときはその文字列長が labelRoom を決めるため。
-    const showSym=(labelStyle==='full'||labelStyle==='value');
+    const showSym=(labelStyle==='full'||labelStyle==='value');   // boxed は枠の中に入るので別置きしない
     // 多重度は太字にしない。同じ見出しの δ 値が標準ウェイトなので '600' だと 2 行で
     // 太さが食い違う。論文の表記（7.30 (dd, J = 18.2, 1.4 Hz)）も多重度は立体・標準で、
     // 帰属テキストでも同じ理由で '600' の直書きをやめている。
@@ -3683,12 +3915,33 @@ function jtBuild(sp, li){
     ctx.font=dFont;
     const dStr=fmtPpm(m.center), dM=ctx.measureText(dStr);
     const dAsc=dM.actualBoundingBoxAscent||cpx*0.78, dDes=dM.actualBoundingBoxDescent||2;
+    /* 枠つきラベル（MestReNova 風）。「A (d)」「7.17」「J(8.37)」を縦に並べて枠で囲む。
+       行はすべて同じ書体で、幅は実測（枠の内側に収める必要があるので概算では足りない）。
+       J は量記号なのでイタリック、括弧と数値は立体。 */
+    const boxFont=plotFont(10);
+    let boxLines=null, boxW=0, boxH=0, boxLineH=0, boxPadX=0, boxPadY=0;
+    if(boxed){
+      const jv=groups.map(gp=>gp.J.toFixed(S.multDigits??2)).join(', ');
+      boxLines=[ runFonts([[(LETTERS.get(m)||'?')+' ('+m.mult+')', false]], boxFont),
+                 runFonts([[dStr, false]], boxFont),
+                 runFonts([['J',true],['('+jv+')',false]], boxFont) ];
+      ctx.font=boxFont;
+      const bm=ctx.measureText('0J(');
+      const asc=bm.actualBoundingBoxAscent||10*fsc*0.75, des=bm.actualBoundingBoxDescent||2;
+      boxLineH=Math.max(asc+des+2.5*fsc, 11*fsc);
+      boxPadX=5*fsc; boxPadY=3.5*fsc;
+      boxLines.forEach(rf=>{ const w=runWidth(rf); if(w>boxW) boxW=w; });
+      boxW+=2*boxPadX;
+      boxH=boxLines.length*boxLineH+2*boxPadY;
+      // 1 行目のベースラインを枠の上端からどれだけ下げるか
+      boxLines.asc=asc;
+    }
     /* 幹の先端とラベルの隙間。以前はベースラインが topY-8、幹の先端が topY-6
        （スタイル2は topY-vseg, vseg=levelH/2 で最大 10）の固定値だったので、
        隙間はスタイル1 で常に 2px、スタイル2 は levelH が 16px を超えると負＝重なっていた。
        しかも文字倍率に追随しないので、字を大きくするほど詰まって見えた。 */
     const gapK=3.5*fsc, symGap=showSym?3*fsc:0;
-    const stemMax=st2?10:6;                     // labelRoom を決める時点では vseg 未定なので上限で見積もる
+    const stemMax=st2?LEVEL_H*0.5:STEM_H;       // labelRoom を決める時点では vseg 未定なので上限で見積もる
     /* ピーク δ ラベル（スタイル2）は全部が同じ高さ labelY に並ぶ。多重線の δ だけ
        ツリーの高さに引きずられて低い位置に出ると、同じ δ 値なのに段が揃わない。
        ピークを出しているときは同じ式で高さを取り、ツリーへは引き出し線でつなぐ。 */
@@ -3701,20 +3954,36 @@ function jtBuild(sp, li){
     const symH=showSym?(symAsc+symDes):0;
     /* 列に載るときは、ツリーはピークのシグナルと同じくラベル帯の下から始める。
        確保するのは「ラベル帯 + 隙間 + 多重度(横書き) + gapK + 幹」。 */
-    const labelRoom = railHead ? ((pband+1)+4+symH+gapK+stemMax)
+    const labelRoom = boxed    ? (stemMax+gapK+boxH+4)
+                    : railHead ? ((pband+1)+4+symH+gapK+stemMax)
                     : rotHead  ? (stemMax+gapK+symDes+symAsc+symGap+dM.width+4)
                                : (stemMax+gapK+fpx+cpx+4);   // room above the tree for the labels
-    const leavesY = Math.max(g.top+labelRoom+4, pkTopY-10);
+    /* 葉の段の高さ。基準は葉そのものではなく「足の先」。以前は葉の段を pkTopY-10 に
+       置いていたが、葉からは footH（スタイル1で 11×文字倍率、スタイル2で vseg）ぶん
+       足が下に伸びるので、足の先は pkTopY+1 ＝ いちばん高いピークの頂点へ必ず 1px
+       食い込んでいた（スタイル2 も vseg が 10 まで伸びるので実質ゼロ）。
+       vseg は levelH 依存でここではまだ決まらないため、stemMax と同じく上限で見積もる。
+       lift は「高さ」スライダー。積分（integShift）と同じくレーン高さに対する比。 */
+    const footMax=st2?LEVEL_H*0.5:11*fsc*vsc, treeClear=12*fsc;
+    const lift=(S.multShift||0)*(g.bottom-g.top);
+    const leavesY = Math.max(g.top+labelRoom+4, pkTopY - footMax - treeClear - lift);
     const topLimit = g.top+labelRoom;           // keep both labels inside this lane
-    let levelH=Math.min(20, (leavesY-topLimit)/(k+0.4));
-    if(levelH<7) levelH=7;
+    let levelH=Math.min(LEVEL_H, (leavesY-topLimit)/(k+0.4));
+    /* 潰れ止めの下限。縦幅を詰めているときにこれが効くと倍率が無視されるので、
+       下限そのものも倍率と一緒に下がる（min を取る）。 */
+    if(levelH<Math.min(7, LEVEL_H)) levelH=Math.min(7, LEVEL_H);
     const topY = Math.max(topLimit, leavesY - k*levelH);
     let maxX=-1e9, minX=1e9;
     levels[levels.length-1].forEach(h=>{ const xx=X(h); if(xx>maxX)maxX=xx; if(xx<minX)minX=xx; });
     const cX=X(cHz), vseg=levelH*0.5;
-    const stemH=st2?vseg:6, stemTop=topY-stemH;
+    const stemH=st2?vseg:STEM_H, stemTop=topY-stemH;
     let headW, headTop, headBot, multBaseY=0, centerBaseY=0, headY0=0, symBaseY=0, headCX=cX;
-    if(railHead){
+    if(boxed){
+      /* 枠はツリーの幹の真上。横位置は後で jtLayout の spreadVar が決める（headX）。 */
+      headBot = stemTop - gapK;
+      headTop = headBot - boxH;
+      headW   = boxW;
+    } else if(railHead){
       /* δ はピークの列の中（回転・上→下）。多重度はツリーの説明なので列へは持ち上げず、
          幹の真上に横書きで残す。列に混ぜると引き出し線の途中に挟まって見え、
          ほかのラベルと線の始まる高さも揃わなくなる。 */
@@ -3740,7 +4009,7 @@ function jtBuild(sp, li){
     }
     // J 値の行。段どうしの縦よけ（lastJY）は従来どおりブロックの中だけで効かせる。
     const rows=[]; let lastJY=-1e9;
-    for(let i=0;i<k;i++){
+    for(let i=0; i<k && !boxed; i++){
       const ymid=topY+i*levelH+levelH*0.5;
       let jy=ymid+jpx*0.35; if(jy < lastJY + jpx*1.15) jy=lastJY + jpx*1.15; lastJY=jy;
       const jValue=groups[i].J.toFixed(S.multDigits??2);
@@ -3751,11 +4020,12 @@ function jtBuild(sp, li){
       ctx.font=jFont; const jm=ctx.measureText('0');
       rows.push({rf, y:jy, w, asc:(jm.actualBoundingBoxAscent||jpx*0.72), des:(jm.actualBoundingBoxDescent||2)});
     }
-    const footH=st2?vseg:11*fsc;
-    trees.push({m, groups, k, levels, X, cX, minX, maxX, topY, levelH, vseg, st2, fsc, jpx,
+    const footH=st2?vseg:11*fsc*vsc;
+    trees.push({m, groups, k, levels, X, cX, minX, maxX, topY, levelH, vseg, st2, fsc, jpx, footH,
       stemTop, footBottom:topY+k*levelH+footH, headW, headTop, headBot,
       rotHead, railHead, gapK, leadEndY, leadTipY, headY0, symBaseY, symW, symAsc, symDes, multBaseY, centerBaseY,
       dStr, dFont, symFont, showSym, labelStyle, rows, lastJY,
+      boxed, boxLines, boxW, boxH, boxLineH, boxPadX, boxPadY,
       headX:headCX, jx:maxX+8, jAlign:'left', jdy:0, lead:false});
   });
   return trees;
@@ -3783,7 +4053,19 @@ function jtLayout(trees, sp, li, XL, XR){
                      if(t.railHead||t.lead) obst.push({r:jtLeadRect(t), text:false, own:t}); });
   const DY=[0, 1.2, 2.4, -1.2, 3.6, 4.8, 6.0].filter(v=>Math.abs(v)<=JW.dyMax);
   trees.slice().sort((a,b)=>a.cX-b.cX).forEach(t=>{
-    let best=null;
+    if(t.boxed) return;                 // J は枠の中。左右に置く別ブロックが無い
+    let memo=JT_PICK.get(t.m); if(!memo){ memo={}; JT_PICK.set(t.m, memo); }
+    const st=memo[JT_CTX]||null;      // 前回この描画先で選んだ置き方と、挑戦者の貯金
+    /* 表示がまったく同じなら選び直さない（上の JW のコメント参照）。 */
+    const sig=[XL, XR, g.top, g.base, t.minX, t.maxX, t.topY].map(v=>Math.round(v*4)).join(',');
+    if(st && st.sig===sig){
+      t.jAlign=(st.side==='left')?'right':'left';
+      t.jx=(st.side==='left')?(t.minX-8):(t.maxX+8);
+      t.jdy=st.dv*t.jpx;
+      obst.push({r:jtBlockRect(t), text:true, own:t});
+      return;
+    }
+    let best=null, prevS=null;        // prevS: 前回位置の今フレームでのスコア（置けなければ null）
     outer:
     for(const side of ['right','left']){
       for(const dv of DY){
@@ -3804,14 +4086,28 @@ function jtLayout(trees, sp, li, XL, XR){
         s += JW.peak*jtEnvArea(R, E);
         const A=Math.max(1, jtArea(R));
         s += (side==='left'?JW.side:0)*A + (Math.abs(dv)/6)*JW.move*A;
-        if(!best || s<best.s) best={s, side, dv};
-        if(s===0) break outer;                        // 既定位置が空いていればそのまま
+        if(!best || s<best.s) best={s, side, dv, A};
+        if(st && st.side===side && st.dv===dv) prevS=s;
+        if(s===0 && !st) break outer;                 // 既定位置が空いていればそのまま
       }
     }
-    if(!best) best={side:'right', dv:0};
-    t.jAlign=(best.side==='left')?'right':'left';
-    t.jx=(best.side==='left')?(t.minX-8):(t.maxX+8);
-    t.jdy=best.dv*t.jpx;
+    if(!best) best=st?{side:st.side, dv:st.dv, A:1, s:0}:{side:'right', dv:0, A:1, s:0};
+    /* チカチカ止め（上の JW のコメント参照）。挑戦者の貯金が JW.hold に届くまでは
+       前回の置き方を使い続ける。 */
+    const tNow=(typeof performance!=='undefined'&&performance.now)?performance.now():Date.now();
+    let pick=best, ch=null, acc=0, t0=(st&&st.t0)||0;
+    if(st && (best.side!==st.side || best.dv!==st.dv)){
+      const key=best.side+'|'+best.dv;
+      acc=(st.ch===key ? (st.acc||0) : 0) + 1;                 // 同じ挑戦者なら積む、変われば積み直す
+      const won = acc>=JW.hold || prevS-best.s > JW.jump*best.A;
+      if(prevS==null) t0=tNow;                                 // 前回位置は置けない → 即移す
+      else if(won && tNow-t0 >= JW.dwell){ t0=tNow; acc=0; }   // 乗り換え確定
+      else { pick={side:st.side, dv:st.dv}; ch=key; }          // 据え置き（積分待ち or 最短間隔待ち）
+    } else if(st){ acc=Math.max(0,(st.acc||0)-1); ch=st.ch; }  // 前回位置が勝った → 挑戦者の貯金を減らす
+    t.jAlign=(pick.side==='left')?'right':'left';
+    t.jx=(pick.side==='left')?(t.minX-8):(t.maxX+8);
+    t.jdy=pick.dv*t.jpx;
+    memo[JT_CTX]={side:pick.side, dv:pick.dv, sig, ch, acc, t0};
     obst.push({r:jtBlockRect(t), text:true, own:t});
   });
 }
@@ -3830,7 +4126,8 @@ function jtDraw(t, mcol){
     ctx.save();
     ctx.strokeStyle=hexA(S.peakColor||css('--peak'), .82);   // ← ピーク側の引き出し線と同色
     ctx.lineWidth=annotLineW();
-    const y0=(t.rotHead ? t.headBot : t.multBaseY+2)+3;
+    if(t.boxed) ctx.strokeStyle=hexA(S.multColor||css('--mult'), .85);   // 枠と同じ色でつなぐ
+    const y0=t.boxed ? (t.headBot+1) : ((t.rotHead ? t.headBot : t.multBaseY+2)+3);
     const endY=t.railHead ? t.leadEndY : t.stemTop;          // 列に載らないときは幹の直上まで
     const tipY=t.railHead ? t.leadTipY : t.stemTop;
     const knee=Math.min(y0+6, endY);                         // ← ピーク側の knee と同じ作り
@@ -3841,7 +4138,22 @@ function jtDraw(t, mcol){
     ctx.lineTo(t.cX, tipY);         // 縦（ピーク側の signalY までの足と同じ）
     ctx.stroke(); ctx.restore();
   }
-  if(t.rotHead){
+  if(t.boxed){
+    /* 枠つきラベル（MestReNova 風）。行は「A (d)」「δ」「J(…)」。
+       地は下のトレース・ツリー線が透けないように塗りつぶす。色は多重線の色で統一する
+       （枠の中で δ だけピーク色にすると、1 つの札が 2 色に割れて読みにくい）。 */
+    const x0=t.headX-t.boxW/2, y0=t.headTop;
+    ctx.fillStyle=hexA(css('--bg')||'#ffffff', .92);
+    ctx.fillRect(x0, y0, t.boxW, t.boxH);
+    ctx.strokeStyle=inkF; ctx.lineWidth=annotLineW();
+    ctx.strokeRect(snapDev(x0,annotLineW()), snapDev(y0,annotLineW()), t.boxW, t.boxH);
+    ctx.fillStyle=inkF; ctx.textAlign='left'; ctx.textBaseline='alphabetic';
+    const asc=(t.boxLines.asc!=null)?t.boxLines.asc:t.boxLineH*0.75;
+    t.boxLines.forEach((rf,i)=>{
+      const w=runWidth(rf);
+      drawRun(rf, t.headX-w/2, y0+t.boxPadY+asc+i*t.boxLineH);
+    });
+  } else if(t.rotHead){
     // δ はピークの δ ラベルと同じ +90°（上から下へ読む）。
     ctx.save(); ctx.translate(t.headX, t.headY0); ctx.rotate(Math.PI/2);
     ctx.textAlign='left'; ctx.textBaseline='middle';
@@ -3888,19 +4200,25 @@ function jtDraw(t, mcol){
   ctx.fillStyle=inkF; ctx.textAlign='left';
   t.rows.forEach(r=>{ const x0=(t.jAlign==='left')?t.jx:t.jx-r.w; drawRun(r.rf, x0, r.y+t.jdy); });
   // leaves: short feet only — no dashed guide lines are drawn on the spectrum
-  const footH=st2?t.vseg:11*t.fsc;
+  const footH=t.footH;
   ctx.strokeStyle=ink;
   t.levels[t.levels.length-1].forEach(h=>{ const xx=t.X(h);
     ctx.beginPath(); ctx.moveTo(xx, t.topY+t.k*t.levelH); ctx.lineTo(xx, t.topY+t.k*t.levelH+footH); ctx.stroke(); });
   if(S.showMultSources && Array.isArray(t.m.lines) && t.m.lines.length){
     const sources='δ: '+t.m.lines.map(v=>fmtPpm(v)).join(', ');
     ctx.fillStyle=hexA(S.peakColor||css('--peak'),.9); ctx.font=plotFont(8.5);
-    ctx.textAlign=(t.jAlign==='left')?'left':'right';
-    ctx.fillText(sources, t.jx, t.lastJY+t.jdy+t.jpx*1.35);
+    if(t.boxed){   // 枠の中には入れない（枠が横に伸びて隣とぶつかる）。枠の真上に置く
+      ctx.textAlign='center';
+      ctx.fillText(sources, t.headX, t.headTop-3);
+    } else {
+      ctx.textAlign=(t.jAlign==='left')?'left':'right';
+      ctx.fillText(sources, t.jx, t.lastJY+t.jdy+t.jpx*1.35);
+    }
   }
   ctx.restore();
 }
-function drawJTrees(){
+function drawJTrees(ctxKey){
+  JT_CTX=ctxKey||'main';               // 本図と各拡大図で J 値ブロックの記憶を分ける
   if(!S.showJTree || !S.showMults) return;
   const li=laneInfo();
   const sps = li.mode==='stack' ? li.vs : (A()&&A().visible&&A().mag ? [A()] : []);
@@ -3965,7 +4283,7 @@ function drawZooms(){
     ctx.fillStyle=css('--bg'); ctx.fillRect(x,y,w,h);   // identical background to main
     VP=zoomVP(z);
     renderContent({names:false, caption:false});       // traces, peaks, integrals, shades, axis — same styling
-    drawJTrees();                                       // mirror the coupling trees into the inset (VP-aware geometry)
+    drawJTrees('z'+k);                                  // mirror the coupling trees into the inset (VP-aware geometry)
     VP=null;
     ctx.restore();
     // ---- frame + (selected only) close (×) + resize handle ----
@@ -4424,7 +4742,9 @@ function renderContent(opts){
       if(S.showIntegCurve){
         let acc=0,tot=0; for(let i=ia;i<=ib;i++) tot+=Math.max(0,d[i]);
         ctx.strokeStyle=igCol; ctx.lineWidth=annotLineW(); ctx.beginPath();
-        const yA=lt+6+shift,yB=lt+lh*0.42+shift; let f=true;
+        /* 階段の縦幅。描き始めの基線 yB は動かさず、天井 yA だけ下ろす。
+           100% は従来どおり「レーン上端の 6px 下 〜 レーン高さの 42%」。 */
+        const yB=lt+lh*0.42+shift, yA=yB-(lh*0.42-6)*integCurveH(); let f=true;
         for(let i=ia;i<=ib;i++){ acc+=Math.max(0,d[i]); const x=ppmToX(ppmAt(sp,i));
           const yy=tot>0?yB-(yB-yA)*(acc/tot):yB; if(f){ctx.moveTo(x,yy);f=false;}else ctx.lineTo(x,yy); }
         ctx.stroke();
@@ -4518,13 +4838,15 @@ function renderContent(opts){
            でグループを作り、そのグループの重心に 14px 固定ピッチで展開していたが、
            グループ同士が互いの位置を見ないため隣の扇が食い込んで注釈が重なっていた
            （2.68/2.67 のような密集部）。端のクランプも、はみ出した群を隣へ押し込んでいた。 */
-        const baseSize=band<48?8.5:10;
+        const baseSize=Math.max(22,g.peakBand0||band)<48?8.5:10;
         /* 多重線の見出し（δ＋多重度）も「ピークの一員」としてこの列に混ぜる。
            別々に置いてから互いを避けさせると、列が混んだとき見出しだけが隣の列を
            次々と乗り越えて遠くへ飛んだ。同じ spreadX に入れれば、他のラベルの方が
            場所を空けるので、見出しはツリーの真上に居られる。 */
         const mtItems=[];
-        if(S.showJTree && S.showMults) (sp.multiplets||[]).forEach((m,mi)=>{
+        /* 枠つきラベル（boxed）は δ・多重度・J を1つの枠にまとめてツリーの真上に置くので、
+           ピークの列に見出しを混ぜない。混ぜると誰も使わない列が1本空くだけになる。 */
+        if(S.showJTree && S.showMults && S.multJStyle!=='boxed') (sp.multiplets||[]).forEach((m,mi)=>{
           if(m.hidden || !annotAt(m.center)) return;
           if(!(m.Js||[]).some(j=>j>0.05)) return;          // ツリーを描かない多重線は対象外
           if(m.center<VW.pLo || m.center>VW.pHi) return;
@@ -4798,11 +5120,6 @@ function draw(){
   VP=null;
   drawRowHover();                      // トレースより先に描く＝波形の奥に回す
   renderContent({names:true, caption:true});
-  /* 拡大図の中でも renderContent → drawJTrees を回すので、そのとき RAILHEAD/RAILBOXES は
-     インセットぶんに作り直される。本図の drawJTrees は drawZooms の後なので、ここで
-     本図ぶんを退避しておき、木を描く直前に戻す。戻さないと本図の見出しが
-     最後のインセットの列位置で描かれる。 */
-  const railHeadMain=RAILHEAD, railBoxMain=RAILBOXES;
   const ph=plotH();
   // drag rect (peak tool: true X–Y box; connector: dashed preview line; others: full plot height)
   if(dragRect){
@@ -4820,6 +5137,15 @@ function draw(){
   drawInsets();
   drawMinimap();
   drawImpurities();
+  /* 本図の注釈は「全部」拡大図より先に描く。以前は drawZooms が途中に入っていたので、
+     その後ろで描かれるもの（多重線の見出しの δ・多重度・J 値・ツリー、コネクタ、
+     省略記号）だけが拡大図の上に残り、隠れる注釈と隠れない注釈が混ざっていた。
+     拡大図は本図の上に浮く一枚のパネルなので、重なったぶんは一律に隠す。 */
+  drawLines();
+  drawJTrees();
+  drawCutBreak();
+  /* 拡大図の中でも renderContent → drawJTrees を回すので、RAILHEAD/RAILBOXES は
+     インセットぶんに作り直される。本図の木はもう描き終わっているので退避は不要。 */
   drawZooms();
   // a gesture that began inside a zoom inset: draw its preview on TOP of the inset (drawZooms
   // repaints the inset background, which would otherwise hide a preview drawn earlier), clipped to it
@@ -4828,12 +5154,12 @@ function draw(){
     ctx.beginPath(); ctx.rect(v.x0,v.top,v.w,v.ph); ctx.clip();
     drawDragPreview(v.top, v.top+v.ph); ctx.restore();
   }
-  drawLines();
-  RAILHEAD=railHeadMain; RAILBOXES=railBoxMain;   // 本図ぶんに戻してから木と見出しを描く
-  drawJTrees();
-  drawCutBreak();
-  if(cursorX!=null){ ctx.strokeStyle=hexA(css('--accent'),.55); ctx.setLineDash([3,3]);
-    ctx.beginPath();ctx.moveTo(cursorX,curTop());ctx.lineTo(cursorX,curTop()+ph);ctx.stroke(); ctx.setLineDash([]); }
+  if(S.cursorGuide!==false && cursorX!=null){
+    ctx.strokeStyle=hexA(cursorGuideColor(),S.cursorOpacity??DEFAULTS.cursorOpacity);
+    ctx.lineWidth=S.cursorWidth??DEFAULTS.cursorWidth;
+    ctx.setLineDash(cursorDash(S.cursorStyle||DEFAULTS.cursorStyle));
+    ctx.beginPath();ctx.moveTo(cursorX,curTop());ctx.lineTo(cursorX,curTop()+ph);ctx.stroke();ctx.setLineDash([]);
+  }
 }
 /* 結果パネルの行にホバーしたときの合図。
    ・対象の「形」で示す：点（ピーク・マーク・テキスト）は細い縦線＋○、
@@ -5587,14 +5913,14 @@ function applyThemePalette(){
 /* ---- decimal places: δ-axis (ppmDigits) + peaks (pkDigits) ---- */
 (function(){
   const ds=document.getElementById('ppmDigits');
-  if(ds){ ds.value=S.ppmDigits; document.getElementById('digv').textContent=String(S.ppmDigits);
+  if(ds){ ds.value=S.ppmDigits; document.getElementById('digv').textContent=ppmDigitsLabel(S.ppmDigits);
     ds.oninput=e=>{ S.ppmDigits=+e.target.value;
-      document.getElementById('digv').textContent=e.target.value;
+      document.getElementById('digv').textContent=ppmDigitsLabel(+e.target.value);
       renderResults(); draw(); }; }
   const pd=document.getElementById('pkDigits');
-  if(pd){ pd.value=S.pkDigits; document.getElementById('pkdigv').textContent=String(S.pkDigits);
+  if(pd){ pd.value=S.pkDigits; document.getElementById('pkdigv').textContent=ppmDigitsLabel(S.pkDigits);
     pd.oninput=e=>{ S.pkDigits=+e.target.value;
-      document.getElementById('pkdigv').textContent=e.target.value;
+      document.getElementById('pkdigv').textContent=ppmDigitsLabel(+e.target.value);
       renderResults(); draw(); }; }
 })();
 const thrS=document.getElementById('thrSlider');
@@ -5618,7 +5944,35 @@ if(thrS){ thrS.value=Math.round(S.thr*100);
     const ishv=document.getElementById('ishv');
     const showIsh=()=>{ if(ishv) ishv.textContent=nsign(String(Math.round((S.integShift||0)*100)))+'%'; };
     showIsh();
-    ish.oninput=e=>{ S.integShift=(+e.target.value)/100; showIsh(); draw(); }; }
+    ish.oninput=e=>{ S.integShift=(+e.target.value)/100; showIsh(); persistUI(); draw(); }; }
+  /* 階段カーブの縦幅。基線はそのままで天井だけ下がる。 */
+  const ich=document.getElementById('integCurveH');
+  if(ich){ ich.value=Math.round(integCurveH()*100);
+    const ichv=document.getElementById('ichv');
+    const showIch=()=>{ if(ichv) ichv.textContent=Math.round(integCurveH()*100)+'%'; };
+    showIch();
+    ich.oninput=e=>{ S.integCurveH=(+e.target.value)/100; showIch(); persistUI(); draw(); }; }
+  /* スタイル2 のピーク引き出し線の縦幅。帯ごと伸縮するので折れ点も先端も比例して動く。 */
+  const pvs=document.getElementById('peakVScale');
+  if(pvs){ pvs.value=Math.round(peakVScale()*100);
+    const pvsv=document.getElementById('pvsv');
+    const showPvs=()=>{ if(pvsv) pvsv.textContent=Math.round(peakVScale()*100)+'%'; };
+    showPvs();
+    pvs.oninput=e=>{ S.peakVScale=(+e.target.value)/100; showPvs(); syncPeakVRow(); persistUI(); draw(); }; }
+  /* 多重線ツリーの高さ。積分の高さ（integShift）と同じ「レーン高さに対する％」。 */
+  const msh=document.getElementById('multShift');
+  if(msh){ msh.value=Math.round((S.multShift||0)*100);
+    const mshv=document.getElementById('mshv');
+    const showMsh=()=>{ if(mshv) mshv.textContent=nsign(String(Math.round((S.multShift||0)*100)))+'%'; };
+    showMsh();
+    msh.oninput=e=>{ S.multShift=(+e.target.value)/100; showMsh(); persistUI(); draw(); }; }
+  /* ツリー自身の縦の丈。段・幹・足をまとめて比例縮小する。 */
+  const mvs=document.getElementById('multVScale');
+  if(mvs){ mvs.value=Math.round((S.multVScale||1)*100);
+    const mvsv=document.getElementById('mvsv');
+    const showMvs=()=>{ if(mvsv) mvsv.textContent=Math.round((S.multVScale||1)*100)+'%'; };
+    showMvs();
+    mvs.oninput=e=>{ S.multVScale=(+e.target.value)/100; showMvs(); persistUI(); draw(); }; }
   setColorBtn('shadeColor', S.shadeColor||'#D33A2C');
   setColorBtn('markColor', S.markColor||'#0E6E7E');
   setColorBtn('textColor', S.textColor||DEFAULTS.textColor);
@@ -5656,7 +6010,7 @@ function clearTextLabels(){ const sp=A(); if(!sp)return; const rows=(sp.peaks||[
   pushUndo(sp); rows.forEach(p=>{ delete p.label; delete p.labelHidden; }); sp.freeTexts=[];
   saveAnnot(sp); S.resTab='assign'; S.asgSub='text'; openResults(); renderResults(); draw(); }
 function clearImages(){ const sp=A(); if(!sp)return; const rows=imgsOf(sp); if(!rows.length)return;
-  pushUndo(sp); rows.forEach(im=>{ delete IMGCACHE[im.id]; }); sp.images=[]; S.selImg=-1;
+  pushUndo(sp); rows.forEach(im=>{ delete IMGCACHE[im.id]; delete IMGTHUMB[im.id]; }); sp.images=[]; S.selImg=-1;
   saveAnnot(sp); renderImgs(); draw(); }
 /* ===== 操作が意味を持つ条件 =====
    「対象が無いのに押せる」をなくすための一覧。ハンドラの中の早期 return と
@@ -5673,8 +6027,12 @@ const RESET_KEYS={
   resetMinimap:['minimapPos','minimapH','minimapStyle','minimapColor','minimapMaskT','minimapWinT','minimapFrameStyle','minimapFrameW'],
   resetCut:    ['cutStyle','cutColor','cutWidth','cutWave','cutSpan','cutGap','cutOpacity'],
   resetLane:   ['laneStyle','laneColor','laneWidth','laneTransp'],
+  resetTitle:  ['titleSize','titleBold'],
   resetMark:   ['markColor','markSize'],
-  resetText:   ['textColor','textSize']
+  resetPeak:   ['peakColor','pkDigits','peakStyle','peakVScale'],
+  resetInteg:  ['integColor','integShift','integCurveH','integDigits','integStyle'],
+  resetText:   ['textColor','textSize'],
+  resetMult:   ['multColor','multShift','multVScale','multDigits','multJStyle','multStyle']
 };
 /* リセット本体も「もう既定か」の判定もこの表を読むので、設定を1つ足したときに
    キーを入れれば両方が同時に追いつく。 */
@@ -5742,11 +6100,15 @@ function doToolAction(act){
   if(act==='undoCut'){ const sp=A(), cuts=cutsOf(sp); if(sp&&cuts.length){ cuts.pop(); sp.cuts=cuts; saveAnnot(sp); draw(); } return; }
   if(act==='resetCut') return resetCutStyle();
   if(act==='resetLane') return resetLaneStyle();
+  if(act==='resetTitle') return resetTitleStyle();
   if(act==='clearMarks') return clearMarks();
   if(act==='clearTextLabels') return clearTextLabels();
   if(act==='clearImages') return clearImages();
   if(act==='calReset') return resetCalibration();
   if(act==='resetMark') return resetMarkStyle();
+  if(act==='resetMult') return resetMultStyle();
+  if(act==='resetPeak') return resetPeakStyle();
+  if(act==='resetInteg') return resetIntegStyle();
   if(act==='resetText') return resetTextStyle();
   if(act==='resetZoom') return resetZoomStyle();
   if(act==='resetMinimap') return resetMinimapStyle();
@@ -5761,6 +6123,12 @@ function resetZoomStyle(){
 function resetMinimapStyle(){
   applyDefaults('resetMinimap');
   syncUIControls(); persistUI(); resize();
+}
+/* タイトルの見た目だけを既定へ。表示/非表示と入力した文字はそのまま残す。
+   大きさは上の余白（padTop）に効くので、他の見た目リセットと違い resize も通す。 */
+function resetTitleStyle(){
+  applyDefaults('resetTitle');
+  syncUIControls(); persistUI(); resize(); draw();
 }
 /* reset the divider appearance only; the on/off switch itself is left alone */
 function resetLaneStyle(){
@@ -5779,6 +6147,24 @@ function resetMarkStyle(){
   const ms=document.getElementById('markSize'); if(ms) ms.value=S.markSize;
   const mv=document.getElementById('mkv'); if(mv) mv.textContent=S.markSize.toFixed(1)+' px';
   persistUI(); draw();
+}
+/* 多重線の見た目（色・高さ・J小数桁・ラベル表示・ツリー形状）だけを既定へ。
+   多重線そのものと表示/非表示はそのまま残す。 */
+function resetMultStyle(){
+  applyDefaults('resetMult');
+  syncUIControls(); persistUI(); renderResults(); draw();
+}
+/* ピークの見た目（色・小数桁・スタイル）だけを既定へ。検出済みのピーク、閾値、
+   表示/非表示はそのまま残す（他のリセットと同じ約束）。 */
+function resetPeakStyle(){
+  applyDefaults('resetPeak');
+  syncUIControls(); persistUI(); renderResults(); draw();
+}
+/* 積分の見た目（色・高さ・階段の縦幅・小数桁・スタイル）だけを既定へ。
+   積分そのもの、階段カーブの表示/非表示はそのまま残す。 */
+function resetIntegStyle(){
+  applyDefaults('resetInteg');
+  syncUIControls(); persistUI(); renderResults(); draw();
 }
 function resetTextStyle(){
   applyDefaults('resetText');
@@ -6308,7 +6694,7 @@ function eraseMultRegion(sp,pA,pB){ const lo=Math.min(pA,pB), hi=Math.max(pA,pB)
    Per-dataset analysis/annotation state is persisted in nmrspectrumviewer.json.
    localStorage is reserved for application preferences and the lightweight
    multi-spectrum workspace (layout/order/view), never spectral arrays. */
-const PERSISTENCE_VERSION=33;
+const PERSISTENCE_VERSION=34;
 function sigKey(sp){ let h=2166136261>>>0;
   const src = sp.haveFid? sp.cplxRe : sp.procReal;
   const n=Math.min(src?src.length:0, 4096);
@@ -6470,7 +6856,7 @@ function applyDock(){
     btn.innerHTML=DOCK_SVG;
     btn.title=t('ttDock');
   }
-  if(typeof syncResultsHeight==='function') requestAnimationFrame(syncResultsHeight);
+  if(typeof syncResultsSticky==='function') requestAnimationFrame(syncResultsSticky);
 }
 function openResults(){ if(!S.spectra.length){ closeResults(); return; } const panel=document.getElementById('results');
   panel.classList.add('open');
@@ -6493,8 +6879,13 @@ document.getElementById('resDock').onclick=e=>{ e.stopPropagation(); S.docked=!S
 /* ===== サイドバーのセクション（スペクトル / 測定条件 / 解析結果）を折りたためるようにする =====
    本文は包まず、`.sect.collapsed>*:not(h3)` で隠す。解析結果は applyDock() が
    #resultsDock に #results を後から差し込むので、ラッパを作ると外に出てしまうため。 */
+/* 開閉のシェブロン 1 個ぶんの markup。節・帰属の節・表示スタイルの 3 か所で使う。
+   const で持つとトップレベルの TDZ でアプリ全体が止まるので function 宣言にする。 */
+function chevSvg(){
+  return '<span class="secchev" aria-hidden="true"><svg class="svi" viewBox="0 0 16 16"><path d="M4.5 6.2 8 9.8l3.5-3.6"/></svg></span>';
+}
 (function(){
-  const CHEV='<span class="secchev" aria-hidden="true"><svg class="svi" viewBox="0 0 16 16"><path d="M4.5 6.2 8 9.8l3.5-3.6"/></svg></span>';
+  const CHEV=chevSvg();
   const sects=[['spectra',document.getElementById('splist')?.closest('.sect')],
                ['acq',document.getElementById('acqSect')],
                ['results',document.getElementById('resultsDock')]];
@@ -6503,18 +6894,21 @@ document.getElementById('resDock').onclick=e=>{ e.stopPropagation(); S.docked=!S
     const on=open(key);
     sect.classList.toggle('collapsed',!on);
     const h=sect.querySelector(':scope>h3'); if(h) h.setAttribute('aria-expanded',String(on)); });
-    if(typeof syncResultsHeight==='function') requestAnimationFrame(syncResultsHeight);
+  /* 畳む/開くと sticky の段の高さが変わる。以前はこの呼び出しが paint（アロー関数）の
+     *外* に置かれていて、読み込み時に一度走るだけだった。paint を呼ぶ側をここに集める。 */
+  const paintAndSync=()=>{ paint();
+    if(typeof syncResultsSticky==='function') requestAnimationFrame(syncResultsSticky); };
   sects.forEach(([key,sect])=>{
     if(!sect) return;
     const h=sect.querySelector(':scope>h3'); if(!h) return;
     h.insertAdjacentHTML('afterbegin',CHEV);
     h.setAttribute('role','button'); h.tabIndex=0;
-    const toggle=()=>{ S.secOpen=S.secOpen||{}; S.secOpen[key]=!open(key); paint(); persistUI(); };
+    const toggle=()=>{ S.secOpen=S.secOpen||{}; S.secOpen[key]=!open(key); paintAndSync(); persistUI(); };
     h.addEventListener('click',e=>{ if(e.target.closest('button,input,select'))return; toggle(); });
     h.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toggle(); } });
   });
-  window.applySectionCollapse=paint;
-  paint();
+  window.applySectionCollapse=paintAndSync;
+  paintAndSync();
 })();
 document.querySelectorAll('.rtab').forEach(b=>b.onclick=()=>{ S.resTab=b.dataset.tab;
   document.querySelectorAll('.rtab').forEach(x=>x.classList.toggle('on',x===b)); renderResults(); });
@@ -6537,11 +6931,13 @@ document.querySelectorAll('.rtab').forEach(b=>b.onclick=()=>{ S.resTab=b.dataset
 
 /* ===== 解析結果パネルの描画 =====
    ・タブは常時表示。件数バッジを持ち、0 件は淡色（押すと空状態＝次の一手が出る）
-   ・表はドックしていても自前のスクロール枠に入る（高さは syncResultsHeight）
+   ・ドック中はスクロールするのは aside だけ。見出し・タブ行・表の見出し行を
+     sticky で残す（段の高さは syncResultsSticky）
    ・ピーク行はクリックで選べ、2 本以上で「多重線にする」の帯が出る
    ・行にホバーするとスペクトル上の対象が光る（形と色は drawRowHover） */
 let _editInteg=-1;      // 相対値をその場で編集している積分（-1 = 編集していない）
 let _editIntegRange=-1; // 結果表で端点を編集している積分（-1 = 編集していない）
+let _editImgName=-1;    // 名前を書き換えている画像（-1 = 編集していない）
 let _lastPkRow=-1;      // Shift での範囲選択の起点（ピーク表の行番号）
 let _lastMultRow=-1;    // Shift での範囲選択の起点（多重線表の行番号）
 
@@ -6556,19 +6952,84 @@ function rowHover(h){
 function zoomToPpm(ppm,half){ if(!isFinite(ppm)) return; const d=half||0.06;
   S.view={pHi:ppm+d,pLo:ppm-d}; draw(); persistUI(); }
 
-/* ドック時のリストの高さ上限。サイドバーの残りを使い切るが max-height なので
-   中身が少ないときは中身なりに縮む。フロート時は #results 側の max-height に任せる。 */
-function syncResultsHeight(){
-  const panel=document.getElementById('results'), body=document.getElementById('rbody');
-  if(!panel||!body) return;
-  if(!panel.classList.contains('docked')){ body.style.removeProperty('--rbody-max'); return; }
-  const dock=document.getElementById('resultsDock'), aside=panel.closest('aside');
-  if(!dock||!aside||dock.style.display==='none'||dock.classList.contains('collapsed')) return;
-  const top=body.getBoundingClientRect().top-aside.getBoundingClientRect().top+aside.scrollTop;
-  body.style.setProperty('--rbody-max', Math.max(160,Math.round(aside.clientHeight-top-16))+'px');
+/* ドック中の sticky の段。見出し(h3) → タブ行(.rhead) → 表の見出し行(th) の順に
+   aside の上端へ積む。帰属タブだけは節の見出し(.racch)があいだに入って 4 段になる。
+   段の高さは ▾ や件数バッジ・言語・--seg-h で変わるので、固定値を書かずに実測して
+   CSS 変数に入れる（CSS 側の既定値は 45 / 82 / 112px）。
+   フロート中は #results 自身の max-height と .rbody の overflow に任せるので外す。 */
+function syncResultsSticky(){
+  const panel=document.getElementById('results'), head=document.getElementById('rhead');
+  const dock=document.getElementById('resultsDock');
+  if(!panel||!head||!dock) return;
+  if(!panel.classList.contains('docked')){
+    panel.style.removeProperty('--rhead-top'); panel.style.removeProperty('--th-top');
+    panel.style.removeProperty('--asg-th-top'); return; }
+  if(dock.style.display==='none'||dock.classList.contains('collapsed')) return;
+  const h3=dock.querySelector(':scope>h3');
+  /* h3 の margin-bottom は CSS で 0 にして padding に付け替えてあるが、
+     読み落として段がずれるより、足しておくほうが安い。 */
+  const gap=h3?(parseFloat(getComputedStyle(h3).marginBottom)||0):0;
+  const a=h3?Math.round(h3.getBoundingClientRect().height+gap):0;
+  const b=a+Math.round(head.getBoundingClientRect().height);
+  panel.style.setProperty('--rhead-top',a+'px');
+  panel.style.setProperty('--th-top',b+'px');
+  /* 帰属タブの列見出しは、節の見出し 1 つぶん余計に下げる。節が畳まれていても
+     見出しの高さは同じなので、開いている節が無くても最初の 1 つで測れる。 */
+  const racch=head.parentElement.querySelector('.rbody.cards .racch');
+  if(racch) panel.style.setProperty('--asg-th-top',
+    (b+Math.round(racch.getBoundingClientRect().height))+'px');
 }
-window.syncResultsHeight=syncResultsHeight;
-window.addEventListener('resize',()=>syncResultsHeight());
+/* 下見は fixed なので、下地が動いたら行から離れてしまう。動いたら消す。 */
+['scroll','wheel'].forEach(ev=>{
+  const aside=document.querySelector('aside'), rb=document.getElementById('rbody');
+  if(aside) aside.addEventListener(ev,hideImgPreview,{passive:true});
+  if(rb) rb.addEventListener(ev,hideImgPreview,{passive:true});
+});
+/* 解析結果のタブ行：幅が足りなくなったら字をアイコンに差し替える。
+   サイドバーは #dragbar で 200px まで狭められ、タブは flex:1 1 0 で等分するので、
+   狭いと「ピーク 29積分 2多重線 2帰属 5」と字が詰まって読めなくなっていた。
+   ellipsis で切ると「ピー…／積…」と、どれがどれか分からない切り方になる。
+   しきい値を px で書かないのが肝：必要な幅は言語（en は語が長く 9px）・文字倍率・
+   件数の桁数で変わる。文字表示のままの必要幅をその場で測って決める。
+   測るために一瞬 .icons を外すが、同じフレームの中なので描画は挟まらない。
+   .icons を付け外ししても行の高さ（--seg-h）と幅は変わらないので、
+   これを ResizeObserver から呼んでもループしない。 */
+function syncResultsTabMode(){
+  const seg=document.querySelector('.rtabs-segment'); if(!seg) return;
+  const tabs=[...seg.querySelectorAll('.rtab')]; if(!tabs.length) return;
+  const avail=seg.clientWidth; if(!avail) return;          // 畳んでいる間は測れない
+  seg.classList.remove('icons');
+  /* 見るのは合計ではなく「いちばん長いタブ」。4 つは flex:1 1 0 + min-width:0 で
+     きっちり等分（＝avail/4）されるので、合計が収まっていても長い「ピーク 29」だけが
+     はみ出して隣の字とくっつく。実際そう見えていた。 */
+  let widest=0;
+  for(const b of tabs){
+    const cs=getComputedStyle(b);
+    const gap=parseFloat(cs.columnGap)||0;
+    let w=(parseFloat(cs.paddingLeft)||0)+(parseFloat(cs.paddingRight)||0), n=0;
+    for(const el of b.children){
+      const ew=el.getBoundingClientRect().width;
+      if(ew<=0) continue;                                  // display:none の絵は数えない
+      if(n++) w+=gap;
+      w+=ew;
+    }
+    if(w>widest) widest=w;
+  }
+  seg.classList.toggle('icons', widest>avail/tabs.length);
+}
+window.syncResultsTabMode=syncResultsTabMode;
+window.syncResultsSticky=syncResultsSticky;
+window.addEventListener('resize',()=>{syncResultsSticky();syncResultsTabMode();});
+/* 段の高さは中身で変わる（件数が 2 桁になる、言語が変わる、--seg-h をいじる）。
+   呼び忘れると th が 1 段ぶんずれたまま気付けないので、実際の高さを見て入れ直す。 */
+(function(){
+  if(typeof ResizeObserver!=='function') return;
+  const dock=document.getElementById('resultsDock'), head=document.getElementById('rhead');
+  const h3=dock&&dock.querySelector(':scope>h3');
+  const ro=new ResizeObserver(()=>{syncResultsSticky();syncResultsTabMode();});
+  if(h3) ro.observe(h3);
+  if(head) ro.observe(head);
+})();
 
 /* 描かれる ● の単位。draw() は「同じ色で 0.15 ppm 以内に続くピーク」を 1 個の ●
    にまとめて中点に置く。一覧もこの単位で出さないと、2 行あるのに ● は 1 個、
@@ -6610,6 +7071,7 @@ function emptyBox(msgKey, actKey, act){
     (act?`<div><button class="rmini" data-start="${act}">${t(actKey)}</button></div>`:'')+`</div>`;
 }
 function renderResults(){
+  hideImgPreview();   // 行ごと消える描き直しでは mouseleave が来ない
   const body=document.getElementById('rbody'), selwrap=document.getElementById('rselwrap'), sp=A();
   if(selwrap){ selwrap.hidden=true; selwrap.innerHTML=''; }
   if(!sp){ body.innerHTML=`<div class="rempty">—</div>`;
@@ -6625,9 +7087,13 @@ function renderResults(){
     b.hidden=false;
     b.classList.toggle('empty',!n);
     b.classList.toggle('on',b.dataset.tab===S.resTab);
-    b.title=n?'':t('tabNone');
+    /* 狭いサイドバーではラベルがアイコンに替わるので、名前は必ず title に置く。
+       0 件のときの「まだありません」は名前のあとに足す（前は名前が入っていなかった）。 */
+    const nm=t({peaks:'tabPeaks',integ:'tabInteg',mult:'tabMult',assign:'tabAssign'}[b.dataset.tab]||'');
+    b.title=nm+(n?'':' — '+t('tabNone'));
     const c=b.querySelector('.rcnt'); if(c) c.textContent=n?String(n):'—';
   });
+  syncResultsTabMode();          // 件数の桁が増えると必要幅も増える
   const eyeC=(on,type,k)=>`<td class="ceye"><button class="reye${on?'':' off'}" data-eye="${type}" data-k="${k}" title="" aria-label="${t('ttShowHide')}" aria-pressed="${String(on)}" data-tooltip="${t('ttShowHide')}">${eyeSvg(on)}</button></td>`;
   /* 色は background-color（長い書き方）で入れる。shorthand の background を inline に
    書くと background-clip も border-box に巻き戻され、CSS 側の content-box（＝内側の
@@ -6820,9 +7286,21 @@ function renderResults(){
        empty:'emptyImages', actKey:'assignImageAction', act:'addImg', build:()=>{
         const pinIcon='<svg class="svi" viewBox="0 0 16 16"><path d="M11.05 1.36l3.58 3.58l-1.79 1.79l-1.02-.26l-2.69 2.69l.26 1.02l-1.79 1.79l-3.58-3.58l1.79-1.79l1.02.26l2.69-2.69l-.26-1.02Z"/><path d="M5.04 10.96L1.36 14.64"/></svg>';
         const bgIcon='<svg class="svi" viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" rx="1.5"/><rect x="2" y="2" width="6" height="6" fill="currentColor" stroke="none"/><rect x="8" y="8" width="6" height="6" fill="currentColor" stroke="none"/></svg>';
-        return `<div class="subbar"><button class="rsub" data-start="addImg">${t('btnAddImg')}</button></div><div class="cmplist">`+
-          imgs.map((rec,k)=>{const off=rec.on===false;return `<div class="cmp${k===S.selImg?' on':''}" data-image-row="${k}"${hvIdx('image',k,cImg)}>`+
-            `<img class="thumb" src="${rec.src}"><span class="cn">${t('imgItem')} ${k+1}</span><span class="cs">${rec.w}×${rec.h}</span>`+
+        /* 「＋ 画像を挿入」のボタンはここには置かない（2026-09-08）。挿入・貼り付けは
+           帰属メニューの「画像を挿入」にあり、0 件のときは空状態が同じボタンを出す。
+           1 件でもあれば一覧の上に常時出しておく必要はない。 */
+        return `<div class="cmplist">`+
+          imgs.map((rec,k)=>{const off=rec.on===false;
+            const esc=v=>String(v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+            const defName=`${t('imgItem')} ${k+1}`, shown=rec.name||defName;
+            /* 名前は押すとその場で書き換わる（積分の相対値と同じ作法）。
+               空のまま確定すると既定の「画像 n」に戻る。 */
+            const nameCell=(_editImgName===k)
+              ? `<input class="intin imgnamein" data-imgnameedit="${k}" value="${esc(rec.name||'')}" placeholder="${esc(defName)}" aria-label="${t('ttImgRename')}">`
+              : `<button type="button" class="imgname" data-imgname="${k}" title="${esc(shown)} — ${t('ttImgRename')}">${esc(shown)}</button>`;
+            return `<div class="cmp${k===S.selImg?' on':''}" data-image-row="${k}"${hvIdx('image',k,cImg)}>`+
+            `<img class="thumb" src="${imgThumbSrc(rec)}" alt=""><span class="cmeta">${nameCell}`+
+            `<span class="cs">${rec.w}×${rec.h}</span></span>`+
             `<button class="imgpin${rec.anchor==='spectrum'?' on':''}" data-image-pin="${k}" title="${t('ttImgPin')}" aria-pressed="${String(rec.anchor==='spectrum')}">${pinIcon}</button>`+
             `<button class="bgk${rec.bgRemoved?' on':''}" data-image-bg="${k}" title="${t('ttImgBg')}">${bgIcon}</button>`+
             `<button class="eye${off?' off':''}" data-image-eye="${k}" title="" aria-label="${t('ttImgEye')}" aria-pressed="${String(!off)}" data-tooltip="${t('ttImgEye')}">${eyeSvg(!off)}</button>`+
@@ -6833,7 +7311,7 @@ function renderResults(){
       const inner=g.n?g.build():emptyBox(g.empty,g.actKey,g.act);
       return `<div class="racc${open?' open':''}" data-acc="${g.id}">`+
         `<button class="racch" data-accbtn="${g.id}" aria-expanded="${String(!!open)}">`+
-        `<span class="rchev"><svg class="svi" viewBox="0 0 16 16"><path d="M6 3.5 10.5 8 6 12.5"/></svg></span>`+
+        chevSvg()+
         `<span>${t(g.label)}</span>`+
         `<span class="rcnt">${g.n||'—'}</span></button>`+
         `<div class="raccb">${inner}</div></div>`;
@@ -6846,6 +7324,24 @@ function renderResults(){
     body.querySelectorAll('[data-image-pin]').forEach(b=>b.onclick=e=>{e.stopPropagation();const rec=imgs[+b.dataset.imagePin];if(!rec)return;const w=rec.w*rec.s,h=rec.h*rec.s,pos=imageBoxPosition(sp,rec,w,h);if(rec.anchor==='spectrum'){rec.anchor='canvas';rec.x=pos.x;rec.y=pos.y;}else anchorImageToSpectrum(sp,rec,pos.x,pos.y);saveAnnot(sp);renderResults();draw();});
     body.querySelectorAll('[data-image-bg]').forEach(b=>b.onclick=e=>{e.stopPropagation();toggleImgBg(sp,+b.dataset.imageBg);});
     body.querySelectorAll('[data-image-eye]').forEach(b=>b.onclick=e=>{e.stopPropagation();const rec=imgs[+b.dataset.imageEye];if(!rec)return;rec.on=rec.on===false;saveAnnot(sp);renderResults();draw();});
+    /* 名前を押すと入力欄に変わる。行の選択（data-image-row）は button を除いて
+       いるので、押しても選択は動かない。 */
+    body.querySelectorAll('[data-imgname]').forEach(b=>b.onclick=e=>{ e.stopPropagation();
+      _editImgName=+b.dataset.imgname; renderResults();
+      const i=document.querySelector('#rbody [data-imgnameedit]'); if(i){ i.focus(); i.select(); } });
+    { const nin=body.querySelector('[data-imgnameedit]');
+      if(nin){
+        const commit=()=>{ if(_editImgName<0) return;
+          const k=+nin.dataset.imgnameedit, v=nin.value.trim(); _editImgName=-1;
+          const rec=imgs[k]; if(!rec){ renderResults(); return; }
+          if(v===(rec.name||'')){ renderResults(); return; }
+          pushUndo();
+          if(v) rec.name=v; else delete rec.name;
+          saveAnnot(sp); renderResults(); };
+        nin.onblur=commit;
+        nin.onkeydown=e=>{ if(e.key==='Enter'){ e.preventDefault(); commit(); }
+                           else if(e.key==='Escape'){ e.preventDefault(); _editImgName=-1; renderResults(); } };
+      } }
   } else if(S.resTab==='mult'){
     const ms=sp.multiplets||[];
     S.selMults=(S.selMults||[]).filter(k=>k<ms.length);
@@ -6972,8 +7468,12 @@ function renderResults(){
   body.querySelectorAll('[data-hv]').forEach(el=>{
     let h=null; try{ h=JSON.parse(el.dataset.hv); }catch(err){}
     if(!h) return;
-    el.onmouseenter=()=>rowHover(h);
-    el.onmouseleave=()=>rowHover(null);
+    /* 画像の行では、40px のサムネイルでは分からない細部を大きく出す。ここに足すのは、
+       この一括配線が el.onmouseenter を「代入で」上書きするため。行を作った側で
+       別に付けても、あとから来るこの行に消される。 */
+    el.onmouseenter=()=>{ rowHover(h);
+      if(h.k==='image') showImgPreview(imgsOf(sp)[h.i], el); };
+    el.onmouseleave=()=>{ rowHover(null); hideImgPreview(); };
     el.ondblclick=e=>{ if(e.target.closest('button,input')) return;
       if(h.k==='point') zoomToPpm(h.p);
       else if(h.k==='range'){ const a=Math.max(h.a,h.b), b=Math.min(h.a,h.b), m=Math.max(0.02,(a-b)*0.25);
@@ -7001,7 +7501,7 @@ function renderResults(){
       _lastPkRow=k; renderResults(); draw();
     };
   });
-  requestAnimationFrame(syncResultsHeight);
+  requestAnimationFrame(syncResultsSticky);
 }
 
 /* 参考文献。誌名・巻・ページまで出す。書誌は Crossref で確認済み。
@@ -7248,7 +7748,7 @@ function organizeAssignPanel(){
            <button class="tmtog" id="tgInsets">${eye}<span data-i18n="assignShowImage">Show images</span></button>
          </div>
        </section>
-       <details class="assign-style-details"><summary data-i18n="assignStyleSettings">Style settings</summary>
+       <details class="assign-style-details"><summary>${chevSvg()}<span data-i18n="assignStyleSettings">Style settings</span></summary>
          <div class="assign-style-body">
            <div class="assign-style-group"><div class="assign-style-subhead" data-i18n="assignStyleMark">Marks</div>
              <div class="tmrow"><span class="tmic"></span><span data-i18n="markColorLbl">Color</span><input type="color" id="markColor" value="#0E6E7E"></div>
@@ -7286,7 +7786,17 @@ segWire('segSrc',v=>{ const sp=A(); if(!sp)return; if(v==='fid'&&!sp.haveFid)ret
 segWire('segMode',v=>{ const sp=A(); if(!sp)return; sp.mode=v; finalize(sp); saveAnnot(sp); syncControls(); draw(); });
 segWire('segZf',v=>{ const sp=A(); if(!sp)return; sp.zf=+v; rebuildSpectrum(sp); saveAnnot(sp); draw(); });
 segWire('segLayout',v=>{ S.layout=v; if(typeof syncLaneStyleUI==='function') syncLaneStyleUI(); draw(); });
-segWire('segPeakStyle',v=>{ S.peakStyle=v; persistUI(); draw(); });
+/* 引き出し線の縦幅はスタイル2 専用（スタイル1 に帯はない）。押しても何も起きない
+   スライダーを生かしておくと壊れて見えるので、ACT_GATE のボタンと同じ考え方で
+   淡くして操作を止め、理由を title に出す。 */
+function syncPeakVRow(){
+  const row=document.getElementById('rowPeakVScale'); if(!row) return;
+  const on=(S.peakStyle==='style2');
+  row.classList.toggle('is-disabled',!on);
+  const r=row.querySelector('input[type=range]'); if(r) r.disabled=!on;
+  row.title = on ? '' : (LANG==='ja'?'スタイル2 のときだけ使えます':'Style 2 only');
+}
+segWire('segPeakStyle',v=>{ S.peakStyle=v; syncPeakVRow(); persistUI(); draw(); });
 segWire('segIntegStyle',v=>{ S.integStyle=v; persistUI(); draw(); });
 segWire('segMultStyle',v=>{ S.multStyle=v; persistUI(); draw(); });
 document.getElementById('wdw').onchange=e=>{ const sp=A(); if(!sp)return; sp.wdw=e.target.value;
@@ -7324,19 +7834,27 @@ function syncMinimapAlpha(){
   const el=document.getElementById('minimapAlpha'); if(!el) return;
   const t=Math.round((1-mmAlpha())*100);
   el.value=String(t);
-  const v=document.getElementById('mmav'); if(v) v.textContent=t+' %';
+  const v=document.getElementById('mmav'); if(v) v.textContent=t+'%';
 }
 document.getElementById('minimapAlpha').oninput=e=>{ const t=+e.target.value;
   if((S.minimapStyle||DEFAULTS.minimapStyle)==='window') S.minimapWinT=t; else S.minimapMaskT=t;
-  document.getElementById('mmav').textContent=t+' %'; persistUI(); draw(); };
+  document.getElementById('mmav').textContent=t+'%'; persistUI(); draw(); };
 segWire('segMinimapPos',v=>{ S.minimapPos=(v==='top'?'top':'bottom'); persistUI(); resize(); });
 segWire('segMinimapFrame',v=>{ S.minimapFrameStyle=(v==='dashed'||v==='dotted')?v:'solid'; persistUI(); draw(); });
 document.getElementById('minimapFrameW').oninput=e=>{ S.minimapFrameW=+e.target.value;
   document.getElementById('mmfwv').textContent=(+e.target.value).toFixed(1)+' px'; persistUI(); draw(); };
 document.getElementById('minimapColor').oninput=e=>{ S.minimapColor=e.target.value; persistUI(); draw(); };
 document.getElementById('axisTicks').oninput=e=>{ S.axisTicks=+e.target.value;
-  document.getElementById('atv').textContent=e.target.value; draw(); };
-const axisMinorTickLabel=n=>n===0?t('optNone'):String(n);
+  document.getElementById('atv').textContent=axisTicksLabel(+e.target.value); draw(); };
+/* 値の表記（2026-09-08）。無次元の値が「2」「15」「4」と数字だけで、
+   隣の「0.5 px」「11 pt」「トレースに連動」と混ざって読めていなかった。
+   単位語はこの2つの関数だけが決める（画面に出す側は必ずここを通す）。 */
+/* const ではなく function 宣言。const だとこの行より前で呼んだ時点で
+   TDZ の ReferenceError になり、スクリプト全体がそこで止まる（実際に止まった）。
+   呼び出し側は 5710 行台の IIFE など、この定義より上にもいる。 */
+function ppmDigitsLabel(n){ return t('unitDigits').replace('{n}',String(n)); }
+function axisTicksLabel(n){ return t('unitTicks').replace('{n}',String(n)); }
+function axisMinorTickLabel(n){ return n===0?t('optNone'):axisTicksLabel(n); }
 document.getElementById('axisMinorTicks').oninput=e=>{ S.axisMinorTicks=+e.target.value;
   document.getElementById('amtv').textContent=axisMinorTickLabel(S.axisMinorTicks); draw(); };
 /* δ軸の線の太さ。0 は「トレースに連動」（既定）を意味する。 */
@@ -7362,9 +7880,9 @@ document.getElementById('markSize').oninput=e=>{ S.markSize=+e.target.value;
 document.getElementById('textSize').oninput=e=>{ S.textSize=+e.target.value;
   document.getElementById('tsv').textContent=(S.textSize).toFixed(1)+' pt'; persistUI(); draw(); };
 document.getElementById('integDigits').oninput=e=>{ S.integDigits=+e.target.value;
-  document.getElementById('idgv').textContent=String(S.integDigits); persistUI(); renderResults(); draw(); };
+  document.getElementById('idgv').textContent=ppmDigitsLabel(S.integDigits); persistUI(); renderResults(); draw(); };
 document.getElementById('multDigits').oninput=e=>{ S.multDigits=+e.target.value;
-  document.getElementById('mdgv').textContent=String(S.multDigits); persistUI(); renderResults(); draw(); };
+  document.getElementById('mdgv').textContent=ppmDigitsLabel(S.multDigits); persistUI(); renderResults(); draw(); };
 document.getElementById('multJStyle').onchange=e=>{ S.multJStyle=e.target.value; persistUI(); draw(); };
 document.getElementById('plotFont').onchange=e=>{ S.plotFont=e.target.value; persistUI(); draw(); };
 document.getElementById('btnResetSet').onclick=()=>{
@@ -7383,7 +7901,7 @@ document.getElementById('btnResetSet').onclick=()=>{
   document.getElementById('axv').textContent=DEFAULTS.axisPad+' px';
   S.axisTicks=DEFAULTS.axisTicks;
   document.getElementById('axisTicks').value=DEFAULTS.axisTicks;
-  document.getElementById('atv').textContent=String(DEFAULTS.axisTicks);
+  document.getElementById('atv').textContent=axisTicksLabel(DEFAULTS.axisTicks);
   S.axisMinorTicks=DEFAULTS.axisMinorTicks;
   document.getElementById('axisMinorTicks').value=DEFAULTS.axisMinorTicks;
   document.getElementById('amtv').textContent=axisMinorTickLabel(DEFAULTS.axisMinorTicks);
@@ -7404,14 +7922,14 @@ document.getElementById('btnResetSet').onclick=()=>{
       const v=document.getElementById('asv'); if(v) v.textContent=fmtPt(DEFAULTS.axisScale); } }
   S.ppmDigits=DEFAULTS.ppmDigits;
   { const pd=document.getElementById('ppmDigits'); if(pd){ pd.value=DEFAULTS.ppmDigits;
-      const v=document.getElementById('digv'); if(v) v.textContent=String(DEFAULTS.ppmDigits); } }
+      const v=document.getElementById('digv'); if(v) v.textContent=ppmDigitsLabel(DEFAULTS.ppmDigits); } }
   { const sf=document.getElementById('plotFont'); if(sf) sf.value=DEFAULTS.plotFont; }
   document.documentElement.style.removeProperty('--bg');
   document.getElementById('bgColor').value=css('--bg');
   persistUI(); resize(); draw(); };
 document.getElementById('btnResetView').onclick=()=>{
   S.ppmDigits=DEFAULTS.ppmDigits; S.pkDigits=DEFAULTS.pkDigits; S.lineW=DEFAULTS.lineW;
-  S.peakStyle=DEFAULTS.peakStyle; S.integStyle=DEFAULTS.integStyle; S.showIntegCurve=DEFAULTS.showIntegCurve; S.multStyle=DEFAULTS.multStyle;
+  S.peakVScale=DEFAULTS.peakVScale; S.peakStyle=DEFAULTS.peakStyle; S.integStyle=DEFAULTS.integStyle; S.showIntegCurve=DEFAULTS.showIntegCurve; S.multStyle=DEFAULTS.multStyle;
   const set=(id,val,txt)=>{ const el=document.getElementById(id); if(el) el.value=val;
     const v=document.getElementById(txt); if(v) v.textContent=String(val); };
   set('ppmDigits',DEFAULTS.ppmDigits,'digv');
@@ -7680,7 +8198,7 @@ function applyPanelFloatMode(on){
     if(lbl){ if(lbl.dataset.i18n) txt.dataset.i18n=lbl.dataset.i18n; txt.textContent=lbl.textContent; }
     title.appendChild(txt);
     const mkBtn=(html,key)=>{ const b=document.createElement('button'); b.type='button'; b.className='tmfloatbtn';
-      b.innerHTML=html; b.title=t(key); b.dataset.tip=key; return b; };
+      b.innerHTML=html; b.title=t(key); b.dataset.tipkey=key; return b; };
     const sizeBtn=mkBtn(RESETSIZE_SVG,'ttResetSize');   // 既定の大きさに戻す
     const minBtn=mkBtn(MIN_SVG,'ttMinimize');           // 最小化（見出しだけにする）
     const btn=mkBtn(FLOAT_SVG,'ttFloat');               // 分離／格納、切り離しが既定なら閉じる
@@ -7697,10 +8215,10 @@ function applyPanelFloatMode(on){
       /* 最小化・大きさのリセットは、窓になっているときだけ意味がある */
       sizeBtn.hidden=minBtn.hidden=!f;
       minBtn.innerHTML=min?EXPAND_SVG:MIN_SVG; minBtn.title=t(min?'ttExpand':'ttMinimize');
-      minBtn.dataset.tip=min?'ttExpand':'ttMinimize';
+      minBtn.dataset.tipkey=min?'ttExpand':'ttMinimize';
       sizeBtn.title=t('ttResetSize');
-      if(S.floatPanels){ btn.innerHTML=CLOSE_SVG; btn.title=t('ttClose'); btn.dataset.tip='ttClose'; return; }
-      btn.innerHTML=f?DOCK_SVG:FLOAT_SVG; btn.title=t(f?'ttDock':'ttFloat'); btn.dataset.tip=f?'ttDock':'ttFloat';
+      if(S.floatPanels){ btn.innerHTML=CLOSE_SVG; btn.title=t('ttClose'); btn.dataset.tipkey='ttClose'; return; }
+      btn.innerHTML=f?DOCK_SVG:FLOAT_SVG; btn.title=t(f?'ttDock':'ttFloat'); btn.dataset.tipkey=f?'ttDock':'ttFloat';
     }
     /* 最小化。resize で付いた inline の高さは覚えておき、戻すときに返す。 */
     function toggleMin(){
@@ -8486,23 +9004,24 @@ document.getElementById('btnCopyImg').onclick=()=>{ closeMenus(); if(!visibleSpe
 })();
 
 /* ---------- portable work file (dataset states + workspace) as JSON ---------- */
-const SHOW_FLAGS=['showInsets','showNames','showPeaks','showIntegs','showShades','showMarks','showText','showMults','showMultSources','showThresholdLine','showLanes','showLines','showZooms','showMinimap','zoomLeaders','laneOverflow','showTitle'];
+const SHOW_FLAGS=['showInsets','showNames','showPeaks','showIntegs','showShades','showMarks','showText','showMults','showMultSources','showThresholdLine','showLanes','showLines','showZooms','showMinimap','zoomLeaders','laneOverflow','showTitle','cursorGuide'];
 function uiState(){ const o={
     view:{pHi:S.view.pHi,pLo:S.view.pLo}, spectrumViews:S.spectrumViews||{}, layout:S.layout, palette:S.palette, monoBase:S.monoBase,
     uiRev:UI_REV, pngScale:S.pngScale, axisW:S.axisW, annotWhere:S.annotWhere,
     lineW:S.lineW, ppmDigits:S.ppmDigits, pkDigits:S.pkDigits, fontScale:S.fontScale, nameScale:S.nameScale, axisScale:S.axisScale, markSize:S.markSize, plotFont:S.plotFont,
     axisPad:S.axisPad, axisTicks:S.axisTicks, axisMinorTicks:S.axisMinorTicks, baseGap:S.baseGap, thr:S.thr, minimapH:S.minimapH, minimapStyle:S.minimapStyle, minimapPos:S.minimapPos, minimapColor:S.minimapColor, minimapMaskT:S.minimapMaskT, minimapWinT:S.minimapWinT, minimapFrameStyle:S.minimapFrameStyle, minimapFrameW:S.minimapFrameW,
     zoomBorderColor:S.zoomBorderColor, zoomBorderWidth:S.zoomBorderWidth, zoomLeaderStyle:S.zoomLeaderStyle,
-    peakColor:S.peakColor, integColor:S.integColor, peakStyle:S.peakStyle, integStyle:S.integStyle, showIntegCurve:S.showIntegCurve,
-    multColor:S.multColor, multDigits:S.multDigits, multJStyle:S.multJStyle, multStyle:S.multStyle, markColor:S.markColor, shadeColor:S.shadeColor, textColor:S.textColor, textSize:S.textSize, textBold:S.textBold, textItalic:S.textItalic,
+    peakColor:S.peakColor, integColor:S.integColor, peakStyle:S.peakStyle, peakVScale:S.peakVScale, integStyle:S.integStyle, showIntegCurve:S.showIntegCurve,
+    multColor:S.multColor, multDigits:S.multDigits, multJStyle:S.multJStyle, multStyle:S.multStyle, multShift:S.multShift, multVScale:S.multVScale, markColor:S.markColor, shadeColor:S.shadeColor, textColor:S.textColor, textSize:S.textSize, textBold:S.textBold, textItalic:S.textItalic,
     textUnderline:S.textUnderline, textFontFam:S.textFontFam, lineColor:S.lineColor, lineStyle:S.lineStyle, connW:S.connW, lineArrow:S.lineArrow,
-    imageDefaultScale:S.imageDefaultScale, imageBorder:S.imageBorder, imageBorderColor:S.imageBorderColor, imageBorderWidth:S.imageBorderWidth, imageBorderStyle:S.imageBorderStyle, integDigits:S.integDigits,
+    imageDefaultScale:S.imageDefaultScale, imageBorder:S.imageBorder, imageBorderColor:S.imageBorderColor, imageBorderWidth:S.imageBorderWidth, imageBorderStyle:S.imageBorderStyle, integDigits:S.integDigits, integShift:S.integShift, integCurveH:S.integCurveH,
     customPalette:S.customPalette||[],
     impSolvent:S.impSolvent, impTol:S.impTol, impTolC:S.impTolC, showImpurities:S.showImpurities, impPins:S.impPins||[],
     lines:S.lines||[], zooms:S.zooms||[],
     figTitle:S.figTitle, titleSize:S.titleSize, titleBold:S.titleBold, cutStyle:S.cutStyle,
     cutColor:S.cutColor, cutWidth:S.cutWidth, cutWave:S.cutWave, cutSpan:S.cutSpan, cutGap:S.cutGap, cutOpacity:S.cutOpacity,
-    laneStyle:S.laneStyle, laneColor:S.laneColor, laneWidth:S.laneWidth, laneTransp:S.laneTransp, flags:{} };
+    laneStyle:S.laneStyle, laneColor:S.laneColor, laneWidth:S.laneWidth, laneTransp:S.laneTransp,
+    cursorColor:S.cursorColor, cursorStyle:S.cursorStyle, cursorWidth:S.cursorWidth, cursorOpacity:S.cursorOpacity, flags:{} };
   SHOW_FLAGS.forEach(f=>o.flags[f]=S[f]); return o; }
 function applyUIState(o, withView){
   if(!o) return;
@@ -8561,8 +9080,13 @@ function applyUIState(o, withView){
   if(['','sans','serif','mono','topspin','mnova'].includes(o.textFontFam)) S.textFontFam=o.textFontFam;
   if(typeof o.connW==='number'&&isFinite(o.connW)&&o.connW>0) S.connW=o.connW;
   if(typeof o.integDigits==='number') S.integDigits=o.integDigits;
+  if(typeof o.integCurveH==='number'&&isFinite(o.integCurveH)) S.integCurveH=Math.max(.2,Math.min(1,o.integCurveH));
+  if(typeof o.peakVScale==='number'&&isFinite(o.peakVScale)) S.peakVScale=Math.max(.5,Math.min(2,o.peakVScale));
+  if(typeof o.integShift==='number'&&isFinite(o.integShift)) S.integShift=Math.max(-.3,Math.min(.4,o.integShift));
   if(typeof o.multDigits==='number') S.multDigits=o.multDigits;
-  if(['full','inline','jonly','value'].includes(o.multJStyle)) S.multJStyle=o.multJStyle;
+  if(typeof o.multShift==='number'&&isFinite(o.multShift)) S.multShift=Math.max(-0.2,Math.min(0.6,o.multShift));
+  if(typeof o.multVScale==='number'&&isFinite(o.multVScale)) S.multVScale=Math.max(.4,Math.min(1.2,o.multVScale));
+  if(['full','inline','jonly','value','boxed'].includes(o.multJStyle)) S.multJStyle=o.multJStyle;
   if('multColor' in o) S.multColor=o.multColor;
   if('lineColor' in o) S.lineColor=o.lineColor;
   if(['solid','dashed','dotted','dashdot'].includes(o.lineStyle)) S.lineStyle=o.lineStyle;
@@ -8593,6 +9117,10 @@ function applyUIState(o, withView){
   if(typeof o.laneTransp==='number') S.laneTransp=Math.max(0,Math.min(.9,o.laneTransp));
   /* 透明度は「0%＝不透明」に決めた。それ以前に書かれた不透明度の値だけ読み替える。 */
   else if(typeof o.laneOpacity==='number') S.laneTransp=Math.max(0,Math.min(.9,1-o.laneOpacity));
+  if(o.cursorColor===null||typeof o.cursorColor==='string') S.cursorColor=o.cursorColor;
+  if(['solid','dashed','dotted','dashdot'].includes(o.cursorStyle)) S.cursorStyle=o.cursorStyle;
+  if(typeof o.cursorWidth==='number'&&isFinite(o.cursorWidth)) S.cursorWidth=Math.max(.5,Math.min(4,o.cursorWidth));
+  if(typeof o.cursorOpacity==='number'&&isFinite(o.cursorOpacity)) S.cursorOpacity=Math.max(.1,Math.min(1,o.cursorOpacity));
   if(typeof o.cutWidth==='number') S.cutWidth=o.cutWidth;
   if(typeof o.cutWave==='number') S.cutWave=o.cutWave;
   if(typeof o.cutSpan==='number') S.cutSpan=Math.max(1,Math.min(12,o.cutSpan));
@@ -8723,17 +9251,33 @@ function syncUIControls(){
   if(typeof syncLaneStyleUI==='function') syncLaneStyleUI();
   const th=document.getElementById('thrSlider'); if(th){ th.value=Math.round(S.thr*100); const v=document.getElementById('thrVal'); if(v) v.textContent=Math.round(S.thr*100)+'%'; }
   const lw=document.getElementById('lineW'); if(lw){ lw.value=S.lineW; const v=document.getElementById('lwv'); if(v) v.textContent=(+S.lineW).toFixed(1)+' px'; }
-  const pd=document.getElementById('ppmDigits'); if(pd){ pd.value=S.ppmDigits; const v=document.getElementById('digv'); if(v) v.textContent=String(S.ppmDigits); }
-  const kd=document.getElementById('pkDigits'); if(kd){ kd.value=S.pkDigits; const v=document.getElementById('pkdigv'); if(v) v.textContent=String(S.pkDigits); }
+  const pd=document.getElementById('ppmDigits'); if(pd){ pd.value=S.ppmDigits; const v=document.getElementById('digv'); if(v) v.textContent=ppmDigitsLabel(S.ppmDigits); }
+  const kd=document.getElementById('pkDigits'); if(kd){ kd.value=S.pkDigits; const v=document.getElementById('pkdigv'); if(v) v.textContent=ppmDigitsLabel(S.pkDigits); }
   const fs=document.getElementById('fontScale'); if(fs){ fs.value=ptOf(S.fontScale); const v=document.getElementById('fsv'); if(v) v.textContent=fmtPt(S.fontScale); }
   const ns=document.getElementById('nameScale'); if(ns){ ns.value=ptOf(S.nameScale); const v=document.getElementById('nsv'); if(v) v.textContent=fmtPt(S.nameScale); }
   const as_=document.getElementById('axisScale'); if(as_){ as_.value=ptOf(S.axisScale); const v=document.getElementById('asv'); if(v) v.textContent=fmtPt(S.axisScale); }
   const mks=document.getElementById('markSize'); if(mks){ mks.value=S.markSize; const v=document.getElementById('mkv'); if(v) v.textContent=(S.markSize||4.6).toFixed(1)+' px'; }
   const tss=document.getElementById('textSize'); if(tss){ tss.value=S.textSize; const v=document.getElementById('tsv'); if(v) v.textContent=(S.textSize||10.5).toFixed(1)+' pt'; }
   const tcb=document.getElementById('textColor'); if(tcb) setColorBtn('textColor', S.textColor||DEFAULTS.textColor);
-  const idg=document.getElementById('integDigits'); if(idg){ idg.value=S.integDigits; const v=document.getElementById('idgv'); if(v) v.textContent=String(S.integDigits??3); }
-  const mdg=document.getElementById('multDigits'); if(mdg){ mdg.value=S.multDigits??2; const v=document.getElementById('mdgv'); if(v) v.textContent=String(S.multDigits??2); }
+  const idg=document.getElementById('integDigits'); if(idg){ idg.value=S.integDigits; const v=document.getElementById('idgv'); if(v) v.textContent=ppmDigitsLabel(S.integDigits??3); }
+  const ish2=document.getElementById('integShift');
+  if(ish2){ ish2.value=Math.round((S.integShift||0)*100);
+    const v=document.getElementById('ishv'); if(v) v.textContent=nsign(String(Math.round((S.integShift||0)*100)))+'%'; }
+  const pvs2=document.getElementById('peakVScale');
+  if(pvs2){ pvs2.value=Math.round(peakVScale()*100);
+    const v=document.getElementById('pvsv'); if(v) v.textContent=Math.round(peakVScale()*100)+'%'; }
+  syncPeakVRow();
+  const ich2=document.getElementById('integCurveH');
+  if(ich2){ ich2.value=Math.round(integCurveH()*100);
+    const v=document.getElementById('ichv'); if(v) v.textContent=Math.round(integCurveH()*100)+'%'; }
+  const mdg=document.getElementById('multDigits'); if(mdg){ mdg.value=S.multDigits??2; const v=document.getElementById('mdgv'); if(v) v.textContent=ppmDigitsLabel(S.multDigits??2); }
   const mjs=document.getElementById('multJStyle'); if(mjs) mjs.value=S.multJStyle||'full';
+  const mvs2=document.getElementById('multVScale');
+  if(mvs2){ mvs2.value=Math.round((S.multVScale||1)*100);
+    const v=document.getElementById('mvsv'); if(v) v.textContent=Math.round((S.multVScale||1)*100)+'%'; }
+  const msh2=document.getElementById('multShift');
+  if(msh2){ msh2.value=Math.round((S.multShift||0)*100);
+    const v=document.getElementById('mshv'); if(v) v.textContent=nsign(String(Math.round((S.multShift||0)*100)))+'%'; }
   const lcb=document.getElementById('lineColor'); if(lcb) setColorBtn('lineColor', S.lineColor||css('--axis'));
   const ax=document.getElementById('axisPad'); if(ax){ ax.value=S.axisPad; const v=document.getElementById('axv'); if(v) v.textContent=S.axisPad+' px'; }
   const mmh=document.getElementById('minimapH'); if(mmh){ const n=MMH(); mmh.value=String(n); const v=document.getElementById('mmhv'); if(v) v.textContent=n+' px'; }
@@ -8751,7 +9295,7 @@ function syncUIControls(){
     /* ミニマップが非表示のあいだは、効き先が無い設定なので触れないことを見せる */
     MINIMAP_ROWS.forEach(id=>{ const r=document.getElementById(id); if(!r) return;
       r.style.opacity=S.showMinimap?'':'0.45'; r.style.pointerEvents=S.showMinimap?'':'none'; }); }
-  const at=document.getElementById('axisTicks'); if(at){ at.value=S.axisTicks; const v=document.getElementById('atv'); if(v) v.textContent=String(S.axisTicks); }
+  const at=document.getElementById('axisTicks'); if(at){ at.value=S.axisTicks; const v=document.getElementById('atv'); if(v) v.textContent=axisTicksLabel(S.axisTicks); }
   const amt=document.getElementById('axisMinorTicks'); if(amt){ amt.value=S.axisMinorTicks; const v=document.getElementById('amtv'); if(v) v.textContent=axisMinorTickLabel(S.axisMinorTicks); }
   const aw=document.getElementById('axisW'); if(aw){ const n=S.axisW||0; aw.value=String(n); const v=document.getElementById('awv'); if(v) v.textContent=axisWLabel(n); }
   const bg=document.getElementById('baseGap'); if(bg){ const pct=(S.baseGap==null?0.035:S.baseGap)*100; bg.value=String(pct); const v=document.getElementById('bgv'); if(v) v.textContent=pct.toFixed(1)+'%'; }
@@ -8784,6 +9328,22 @@ function toast(msg, ms){ let el=document.getElementById('toast');
    a large rework bumps the major (→ 2.0). Badge shows v + CHANGELOG[0].v.
    Fields: v (version string), date (YYYY-MM-DD), en[] / ja[] bullet lists. */
 const CHANGELOG=[
+  { v:'1.23', date:'2026-09-09',
+    en:['Multiplet labels gain a boxed style, after MestReNova. Choose it in Multiplets › Label display (“A (d) / δ / J (boxed)”). Each multiplet is lettered from low field — the largest δ is A — and gets a three-line head right above its tree: “A (d)”, the shift, and “J(8.37)”, all inside a frame drawn in the multiplet colour. The box replaces both the stacked δ/symbol head and the J block that used to sit beside the tree, so the whole assignment reads as one card instead of three pieces the eye has to gather. Boxes that would collide are spread sideways and tied back to their stem with the same leader the δ head already used, and the box is opaque so a tree behind it does not show through. Letters are assigned over the whole spectrum, not the visible window, so panning and zooming never reshuffle them; hidden multiplets are skipped so the letters stay contiguous. With peak labels in style 2 the head no longer claims a slot in the δ column — it is not there any more — so the column does not carry an empty gap. Tree shape, height, depth, colour and J decimals all keep working as before.'],
+    ja:['多重線のラベルに、MestReNova にならった<b>枠つき</b>の表示を追加しました。「多重線 › ラベルの表示」で「A (d) / δ / J（枠つき）」を選びます。多重線を低磁場側（δ の大きい側）から順に A・B・C… と名付け、「A (d)」「7.17」「J(8.37)」の 3 行を枠で囲んでツリーの真上に置きます。これまでは δ＋多重度の見出しがツリーの上、J 値はツリーの横と離れていたので、一つの帰属を読むのに目を 3 か所に配る必要がありました。枠つきはそれを 1 枚の札にまとめます。枠の中はすべて多重線の色で描き、地は不透明なので背後のトレースやツリーが透けません。枠どうしが重なるときは横にずらし、従来の見出しと同じ引き出し線で幹につなぎます。記号は表示範囲ではなくスペクトル全体の並び順で決めるので、パンやズームで A/B が入れ替わりません（非表示にした多重線は飛ばすので、残ったものに連番で付きます）。ピークの δ ラベルがスタイル2 のときは、見出しをその列に混ぜないようにしました（枠の中に δ があるので、混ぜると誰も使わない列が 1 本空くだけです）。ツリーの形状・高さ・縦幅・色・J 小数桁はこれまでどおり効きます。'] },
+  { v:'1.22', date:'2026-09-09',
+    en:['Images in the Assignment tab can be told apart at a glance. Four changes. The thumbnail no longer crops: it used <b>object-fit:cover</b>, which fills the box with the middle of the picture \u2014 for a structure drawing, that is the white space between the bonds, so two different structures both came out blank. It now fits the whole picture in. It is drawn on white, which also fixes structures pasted as transparent PNGs vanishing in the dark theme, since there was no backing behind the black lines. It is <b>40 px</b> instead of 20, and the margins are trimmed away when the list is built \u2014 the four corners are taken as the background and the picture is cut to what is left \u2014 so the box holds the structure rather than the paper around it. <b>Hovering a row</b> shows the picture at 220 px beside the sidebar, for when the thumbnail is not enough. And each image can be <b>named</b>: click the name in the row, type, Enter (Esc cancels, and an empty name goes back to \u201cImage 1\u201d). The name is saved with the annotations and is undoable. Rows are now 47 px instead of 29.'],
+    ja:['\u300c\u5e30\u5c5e\u300d\u30bf\u30d6\u306e\u753b\u50cf\u3092\u3001\u4e00\u89a7\u306e\u307e\u307e\u898b\u5206\u3051\u3089\u308c\u308b\u3088\u3046\u306b\u3057\u307e\u3057\u305f\u3002\u5909\u66f4\u306f 4 \u3064\u3067\u3059\u3002\u30b5\u30e0\u30cd\u30a4\u30eb\u306f<b>\u5207\u308a\u629c\u304b\u306a\u304f\u306a\u308a\u307e\u3057\u305f</b>\u3002\u3053\u308c\u307e\u3067\u306f object-fit:cover \u3067\u3001\u67a0\u306b\u5408\u308f\u305b\u3066\u4e2d\u592e\u3092\u5207\u308a\u629c\u3044\u3066\u3044\u305f\u306e\u3067\u3001\u69cb\u9020\u5f0f\u3067\u306f\u7d50\u5408\u306e\u9593\u306e\u767d\u3044\u4f59\u767d\u3060\u3051\u304c\u6b8b\u308a\u3001\u5225\u306e\u69cb\u9020\u5f0f 2 \u679a\u304c\u3069\u3061\u3089\u3082\u771f\u3063\u767d\u306b\u306a\u3063\u3066\u3044\u307e\u3057\u305f\u3002\u5730\u3092\u767d\u3067\u56fa\u5b9a\u3057\u305f\u306e\u3067\u3001\u900f\u904e PNG \u3067\u8cbc\u3063\u305f\u69cb\u9020\u5f0f\u304c\u30c0\u30fc\u30af\u30c6\u30fc\u30de\u3067\u9ed2\u3044\u7dda\u3054\u3068\u6d88\u3048\u308b\u554f\u984c\u3082\u3042\u308f\u305b\u3066\u76f4\u3063\u3066\u3044\u307e\u3059\u3002\u5927\u304d\u3055\u306f 20px \u304b\u3089 <b>40px</b> \u306b\u3057\u3001\u4e00\u89a7\u3092\u4f5c\u308b\u3068\u304d\u306b<b>\u4f59\u767d\u3092\u81ea\u52d5\u3067\u843d\u3068\u3057\u307e\u3059</b>\uff08\u56db\u9685\u306e\u8272\u3092\u5730\u3068\u307f\u306a\u3057\u3001\u4e2d\u8eab\u306e\u5916\u63a5\u77e9\u5f62\u3067\u5207\u308b\uff09\u3002\u679a\u306e\u4f59\u767d\u3067\u306f\u306a\u304f\u69cb\u9020\u5f0f\u305d\u306e\u3082\u306e\u304c\u67a0\u306b\u5165\u308a\u307e\u3059\u3002<b>\u884c\u306b\u30db\u30d0\u30fc</b>\u3059\u308b\u3068\u3001\u30b5\u30a4\u30c9\u30d0\u30fc\u306e\u6a2a\u306b 220px \u3067\u5927\u304d\u304f\u51fa\u307e\u3059\uff08\u30b5\u30e0\u30cd\u30a4\u30eb\u3067\u8db3\u308a\u306a\u3044\u3068\u304d\u7528\uff09\u3002\u305d\u3057\u3066\u753b\u50cf\u306b<b>\u540d\u524d\u3092\u4ed8\u3051\u3089\u308c\u308b</b>\u3088\u3046\u306b\u3057\u307e\u3057\u305f\u3002\u884c\u306e\u540d\u524d\u3092\u62bc\u3057\u3066\u5165\u529b\u3057\u3001Enter \u3067\u78ba\u5b9a\uff08Esc \u3067\u53d6\u308a\u6d88\u3057\u3001\u7a7a\u306b\u3059\u308b\u3068\u300c\u753b\u50cf 1\u300d\u306b\u623b\u308a\u307e\u3059\uff09\u3002\u540d\u524d\u306f\u6ce8\u91c8\u3068\u4e00\u7dd2\u306b\u4fdd\u5b58\u3055\u308c\u3001\u53d6\u308a\u6d88\u305b\u307e\u3059\u3002\u884c\u306e\u9ad8\u3055\u306f 29px \u304b\u3089 47px \u306b\u306a\u308a\u307e\u3059\u3002'] },
+  { v:'1.21', date:'2026-09-08',
+    en:['The image list in that tab loses its cards as well, and its \u201c+ Insert image\u201d button. The images were the one group still drawn as bordered rows, because they are laid out as divs rather than a table and so were missed when the frames came off; they now use the same row height, padding, separator and hover/selected fills as every other section. The insert button is gone from the list because the action already lives in Assign \u203a Insert an image, and the empty state still offers it when there is nothing to show.',
+        'The Assignment tab drops its cards too. Its five groups \u2014 marks, text, shading, connectors, images \u2014 had been drawn as bordered, filled cards since 1.19; with the list frame gone in 1.20 that left this one tab boxed three deep (sidebar section \u2192 Results \u2192 card). The border also carried a cost that was not obvious: the cards clip their rounded corners with overflow:hidden, which makes each card its own scroll container, so nothing inside the tab could stick to the top while the sidebar scrolled. The groups are now flat, separated by a hairline like every other list, and two more things stay in view as you scroll: the group name (\u25b8 Text 24) and, below it, that group\u2019s column header. Together with the \u201cResults\u201d heading and the tab row that is four bands, 137 px, at the top of the sidebar.'],
+    ja:['\u540c\u3058\u30bf\u30d6\u306e\u753b\u50cf\u306e\u4e00\u89a7\u3082\u30ab\u30fc\u30c9\u3092\u3084\u3081\u3001\u300c\uff0b \u753b\u50cf\u3092\u633f\u5165\u300d\u306e\u30dc\u30bf\u30f3\u3092\u5916\u3057\u307e\u3057\u305f\u3002\u753b\u50cf\u3060\u3051\u306f\u8868\u3067\u306f\u306a\u304f div \u306e\u4e26\u3073\u3067\u4f5c\u3063\u3066\u3044\u305f\u305f\u3081\u3001\u67a0\u3092\u5916\u3057\u305f\u3068\u304d\u306b\u53d6\u308a\u6b8b\u3055\u308c\u3066\u3044\u307e\u3057\u305f\u3002\u884c\u306e\u9ad8\u3055\u30fb\u4f59\u767d\u30fb\u533a\u5207\u308a\u7dda\u30fb\u30db\u30d0\u30fc\u3068\u9078\u629e\u306e\u5857\u308a\u3092\u3001\u4ed6\u306e\u7bc0\u306e\u884c\u3068\u540c\u3058\u306b\u3057\u3066\u3042\u308a\u307e\u3059\u3002\u633f\u5165\u306e\u30dc\u30bf\u30f3\u306f\u300c\u5e30\u5c5e \u203a \u753b\u50cf\u3092\u633f\u5165\u300d\u306b\u540c\u3058\u3082\u306e\u304c\u3042\u308a\u30010 \u4ef6\u306e\u3068\u304d\u306f\u7a7a\u72b6\u614b\u304c\u540c\u3058\u30dc\u30bf\u30f3\u3092\u51fa\u3059\u306e\u3067\u3001\u4e00\u89a7\u306e\u4e0a\u306b\u5e38\u6642\u51fa\u3057\u3066\u304a\u304f\u5fc5\u8981\u306f\u3042\u308a\u307e\u305b\u3093\u3002',
+        '\u300c\u5e30\u5c5e\u300d\u30bf\u30d6\u306e\u30ab\u30fc\u30c9\u3082\u3084\u3081\u307e\u3057\u305f\u30021.19 \u304b\u3089 5 \u3064\u306e\u7bc0\uff08\u30de\u30fc\u30af\u30fb\u30c6\u30ad\u30b9\u30c8\u30fb\u5857\u308a\u3064\u3076\u3057\u30fb\u30b3\u30cd\u30af\u30bf\u30fb\u753b\u50cf\uff09\u3092\u67a0\u4ed8\u304d\u306e\u30ab\u30fc\u30c9\u3067\u63cf\u3044\u3066\u3044\u307e\u3057\u305f\u304c\u30011.20 \u3067\u4e00\u89a7\u306e\u67a0\u3092\u5916\u3057\u305f\u7d50\u679c\u3001\u3053\u306e\u30bf\u30d6\u3060\u3051\u304c\u300c\u30b5\u30a4\u30c9\u30d0\u30fc\u306e\u6b04 \u2192 \u89e3\u6790\u7d50\u679c \u2192 \u30ab\u30fc\u30c9\u300d\u306e 3 \u91cd\u306b\u306a\u3063\u3066\u3044\u307e\u3057\u305f\u3002\u67a0\u306b\u306f\u898b\u3048\u306b\u304f\u3044\u4ee3\u511f\u3082\u3042\u308a\u3001\u89d2\u4e38\u3067\u4e2d\u8eab\u3092\u5207\u308b\u305f\u3081\u306e overflow:hidden \u304c\u7bc0\u3054\u3068\u306b\u72ec\u7acb\u3057\u305f\u30b9\u30af\u30ed\u30fc\u30eb\u9818\u57df\u3092\u4f5c\u308b\u306e\u3067\u3001\u30b5\u30a4\u30c9\u30d0\u30fc\u3092\u9001\u3063\u3066\u3082\u3053\u306e\u30bf\u30d6\u306e\u4e2d\u306e\u3082\u306e\u306f\u4f55\u3072\u3068\u3064\u4e0a\u306b\u6b8b\u308c\u307e\u305b\u3093\u3067\u3057\u305f\u3002\u3044\u307e\u306f\u4ed6\u306e\u4e00\u89a7\u3068\u540c\u3058\u304f\u7f6b\u7dda 1 \u672c\u3067\u533a\u5207\u3063\u305f\u5e73\u3089\u306a\u4e26\u3073\u306b\u306a\u308a\u3001\u30b9\u30af\u30ed\u30fc\u30eb\u4e2d\u306b\u3055\u3089\u306b 2 \u3064\u2014\u2014\u7bc0\u306e\u540d\u524d\uff08\u25b8 \u30c6\u30ad\u30b9\u30c8 24\uff09\u3068\u3001\u305d\u306e\u4e0b\u306b\u305d\u306e\u7bc0\u306e\u5217\u898b\u51fa\u3057\u2014\u2014\u304c\u6b8b\u308a\u307e\u3059\u3002\u898b\u51fa\u3057\u300c\u89e3\u6790\u7d50\u679c\u300d\u3068\u30bf\u30d6\u5217\u3068\u5408\u308f\u305b\u3066 4 \u6bb5\u30fb137px \u304c\u30b5\u30a4\u30c9\u30d0\u30fc\u306e\u4e0a\u306b\u5c45\u5ea7\u308a\u307e\u3059\u3002\u898b\u6bd4\u3079\u305f\u30da\u30fc\u30b8\u306f assign-nesting-proposals.html \u306b\u3042\u308a\u307e\u3059\u3002'] },
+  { v:'1.20', date:'2026-09-08',
+    en:['The Results list no longer scrolls inside its own frame. Since 1.19 it had a border and a height cap, which made the sidebar hold two scroll regions instead of one. That cap is computed from how much room is left below the sections above, so opening Spectra, Acquisition, Phase and Processing squeezed the list down to its 160 px floor — and scrolling the sidebar to bring it up did not give it the space back, because the measurement is taken in the sidebar\u2019s own content coordinates. Now the sidebar is the only thing that scrolls, and the three things worth keeping in view stay put on their own: the \u201cResults\u201d heading (which carries the float button), the tab row, and the table header, each sticking below the one above it. The frame and its fill are gone with it.',
+        'The Assignment cards no longer reserve a scrollbar gutter. It was there because the list used to scroll on its own; with the nested scrolling gone there is no bar to make room for, and leaving it in would have shifted the cards 8 px at all times instead of only while scrolling. Their right edges still line up with the Spectra rows.'],
+    ja:['\u300c\u89e3\u6790\u7d50\u679c\u300d\u306e\u4e00\u89a7\u3092\u3001\u81ea\u524d\u306e\u30b9\u30af\u30ed\u30fc\u30eb\u67a0\u306b\u5165\u308c\u308b\u306e\u3092\u3084\u3081\u307e\u3057\u305f\u30021.19 \u3067\u5165\u308c\u305f\u67a0\u3068\u9ad8\u3055\u306e\u4e0a\u9650\u306f\u3001\u30b5\u30a4\u30c9\u30d0\u30fc\u306e\u4e2d\u306b\u3082\u3046\u4e00\u6bb5\u30b9\u30af\u30ed\u30fc\u30eb\u3092\u4f5c\u308b\u3082\u306e\u3067\u3057\u305f\u3002\u4e0a\u9650\u306f\u300c\u4e0a\u306e\u6b04\u306e\u4e0b\u306b\u6b8b\u3063\u3066\u3044\u308b\u9ad8\u3055\u300d\u304b\u3089\u6c42\u3081\u3066\u3044\u308b\u306e\u3067\u3001\u30b9\u30da\u30af\u30c8\u30eb\u30fb\u6e2c\u5b9a\u60c5\u5831\u30fb\u4f4d\u76f8\u30fb\u51e6\u7406\u3092\u958b\u3051\u308b\u3068\u4e00\u89a7\u306f\u4e0b\u9650\u306e 160px \u307e\u3067\u6f70\u308c\u3001\u3057\u304b\u3082\u9ad8\u3055\u306e\u8a08\u7b97\u304c\u30b5\u30a4\u30c9\u30d0\u30fc\u306e\u4e2d\u8eab\u5074\u306e\u5ea7\u6a19\u306a\u306e\u3067\u3001\u4e0b\u3078\u9001\u3063\u3066\u753b\u9762\u3044\u3063\u3071\u3044\u306b\u6301\u3063\u3066\u304d\u3066\u3082\u5e83\u304c\u308a\u307e\u305b\u3093\u3067\u3057\u305f\u3002\u3044\u307e\u306f\u30b9\u30af\u30ed\u30fc\u30eb\u3059\u308b\u306e\u306f\u30b5\u30a4\u30c9\u30d0\u30fc\u3060\u3051\u3067\u3001\u898b\u3048\u3066\u3044\u3066\u307b\u3057\u3044 3 \u3064\u2014\u2014\u898b\u51fa\u3057\u300c\u89e3\u6790\u7d50\u679c\u300d\uff08\u5207\u308a\u96e2\u3057\u306e\u77e2\u5370\u304c\u3053\u3053\u306b\u3042\u308a\u307e\u3059\uff09\u3001\u30bf\u30d6\u5217\u3001\u8868\u306e\u898b\u51fa\u3057\u884c\u2014\u2014\u304c\u4e0a\u304b\u3089\u9806\u306b\u8cbc\u308a\u4ed8\u3044\u3066\u6b8b\u308a\u307e\u3059\u3002\u67a0\u3068\u5730\u8272\u306f\u4e00\u7dd2\u306b\u306a\u304f\u306a\u308a\u307e\u3057\u305f\u3002',
+        '\u300c\u5e30\u5c5e\u300d\u306e\u30ab\u30fc\u30c9\u304b\u3089\u3001\u30b9\u30af\u30ed\u30fc\u30eb\u30d0\u30fc\u306e\u6e9d\u306e\u78ba\u4fdd\u3092\u5916\u3057\u307e\u3057\u305f\u3002\u4e00\u89a7\u304c\u81ea\u524d\u3067\u30b9\u30af\u30ed\u30fc\u30eb\u3057\u3066\u3044\u305f\u9803\u306e\u5bfe\u7b56\u3067\u3001\u5165\u308c\u5b50\u306e\u30b9\u30af\u30ed\u30fc\u30eb\u304c\u7121\u304f\u306a\u3063\u305f\u3044\u307e\u306f\u30d0\u30fc\u81ea\u4f53\u304c\u51fa\u306a\u3044\u305f\u3081\u3001\u6b8b\u3057\u3066\u304a\u304f\u3068\u300c\u5e38\u306b 8px \u305a\u308c\u308b\u300d\u5074\u306b\u5012\u308c\u307e\u3059\u3002\u53f3\u7aef\u304c\u30b9\u30da\u30af\u30c8\u30eb\u6b04\u306e\u884c\u3068\u63c3\u3046\u306e\u306f\u305d\u306e\u307e\u307e\u3067\u3059\u3002'] },
   { v:'1.19', date:'2026-09-07',
     en:['Connectors now say whether they follow the spectrum or stay put, per endpoint and per axis. They used to be stored as a fraction of the whole plot box, so only δ tracked zoom and pan: an endpoint drawn to a peak apex hung in mid-air as soon as the intensity changed (the plain mouse wheel over the plot), and in stacked view a connector could end up over a different spectrum when the number of lanes changed. Each endpoint now carries two choices. Its <b>height</b> either follows the trace (δ plus an intensity value on a named spectrum, so it stays on the peak through intensity changes, lane changes, the integral bands and the baseline gap) or is fixed to its lane, the way text labels and marks already are. Its <b>δ position</b> either follows δ, or is fixed on screen so that zooming and panning leave it where it is — for a line drawn in clear space as a piece of figure furniture, rather than a pointer at a peak. Two pins in the Results row, left of the eye, set the two axes for the whole connector; clicking the row opens the same two pins for each end separately. Neither ever moves the line. Height is decided for you when you draw: on the trace it follows, in clear space it is fixed. Connectors drawn before this change are converted to fixed height, which is how they behaved. Dragging the line itself now moves it as a whole instead of starting a new one, and Shift-dragging an end keeps the current angle and changes only the length. Assign › Connectors › Style settings gains an arrowhead (none / start / end / both). Endpoints can no longer be dropped outside the plot, and the line is clipped to it, so an endpoint pushed off the top by a large intensity no longer draws across the δ axis and margins. A connector with an endpoint in an omitted (cut) region or in a zoom window is hidden, as every other annotation already was — it used to be judged on its midpoint alone. Drawing, moving, pinning, deleting and clearing connectors are undoable, and deleting one from a Results row is saved. Calibration shifts only the endpoints that belong to the calibrated spectrum and still follow δ.',
         'Reworked the Results panel in the sidebar. Its list now scrolls inside its own frame instead of stretching the whole sidebar. With 42 picked peaks the old panel pushed the sidebar to about 1030 px of scrolling, which carried the tab row and the “Results” heading off screen — switching to Integrals meant scrolling back to the top first. The table header sticks to the top of the list rather than to the top of the sidebar, and the panel now behaves the same docked as it does floating.',
@@ -9461,7 +10021,8 @@ const MANUAL = {
       ]},
       {sub:'調整する'},
       {ul:[
-        '<b>ラベルの表示</b>：「d と J = X Hz」（標準）、「J = X Hz (d)」、「J = X Hz」（d を非表示）、「d と数値のみ」（従来）を切り替えられます。化学シフト δ はピーク検出と同じ色、J は紫で表示されます。',
+        '<b>ラベルの表示</b>：「d と J = X Hz」（標準）、「J = X Hz (d)」、「J = X Hz」（d を非表示）、「d と数値のみ」（従来）、「A (d) / δ / J（枠つき）」を切り替えられます。化学シフト δ はピーク検出と同じ色、J は紫で表示されます。',
+        '<b>枠つき（A (d) / δ / J）</b>：MestReNova の表示にならった見出しです。多重線を低磁場側（δ の大きい側）から順に A・B・C… と名付け、「A (d)」「7.17」「J(8.37)」の 3 行を枠で囲んでツリーの真上に置きます。枠の中はすべて多重線の色で描き、枠どうしが重なるときは横にずらして幹から引き出し線でつなぎます。記号は表示範囲ではなくスペクトル全体の並び順で決まるので、パンやズームで入れ替わりません（非表示にした多重線は飛ばします）。',
         '<b>元ピークの δ</b>：表示をオンにすると、多重線を定義した各検出ピークの化学シフトをツリー右側に表示します。初期状態では非表示です。<b>J の小数桁</b>：J〔Hz〕の表示桁数（0〜3）。<b>色</b>：多重線ラベルの色。',
         `<b>削除</b> ${manIc('trash')} ／ <b>表示 / 非表示</b> ${manIc('eye')}：範囲削除・全消去・表示切替ができます。`,
       ]},
@@ -9690,7 +10251,8 @@ const MANUAL = {
       ]},
       {sub:'Adjusting'},
       {ul:[
-        '<b>Label display</b>: switch among the separate multiplet symbol and J (default), “J = X Hz (d)”, J only, and the previous number-only J style. Chemical shift δ uses the peak colour; J is purple.',
+        '<b>Label display</b>: switch among the separate multiplet symbol and J (default), “J = X Hz (d)”, J only, the previous number-only J style, and the boxed “A (d) / δ / J” label. Chemical shift δ uses the peak colour; J is purple.',
+        '<b>Boxed (A (d) / δ / J)</b>: a MestReNova-style head. Multiplets are lettered A, B, C… from low field (largest δ) and each one gets a three-line box — “A (d)”, “7.17”, “J(8.37)” — placed right above its tree. The whole box is drawn in the multiplet colour; boxes that would collide are shifted sideways and tied back to the stem with a leader. Letters follow the order of the whole spectrum, not the visible window, so panning and zooming never reshuffle them (hidden multiplets are skipped).',
         '<b>Source peak δ</b>: when enabled, shows the chemical shifts of the detected peaks used to define the multiplet at the right of its tree. It is off by default. <b>J decimals</b>: decimals shown for J (Hz) (0–3). <b>Colour</b>: multiplet-label colour.',
         `<b>Delete</b> ${manIc('trash')} / <b>Show / hide</b> ${manIc('eye')}: remove by range, clear all, toggle visibility.`,
       ]},
@@ -9876,7 +10438,7 @@ function applyModKeyLabels(){
     if(b&&b.title) b.title=b.title.replace(/Ctrl/g,MODKEY); }); }
 }
 function setLang(l){ LANG=l; applyI18n(); renderShortcuts(); applyModKeyLabels();
-  document.querySelectorAll('.tmpanelhead .tmfloatbtn[data-tip]').forEach(b=>b.title=t(b.dataset.tip));
+  document.querySelectorAll('.tmpanelhead .tmfloatbtn[data-tipkey]').forEach(b=>b.title=t(b.dataset.tipkey));
   if(typeof window.refreshAssignI18n==='function') window.refreshAssignI18n();
   const sg=document.getElementById('segLang');
   if(sg) sg.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===l)); }
@@ -10046,7 +10608,7 @@ html[data-theme="light"] #toolbar .rsub:not(.on):hover{
 .asg-gear-card .asg-item-heading{min-height:24px;padding:4px 6px 2px}
 .asg-gear-card .asg-item-heading>.tmic{width:16px;height:16px;color:var(--trace);opacity:.88}
 .asg-gear-card .asg-item-heading>.tmic .svi{width:16px;height:16px}
-.asg-header-actions{display:inline-flex;align-items:center;gap:4px;margin-left:auto}
+.asg-header-actions{display:inline-flex;align-items:center;gap:var(--btn-gap,4px);margin-left:auto}
 /* 目の右寄せは class ではなく置かれている文脈で決める */
 .grphead>.vis-header-eye{margin-left:auto}
 .asg-gear-btn{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;margin-left:auto;padding:2px;border:1px solid var(--button-line);border-radius:5px;background:transparent;color:var(--dim);cursor:pointer;transition:color .16s,background .16s}
@@ -10328,7 +10890,7 @@ html[data-theme="light"] #toolbar .rsub:not(.on):hover{
 
 <!-- Unified visibility controls: Assignment-style state, layout and availability -->
 <style id="visibility-system-unified">
-.vis-heading-actions{display:inline-flex;align-items:center;gap:4px;margin-left:auto}
+.vis-heading-actions{display:inline-flex;align-items:center;gap:var(--btn-gap,4px);margin-left:auto}
 /* 右寄せは group か先頭のボタン1つだけ。2つ目以降まで margin-left:auto だと余白が等分され、
    見出しごとにボタン間隔が変わってしまう（-1 / 1 / 5 / 23px が混在していた）。 */
 .vis-heading-actions button,.asg-header-actions button{margin-left:0!important}
@@ -10569,34 +11131,42 @@ html[data-theme="light"] #toolbar .rsub:not(.on):hover{
   width:min(660px,calc(100vw - 24px));min-width:0!important;padding:12px;
   overflow-x:hidden;overscroll-behavior:contain
 }
-.uset-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin-bottom:8px;border-radius:7px;overflow:hidden;box-shadow:inset 0 0 0 1px var(--line)}
+/* タブ帯は下線式（2026-09-08）。以前は塗りつぶしのセグメントで、中の .seg と
+   塗りが同色（--ui-on）・高さ 27.5 対 30・文字 11.5/650 対 10.5/600 と差が小さく、
+   「ページの階層」と「フィールドの階層」が同ランクに見えていた。
+   塗りは .seg に譲り、タブは下線だけで示す。選択色は icon-button-tokens 側で決める。 */
+.uset-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin-bottom:12px;
+  border-bottom:1px solid var(--line)}
 .uset-tabs button{
-  border:none;background:transparent;color:var(--dim);
-  /* Keep this switcher as compact as the Assignment tabs. */
-  padding:5px 12px;cursor:pointer;font-size:11.5px;white-space:nowrap
+  position:relative;border:none;background:transparent;color:var(--dim);
+  padding:7px 12px 8px;cursor:pointer;font-size:12px;white-space:nowrap
 }
-.uset-tabs button+button{border-left:1px solid var(--line)}
-.uset-tabs button.on{background:var(--trace);color:#fff;font-weight:650}
-.uset-tabs button.on,.uset-tabs button.on+button{border-left-color:transparent}
+/* 下線はタブ帯の罫線に重ねる（bottom:-1px）。左右を少し詰めて文字幅に寄せる。 */
+.uset-tabs button.on::after{content:"";position:absolute;left:10px;right:10px;bottom:-1px;
+  height:2px;border-radius:2px;background:currentColor}
 .uset-tabs button:focus{outline:none}
 .uset-tabs button:focus-visible{outline:1px solid var(--dim);outline-offset:-3px}
 .uset-pane[hidden]{display:none!important}
 .uset-grid{display:grid;grid-template-columns:minmax(230px,.9fr) minmax(220px,.85fr) minmax(330px,1.25fr);gap:10px;align-items:start}
 .uset-grid-controls{grid-template-columns:repeat(2,minmax(0,1fr));max-width:none}
+.uset-stack.uset-controls-stack{gap:16px}
 .uset-grid-general{grid-template-columns:repeat(2,minmax(0,1fr));max-width:none}
-.uset-grid-general .seg button{padding:5px 10px;font-size:11.5px}
-/* 設定パネルの切替スイッチ（重ね/並べる など）は、ピーク/積分の「スタイル1・2」と同寸にする。
-   一般タブ（言語・テーマ）だけは独自の大きめ指定を残す。 */
-.uset-pane:not(.uset-grid-general) .seg button{padding:4px 7px;font-size:10.5px}
+/* 設定パネルの切替選択は横だけ広めに取る。高さと文字の大きさは
+   --seg-h / --seg-fs（icon-button-tokens の 18）が全画面共通で決める。 */
+.uset-pane .seg button{padding:0 7px}
 .uset-autosave{grid-column:1/-1;margin-top:2px;color:var(--faint);font-size:10.5px;text-align:center}
 .uset-stack{display:flex;flex-direction:column;gap:10px;min-width:0}
 .uset-grid-display{grid-template-columns:repeat(2,minmax(0,1fr));max-width:none}
 /* スライダー行：[つまみ]─[値]─(必要なら目) を1行に並べる */
 .uset-sliderrow{display:flex;align-items:center;gap:9px}
 .uset-sliderrow>input[type=range]{flex:1 1 auto;min-width:0;margin:0}
-.uset-sliderrow>.val{flex:none;min-width:36px;text-align:right;font-variant-numeric:tabular-nums}
-.uset-sliderrow>.vistog.iconvis{margin-left:0}
+.uset-sliderrow>.val{flex:none;min-width:52px;text-align:right;font-variant-numeric:tabular-nums}
 .uset-card .ctl>label{margin-bottom:5px}
+/* ラベルに目と歯車が付く行（タイトル文字）も同じ 5px を空ける。すぐ上の規則は
+   .ctl の直下の label しか見ないので、label を .lblgear-row で包んだ行だけ
+   下の入力欄と隙間ゼロでくっついていた。区切り線の行は .uset-toggle-list の
+   中（親が .ctl ではない）なので、この指定には当たらない。 */
+.uset-card .ctl>.lblgear-row{margin-bottom:5px}
 .uset-visrow{margin-top:6px}
 .uset-resetrow{grid-column:1/-1;margin-top:4px}
 .uset-resetrow .uset-reset{width:100%}
@@ -10610,10 +11180,25 @@ html[data-theme="light"] #toolbar .rsub:not(.on):hover{
   align-items:center;justify-content:center;color:var(--dim);margin-right:2px}
 .uset-card .ctl{margin-bottom:12px}
 .uset-card .ctl:last-child{margin-bottom:0}
+/* δ表示範囲は「値の対」と「実行」を一続きに読む操作なので、横一列にまとめる。
+   数値は ppm の表示に十分な 120px を上限にするが、そこで固定はしない：
+   設定パネルの 2 カラム（1 列あたり約 290px）では 120+120+適用 が入り切らず、
+   max-content のままだと「適用」がカードの外へはみ出していた。
+   列は minmax(0,120px)＝広ければ 120px・狭ければ縮む、とする
+   （2 カラム時は 1 つあたり約 94px になり、ppm 4 桁は十分読める）。
+   折り返すと「適用」が 1 行下に取り残されるので nowrap のまま縮める。 */
+.range-control{display:flex;flex-wrap:nowrap;align-items:center;gap:8px;max-width:100%;min-width:0}
+.range-fields{flex:0 1 auto;min-width:0;display:grid;grid-template-columns:minmax(0,120px) auto minmax(0,120px);align-items:center;gap:6px}
+.range-fields input{width:100%;min-width:64px;font-variant-numeric:tabular-nums}
+.range-fields span{color:var(--faint);text-align:center}
+.range-apply{flex:0 1 auto;width:auto!important;min-width:68px;margin:0!important;padding-inline:14px}
 .uset-card .pallist{grid-template-columns:1fr 1fr}
 .uset-card-wide{grid-column:1/-1}
 .uset-subhead{margin:14px 0 8px;padding-top:10px;border-top:1px solid var(--line);font-size:11px;font-weight:700;color:var(--dim)}
 .uset-toggle-list{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.uset-cursor-row{display:flex;align-items:stretch;gap:6px}
+.uset-cursor-row .uset-toggle{flex:1 1 auto}
+.uset-cursor-row .asg-gear-btn{align-self:center;margin-left:0}
 .uset-card .uset-layout-control{margin-bottom:6px}
 .uset-spectrum-toggles{margin:0 0 8px}
 .uset-palette-heading{display:flex;align-items:center;gap:6px;margin-bottom:5px;font-size:11px;color:var(--dim)}
@@ -10662,6 +11247,10 @@ html[data-theme="light"] #toolbar .rsub:not(.on):hover{
   .unified-settings-panel{width:calc(100vw - 190px)}
   .uset-tabs button{padding:5px 3px;font-size:11px}
   .uset-card .pallist{grid-template-columns:1fr}
+  .range-control{align-items:stretch;flex-wrap:wrap;max-width:none}
+  .range-fields{flex:1 1 100%;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr)}
+  .range-fields input{width:100%}
+  .range-apply{width:100%!important}
 }
 /* Display tab: 2-column + palette summary opening a modal picker */
 .uset-grid-display{grid-template-columns:minmax(230px,1fr) minmax(290px,1fr)}
@@ -10669,8 +11258,6 @@ html[data-theme="light"] #toolbar .rsub:not(.on):hover{
 .uset-pal-row1{display:flex;align-items:center;gap:10px;min-width:0}
 .uset-pal-row1 .palstrip{flex:1 1 auto;min-width:0;height:16px}
 .uset-pal-row1 .pallabel{flex:0 0 auto;font-size:11.5px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:48%}
-.uset-pal-stack{border:1px solid var(--line);border-radius:8px;background:var(--bg);padding:6px;height:154px}
-.uset-pal-stack svg{display:block;width:100%;height:100%}
 /* palette modal (manual-style separate window) */
 .palmodal{position:fixed;inset:0;background:rgba(14,20,25,.6);z-index:220;display:none;align-items:center;justify-content:center;padding:24px}
 html[data-theme=light] .palmodal{background:rgba(40,44,48,.36)}
@@ -10772,6 +11359,10 @@ tr.connsub span{font-size:10.5px;color:var(--dim);min-width:26px}
   --ic-sw:1.0;
   /* 四角いアイコンボタン */
   --btn-sq:22px;      /* 一辺 */
+  /* 四角いアイコンボタンが横に並ぶときの間隔。見出しの目や歯車
+     （.vis-heading-actions / .asg-header-actions / .grphead）はすべて 4px で、
+     .lblgear-row だけが 6px と食い違っていたのでここに集約した。 */
+  --btn-gap:4px;
   --btn-r:6px;        /* ふつうのボタンの角丸 */
   --btn-r-sq:5px;     /* 四角いボタンの角丸 */
   /* 無効なときの薄さ。以前は .25/.32/.35/.38/.45/.46 と7通りに散っていた */
@@ -10783,6 +11374,10 @@ tr.connsub span{font-size:10.5px;color:var(--dim);min-width:26px}
      実測で差 0.6/255 ＝ まったく見えていなかった（ダークでも 1.4/255）。
      --ink を薄く重ねる形なら、どの面の上でも・どちらのテーマでも同じだけ効く。 */
   --ui-hover:color-mix(in srgb,var(--ink) 7%,transparent);
+  /* 切替選択（.seg / .rtabs-segment）の縦寸法。外枠の高さと文字の大きさ。
+     中のボタンは枠1px＋余白2px を除いた 24px になる。 */
+  --seg-h:30px;
+  --seg-fs:10.5px;
 }
 
 /* --- 1. 線の太さを「画面の実寸」で決める -----------------------
@@ -10819,8 +11414,7 @@ tr.connsub span{font-size:10.5px;color:var(--dim);min-width:26px}
 #toolbar .svi,
 #menuExportBox>.tbtn .svi,
 #btnManualBar .svi,
-.history-btn .svi,
-.sect h3 .secchev .svi{
+.history-btn .svi{
   stroke-width:var(--ic-sw)
 }
 #toolbar .svi,
@@ -10832,11 +11426,14 @@ tr.connsub span{font-size:10.5px;color:var(--dim);min-width:26px}
   width:var(--ic-lg);height:var(--ic-lg)
 }
 #btnManualBar .svi{opacity:1}                     /* マニュアルだけ薄いのをやめる */
-.sect h3 .secchev .svi{width:var(--ic-sm);height:var(--ic-sm)}
 
 /* --- 2. 枠線の色を役割で分ける ---------------------------------
    押せるもの＝--button-line ／ 区切り線・パネルの枠＝--line */
-.cmp,.sprow,.rsw,.phbtns .mini,.seg,.rtab.on,
+/* .cmp（画像の行）自身はここに載せない。2026-09-08 に枠なしの一覧の行になり、
+   残っている線は行の区切り（--grid、表の td と同じ）だけなので、ここで
+   --button-line に塗り替えると画像の節だけ区切り線が濃くなる。
+   行の中の四角いボタン（.cmp .rrm など）は今までどおり枠を持つので残す。 */
+.sprow,.rsw,.phbtns .mini,.seg,.rtab.on,
 .cmp .rrm,.cmp .bgk,.cmp .imgpin,.sprow .rm,.sprow .vzt,
 .colorpop .cpsw,.colorpop .cpbtns button,.uset-switch{
   border-color:var(--button-line)
@@ -10854,9 +11451,16 @@ tr.connsub span{font-size:10.5px;color:var(--dim);min-width:26px}
   border-radius:var(--btn-r-sq);padding:2px
 }
 
-/* --- 4. マウスを載せたときは灰色。色が付くのは ON のときだけ --- */
-.tbtn:hover,.cmp:hover,.phbtns .mini:hover,.sprow .vzt:hover{
-  color:var(--ink);border-color:var(--gridw)
+/* --- 4. マウスを載せたときは灰色。色が付くのは ON のときだけ ---
+   2026-09-08、ここを「押せるものの平らなホバー」の唯一の定義元にした。
+   値は #toolbar 側の hover 規則（「remove previous lift / strong glow」）と
+   .uset-reset:hover に合わせてある。浮き上がりと影はここで打ち消す。
+   ON・armed・開いているメニューは、これより後ろの規則で resting の見た目を保つ。 */
+.tbtn:hover,.rsub:not(.on):hover,.phbtns .mini:hover,.sprow .vzt:hover{
+  transform:none;box-shadow:none;
+  color:color-mix(in srgb,var(--ink) 88%,var(--dim) 12%);
+  border-color:color-mix(in srgb,var(--line) 72%,var(--gridw) 28%);
+  background:var(--ui-hover)
 }
 /* ON の両矢印は目ボタンと同じ扱いにする：色と枠線は青緑のまま、
    ホバー時は背景だけ 10% から 16% へ濃くする。 */
@@ -10874,8 +11478,10 @@ tr.connsub span{font-size:10.5px;color:var(--dim);min-width:26px}
   border-color:var(--trace);
   border-width:1px
 }
-/* 選択中の行は「枠1本」で示す（枠と内側の影で二重線になるのをやめる） */
-.cmp.on,.sprow.active{
+/* 選択中の行は「枠1本」で示す（枠と内側の影で二重線になるのをやめる）。
+   .cmp は 2026-09-08 に枠なしの一覧の行になったので、ここからは外してある
+   （塗りだけで示す。定義は .cmp.on 側にある）。 */
+.sprow.active{
   border-color:var(--trace);
   background:color-mix(in srgb,var(--trace) 6%,transparent);
   box-shadow:none
@@ -10895,7 +11501,7 @@ tr.connsub span{font-size:10.5px;color:var(--dim);min-width:26px}
   background:color-mix(in srgb,var(--ui-on) 10%,transparent);
   border-color:color-mix(in srgb,var(--ui-on) 28%,transparent)
 }
-.uset-tabs button.on{background:var(--ui-on);color:var(--on-solid)}
+.uset-tabs button.on{background:transparent;color:var(--ui-on);font-weight:700}
 .pal-reverse.on{background:var(--ui-on);border-color:var(--ui-on);color:var(--on-solid)}
 /* クリック待ちは橙。図のピーク色（--peak）とは切り離す */
 .toolmenu .tbtn.main.armed,.rsub.toolbtn.armed{
@@ -10988,8 +11594,9 @@ input[type=color]::-webkit-color-swatch{border:none;border-radius:3px}
 
 /* --- 12. 切替スイッチの大きさをそろえる --------------------
    一般タブ（言語・テーマ）だけ タブと同じ大きさ（5px/11.5px＝33.5px）で、
-   他の設定切替（4px/10.5px＝30px）より大きかった。 */
-.uset-grid-general .seg button{padding:4px 7px;font-size:10.5px}
+   他の設定切替（4px/10.5px＝30px）より大きかった。
+   2026-09-08：一般タブだけの上書きは不要になった（設定パネル全体に効く
+   `.uset-pane .seg button{padding:0 7px}` と、高さを決める 18 に統合）。 */
 
 /* --- 13. サイドバーの見出し ---------------------------------
    10px と小さく、ツールバーのラベル（11.5px）より2段階小さかった。 */
@@ -11006,10 +11613,38 @@ input[type=color]::-webkit-color-swatch{border:none;border-radius:3px}
 .rtab:not(.on):hover{background:var(--ui-hover);color:var(--ink)}
 .uset-tabs button:not(.on):hover{background:var(--ui-hover);color:var(--ink)}
 .assign-style-details summary:hover{color:var(--ink)}
-.assign-style-details summary:hover::before{color:var(--dim)}
+.assign-style-details summary:hover .secchev{color:var(--dim)}
 .customsw .csw .cswx:hover{background:color-mix(in srgb,var(--ui-danger) 82%,var(--ink))}
 
-/* --- 16. 星ピン：押すとどうなるかをホバーで見せる（案D） -------
+/* --- 16. 解析結果タブを設定パネルのタブ帯と同じ下線式にする（2026-09-08） -----
+   2026-09-07 に .seg と同じ塗りつぶしセグメントへ寄せたが、設定パネルのタブ帯を
+   下線式にしたことで、同じ「どのページを見ているか」の切替が2通りの見た目になった。
+   線引きを「塗り＝設定の値そのものを選ぶ .seg／下線＝ページの切替」に決めて、
+   こちらを下線側へ移す。件数バッジと空状態の挙動は変えない。
+   高さ（--seg-h）は --- 18. がそのまま決めるので、ここでは触らない。 */
+.rtabs-segment{display:flex;align-items:stretch;flex:1 1 0;min-width:0;gap:0;padding:0;
+  border:none;border-radius:0;background:transparent;border-bottom:1px solid var(--line)}
+.rtabs-segment .rtab{position:relative;display:inline-flex;align-items:center;justify-content:center;
+  gap:3px;flex:1 1 0;min-width:0;padding:0 4px;border:none;border-radius:0;background:transparent;
+  color:var(--dim);font-size:10.5px;white-space:nowrap;cursor:pointer;
+  transition:color .16s ease,background .16s ease}
+.rtabs-segment .rtab.on{border:none;background:transparent;color:var(--trace);font-weight:700}
+/* 下線はタブ帯の罫線に重ねる（bottom:-1px）。左右を少し詰めて文字幅に寄せる。
+   .uset-tabs と同じ作り。色は currentColor なので選択色の変更に自動で付いてくる。 */
+.rtabs-segment .rtab.on::after{content:"";position:absolute;left:6px;right:6px;bottom:-1px;
+  height:2px;border-radius:2px;background:currentColor}
+.rtabs-segment .rtab .rcnt{flex:none;background:var(--grid);color:var(--dim)}
+/* 選択中のバッジは「塗りの上の白抜き」をやめる。地色に戻るので読めなくなるため、
+   枠なしの .rtab.on .rcnt（L768）と同じ「薄いトレース色の下地＋トレース色の文字」に戻す。 */
+.rtabs-segment .rtab.on .rcnt{background:color-mix(in srgb,var(--trace) 18%,transparent);color:var(--trace)}
+.rtabs-segment .rtab.empty .rcnt{background:none;padding:2px 1px}
+.rtabs-segment .rtab:not(.on):hover{background:transparent;color:var(--ink)}
+.rtabs-segment .rtab:focus{outline:none}
+.rtabs-segment .rtab:focus-visible{outline:2px solid var(--trace);outline-offset:-2px}
+/* 英語では Multiplets / Integrals が長くなるため、狭いサイドバーでも 4 項目を1行に保つ。 */
+html[lang=en] .rtabs-segment .rtab{padding-right:2px;padding-left:2px;font-size:9px}
+
+/* --- 17. 星ピン：押すとどうなるかをホバーで見せる（案D） -------
    ピン留め済み＝星の中が塗られる、という決まりが既にあるので、
    ホバーで「うっすら塗る」＝これから塗られますよ、の予告になる。
    塗りを濃くするとピン留め済みと見分けが付かなくなるので 20% に留める。
@@ -11019,6 +11654,36 @@ input[type=color]::-webkit-color-swatch{border:none;border-radius:3px}
 .improw:not(.pin):hover .imppin{color:var(--mult)}
 .improw:not(.pin):hover .imppin .svi{fill:currentColor;fill-opacity:.20}
 .improw.pin:hover .imppin .svi{fill-opacity:.45}
+
+/* --- 18. 切替選択の高さを1つにそろえる（2026-09-08） -------------
+   同じ「実線／破線／点線」の並びなのに、置いた場所で高さが4通りに割れていた。
+     設定パネルの中（言語・テーマ・重ね/並べる・スタイル1/2）…… 30px
+     歯車ポップオーバー（カーソル・ミニマップ・カット・拡大図）とパレット… 34.5px
+     処理パネルの ×1/×2/×4 …………………………………………………… 31px
+     解析結果のタブ（.rtabs-segment）……………………………………… 32px
+   原因は2つ。(1) 上下 padding と文字の大きさを場所ごとに書き足していた。
+   (2) line-height:normal のままなので行の高さが字面に引っぱられ、日本語(16.5px)と
+   英数字(13px)で同じ指定でも 3.5px 変わる（×1/×2/×4 が 31px だったのはこれ）。
+   そこで「外枠の高さ＝--seg-h」だけを決め、中のボタンは align-items:stretch で
+   伸ばして line-height:1 で字を中央に置く。これで上下 padding は高さに効かなくなり、
+   場所ごとの指定は横余白（狭い列で字を切らないための 2〜7px）だけになる。
+   高さを変えたいときは :root の --seg-h を1か所直せば全画面が付いてくる。 */
+.rtabs-segment{height:var(--seg-h);box-sizing:border-box}
+.rtabs-segment .rtab{padding-top:0;padding-bottom:0;line-height:1}
+
+/* --- 19. 解析結果タブ：幅が足りないときはアイコンだけにする（2026-09-09） ------
+   絵はツールバーの同じ操作のボタンと同一（ピーク＝⋀／積分＝∫／多重線＝ツリー／
+   帰属＝タグ）。件数バッジは残す：どのタブに何件あるかは字を消しても要る情報で、
+   サイドバー最小幅 200px でも 14px の絵＋バッジ＋余白で 1 段に収まる。
+   付け外しの判定は syncResultsTabMode()（px のしきい値は持たない）。 */
+.rtabs-segment .rtab .rtic-t{display:none;flex:none;align-items:center;justify-content:center}
+.rtabs-segment .rtab .rtic-t .svi{width:var(--ic-sm);height:var(--ic-sm)}
+.rtabs-segment.icons .rtab .rtic-t{display:inline-flex}
+.rtabs-segment.icons .rtab .rtlbl{display:none}
+.rtabs-segment.icons .rtab{gap:3px;padding:0 2px}
+/* 選択中の下線は字幅に寄せて左右 6px 詰めているが、アイコン 1 個ぶんの幅では
+   下線が消えかける。アイコン段では詰めを 2px に緩めて、どのタブを見ているか残す。 */
+.rtabs-segment.icons .rtab.on::after{left:2px;right:2px}
 
 </style>
 <script>
@@ -11039,8 +11704,8 @@ input[type=color]::-webkit-color-swatch{border:none;border-radius:3px}
     return node&&(node.classList.contains('ctl')?node:node.closest('.ctl'));
   };
   const text={
-    ja:{display:'表示',controls:'操作',general:'一般',spectrum:'スペクトル',language:'言語',theme:'テーマ',autoSave:'変更は自動保存されます',layout:'スペクトル',visibility:'表示・非表示',appearance:'見た目',palette:'カラーパレット',viewOps:'表示範囲・ズーム',intensity:'強度調整',wheel:'ホイール・スクロール',spectrumSet:'スペクトル設定',scopeTarget:'適用先',noSpectrum:'スペクトル未選択',resetVisibility:'デフォルトに戻す',resetAppearance:'デフォルトに戻す',resetDisplay:'「表示」の設定をデフォルトに戻す',resetWheel:'ホイール設定をリセット',typography:'文字',axis:'δ軸',colors:'配色',laneDividers:'スペクトル間の区切り線',allowOverflow:'ピークの貫通を許可',wheelInertia:'ホイール慣性',wheelInvert:'向きを反転',wheelPan:'横スクロールでδ移動',limitView:'データ範囲外を表示しない',strengthTarget:'強度調整の適用先',targetAll:'全スペクトル',targetActive:'選択中のみ',targetPartial:'個別指定',panels:'パネル',panelFloat:'ツールパネルを切り離して表示',switchOn:'オン',switchOff:'オフ',change:'変更',closePicker:'閉じる',paletteTitle:'カラーパレット',previewFor:'プレビュー：',previewCount:'プレビューする本数',previewCurrent:'現在',previewMaximum:'最大',reverseOrder:'色順を反転'},
-    en:{display:'Display',controls:'Controls',general:'General',spectrum:'Spectrum',language:'Language',theme:'Theme',autoSave:'Changes are saved automatically',layout:'Spectrum',visibility:'Show / hide',appearance:'Appearance',palette:'Color palette',viewOps:'Range & zoom',intensity:'Intensity',wheel:'Wheel & scroll',spectrumSet:'Spectrum settings',scopeTarget:'Applies to',noSpectrum:'No spectrum selected',resetVisibility:'Restore defaults',resetAppearance:'Restore defaults',resetDisplay:'Reset the Display tab to defaults',resetWheel:'Reset wheel settings',typography:'Text',axis:'δ axis',colors:'Colors',laneDividers:'Dividers between spectra',allowOverflow:'Allow peak overflow',wheelInertia:'Wheel inertia',wheelInvert:'Invert direction',wheelPan:'Horizontal scroll pans δ',limitView:'Hide out-of-range',strengthTarget:'Apply intensity changes to',targetAll:'All spectra',targetActive:'Selected only',targetPartial:'Custom selection',panels:'Panels',panelFloat:'Detach tool panels',switchOn:'On',switchOff:'Off',change:'Change',closePicker:'Close',paletteTitle:'Color palette',previewFor:'Preview:',previewCount:'Preview spectra',previewCurrent:'Current',previewMaximum:'Maximum',reverseOrder:'Reverse order'}
+    ja:{display:'表示',controls:'操作',general:'一般',spectrum:'スペクトル',language:'言語',theme:'テーマ',autoSave:'変更は自動保存されます',layout:'スペクトル',visibility:'表示・非表示',appearance:'見た目',palette:'カラーパレット',viewOps:'表示範囲・ズーム',intensity:'強度調整',wheel:'ホイール・スクロール',cursor:'カーソル',cursorGuide:'カーソルガイド',cursorGuideStyle:'カーソルガイドのスタイル',cursorLineStyle:'線種',cursorLineWidth:'太さ',cursorTransparency:'透明度',cursorColor:'色',resetCursorStyle:'デフォルトに戻す',solid:'実線',dashed:'破線',dotted:'点線',spectrumSet:'スペクトル設定',scopeTarget:'適用先',noSpectrum:'スペクトル未選択',resetVisibility:'デフォルトに戻す',resetAppearance:'デフォルトに戻す',resetDisplay:'「表示」の設定をデフォルトに戻す',resetControls:'「操作」の設定をデフォルトに戻す',typography:'文字',axis:'δ軸',colors:'配色',laneDividers:'スペクトル間の区切り線',allowOverflow:'ピークの貫通を許可',wheelInertia:'ホイール慣性',wheelInvert:'向きを反転',wheelPan:'横スクロールでδ移動',limitView:'データ範囲外を表示しない',strengthTarget:'適用先',targetAll:'全スペクトル',targetActive:'選択中のみ',targetPartial:'個別指定',panels:'パネル',panelFloat:'ツールパネルを切り離して表示',switchOn:'オン',switchOff:'オフ',change:'変更',closePicker:'閉じる',paletteTitle:'カラーパレット',previewFor:'プレビュー：',previewCount:'プレビューする本数',previewCurrent:'現在',previewMaximum:'最大',reverseOrder:'色順を反転'},
+    en:{display:'Display',controls:'Controls',general:'General',spectrum:'Spectrum',language:'Language',theme:'Theme',autoSave:'Changes are saved automatically',layout:'Spectrum',visibility:'Show / hide',appearance:'Appearance',palette:'Color palette',viewOps:'Range & zoom',intensity:'Intensity',wheel:'Wheel & scroll',cursor:'Cursor',cursorGuide:'Cursor guide',cursorGuideStyle:'Cursor guide style',cursorLineStyle:'Line style',cursorLineWidth:'Width',cursorTransparency:'Transparency',cursorColor:'Color',resetCursorStyle:'Reset to defaults',solid:'Solid',dashed:'Dashed',dotted:'Dotted',spectrumSet:'Spectrum settings',scopeTarget:'Applies to',noSpectrum:'No spectrum selected',resetVisibility:'Restore defaults',resetAppearance:'Restore defaults',resetDisplay:'Reset the Display tab to defaults',resetControls:'Reset the Controls tab to defaults',typography:'Text',axis:'δ axis',colors:'Colors',laneDividers:'Dividers between spectra',allowOverflow:'Allow peak overflow',wheelInertia:'Wheel inertia',wheelInvert:'Invert direction',wheelPan:'Horizontal scroll pans δ',limitView:'Hide out-of-range',strengthTarget:'Applies to',targetAll:'All spectra',targetActive:'Selected only',targetPartial:'Custom selection',panels:'Panels',panelFloat:'Detach tool panels',switchOn:'On',switchOff:'Off',change:'Change',closePicker:'Close',paletteTitle:'Color palette',previewFor:'Preview:',previewCount:'Preview spectra',previewCurrent:'Current',previewMaximum:'Maximum',reverseOrder:'Reverse order'}
   };
   const tr=k=>(text[LANG]||text.ja)[k]||k;
   const make=(tag,cls)=>{const n=document.createElement(tag);if(cls)n.className=cls;return n;};
@@ -11062,6 +11727,11 @@ input[type=color]::-webkit-color-swatch{border:none;border-radius:3px}
     palette:'<path d="M8 2.2a5.8 5.8 0 1 0 0 11.6c.9 0 1.3-.6 1.3-1.2 0-.9-.7-1.2-.7-1.9 0-.5.4-.9 1-.9h1.1a3.1 3.1 0 0 0 3.1-3.1C13.8 4.3 11.2 2.2 8 2.2z"/><circle cx="5.4" cy="6.2" r=".9"/><circle cx="8" cy="4.8" r=".9"/><circle cx="10.6" cy="6.2" r=".9"/>',
     viewOps:'<path d="M2 8h12"/><path d="m4.6 5.4L2 8l2.6 2.6M11.4 5.4 14 8l-2.6 2.6"/>',
     wheel:'<rect x="4.6" y="1.8" width="6.8" height="12.4" rx="3.4"/><line x1="8" y1="4.4" x2="8" y2="6.6"/>',
+    /* 矢印は 16 の枠に収める。旧アイコンは下端が y=15.65 まで伸びていて、
+       他の見出しアイコン（おおむね 1.4〜14.2 に収まる）より一回り大きく、
+       この行だけ重く見えていた。今の形は x 4.3〜11.6 / y 2.8〜13.1 で、
+       中心も 8,8 に合わせてある。 */
+    cursor:'<path d="M4.3 2.8v9.1l2.4-2.2 1.5 3.4 1.6-.7-1.4-3.3h3.2z"/>',
     spectrumSet:'<path d="M2 12h2.5c.35 0 .62-.22.74-.56l.66-3.72c.12-.65.57-.65.7 0l.65 3.72c.1.34.4.56.76.56h.55c.4 0 .7-.28.78-.67l.68-6.1c.1-.75.57-.75.7 0l.78 6.1c.07.38.4.67.8.67H14"/>',
     language:'<circle cx="8" cy="8" r="5.8"/><path d="M2.2 8h11.6"/><path d="M8 2.2c1.6 1.7 2.4 3.7 2.4 5.8S9.6 12.1 8 13.8C6.4 12.1 5.6 10.1 5.6 8s.8-4.1 2.4-5.8z"/>',
     panels:'<rect x="1.6" y="2.6" width="9" height="7.4" rx="1.4"/><path d="M6.4 13.4h6.2a1.8 1.8 0 0 0 1.8-1.8V6"/>',
@@ -11128,16 +11798,25 @@ input[type=color]::-webkit-color-swatch{border:none;border-radius:3px}
   const layoutCard=card('layout',[layoutNode,laneRow,lineWidthCtl,paletteCtl]);
 
   // --- 文字：フォント → 各サイズ → タイトル ---
+  /* タイトルの歯車ポップオーバー（#titleStyleSettings）はカードに入れないこと。
+     setupStyleGear が body へ移したうえで position:fixed の実座標を書き込むが、
+     .mpanel は開くアニメーションのため transform / will-change:transform を持っており、
+     中に入れると「fixed の基準」がビューポートではなくパネルになる。
+     結果、歯車の位置を測って置いたはずの窓がパネルの左上ぶんだけずれて出て、
+     押しても何も出てこないように見えていた。区切り線・カーソルの歯車と同じく
+     body 直下に置いたままにする。 */
   const titleCtl=document.getElementById('figTitleInput').closest('.ctl');
-  const titlePopover=document.getElementById('titleStyleSettings');
   const typoCard=card('typography',[ctl('plotFont'),ctl('fontScale'),ctl('nameScale'),
-                                    titleCtl,titlePopover]);
+                                    titleCtl]);
 
   // --- δ軸：接頭辞「δ軸の」は見出しが担う ---
   const axisCard=card('axis',[ctl('ppmDigits'),ctl('axisTicks'),ctl('axisMinorTicks'),ctl('axisW'),ctl('axisScale'),ctl('axisPad'),ctl('baseGap')]);
 
-  left.append(layoutCard);
-  right.append(typoCard,axisCard);
+  /* 左＝スペクトル(147)＋文字(250)＝397 / 右＝δ軸(345)。2026-09-08 に入れ替えた。
+     以前は左がスペクトル1枚だけで 147 対 614 と偏っていた（スペクトル未読込だと
+     .uset-card[hidden] で左が 0px になり、右半分だけの片肺になっていた）。 */
+  left.append(layoutCard,typoCard);
+  right.append(axisCard);
   const resetRow=make('div','uset-resetrow'); resetRow.appendChild(resetDisplay);
   display.append(left,right,resetRow);
   root.appendChild(display);
@@ -11155,18 +11834,47 @@ input[type=color]::-webkit-color-swatch{border:none;border-radius:3px}
   const strengthTargetNote=make('div','uset-target-note');strengthTargetNote.hidden=true;
   strengthTargetSeg.append(strengthActive,strengthAll);strengthTarget.append(strengthTargetLabel,strengthTargetSeg,strengthTargetNote);
   strengthTargetButton.replaceWith(strengthTarget);
+  /* 「適用先」は見出しのすぐ下に置く（2026-09-08）。スペクトル設定カードの適用先ピルと
+     同じ語・同じ位置にそろえた。以前は ÷2 ×2 自動 の下にあり、押したあとで
+     どこに効いたのかを読む順序になっていた。 */
+  intensityControl?.prepend(strengthTarget);
   const inertiaButton=switchify(document.getElementById('btnInertia'),'wheelInertia');
   const invertButton=switchify(document.getElementById('btnInvert'),'wheelInvert');
   const hscrollButton=switchify(document.getElementById('btnHscroll'),'wheelPan');
   const limitViewButton=switchify(document.getElementById('btnLimitView'),'limitView');
   const wheelToggleList=inertiaButton.parentElement;
   wheelToggleList.className='uset-toggle-list';wheelToggleList.removeAttribute('style');wheelToggleList.appendChild(hscrollButton);wheelToggleList.appendChild(limitViewButton);
+  const cursorToggle=switchify(make('button'),'cursorGuide');
+  cursorToggle.type='button';
+  const cursorGear=make('button','asg-gear-btn');
+  cursorGear.type='button';
+  cursorGear.innerHTML='<svg class="svi" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.3 1.7h3.4l.5 2.3 1.9.8 2-1.3 2.4 2.4-1.3 2 .8 1.9 2.3.5v3.4l-2.3.5-.8 1.9 1.3 2-2.4 2.4-2-1.3-1.9.8-.5 2.3h-3.4l-.5-2.3-1.9-.8-2 1.3-2.4-2.4 1.3-2-.8-1.9-2.3-.5v-3.4l2.3-.5.8-1.9-1.3-2 2.4-2.4 2 1.3 1.9-.8.5-2.3Z"/><circle cx="12" cy="12" r="3.1"/></svg>';
+  const cursorRow=make('div','uset-cursor-row');cursorRow.append(cursorToggle,cursorGear);
+  const cursorStyleBox=make('div','asg-gear-settings zoom-gear-popover');
+  cursorStyleBox.id='cursorStyleSettings';cursorStyleBox.hidden=true;
+  cursorStyleBox.innerHTML='<div class="zoom-style-body">'
+    +'<div class="zoom-style-row"><label data-cursor-text="cursorLineStyle"></label><div class="seg" id="segCursorStyle"><button type="button" data-v="solid" data-cursor-text="solid"></button><button type="button" data-v="dashed" data-cursor-text="dashed"></button><button type="button" data-v="dotted" data-cursor-text="dotted"></button></div></div>'
+    +'<div class="tmrow"><label data-cursor-text="cursorLineWidth"></label><input type="range" id="cursorWidthInp" min="0.5" max="4" step="0.1"><span class="thrval" id="cursorWidthVal"></span></div>'
+    +'<div class="tmrow"><label data-cursor-text="cursorTransparency"></label><input type="range" id="cursorTransparencyInp" min="0" max="90" step="5"><span class="thrval" id="cursorTransparencyVal"></span></div>'
+    +'<div class="tmrow"><label data-cursor-text="cursorColor"></label><input type="color" id="cursorColorInp"></div>'
+    +'<button type="button" class="tmitem tbtn uset-reset" id="btnResetCursorStyle"><svg class="svi" viewBox="0 0 16 16" aria-hidden="true"><path d="M13 5.6A5.8 5.8 0 1 0 13.6 9"/><path d="M13 2.7v3h-3"/></svg><span data-cursor-text="resetCursorStyle"></span></button>'
+    +'</div>';
+  document.body.appendChild(cursorStyleBox);
   const scope=make('div','uset-scope');scope.innerHTML='<span data-uset-text="scopeTarget"></span><span aria-hidden="true">·</span><span class="uset-scope-name"></span>';
   const spectrumFields=make('div','uset-spectrum-grid');spectrumFields.append(document.getElementById('srcRow'),ctl('segMode'));
   const viewCard=card('viewOps',[ctl('rangeHi'),ctl('zoomIn'),intensityHead,intensityControl]);
-  const wheelCard=card('wheel',[ctl('wheelSens'),document.getElementById('btnResetSet')]);
+  const wheelCard=card('wheel',[ctl('wheelSens')]);
+  const cursorCard=card('cursor',[cursorRow]);
+  const controlsRight=make('div','uset-stack uset-controls-stack');controlsRight.append(wheelCard,cursorCard);
   const spectrumCard=card('spectrumSet',[scope,spectrumFields]);spectrumCard.classList.add('uset-card-wide');
-  controls.append(viewCard,wheelCard,spectrumCard);
+  /* 「デフォルトに戻す」はタブごとに1本、ペインの末尾（2026-09-08）。
+     以前は 表示＝ペイン末尾／操作＝ホイールカードの中／一般＝無し と3通りで、
+     操作タブのものだけカードの中にあり「ホイールだけ」に見えていた。
+     戻す範囲は操作タブの設定＝ホイールとカーソルガイド。表示範囲・ズームや
+     データ源・モードは設定ではなく状態なので触らない（resetMark などと同じ約束）。 */
+  const resetControlsRow=make('div','uset-resetrow');
+  resetControlsRow.appendChild(document.getElementById('btnResetSet'));
+  controls.append(viewCard,controlsRight,spectrumCard,resetControlsRow);
   root.appendChild(controls);
 
   const general=pane('general','uset-grid uset-grid-general');
@@ -11244,13 +11952,13 @@ input[type=color]::-webkit-color-swatch{border:none;border-radius:3px}
       const row1=make('div','uset-pal-row1');
       const strip=make('span','palstrip'),label=make('span','pallabel');
       row1.append(strip,label);
-      const stackBox=make('div','uset-pal-stack');
-      summary.append(row1,stackBox);palCtl.append(colorHeading,summary);
+      /* 設定タブ側は「色帯＋パレット名」だけ。スペクトルの積み重ねプレビューは
+         選択ウィンドウ（歯車で開く）にあるので、ここには置かない。 */
+      summary.append(row1);palCtl.append(colorHeading,summary);
 
       const renderSummary=()=>{
         const n=paletteN();strip.innerHTML='';
         pcolors(S.palette,n).forEach(c=>{const d=make('span');d.style.background=c;if((c||'').toUpperCase()==='#FFFFFF')d.style.boxShadow='inset 0 0 0 1px var(--line)';strip.appendChild(d);});
-        stackBox.innerHTML=stackedSVG(S.palette,n,300,96);
         label.textContent=(typeof PAL_LABEL!=='undefined'&&PAL_LABEL[S.palette])||S.palette;
       };
       const syncPreviewCount=()=>{
@@ -11296,11 +12004,19 @@ input[type=color]::-webkit-color-swatch{border:none;border-radius:3px}
     range.replaceWith(row); row.appendChild(range);
     const val=c.querySelector(':scope>label .val'); if(val) row.appendChild(val);
   });
-  /* ファイル名の表示トグルは「ファイル名のサイズ」の行末に置く（タイトル文字と同じ作り） */
-  /* root はまだ document に挿していないので getElementById では引けない。root 内を直接引く。 */
-  { const row=root.querySelector('#nameScale')?.closest('.ctl')?.querySelector('.uset-sliderrow');
+  /* ファイル名の表示トグルは「ラベル行の右端」に置く（2026-09-08）。
+     目と歯車の居場所は区切り線・タイトル文字と同じ .lblgear-row の1通りに統一した。
+     以前はここだけスライダー行（値の右）に置いていて、同じ目が2通りの場所に出ていた。
+     root はまだ document に挿していないので getElementById では引けない。root 内を直接引く。 */
+  { const ctlNode=root.querySelector('#nameScale')?.closest('.ctl');
+    const label=ctlNode?.querySelector(':scope>label');
     const eye=document.getElementById('btnNames');
-    if(row&&eye){ eye.classList.add('iconvis'); row.appendChild(eye); } }
+    if(ctlNode&&label&&eye){
+      const line=make('div','lblgear-row');
+      label.replaceWith(line); label.style.margin='0';
+      eye.classList.add('iconvis');
+      line.append(label,eye);
+    } }
 
   settingsPanel.replaceChildren(root);
   viewBox.remove();
@@ -11326,7 +12042,8 @@ input[type=color]::-webkit-color-swatch{border:none;border-radius:3px}
     root.querySelectorAll('[data-uset-palette-gear]').forEach(b=>{const label=tr('paletteTitle')+' — '+tr('change');b.title=label;b.setAttribute('aria-label',label);});
     const resetLabel=(button,key)=>button.innerHTML='<svg class="svi" viewBox="0 0 16 16" aria-hidden="true"><path d="M13 5.6A5.8 5.8 0 1 0 13.6 9"/><path d="M13 2.7v3h-3"/></svg><span>'+tr(key)+'</span>';
     resetLabel(resetDisplay,'resetDisplay');
-    document.getElementById('btnResetSet').textContent=tr('resetWheel');
+    resetLabel(document.getElementById('btnResetSet'),'resetControls');
+    refreshCursorText();
     syncOperationControls();
     updateScope();
   }
@@ -11347,10 +12064,11 @@ input[type=color]::-webkit-color-swatch{border:none;border-radius:3px}
   resetDisplay.onclick=()=>{ doResetVisibility(); doResetAppearance(); };
   document.getElementById('btnResetSet').className='tbtn uset-reset';
   document.getElementById('btnResetSet').onclick=()=>{
-    Object.assign(S,{wheelSens:DEFAULTS.wheelSens,wheelInertia:DEFAULTS.wheelInertia,wheelInvert:DEFAULTS.wheelInvert,hscroll:DEFAULTS.hscroll,limitView:DEFAULTS.limitView});mom.v=0;
+    Object.assign(S,{wheelSens:DEFAULTS.wheelSens,wheelInertia:DEFAULTS.wheelInertia,wheelInvert:DEFAULTS.wheelInvert,hscroll:DEFAULTS.hscroll,limitView:DEFAULTS.limitView,
+      cursorGuide:DEFAULTS.cursorGuide,cursorColor:DEFAULTS.cursorColor,cursorStyle:DEFAULTS.cursorStyle,cursorWidth:DEFAULTS.cursorWidth,cursorOpacity:DEFAULTS.cursorOpacity});mom.v=0;
     const ws=document.getElementById('wheelSens');ws.value=S.wheelSens;document.getElementById('wsv').textContent='×'+S.wheelSens.toFixed(1);
     [['btnInertia',S.wheelInertia],['btnInvert',S.wheelInvert],['btnHscroll',S.hscroll],['btnLimitView',S.limitView]].forEach(([id,on])=>document.getElementById(id).classList.toggle('on',on));
-    savePrefs();
+    syncCursorGuideUI();persistUI();savePrefs();draw();
   };
 
   overflowButton.onclick=()=>{
@@ -11368,6 +12086,68 @@ input[type=color]::-webkit-color-swatch{border:none;border-radius:3px}
     const state=button.querySelector('.uset-switch-label');
     if(state)state.textContent=tr(on?onKey:offKey);
   }
+  const cursorInputColor=()=>{
+    const color=cursorGuideColor();
+    return /^#[0-9a-f]{6}$/i.test(color)?color:'#3A4750';
+  };
+  function refreshCursorText(){
+    cursorStyleBox.querySelectorAll('[data-cursor-text]').forEach(el=>el.textContent=tr(el.dataset.cursorText));
+    const label=tr('cursorGuideStyle');cursorStyleBox.dataset.title=label;cursorGear.title=label;cursorGear.setAttribute('aria-label',label);
+  }
+  function syncCursorGuideUI(){
+    syncSwitch(cursorToggle,S.cursorGuide!==false);
+    const style=S.cursorStyle||DEFAULTS.cursorStyle;
+    cursorStyleBox.querySelectorAll('#segCursorStyle button').forEach(button=>button.classList.toggle('on',button.dataset.v===style));
+    const width=Math.max(.5,Math.min(4,S.cursorWidth??DEFAULTS.cursorWidth));
+    const opacity=Math.max(.1,Math.min(1,S.cursorOpacity??DEFAULTS.cursorOpacity));
+    const widthInput=cursorStyleBox.querySelector('#cursorWidthInp');if(widthInput)widthInput.value=width;
+    const transparency=1-opacity;
+    const transparencyInput=cursorStyleBox.querySelector('#cursorTransparencyInp');if(transparencyInput)transparencyInput.value=Math.round(transparency*100);
+    const colorInput=cursorStyleBox.querySelector('#cursorColorInp');if(colorInput)colorInput.value=cursorInputColor();
+    const widthValue=cursorStyleBox.querySelector('#cursorWidthVal');if(widthValue)widthValue.textContent=width.toFixed(1)+' px';
+    const transparencyValue=cursorStyleBox.querySelector('#cursorTransparencyVal');if(transparencyValue)transparencyValue.textContent=Math.round(transparency*100)+' %';
+  }
+  let cursorStyleOpen=false;
+  function closeCursorStyleSettings(){
+    if(!cursorStyleOpen)return;
+    cursorStyleBox.hidden=true;cursorGear.classList.remove('on');cursorGear.setAttribute('aria-expanded','false');cursorStyleOpen=false;
+  }
+  function placeCursorStyleSettings(){
+    cursorStyleBox.hidden=false;cursorStyleBox.style.visibility='hidden';
+    const gearRect=cursorGear.getBoundingClientRect(),w=cursorStyleBox.offsetWidth,h=cursorStyleBox.offsetHeight;
+    const left=Math.max(8,Math.min(innerWidth-w-8,gearRect.right-w));
+    let top=gearRect.bottom+6;if(top+h>innerHeight-8)top=Math.max(8,gearRect.top-h-6);
+    cursorStyleBox.style.left=Math.round(left)+'px';cursorStyleBox.style.top=Math.round(top)+'px';cursorStyleBox.style.visibility='';
+  }
+  cursorGear.setAttribute('aria-controls','cursorStyleSettings');cursorGear.setAttribute('aria-expanded','false');
+  cursorGear.addEventListener('click',event=>{
+    event.preventDefault();event.stopPropagation();
+    if(cursorStyleOpen){closeCursorStyleSettings();return;}
+    syncCursorGuideUI();cursorStyleOpen=true;cursorGear.classList.add('on');cursorGear.setAttribute('aria-expanded','true');placeCursorStyleSettings();
+  });
+  cursorStyleBox.addEventListener('pointerdown',event=>event.stopPropagation());
+  cursorStyleBox.addEventListener('click',event=>event.stopPropagation());
+  document.addEventListener('pointerdown',event=>{if(cursorStyleOpen&&!cursorStyleBox.contains(event.target)&&!cursorGear.contains(event.target))closeCursorStyleSettings();},true);
+  document.addEventListener('keydown',event=>{if(event.key==='Escape')closeCursorStyleSettings();},true);
+  window.addEventListener('resize',closeCursorStyleSettings);
+  cursorToggle.onclick=()=>{S.cursorGuide=!S.cursorGuide;syncCursorGuideUI();persistUI();draw();};
+  cursorStyleBox.querySelector('#segCursorStyle').addEventListener('click',event=>{
+    const button=event.target.closest('button[data-v]');if(!button)return;
+    S.cursorStyle=button.dataset.v;syncCursorGuideUI();persistUI();draw();
+  });
+  cursorStyleBox.querySelector('#cursorWidthInp').oninput=event=>{
+    S.cursorWidth=+event.target.value;syncCursorGuideUI();persistUI();draw();
+  };
+  cursorStyleBox.querySelector('#cursorTransparencyInp').oninput=event=>{
+    S.cursorOpacity=1-(+event.target.value)/100;syncCursorGuideUI();persistUI();draw();
+  };
+  cursorStyleBox.querySelector('#cursorColorInp').oninput=event=>{
+    S.cursorColor=event.target.value;syncCursorGuideUI();persistUI();draw();
+  };
+  cursorStyleBox.querySelector('#btnResetCursorStyle').onclick=()=>{
+    Object.assign(S,{cursorColor:DEFAULTS.cursorColor,cursorStyle:DEFAULTS.cursorStyle,cursorWidth:DEFAULTS.cursorWidth,cursorOpacity:DEFAULTS.cursorOpacity});
+    syncCursorGuideUI();persistUI();draw();
+  };
   function syncOperationControls(){
     syncSwitch(panelFloatButton,S.floatPanels);
     syncSwitch(overflowButton,S.laneOverflow);
@@ -11375,6 +12155,7 @@ input[type=color]::-webkit-color-swatch{border:none;border-radius:3px}
     syncSwitch(invertButton,S.wheelInvert);
     syncSwitch(hscrollButton,S.hscroll);
     syncSwitch(limitViewButton,S.limitView);
+    syncCursorGuideUI();
     const spectra=S.spectra||[],armed=spectra.filter(sp=>sp.vzoom!==false);
     const all=spectra.length>0&&armed.length===spectra.length;
     const partial=armed.length>0&&!all;
