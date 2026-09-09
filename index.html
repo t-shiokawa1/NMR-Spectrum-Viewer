@@ -589,6 +589,22 @@ html:not([data-panelfloat="on"]) .toolmenu:not(.floating) .tmpanel2{padding-top:
 #tmInteg .integ-organized .peak-settings-section .tmstyle>span:first-child{min-width:0}
 #tmInteg .integ-organized .peak-settings-section .tmstyle .seg{min-width:0}
 #tmInteg .integ-organized .peak-settings-section .tmstyle .seg button{min-width:0;padding-left:2px;padding-right:2px;white-space:nowrap}
+/* 「自動で積分」の行。設定は行の右端の歯車ポップオーバーに畳む（拡大図・カット・
+   ミニマップのスタイル設定と同じ作り）。パネルに直に並べると、積分パネルだけ
+   スライダー 3 本ぶん縦に伸びて、削除と表示設定が画面の外へ押し出される。 */
+#tmInteg .ai-row{display:flex;align-items:center;gap:4px;padding-right:9px}
+#tmInteg .ai-row>.tmitem{flex:1 1 auto;width:auto;min-width:0}
+#tmInteg .ai-row>.asg-gear-btn{flex:none;margin-left:0}
+/* ポップオーバーの中のチェック。表示/非表示ではなく設定なので、目玉ではなく四角にする。 */
+.ai-gear-popover .ai-opts{display:flex;flex-direction:column;gap:1px;padding:3px 0 1px}
+.ai-gear-popover .ai-opt{display:flex;align-items:center;gap:7px;width:100%;box-sizing:border-box;padding:4px 7px;border:none;border-radius:6px;background:none;font-size:12px;color:var(--dim);text-align:left;cursor:pointer}
+.ai-gear-popover .ai-opt:hover{background:var(--ui-hover)}
+.ai-gear-popover .ai-opt.on{color:var(--ink)}
+.ai-gear-popover .ai-opt .aick{position:relative;flex:0 0 13px;width:13px;height:13px;border:1.5px solid var(--dim);border-radius:3px;box-sizing:border-box}
+.ai-gear-popover .ai-opt.on .aick{border-color:var(--trace);background:var(--trace)}
+.ai-gear-popover .ai-opt.on .aick::after{content:'';position:absolute;left:3.5px;top:.5px;width:3px;height:7px;border:solid var(--panel);border-width:0 1.5px 1.5px 0;transform:rotate(45deg)}
+.ai-gear-popover .ai-opt:focus{outline:none}
+.ai-gear-popover .ai-opt:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
 /* Apply the same Assignment-card indentation to Peaks and Multiplets. */
 #tmShift .peak-organized .peak-work-section>.tmitem,
 #tmMult .mult-organized .peak-work-section>.tmitem,
@@ -722,6 +738,13 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
 #hint{position:absolute;left:50%;top:48%;transform:translate(-50%,-50%);text-align:center;color:var(--dim);pointer-events:none;width:80%;max-width:560px}
 #hint .big{font-size:15px;margin-bottom:10px;color:var(--ink)}
 #hint .small{font-size:12px;line-height:1.9}
+/* #hint 全体は pointer-events:none なので、押せる要素だけ明示的に戻す */
+#hintReopenWrap{pointer-events:auto;margin:2px 0 12px}
+#hintReopenWrap[hidden]{display:none!important}
+#btnHintReopen{display:inline-flex;align-items:center;gap:7px;padding:6px 13px;border:1px solid var(--line);
+  border-radius:8px;background:var(--panel);color:var(--ink);font:inherit;font-size:12.5px;cursor:pointer}
+#btnHintReopen:hover{background:var(--ui-hover);border-color:var(--accent)}
+#btnHintReopen b{font-weight:600;color:var(--dim);max-width:22em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 /* results overlay (does NOT resize canvas) */
 #results{position:absolute;top:10px;right:10px;width:300px;max-height:calc(100% - 20px);
@@ -1046,6 +1069,7 @@ html[data-theme=light] .manmodal{background:rgba(40,44,48,.36)}
 .paperctl label .pl{font-size:11px;color:var(--dim);white-space:nowrap}
 .paperctl input[type=number]{width:100%;min-width:0;padding:4px 6px;font-size:11.5px}
 .paperctl select{width:100%;min-width:0;padding:4px 6px;font-size:11.5px}
+.paperctl input[type=checkbox]{justify-self:start;width:14px;height:14px;margin:0;accent-color:var(--trace);cursor:pointer}
 /* 核種・MHz・溶媒・J小数桁と編集欄は「編集」で開く。既定はプレビューだけ */
 .paper-editbox{display:flex;flex-direction:column;gap:7px}
 .paper-editbox[hidden]{display:none}
@@ -1500,6 +1524,10 @@ html[data-theme="light"] .toolmenu.open .tmpanel{
               <select id="plotFont"><option value="topspin" data-i18n="optTopSpin">Arial</option><option value="mnova" data-i18n="optMNova">Avenir Next</option><option value="sans" data-i18n="optSans">Sans</option><option value="serif" data-i18n="optSerif">Serif</option><option value="mono" data-i18n="optMono">Mono</option></select>
             </div>
             <div class="ctl">
+              <label data-i18n="lblAxisCaption">Label text</label>
+              <input type="text" id="axisCaptionInput" data-i18n-title="hintAxisCaption" title="">
+            </div>
+            <div class="ctl">
               <label><span data-i18n="lblAxisDigits">δ-axis decimals</span> <span class="val" id="digv">2 桁</span></label>
               <input type="range" id="ppmDigits" min="1" max="6" step="1" value="2">
             </div>
@@ -1642,12 +1670,28 @@ html[data-theme="light"] .toolmenu.open .tmpanel{
           <section class="peak-work-section">
             <div class="peak-work-heading"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M10 3.1c-.2-.9-1.2-1.1-1.8-.4-.5.6-.5 1.7-.6 3.3-.1 2.7-.1 5.3-.7 6.1-.6.8-1.6.6-1.9-.3"/></svg></span><span data-i18n="integGroupCreate">Create integrals</span></div>
             <button class="tmitem" data-act="tInteg"><span data-i18n="actIntegrate">Integrate (drag range)</span></button>
+            <div class="ai-row"><button class="tmitem" data-act="autoInteg"><span data-i18n="actAutoInteg">Auto-integrate</span></button><button type="button" class="asg-gear-btn" id="autoIntegGear" data-i18n-title="autoIntegSettings" title=""><svg class="svi" viewBox="0 0 24 24"><path d="M10.3 1.7h3.4l.5 2.3 1.9.8 2-1.3 2.4 2.4-1.3 2 .8 1.9 2.3.5v3.4l-2.3.5-.8 1.9 1.3 2-2.4 2.4-2-1.3-1.9.8-.5 2.3h-3.4l-.5-2.3-1.9-.8-2 1.3-2.4-2.4 1.3-2-.8-1.9-2.3-.5v-3.4l2.3-.5.8-1.9-1.3-2 2.4-2.4 2 1.3 1.9-.8.5-2.3Z"/><circle cx="12" cy="12" r="3.1"/></svg></button></div>
+            <div id="autoIntegSettings" class="asg-gear-settings zoom-gear-popover ai-gear-popover" hidden data-i18n-popover-title="autoIntegSettings">
+              <div class="zoom-style-body">
+                <div class="tmrow"><label data-i18n="lblAiSigma">Sensitivity</label><input type="range" id="aiSigma" min="2" max="10" step="0.5" value="4"><span class="thrval" id="aisgv">4.0σ</span></div>
+                <div class="tmrow"><label data-i18n="lblAiTail">Tail reach</label><input type="range" id="aiTail" min="2" max="20" step="1" value="8"><span class="thrval" id="aitlv">×8</span></div>
+                <div class="tmrow"><label data-i18n="lblAiMerge">Merge gap</label><input type="range" id="aiMerge" min="0" max="100" step="5" value="25"><span class="thrval" id="aimgv">25 Hz</span></div>
+                <div class="zoom-style-row"><label data-i18n="lblAiMode">Existing</label><div class="seg" id="segAiMode"><button data-v="replace" class="on" data-i18n="optAiReplace">Replace</button><button data-v="add" data-i18n="optAiAdd">Add</button></div></div>
+                <div class="ai-opts">
+                  <button type="button" class="ai-opt on" id="aiSkipSolv"><span class="aick"></span><span data-i18n="lblAiSkipSolv">Skip solvent / water</span></button>
+                  <button type="button" class="ai-opt on" id="aiBlc"><span class="aick"></span><span data-i18n="lblAiBlc">Subtract baseline</span></button>
+                  <button type="button" class="ai-opt" id="aiViewOnly"><span class="aick"></span><span data-i18n="lblAiViewOnly">Visible range only</span></button>
+                </div>
+                <button class="tmitem tbtn uset-reset" data-act="resetAutoInteg"><svg class="svi" viewBox="0 0 16 16" aria-hidden="true"><path d="M13 5.6A5.8 5.8 0 1 0 13.6 9"/><path d="M13 2.7v3h-3"/></svg><span data-i18n="btnResetDef">Reset to defaults</span></button>
+              </div>
+            </div>
           </section>
           <div class="tmsep"></div>
           <section class="peak-work-section">
             <div class="peak-work-heading"><span class="tmic"><svg class="svi" viewBox="0 0 16 16"><path d="M2.2 5.2h11.6"/><path d="M6.2 5.2V3.6c0-.4.3-.7.7-.7h2.2c.4 0 .7.3.7.7v1.6"/><path d="M4.1 5.2l.5 7a1.2 1.2 0 0 0 1.2 1.1h4.4a1.2 1.2 0 0 0 1.2-1.1l.5-7"/><path d="M6.6 7.4v3.6M9.4 7.4v3.6"/></svg></span><span data-i18n="integGroupDelete">Delete integrals</span></div>
             <button class="tmitem erase" data-act="delInteg"><span data-i18n="actDelSel">Delete selected</span></button>
             <button class="tmitem erase" data-act="tEraseInt"><span data-i18n="actRemoveRange">Remove (drag range)</span></button>
+            <button class="tmitem erase" data-act="clearAutoInteg"><span data-i18n="actClearAutoIntegs">Delete auto integrals</span></button>
             <button class="tmitem erase" data-act="clearInteg"><span data-i18n="actClearAllIntegs">Delete all integrals</span></button>
           </section>
           <div class="tmsep"></div>
@@ -1820,6 +1864,7 @@ html[data-theme="light"] .toolmenu.open .tmpanel{
         setupStyleGear('cutStyleGear','cutStyleSettings','closeCutStyleSettings');
         setupStyleGear('titleStyleGear','titleStyleSettings','closeTitleStyleSettings');
         setupStyleGear('minimapStyleGear','minimapStyleSettings','closeMinimapStyleSettings');
+        setupStyleGear('autoIntegGear','autoIntegSettings','closeAutoIntegSettings');
         /* 不純物だけはポップオーバーではなく独立パネル。外側をクリックしても閉じず、
            見出しをつかんで動かせる（スペクトルを見ながら参照表と照合するため）。 */
         (()=>{
@@ -1875,6 +1920,11 @@ html[data-theme="light"] .toolmenu.open .tmpanel{
       <canvas id="cv"></canvas>
       <div id="hint">
         <div class="big" data-i18n="hintBig">Load a Bruker dataset to begin</div>
+        <!-- リロードでフォルダの読み取り許可が切れたときだけ出る復帰口。押す＝ユーザー操作
+             なので、ここで初めて requestPermission が通る（自動では通せない）。 -->
+        <div id="hintReopenWrap" hidden><button id="btnHintReopen" type="button">
+          <svg class="svi" viewBox="0 0 16 16" aria-hidden="true"><path d="M13.4 6.2A5.6 5.6 0 1 0 13.9 9"/><path d="M13.4 3.4v2.9h-2.9"/></svg>
+          <span data-i18n="actReopenLast">Reopen last folder</span><b id="hintReopenName"></b></button></div>
         <div class="small" data-i18n="hintSmall"></div>
         <div class="small" data-i18n="hintKeys" style="margin-top:6px;opacity:.85"></div>
       </div>
@@ -1936,6 +1986,7 @@ const I18N={
   emptyImages:"No images yet. Insert a structure drawing or any picture to place on the plot.",
   thConnFrom:"From δ", thConnTo:"To δ", emptyConn:"No connectors yet. Use the connector tool to drag between two points.", connHint:"Drag two points to add · drag the line itself to move it · Shift-drag an end to change only its length · the two pins fix the height and the δ position (click a row to set each end separately) · click a row × to delete.",
   tAssignGrp:"Assign", lblShowMarks:"Marks", lblShowText:"Text",
+  lblAxisCaption:"Label text", hintAxisCaption:"Text under the axis. Leave empty for the default \u201cchemical shift \u03b4 / ppm\u201d. \u03b4 \u03bd \u03bb and a standalone J are italicised automatically (IUPAC); wrap anything else in *asterisks* to italicise it.",
   lblAxisDigits:"Decimals", lblPeakDigits:"Label decimals", lblPeakVScale:"Leader height", lblAxisLineW:"Line width", optAxisWAuto:"Match trace",
   unitDigits:"{n} dp", unitTicks:"{n} ticks",
   lblAnnotWhere:"Annotations", optAnnotZoom:"Inset", optAnnotMain:"Spectrum", optAnnotBoth:"Both",
@@ -1984,7 +2035,7 @@ const I18N={
   hintKeys:"Keys: <b>C</b> calibrate · <b>P</b> peaks (<b>⇧P</b> erase) · <b>I</b> integrate (<b>⇧I</b> erase) · <b>M</b> multiplets · <b>A</b> label · <b>D</b> mark · <b>F</b> full · <b>0</b> auto · <b>↑↓</b> intensity · <b>←→</b> pan · <b>Esc</b> cancel · <b>Ctrl+Z/Y</b> undo/redo · <b>Ctrl+O</b> open",
   expPng:"Image (PNG)", expCsv:"Spectrum (CSV)", expReport:"Analysis report (CSV)",
   expPngScale:"Image resolution",
-  expPaper:"Paper-format text", paperTitle:"Paper-format text", paperNuc:"Nucleus", paperMHz:"MHz", paperSolv:"Solvent", paperJDec:"J decimals", paperEditLbl:"Editable text", paperPrevLbl:"Preview", paperEdit:"Edit", paperRegen:"Regenerate", paperRegenWarn:"Regenerating replaces your manual edits. Continue?", paperCopy:"Copy (plain)", paperCopyRich:"Copy (formatted)", paperCopied:"Copied to clipboard", paperCopiedRich:"Copied with formatting (paste into Word)",
+  expPaper:"Paper-format text", paperTitle:"Paper-format text", paperNuc:"Nucleus", paperMHz:"MHz", paperSolv:"Solvent", paperJDec:"J decimals", paperSkipSolv:"Drop solvent peak", paperEditLbl:"Editable text", paperPrevLbl:"Preview", paperEdit:"Edit", paperRegen:"Regenerate", paperRegenWarn:"Regenerating replaces your manual edits. Continue?", paperCopy:"Copy (plain)", paperCopyRich:"Copy (formatted)", paperCopied:"Copied to clipboard", paperCopiedRich:"Copied with formatting (paste into Word)",
   secSpectra:"Spectra", noSpectra:"No spectra loaded", secAcq:"Acquisition", secResults:"Results",
   secProc:"Processing",
   lblSource:"Data source", optProcessed:"Processed", optRawFid:"Raw FID",
@@ -1996,6 +2047,11 @@ const I18N={
   tPeaksMain:"⋀ Peaks", tIntegMain:"∫ Integrals", tPeaksTxt:"Peaks", tIntegTxt:"Integrals", lblResults:"Results list",
   actDetect:"Detect (drag range)", actThreshold:"Threshold", actDetectThr:"Detect all ≥ threshold", lblShowThreshold:"Show threshold on spectrum", actRemoveRange:"Remove (drag range)", actClearAll:"Clear all",
   peakGroupDetect:"Detect peaks", peakGroupDelete:"Delete peaks", peakGroupDisplay:"Display settings", actDelSelPeak:"Click a peak to delete", actClearAllPeaks:"Delete all peaks", lblShowPeaksMenu:"Show peaks",
+  actAutoInteg:"Auto-integrate", actClearAutoIntegs:"Delete auto integrals",
+  autoIntegSettings:"Auto-integrate settings",
+  lblAiSigma:"Sensitivity", lblAiTail:"Tail reach", lblAiMerge:"Merge gap", lblAiMode:"Existing",
+  optAiReplace:"Replace", optAiAdd:"Add", lblAiSkipSolv:"Skip solvent / water", lblAiBlc:"Subtract baseline", lblAiViewOnly:"Visible range only",
+  msgAiNone:"No signals found — lower the sensitivity", msgAiDone:"Integrated {n} regions automatically", msgAiDone1:"Integrated 1 region automatically",
   integGroupCreate:"Create integrals", integGroupDelete:"Delete integrals", actClearAllIntegs:"Delete all integrals", lblShowIntegsMenu:"Show integrals", lblIntegCurveMenu:"Show stair curve",
   multGroupCreate:"Create multiplets", multGroupDelete:"Delete multiplets", actClearAllMults:"Delete all multiplets", lblShowMultsMenu:"Show multiplets", lblMultSourcesMenu:"Show source peak δ",
   actIntegrate:"Integrate (drag range)", actDelSel:"Delete selected", actMark:"Mark", actText:"Text label",
@@ -2072,6 +2128,7 @@ const I18N={
   emptyImages:"画像はまだありません。構造式などを挿入するとプロット上に置けます。",
   thConnFrom:"始点 δ", thConnTo:"終点 δ", emptyConn:"コネクタはまだありません。破線コネクタツールで2点をドラッグして追加します。", connHint:"2点をドラッグで追加・線をつまんで移動・端点を Shift+ドラッグで角度そのまま長さだけ変更・2つのピンで高さと δ位置を固定（行をクリックすると端点ごとに指定）・行の×で個別削除。",
   tAssignGrp:"帰属", lblShowMarks:"マーク", lblShowText:"テキスト",
+  lblAxisCaption:"ラベルの文字", hintAxisCaption:"δ軸の下に出す文字です。空欄なら既定の「chemical shift δ / ppm」。δ ν λ と単独の J は IUPAC に従って自動で斜体になります。ほかを斜体にしたいときは *アスタリスク* で囲ってください。",
   lblAxisDigits:"小数桁", lblPeakDigits:"ラベルの小数桁", lblPeakVScale:"引き出し線の縦幅", lblAxisLineW:"線の太さ", optAxisWAuto:"トレースに連動",
   unitDigits:"{n} 桁", unitTicks:"{n} 本",
   lblAnnotWhere:"注釈の表示先", optAnnotZoom:"拡大図", optAnnotMain:"元スペクトル", optAnnotBoth:"両方",
@@ -2120,7 +2177,7 @@ const I18N={
   hintKeys:"キー: <b>C</b> 校正 ・ <b>P</b> ピーク（<b>⇧P</b> 消去）・ <b>I</b> 積分（<b>⇧I</b> 消去）・ <b>M</b> 多重線 ・ <b>A</b> ラベル ・ <b>D</b> マーク ・ <b>F</b> 全体 ・ <b>0</b> 自動 ・ <b>↑↓</b> 強度 ・ <b>←→</b> 移動 ・ <b>Esc</b> 解除 ・ <b>Ctrl+Z/Y</b> 取消/やり直し ・ <b>Ctrl+O</b> 開く",
   expPng:"画像 (PNG)", expCsv:"スペクトル (CSV)", expReport:"解析レポート (CSV)",
   expPngScale:"画像の解像度",
-  expPaper:"論文形式テキスト", paperTitle:"論文形式テキスト", paperNuc:"核種", paperMHz:"MHz", paperSolv:"溶媒", paperJDec:"J 小数桁", paperEditLbl:"編集テキスト", paperPrevLbl:"プレビュー", paperEdit:"編集", paperRegen:"再生成", paperRegenWarn:"再生成すると手動で編集した内容が置き換わります。続けますか？", paperCopy:"コピー（プレーン）", paperCopyRich:"コピー（書式付き）", paperCopied:"クリップボードにコピーしました", paperCopiedRich:"書式付きでコピーしました（Wordに貼付可）",
+  expPaper:"論文形式テキスト", paperTitle:"論文形式テキスト", paperNuc:"核種", paperMHz:"MHz", paperSolv:"溶媒", paperJDec:"J 小数桁", paperSkipSolv:"重溶媒を除く", paperEditLbl:"編集テキスト", paperPrevLbl:"プレビュー", paperEdit:"編集", paperRegen:"再生成", paperRegenWarn:"再生成すると手動で編集した内容が置き換わります。続けますか？", paperCopy:"コピー（プレーン）", paperCopyRich:"コピー（書式付き）", paperCopied:"クリップボードにコピーしました", paperCopiedRich:"書式付きでコピーしました（Wordに貼付可）",
   secSpectra:"スペクトル", noSpectra:"未読み込み", secAcq:"測定条件", secResults:"解析結果",
   secProc:"処理",
   lblSource:"データ源", optProcessed:"処理済み", optRawFid:"生FID",
@@ -2132,6 +2189,11 @@ const I18N={
   tPeaksMain:"⋀ ピーク", tIntegMain:"∫ 積分", tPeaksTxt:"ピーク", tIntegTxt:"積分", lblResults:"結果一覧",
   actDetect:"範囲選択で検出", actThreshold:"閾値", actDetectThr:"閾値以上を全検出", lblShowThreshold:"スペクトルに閾値を表示", actRemoveRange:"範囲選択で削除", actClearAll:"全て削除",
   peakGroupDetect:"ピークを検出する", peakGroupDelete:"ピークを削除する", peakGroupDisplay:"表示設定", actDelSelPeak:"ピークをクリックして削除", actClearAllPeaks:"すべてのピークを削除", lblShowPeaksMenu:"ピークを表示",
+  actAutoInteg:"自動で積分", actClearAutoIntegs:"自動の積分を削除",
+  autoIntegSettings:"自動積分の設定",
+  lblAiSigma:"検出感度", lblAiTail:"裾の伸ばし", lblAiMerge:"統合する隙間", lblAiMode:"既存の積分",
+  optAiReplace:"置き換え", optAiAdd:"追加", lblAiSkipSolv:"重溶媒・水を除く", lblAiBlc:"ベースラインを引く", lblAiViewOnly:"表示範囲だけ",
+  msgAiNone:"信号が見つかりませんでした（検出感度を下げてください）", msgAiDone:"{n} 区間を自動で積分しました", msgAiDone1:"1 区間を自動で積分しました",
   integGroupCreate:"積分する", integGroupDelete:"積分を削除する", actClearAllIntegs:"すべての積分を削除", lblShowIntegsMenu:"積分を表示", lblIntegCurveMenu:"階段カーブを表示",
   multGroupCreate:"多重線を作成する", multGroupDelete:"多重線を削除する", actClearAllMults:"すべての多重線を削除", lblShowMultsMenu:"多重線を表示", lblMultSourcesMenu:"元ピークの δ を表示",
   actIntegrate:"範囲選択で積分", actDelSel:"選択した積分を削除", actMark:"マーク", actText:"テキストラベル",
@@ -2380,12 +2442,16 @@ const UI_REV=3;              // 既定値を変えたら上げる（古い保存
 const DEFAULTS={lineW:0.5, wheelSens:1, wheelInertia:false, wheelInvert:false, hscroll:true, limitView:true, cursorGuide:true, cursorColor:null, cursorStyle:'dashed', cursorWidth:1, cursorOpacity:.55, axisPad:50, axisTicks:15, axisMinorTicks:4, axisW:null, baseGap:0.035, annotWhere:'zoom', minimapH:110, minimapStyle:'mask', minimapPos:'top', minimapColor:null, minimapMaskT:38, minimapWinT:88, minimapFrameStyle:'solid', minimapFrameW:1,
   fontScale:1, nameScale:1, axisScale:1, markSize:4.6, markColor:'#0E6E7E', shadeColor:'#D33A2C', textColor:'#000000', textSize:10.5, textBold:false, textItalic:false, textUnderline:false, textFontFam:'', lineColor:null, lineStyle:'dashed', connW:0.5, lineArrow:'none', imageBorder:false, imageBorderColor:'#3A4750', imageBorderWidth:1, imageBorderStyle:'solid', integDigits:3, integShift:0, integCurveH:1, peakColor:null, peakVScale:1, integColor:null, multColor:null, multDigits:2, multJStyle:'full', multStyle:'style1', multShift:0, multVScale:1, plotFont:'topspin', ppmDigits:2, pkDigits:2,
   zoomBorderColor:null, zoomBorderWidth:1, zoomLeaderStyle:'dashed', peakStyle:'style1', integStyle:'style1', showIntegCurve:true,
-  showTitle:false, figTitle:null, titleSize:15, titleBold:false, cutStyle:'wave', cutColor:null, cutWidth:0.5, cutWave:6, cutSpan:2, cutGap:10, cutOpacity:0.9,
+  showTitle:false, figTitle:null, titleSize:15, titleBold:false, axisCaption:null, cutStyle:'wave', cutColor:null, cutWidth:0.5, cutWave:6, cutSpan:2, cutGap:10, cutOpacity:0.9,
   laneStyle:'solid', laneColor:'#000000', laneWidth:0.5, laneTransp:0,
-  floatPanels:false,
+  floatPanels:false, paperSkipSolv:true,
+  /* 積分の自動検出。aiSigma＝ノイズの何倍を信号とみなすか、aiTail＝裾を半値半幅の何倍まで伸ばすか、
+     aiMerge＝隣り合う区間を1つにまとめる隙間(Hz)、aiMinArea＝最大区間に対する面積の足切り(%)。 */
+  aiSigma:4, aiTail:8, aiMerge:25, aiMinArea:0.5, aiSkipSolv:true, aiBlc:true, aiViewOnly:false, aiMode:'replace',
   pngScale:2};
 const S={ spectra:[], active:-1, view:{pHi:1,pLo:0}, spectrumViews:{}, yscale:1, tool:null,
   lineW:0.5, wheelSens:1, wheelInertia:false, wheelInvert:false, hscroll:true, limitView:true, cursorGuide:true, cursorColor:null, cursorStyle:'dashed', cursorWidth:1, cursorOpacity:.55, selInteg:-1, selImg:-1, selZoom:-1, selLine:-1,
+  aiSigma:4, aiTail:8, aiMerge:25, aiMinArea:0.5, aiSkipSolv:true, aiBlc:true, aiViewOnly:false, aiMode:'replace',
   selPeak:-1, selPeaks:[], selMults:[], thr:0.05, axisPad:50, axisTicks:15, axisMinorTicks:4, axisW:null, baseGap:0.035, annotWhere:'zoom', integShift:0, integCurveH:1, peakVScale:1,
   peakColor:null, integColor:null, peakStyle:'style1', integStyle:'style1', showIntegCurve:true, multColor:null, multDigits:2, multJStyle:'full', multStyle:'style1', multShift:0, multVScale:1, showMultSources:false,
   markColor:'#0E6E7E', shadeColor:'#D33A2C', markSize:4.6, textColor:'#000000', textSize:10.5, textBold:false, textItalic:false, textUnderline:false, textFontFam:'', lineColor:null, lineStyle:'dashed', connW:0.5, lineArrow:'none', imageDefaultScale:1, imageBorder:false, imageBorderColor:'#3A4750', imageBorderWidth:1, imageBorderStyle:'solid', integDigits:3, showInsets:true, showNames:true, showPeaks:true, showIntegs:true, showShades:true, showMarks:true, showText:true,
@@ -2395,14 +2461,13 @@ const S={ spectra:[], active:-1, view:{pHi:1,pLo:0}, spectrumViews:{}, yscale:1,
   zoomBorderColor:null, zoomBorderWidth:1, zoomLeaderStyle:'dashed',
   customPalette:['#1f3a93','#9e2b25','#117a4d','#8a5a00','#6a1b8a'],
   impSolvent:'cdcl3', impTol:0.03, impTolC:0.3, showImpurities:false, impPins:[], impFilter:'',
-  showTitle:false, figTitle:null, titleSize:15, titleBold:false, cutStyle:'wave', cutColor:null, cutWidth:0.5, cutWave:6, cutSpan:2, cutGap:10, cutOpacity:0.9,
-  laneStyle:'solid', laneColor:'#000000', laneWidth:0.5, laneTransp:0,
+  showTitle:false, figTitle:null, titleSize:15, titleBold:false, axisCaption:null, cutStyle:'wave', cutColor:null, cutWidth:0.5, cutWave:6, cutSpan:2, cutGap:10, cutOpacity:0.9,
+  laneStyle:'solid', laneColor:'#000000', laneWidth:0.5, laneTransp:0, paperSkipSolv:true,
   pngScale:2 };
 function A(){ return S.spectra[S.active]||null; }
 let _viewOwner=null;
 function validSavedView(v){ return !!(v&&isFinite(v.pHi)&&isFinite(v.pLo)&&v.pHi>v.pLo); }
 function saveViewFor(sp){ if(!sp||!validSavedView(S.view)) return; const v={pHi:S.view.pHi,pLo:S.view.pLo};sp.view=v;S.spectrumViews[sigKey(sp)]=v; }
-function restoreViewFor(sp){ if(!sp) return; const v=validSavedView(sp.view)?sp.view:S.spectrumViews[sigKey(sp)];if(validSavedView(v))S.view={pHi:v.pHi,pLo:v.pLo}; }
 // Platform modifier key for display (Ctrl on Windows/Linux, ⌘ on Mac; default ⌘ if unknown)
 const IS_MAC=(function(){ try{
     const p=(navigator.userAgentData&&navigator.userAgentData.platform)||navigator.platform||navigator.userAgent||'';
@@ -2622,10 +2687,30 @@ function pickPeaksBox(sp,pA,pB,vA,vB){
   return added;
 }
 
+/* 積分のローカルベースライン。区間の両端の外側を見本にして、その中央値を結んだ直線。
+   自動で引いた区間は広くなりがちで、ベースラインのずれ×点数がそのまま面積に乗る。
+   g.blc が立っている積分だけに効かせる。手で引いた既存の積分の値は動かさない。 */
+function integBaseline(sp,g,ia,ib){
+  if(!g||!g.blc) return null;
+  const d=dispOf(sp), n=ib-ia+1;
+  const w=Math.max(3,Math.min(Math.round(n*0.1),32));
+  const med=(from,to)=>{ from=Math.max(0,from); to=Math.min(sp.N-1,to);
+    const a=[]; for(let i=from;i<=to;i++) a.push(d[i]);
+    if(!a.length) return 0; a.sort((x,y)=>x-y); return a[a.length>>1]; };
+  const y0=med(ia-w,ia), y1=med(ib,ib+w);
+  return {y0, k:(ib>ia)?(y1-y0)/(ib-ia):0};
+}
+/* 積分区間を index に直し、ローカルベースラインも一緒に返す。
+   値の計算（recalcIntegral）と階段カーブの描画が同じ土台を見るための一本化。 */
+function integSpan(sp,g){
+  let ia=idxAtPpm(sp,g.a), ib=idxAtPpm(sp,g.b); if(ia>ib){const t=ia;ia=ib;ib=t;}
+  ia=Math.max(0,Math.min(sp.N-1,ia)); ib=Math.max(0,Math.min(sp.N-1,ib));
+  return {ia, ib, bl:integBaseline(sp,g,ia,ib)};
+}
+function integValueAt(d,i,ia,bl){ return Math.max(0, d[i]-(bl?bl.y0+bl.k*(i-ia):0)); }
 function recalcIntegral(sp,g){
-  const d=dispOf(sp); let ia=idxAtPpm(sp,g.a), ib=idxAtPpm(sp,g.b); if(ia>ib){const t=ia;ia=ib;ib=t;}
-  ia=Math.max(0,ia); ib=Math.min(sp.N-1,ib);
-  let sum=0; for(let i=ia;i<=ib;i++) sum+=Math.max(0,d[i]); g.sum=sum;
+  const d=dispOf(sp), sn=integSpan(sp,g);
+  let sum=0; for(let i=sn.ia;i<=sn.ib;i++) sum+=integValueAt(d,i,sn.ia,sn.bl); g.sum=sum;
 }
 function renormIntegrals(sp){
   const arr=sp.integrals||[]; if(!arr.length) return;
@@ -2679,6 +2764,354 @@ function integralAtPpm(sp,ppm){
   for(let k=sp.integrals.length-1;k>=0;k--){ const g=sp.integrals[k];
     if(ppm>=Math.min(g.a,g.b) && ppm<=Math.max(g.a,g.b)) return k; }
   return -1;
+}
+/* ===================== 積分の自動検出 =====================
+   手で引く積分と土台が2つ違う。
+   (1) 閾値をノイズ量そのもので測る。ピーク検出の「最大ピークの何%」（S.thr）は
+       大きい信号が1本あると小信号が全部沈むので、自動積分には使えない。
+   (2) 裾は各領域で実測した半値半幅の倍数で切る。Lorentzian の面積は裾に効き、
+       ±5×HWHM で 87%、±10×HWHM で 94% しか入らない。固定 Hz で切ると
+       線幅の違う信号どうしで欠ける割合が変わり、積分比そのものが狂う。
+   出てくるのは ppm の区間だけで、積分値は既存の recalcIntegral が出す。 */
+
+/* ベースラインの筋。全体をブロックに割り、各ブロックの中央値を結ぶ。
+   点の大半はベースラインなので中央値は信号に引きずられず、ドリフトには追従する。
+   ブロックの数は「掃引を何枚に切るか」なので、点数が違っても 1 枚の ppm 幅は変わらない。
+   ここは細かさの取り合いで、実測（20 ppm 掃引・65536 点）はこうだった。
+     1 枚 0.31 ppm（64 枚, 旧既定）… 空いた場所での外れ 平均 0.37σ。ただし強いピークの
+       隣では中央値がそのピークに持ち上げられ、補間で両隣まで流れ込んで **−8.4σ** ずれる。
+       δ7.05 の平らな場所がベースラインより 8σ 低いことになり、そこに立つ 38σ の信号を
+       まるごと取り逃がした。
+     1 枚 0.16 ppm（128 枚, 今の既定）… 強いピークの隣のずれが −0.6σ まで落ちる。
+     1 枚 0.08 ppm（256 枚）… 空いた場所は 0.10σ とさらに素直だが、幅 0.10 ppm の
+       ブロードな信号が 17% しか残らない（128 枚なら 53%）。ブロックが信号にすっぽり
+       入ると、その山を自分でベースラインだと思ってしまう。
+   ブロードな信号を残せて、強いピークの隣のずれも消える 128 枚を既定にしてある。 */
+function baselineTrack(sp, nb){
+  const d=dispOf(sp), N=sp&&sp.N; if(!d||!N) return null;
+  nb=Math.max(8,Math.min(1024, nb||128));
+  const w=Math.max(8, Math.floor(N/nb)), cx=[], cy=[], buf=[];
+  for(let s=0;s<N;s+=w){
+    const e=Math.min(N-1,s+w-1); buf.length=0;
+    for(let i=s;i<=e;i++) buf.push(d[i]);
+    buf.sort((a,b)=>a-b);
+    cx.push((s+e)/2); cy.push(buf[buf.length>>1]);
+  }
+  const bl=new Float64Array(N);
+  let k=0;
+  for(let i=0;i<N;i++){
+    while(k<cx.length-2 && i>cx[k+1]) k++;
+    const j=Math.min(k+1,cx.length-1);
+    const x0=cx[k], x1=cx[j], y0=cy[k], y1=cy[j];
+    bl[i]=(x1>x0)?y0+(y1-y0)*Math.min(1,Math.max(0,(i-x0)/(x1-x0))):y0;
+  }
+  return bl;
+}
+/* ノイズ σ。ベースラインを引いた残差の中央絶対偏差 ×1.4826。
+   標準偏差そのものだと信号がそのまま効いてしまう。 */
+function noiseSigma(sp, bl){
+  const d=dispOf(sp), N=sp&&sp.N; if(!d||!N) return 1e-12;
+  const step=Math.max(1, Math.floor(N/20000)), a=[];
+  for(let i=0;i<N;i+=step) a.push(d[i]-(bl?bl[i]:0));
+  if(!a.length) return 1e-12;
+  a.sort((x,y)=>x-y);
+  const med=a[a.length>>1];
+  for(let i=0;i<a.length;i++) a[i]=Math.abs(a[i]-med);
+  a.sort((x,y)=>x-y);
+  return Math.max(1e-12, 1.4826*a[a.length>>1]);
+}
+/* 区間の頂点と半値半幅（点数）。裾をどこまで伸ばすかの物差し。 */
+function regionPeak(sp, bl, ia, ib){
+  const d=dispOf(sp);
+  let mi=ia, mv=-Infinity;
+  for(let i=ia;i<=ib;i++){ const v=d[i]-(bl?bl[i]:0); if(v>mv){ mv=v; mi=i; } }
+  if(!(mv>0)) return {mi, apex:0, hw:1};
+  const half=mv/2; let l=mi, r=mi;
+  while(l>0 && d[l]-(bl?bl[l]:0)>half) l--;
+  while(r<sp.N-1 && d[r]-(bl?bl[r]:0)>half) r++;
+  return {mi, apex:mv, hw:Math.max(1,(r-l)/2)};
+}
+/* 1 点あたりの Hz。統合距離を Hz で書けるようにする（磁場が変わっても効き方が同じ）。 */
+function hzPerPoint(sp){
+  const N=sp&&sp.N; if(!N||N<2) return 1;
+  return Math.abs((sp.ppmLo-sp.ppmHi)/(N-1))*(refMHz(sp)||500);
+}
+/* 除外する δ（重溶媒の残留、水、TMS）。「不純物を探す」の溶媒選択と表をそのまま借りる。 */
+function autoIntegExcluded(sp){
+  const nuc=nucKind(sp), key=S.impSolvent, out=[];
+  const tol=(nuc==='13C')?(S.impTolC==null?0.3:S.impTolC):(S.impTol==null?0.03:S.impTol);
+  (residualSolventPpms(key,nuc)||[]).forEach(v=>{ if(v!=null) out.push({ppm:v, tol}); });
+  if(nuc!=='13C'){
+    (impForSolvent(key)||[]).forEach(e=>{ if(e.name==='water') out.push({ppm:e.ppm, tol}); });
+    out.push({ppm:0, tol:Math.min(tol,0.05)});          // TMS
+  }
+  return out;
+}
+/* 積分すべき区間を探す。返すのは {a:高δ, b:低δ, area} の配列（δ の大きい順）。 */
+function detectIntegralRegions(sp, opt){
+  const d=dispOf(sp), N=sp&&sp.N; if(!d||!N) return [];
+  const o=Object.assign({sigma:4, tail:8, mergeHz:25, minArea:0.5,
+                         skipSolv:true, viewOnly:false, blocks:128, maxN:120}, opt||{});
+  const bl=baselineTrack(sp,o.blocks), sg=noiseSigma(sp,bl);
+  /* 足切りの物差し。面積「だけ」で測ると、粗い試料でいちばん大きい不純物が物差しに
+     なって本物の小さい信号が全部落ちる（実測で δ4.94・2.41・7.05 にある 30σ 前後の
+     信号が、δ1.24 のアルキル不純物 1 本のせいで消えた）。高さでも測って、面積か高さの
+     どちらかを満たせば残す。高さの物差しを最大の 0.7% にしてあるのは ¹³C サテライト
+     （親の 0.55%）をここで落とすため。溶媒は帯ごと外してあるので物差しには入らない。 */
+  const keeper=list=>{
+    const mxA=list.reduce((m,r)=>Math.max(m,r.area),0);
+    const mxH=list.reduce((m,r)=>Math.max(m,r.apex),0);
+    const fa=mxA*(o.minArea/100), fh=Math.max(1.5*o.sigma*sg, mxH*0.007);
+    return r=>(r.area>=fa || r.apex>=fh);
+  };
+  let lo=0, hi=N-1;
+  if(o.viewOnly && S.view && isFinite(S.view.pHi) && isFinite(S.view.pLo)){
+    let x=idxAtPpm(sp,S.view.pHi), y=idxAtPpm(sp,S.view.pLo); if(x>y){const t=x;x=y;y=t;}
+    lo=Math.max(0,x); hi=Math.min(N-1,y);
+  }
+  if(hi-lo<8) return [];
+  /* ⓪ 重溶媒・水・TMS を外す帯。表の δ から ±tol をそのまま帯にしてはいけない。
+        tol（既定 0.03 ppm＝500 MHz で ±15 Hz）は「不純物を探す」の照合の許容差で、
+        溶媒の δ が濃度や温度で動くぶんを見込んだ広さ。線そのものの幅ではない。
+        実測（CDCl₃）：残留ピークは δ7.2597 にあり、±0.03 の帯は 7.23–7.29 を覆う。
+        その中に δ7.280 / 7.277 の 248σ / 228σ の二重線が入っていて、隣で積分している
+        多重線のいちばん高い線（233σ）より高いのに丸ごと捨てられていた。
+        なので帯は「表の δ の近くで実際にいちばん高い点」から左右に、谷か、頂点の
+        0.5%（裾の床と同じ物差し）まで下りたところで切る。±tol は上限としてだけ使う。
+        帯は run を作る段でよけ、裾も帯には入れず、統合も帯をまたがせない。頂点で
+        「この run は溶媒」と後から判定する作りだと、溶媒と地続きになった隣の本物の
+        信号まで 1 つの run になり、頂点が溶媒なので丸ごと消える（この二重線がそれ）。 */
+  const bands=[];
+  if(o.skipSolv) autoIntegExcluded(sp).forEach(e=>{
+    let x=idxAtPpm(sp,e.ppm+e.tol), y=idxAtPpm(sp,e.ppm-e.tol); if(x>y){ const t=x; x=y; y=t; }
+    x=Math.max(lo,x); y=Math.min(hi,y); if(y<=x) return;
+    let mi=x, mv=-Infinity;
+    for(let i=x;i<=y;i++){ const v=d[i]-bl[i]; if(v>mv){ mv=v; mi=i; } }
+    if(!(mv>o.sigma*sg)) return;                       // その δ に残留ピークが無い
+    /* 帯のふちは「run を作る閾値まで下りたところ」。ここを 0.005×頂点などで浅く切ると、
+       閾値をまだ超えている溶媒の裾が帯の外に残り、そのまま 1 本の区間になる
+       （合成 25 本で余計な区間が 26 個出た）。谷（v>prev+2σ）で止まるので、
+       本物の隣の信号まで飲み込むことはない。 */
+    const stop=o.sigma*sg;
+    /* 1 点でも閾値を割ったら止める、にはしない。裾はノイズで上下するので、1 点の
+       へこみで帯が終わり、その外に残った裾がまた 3 点続けて閾値を超えて 1 本の区間に
+       なる（合成 25 本で δ7.28 / 7.24 に余計な区間が 44 個出た）。run を作る側と同じで
+       3 点続けて下りたところを帯のふちにする。 */
+    /* 谷の判定は生の点でやると、裾がゆっくり下りている途中のノイズの揺れが毎回
+       「隣が立ち上がった」に見えて帯がそこで終わる（裾の伸ばしで踏んだのと同じ罠）。
+       5 点の移動平均で見る。 */
+    const sv=i=>{ let a=0,n=0; for(let k=i-2;k<=i+2;k++){ if(k<lo||k>hi) continue; a+=d[k]-bl[k]; n++; } return n?a/n:0; };
+    const edge=(from,side)=>{ let i=from, prev=sv(from), low=-1, n=0;
+      for(;;){ const j=i+side; if(j<lo||j>hi) return low>=0?low:i;
+        const v=sv(j);
+        if(v<=stop){ if(low<0) low=j; if(++n>=3) return low; }
+        else { low=-1; n=0;
+          if(v>prev+2*sg) return i;                    // 谷を過ぎて隣が立ち上がった
+          prev=Math.min(prev,v); }
+        i=j; } };
+    let ba=edge(mi,-1), bb=edge(mi,1);
+    /* 残留ピークが多重線のこともある（¹³C の CDCl₃ は 1:1:1 の三重線、DMSO-d₆ は
+       1:3:6:7:6:3:1 の七重線）。いちばん高い線だけを帯にすると外側の線が帯からはみ出し、
+       それが「いちばん高い run」として足切りの物差しになって、本物の小信号が全部落ちる
+       （実測で ¹³C が 19 区間 → 8 区間になり、δ119〜150 の芳香族が 11 本消えた）。
+       広げるのは **左右そろって同じ距離にある** 線だけにする。溶媒の多重線は中心線に
+       ついて対称だが、たまたま隣にある本物の信号は片側にしか無い。片側だけで広げると、
+       水（δ1.56）の隣のアルキル信号を次々に飲み込んだ（60 本での取りこぼしが 626 → 896）。
+       ±tol は最初の 1 本を見つけるためだけに使う。表の δ（CDCl₃ ¹³C は 77.16）と
+       実際の基準（この装置は 77.00）がずれていると三重線の外側が ±tol の外に落ちる。 */
+    const near=Math.max(2, Math.round(60/hzPerPoint(sp)));
+    const lineAt=(from,side)=>{                        // from の外側 near 点以内の最初の線
+      for(let n=1;n<=near;n++){ const i=from+side*n;
+        if(i<=lo||i>=hi) return -1;
+        const v=d[i]-bl[i];
+        if(v>=0.25*mv && v>=d[i-1]-bl[i-1] && v>d[i+1]-bl[i+1]) return i; }
+      return -1; };
+    for(let g=0; g<8; g++){
+      const L=lineAt(ba,-1), R=lineAt(bb,1);
+      if(L<0 || R<0) break;
+      if(Math.abs((ba-L)-(R-bb))>2) break;             // 左右そろっていない
+      ba=edge(L,-1); bb=edge(R,1);
+    }
+    const bd=[ba, bb]; bd.mi=mi; bd.apex=mv; bands.push(bd);
+  });
+  bands.sort((a,b)=>a[0]-b[0]);
+  const inBand=i=>{ for(let k=0;k<bands.length;k++){ if(i<bands[k][0]) return false;
+                      if(i<=bands[k][1]) return true; } return false; };
+  /* ① ノイズの o.sigma 倍を超える点が minRun 点以上続いたところ（1 点だけの棘は捨てる） */
+  const cut=o.sigma*sg, minRun=3;
+  let runs=[];
+  let s=-1;
+  for(let i=lo;i<=hi;i++){
+    if(!inBand(i) && d[i]-bl[i]>cut){ if(s<0) s=i; }
+    else if(s>=0){ if(i-s>=minRun) runs.push({ia:s, ib:i-1}); s=-1; }
+  }
+  if(s>=0 && hi-s+1>=minRun) runs.push({ia:s, ib:hi});
+  if(!runs.length) return [];
+  /* ② 裾を伸ばす。ここが自動積分の精度そのもの。
+        Lorentzian の面積は裾に効き、中心から ±n×半値半幅で切ると n=5 で 87%、
+        n=10 で 94%、n=20 で 97% しか入らない。困るのは欠けること自体ではなく、
+        「どこで切るか」が信号ごとに変わって欠け方が揃わないこと。だから
+        (a) 閾値を超えた区間の端ではなく、いちばん外側の線の中心から測る
+            （端の位置は信号の高さで動く。高い信号ほど遠くまで閾値を超える）
+        (b) 距離はその信号自身の半値半幅で数える（線幅が違っても揃う）
+        の 2 つで測る。止めるのは隣の信号の立ち上がりだけ。
+        戻りの判定を生の点でやると、裾はノイズと同じ高さまで下りてくるので
+        1 点の揺れが毎回「隣の信号」に見え、o.tail をいくら伸ばしても同じ場所で
+        止まる（実測で 4 倍と 20 倍が同じ結果になった）。半値半幅ぶんの移動平均で
+        見て、戻り幅も頂点に対する割合で測る。 */
+  runs.forEach(r=>{
+    const pk=regionPeak(sp,bl,r.ia,r.ib);
+    r.hw=pk.hw; r.apex=pk.apex; r.mi=pk.mi;
+    // run の中の極大＝線の中心。多重線ではいちばん外側の 2 本が裾の起点になる。
+    let L=pk.mi, R=pk.mi;
+    const lvl=Math.max(2*sg, 0.02*pk.apex);
+    for(let i=Math.max(1,r.ia);i<=Math.min(N-2,r.ib);i++){
+      const v=d[i]-bl[i];
+      if(v>lvl && v>=d[i-1]-bl[i-1] && v>d[i+1]-bl[i+1]){ if(i<L) L=i; if(i>R) R=i; }
+    }
+    const lim=Math.max(2, Math.round(o.tail*r.hw));
+    const rad=Math.max(1,Math.round(r.hw));
+    const sm=i=>{ let a=0,n=0; for(let k=i-rad;k<=i+rad;k++){ if(k<0||k>=N) continue; a+=d[k]-bl[k]; n++; } return n?a/n:0; };
+    const rise=Math.max(2*sg, 0.03*r.apex);
+    /* 打ち切りの床。隣が無い側では「もうノイズまで下りた」で止めないと、
+       半値半幅の大きいブロードな瘤が o.tail 倍ぶん歩き切って、何も無いところまで
+       区間を伸ばす（実測で δ7.7 の幅 0.15 ppm・頂点 8σ の瘤が 8.19 まで 0.7 ppm 伸び、
+       そのまま 7.44–7.29 の芳香族クラスターと 1 つに統合された）。
+       床を頂点の 0.5% にしておくと、強い信号では Lorentzian の裾がそこまで下りるのは
+       14×半値半幅より外なので o.tail の側が先に効き、④ で揃えた欠け方は変わらない。 */
+    const floor=Math.max(0.5*sg, 0.005*r.apex);
+    for(const side of [-1,1]){
+      let i=(side<0)?L:R, mn=Infinity, mnIdx=i, last=i, hitNeighbour=false;
+      for(let n=0;n<lim;n++){
+        const j=i+side; if(j<lo||j>hi||inBand(j)) break;   // 帯には入らない
+        i=j; const v=sm(i);
+        if(v<=floor){ last=i; break; }                    // ノイズまで下りた
+        if(v<mn){ mn=v; mnIdx=i; }
+        else if(v>mn+rise){ hitNeighbour=true; break; }   // 谷を過ぎて隣が立ち上がった
+        last=i;
+      }
+      const edge=hitNeighbour?mnIdx:last;                 // 隣にぶつかったら谷で切る
+      if(side<0) r.ia=Math.min(r.ia,edge); else r.ib=Math.max(r.ib,edge);
+    }
+  });
+  /* ②''' ¹³C サテライト。強いピークの両側 ±¹J/2 に、親の 0.55% の高さで必ず 2 本出る。
+         面積の足切りだけに任せると、物差しから外した残留溶媒（CHCl₃, ¹J=209 Hz）の
+         サテライトが素通りする（実測で 60 本中 18 本に δ7.05 / 7.47 の細い区間が出た）。
+         親を挟んで左右対称・間隔 30〜300 Hz・高さが親の 0.2〜1.2% の 2 本組に印を付ける。
+         2 本そろっていることを条件にするのは、本物の小信号をたまたま落とさないため。 */
+  {
+    // 親には帯（溶媒）も入れる。帯にしてしまうと run が無くなり、いちばん
+    // サテライトを出す CHCl₃ が親の候補から消えてしまう。
+    const hzPt0=hzPerPoint(sp);
+    const strong=runs.filter(r=>r.apex>=100*sg)
+                     .concat(bands.filter(b=>b.apex>=100*sg).map(b=>({mi:b.mi, apex:b.apex})));
+    strong.forEach(p=>{
+      const cand=runs.filter(r=>r!==p && r.apex>0.002*p.apex && r.apex<0.012*p.apex);
+      cand.forEach(L=>{
+        if(L.mi>=p.mi) return;
+        const dl=(p.mi-L.mi)*hzPt0; if(dl<30||dl>300) return;
+        cand.forEach(R=>{
+          if(R.mi<=p.mi) return;
+          if(Math.abs((R.mi-p.mi)*hzPt0-dl)>4) return;
+          if(Math.max(L.apex,R.apex)>2.5*Math.min(L.apex,R.apex)) return;
+          L.sat=true; R.sat=true;
+        });
+      });
+    });
+    runs=runs.filter(r=>!r.sat);
+    if(!runs.length) return [];
+  }
+  /* ②'' 弱すぎる区間はここで落とす。統合より先にやらないといけない。
+         4σ を 3 点続けて超えたノイズの瘤は、統合の隙間（既定 25 Hz ＝ 500 MHz で
+         約 0.05 ppm）の中に入ってしまい、本物の信号と 1 つにまとめられて区間を
+         何倍にも広げる（実測で δ2.30 の一重線が 2.33〜2.14 に伸び、値が +7% ずれた）。 */
+  runs.forEach(r=>{ let a=0; for(let i=r.ia;i<=r.ib;i++) a+=Math.max(0,d[i]-bl[i]); r.area=a; });
+  runs=runs.filter(keeper(runs));
+  if(!runs.length) return [];
+  /* ③ 隣り合う区間の統合。近ければ 1 つの多重線、離れていても谷が浅ければ同じ信号。
+        判定の考え方は analyzeMultiplet のクラスタ分割（隙間で切る）と揃えてある。 */
+  runs.sort((a,b)=>a.ia-b.ia);
+  const hzPt=hzPerPoint(sp), mhz=Math.max(0,o.mergeHz), merged=[runs[0]];
+  for(let k=1;k<runs.length;k++){
+    const p=merged[merged.length-1], q=runs[k], gap=q.ia-p.ib, gapHz=Math.max(0,gap)*hzPt;
+    // 隙間に溶媒の帯が掛かっていたら、隙間でも谷でも決してつなげない
+    const same=!bands.some(b=>b[1]>=p.ib && b[0]<=q.ia);
+    let join = same && (gap<=0 || gapHz<mhz);
+    if(same && !join && gapHz<mhz*3){
+      let valley=Infinity;
+      for(let i=p.ib;i<=q.ia;i++){ const v=d[i]-bl[i]; if(v<valley) valley=v; }
+      const ap=Math.min(p.apex,q.apex);
+      if(ap>0 && valley>0.25*ap) join=true;
+    }
+    if(join){
+      p.ib=Math.max(p.ib,q.ib); p.hw=Math.max(p.hw,q.hw);
+      if(q.apex>p.apex){ p.apex=q.apex; p.mi=q.mi; }
+    } else merged.push(q);
+  }
+  /* ④ 面積と高さで足切り。¹³C サテライトや残った棘はここで落ちる。 */
+  merged.forEach(r=>{ let a=0; for(let i=r.ia;i<=r.ib;i++) a+=Math.max(0,d[i]-bl[i]); r.area=a; });
+  const ok=keeper(merged);
+  let keep=merged.filter(r=>r.ib>r.ia && ok(r));
+  if(keep.length>o.maxN){ keep.sort((a,b)=>b.area-a.area); keep.length=o.maxN; keep.sort((a,b)=>a.ia-b.ia); }
+  return keep.map(r=>({a:ppmAt(sp,r.ia), b:ppmAt(sp,r.ib), area:r.area}));
+}
+/* 「自動で積分」の本体。区間を探して積分に変える。 */
+function autoIntegrate(){
+  const sp=A(); if(!sp||!sp.mag){ toast(t('toolNeedOne')); return; }
+  const regions=detectIntegralRegions(sp,{
+    sigma:S.aiSigma, tail:S.aiTail, mergeHz:S.aiMerge, minArea:S.aiMinArea,
+    skipSolv:S.aiSkipSolv!==false, viewOnly:!!S.aiViewOnly});
+  if(!regions.length){ toast(t('msgAiNone')); return; }
+  pushUndo(sp);
+  const add=(S.aiMode==='add');
+  if(!add) sp.integrals=[];
+  sp.integrals=sp.integrals||[];
+  const old=add?sp.integrals.slice():[];
+  let n=0;
+  regions.forEach(r=>{
+    // 追加のときは、すでに積分がある区間には重ねない（手で引いたものを壊さない）
+    if(add && old.some(g=>Math.min(g.a,g.b)<Math.max(r.a,r.b) && Math.max(g.a,g.b)>Math.min(r.a,r.b))) return;
+    const g={a:Math.max(r.a,r.b), b:Math.min(r.a,r.b), sum:0, rel:1, auto:true};
+    if(S.aiBlc!==false) g.blc=true;
+    recalcIntegral(sp,g); sp.integrals.push(g); n++;
+  });
+  renormIntegrals(sp);
+  S.selInteg=-1;
+  saveAnnot(sp); S.resTab='integ'; openResults(); renderResults(); draw();
+  toast(t(n===1?'msgAiDone1':'msgAiDone').replace('{n}',n));
+}
+/* 自動で作った積分だけ消す（手で引いたものは残す） */
+function clearAutoIntegrals(){
+  const sp=A(); if(!sp||!(sp.integrals||[]).some(g=>g.auto)) return;
+  pushUndo(sp);
+  sp.integrals=(sp.integrals||[]).filter(g=>!g.auto);
+  renormIntegrals(sp); S.selInteg=-1;
+  saveAnnot(sp); S.resTab='integ'; openResults(); renderResults(); draw();
+}
+/* 自動積分の設定 UI。スライダー・チェック・置き換え/追加をここでまとめて面倒を見る。
+   どれも押したときに初めて効く設定なので、変えても描き直さない。 */
+function syncAutoIntegUI(){
+  const set=(id,v)=>{ const el=document.getElementById(id); if(el) el.value=v; };
+  const txt=(id,v)=>{ const el=document.getElementById(id); if(el) el.textContent=v; };
+  set('aiSigma',S.aiSigma); set('aiTail',S.aiTail); set('aiMerge',S.aiMerge);
+  txt('aisgv',(S.aiSigma??4).toFixed(1)+'\u03c3');
+  txt('aitlv','\u00d7'+Math.round(S.aiTail??8));
+  txt('aimgv',Math.round(S.aiMerge??25)+' Hz');
+  ['aiSkipSolv','aiBlc','aiViewOnly'].forEach(key=>{
+    const el=document.getElementById(key); if(el) el.classList.toggle('on',!!S[key]); });
+  const seg=document.getElementById('segAiMode');
+  if(seg) seg.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===(S.aiMode||'replace')));
+}
+function wireAutoIntegUI(){
+  const slide=(id,key,round)=>{ const el=document.getElementById(id); if(!el) return;
+    el.oninput=e=>{ const v=+e.target.value; S[key]=round?Math.round(v):v; syncAutoIntegUI(); persistUI(); }; };
+  slide('aiSigma','aiSigma',false); slide('aiTail','aiTail',true); slide('aiMerge','aiMerge',true);
+  ['aiSkipSolv','aiBlc','aiViewOnly'].forEach(key=>{ const el=document.getElementById(key); if(!el) return;
+    el.onclick=e=>{ e.stopPropagation(); S[key]=!S[key]; syncAutoIntegUI(); persistUI(); }; });
+  const seg=document.getElementById('segAiMode');
+  if(seg) seg.querySelectorAll('button').forEach(b=>{ b.onclick=e=>{ e.stopPropagation();
+    S.aiMode=(b.dataset.v==='add')?'add':'replace'; syncAutoIntegUI(); persistUI(); }; });
+  syncAutoIntegUI();
 }
 /* detect every local maximum with rel ≥ thr (0–1) across the whole spectrum */
 function detectPeaksThreshold(sp, thr){
@@ -3235,6 +3668,31 @@ function axisFont(size, weight){ return (weight?weight+' ':'')+(Math.round(size*
 function runFonts(run, font){ return run.map(([t,it])=>[t, it?'italic '+font:font]); }
 function runWidth(rf){ let w=0; for(const [t,f] of rf){ ctx.font=f; w+=ctx.measureText(t).width; } return w; }
 function drawRun(rf, x, y){ let cx=x; for(const [t,f] of rf){ ctx.font=f; ctx.fillText(t,cx,y); cx+=ctx.measureText(t).width; } return cx-x; }
+/* δ軸のラベル文字。既定は IUPAC の量記号表記 "chemical shift δ / ppm"。 */
+function axisCaptionDefault(){ return 'chemical shift \u03b4 / ppm'; }
+function axisCaptionText(){ const t=S.axisCaption; return (t==null||t==='')?axisCaptionDefault():t; }
+/* 自由文を runFonts 用の [文字, 斜体?] 列に割る。
+   ・*…* で囲った範囲は斜体（囲みたい記号が下の自動判定から漏れたとき用）
+   ・囲みの外では量記号だけを斜体にする：δ ν λ は常に、J は前後が英字でないときだけ
+     （JEOL や Japan の J まで寝かせないため）。単位や語は立体のまま。 */
+function axisCaptionRuns(text){
+  const out=[];
+  const add=(str,it)=>{ if(!str) return; const last=out[out.length-1];
+    if(last && last[1]===it) last[0]+=str; else out.push([str,it]); };
+  const isAlpha=c=>!!c && /[A-Za-z]/.test(c);
+  let forced=false;
+  for(const part of String(text).split('*')){
+    if(forced) add(part,1);
+    else for(let i=0;i<part.length;i++){
+      const c=part[i];
+      const sym = '\u03b4\u03bd\u03bb'.indexOf(c)>=0 ||
+                  (c==='J' && !isAlpha(part[i-1]) && !isAlpha(part[i+1]));
+      add(c, sym?1:0);
+    }
+    forced=!forced;
+  }
+  return out;
+}
 /* 表示専用。負号のハイフンは短くて読みにくいので en ダッシュに置き換える。
    CSV・レポート・保存データはそのままなので、この関数は画面表示にだけ使うこと。 */
 function nsign(t){ return String(t).replace(/^-/,'\u2013'); }
@@ -4571,10 +5029,11 @@ function renderContent(opts){
     ctx.fillStyle=css('--axis'); ctx.fillText(p.toFixed(axisDigits(span,step)), x, Math.min(tickLabY, H-4));
   }
   if(opts.caption!==false){
-    // "chemical shift δ / ppm" — 量記号の δ だけイタリック（IUPAC の量記号表記）。
-    // canvas は 1 回の fillText で書体を混ぜられないので、実測幅で継ぎ足しながら中央寄せする。
+    // 既定は "chemical shift δ / ppm"（量記号の δ だけイタリック＝IUPAC の量記号表記）。
+    // 文字は設定で差し替えられる。canvas は 1 回の fillText で書体を混ぜられないので、
+    // 実測幅で継ぎ足しながら中央寄せする。
     const capY=Math.min(tickLabY+axf+2, H-4);
-    const capRun=runFonts([['chemical shift ',0],['δ',1],[' / ppm',0]], axisFont(11)); // 目盛の数字と同じウェイト
+    const capRun=runFonts(axisCaptionRuns(axisCaptionText()), axisFont(11)); // 目盛の数字と同じウェイト
     ctx.fillStyle=css('--axis'); ctx.textAlign='left';
     drawRun(capRun, (XL+XR)/2-runWidth(capRun)/2, capY);
   }
@@ -4737,15 +5196,15 @@ function renderContent(opts){
         ctx.fillStyle=igCol;
         ctx.fillRect(x1-2,lt,4,8); ctx.fillRect(x2-2,lt,4,8);
       }
-      let ia=idxAtPpm(sp,ig.a),ib=idxAtPpm(sp,ig.b); if(ia>ib){const t=ia;ia=ib;ib=t;}
+      const igSn=integSpan(sp,ig), ia=igSn.ia, ib=igSn.ib;
       const shift=(S.integShift||0)*lh;
       if(S.showIntegCurve){
-        let acc=0,tot=0; for(let i=ia;i<=ib;i++) tot+=Math.max(0,d[i]);
+        let acc=0,tot=0; for(let i=ia;i<=ib;i++) tot+=integValueAt(d,i,ia,igSn.bl);
         ctx.strokeStyle=igCol; ctx.lineWidth=annotLineW(); ctx.beginPath();
         /* 階段の縦幅。描き始めの基線 yB は動かさず、天井 yA だけ下ろす。
            100% は従来どおり「レーン上端の 6px 下 〜 レーン高さの 42%」。 */
         const yB=lt+lh*0.42+shift, yA=yB-(lh*0.42-6)*integCurveH(); let f=true;
-        for(let i=ia;i<=ib;i++){ acc+=Math.max(0,d[i]); const x=ppmToX(ppmAt(sp,i));
+        for(let i=ia;i<=ib;i++){ acc+=integValueAt(d,i,ia,igSn.bl); const x=ppmToX(ppmAt(sp,i));
           const yy=tot>0?yB-(yB-yA)*(acc/tot):yB; if(f){ctx.moveTo(x,yy);f=false;}else ctx.lineTo(x,yy); }
         ctx.stroke();
       }
@@ -5952,6 +6411,8 @@ if(thrS){ thrS.value=Math.round(S.thr*100);
     const showIch=()=>{ if(ichv) ichv.textContent=Math.round(integCurveH()*100)+'%'; };
     showIch();
     ich.oninput=e=>{ S.integCurveH=(+e.target.value)/100; showIch(); persistUI(); draw(); }; }
+  /* 自動積分のパラメータ。描き直しは要らない（押したときに初めて効く）ので draw は呼ばない。 */
+  wireAutoIntegUI();
   /* スタイル2 のピーク引き出し線の縦幅。帯ごと伸縮するので折れ点も先端も比例して動く。 */
   const pvs=document.getElementById('peakVScale');
   if(pvs){ pvs.value=Math.round(peakVScale()*100);
@@ -6031,6 +6492,7 @@ const RESET_KEYS={
   resetMark:   ['markColor','markSize'],
   resetPeak:   ['peakColor','pkDigits','peakStyle','peakVScale'],
   resetInteg:  ['integColor','integShift','integCurveH','integDigits','integStyle'],
+  resetAutoInteg:['aiSigma','aiTail','aiMerge','aiMinArea','aiSkipSolv','aiBlc','aiViewOnly','aiMode'],
   resetText:   ['textColor','textSize'],
   resetMult:   ['multColor','multShift','multVScale','multDigits','multJStyle','multStyle']
 };
@@ -6046,6 +6508,8 @@ const _acnt=k=>{ const sp=_asp(); return sp?((sp[k]||[]).length):0; };
 const ACT_GATE={
   clearPk:        {ok:()=>_acnt('peaks')>0,       ja:'ピークがありません',   en:'No peaks'},
   clearInteg:     {ok:()=>_acnt('integrals')>0,   ja:'積分がありません',     en:'No integrals'},
+  clearAutoInteg: {ok:()=>{ const sp=_asp(); return !!sp&&(sp.integrals||[]).some(g=>g.auto); },
+                                                  ja:'自動の積分がありません', en:'No auto integrals'},
   clearMult:      {ok:()=>_acnt('multiplets')>0,  ja:'多重線がありません',   en:'No multiplets'},
   clearMultSel:   {ok:()=>!!(S.selPeaks||[]).length||!!(S.selMults||[]).length,
                                                   ja:'選択されていません',   en:'Nothing selected'},
@@ -6085,10 +6549,14 @@ function doToolAction(act){
   if(typeof window.closeAssignSettings==='function') window.closeAssignSettings();
   if(typeof window.closeCutStyleSettings==='function') window.closeCutStyleSettings();
   if(typeof window.closeZoomStyleSettings==='function') window.closeZoomStyleSettings();
+  if(typeof window.closeAutoIntegSettings==='function') window.closeAutoIntegSettings();
   closeToolMenus();
   if(act==='clearPk') return clearPeaks();
   if(act==='clearInteg') return clearIntegrals();
   if(act==='delInteg') return delSelectedInteg();
+  if(act==='autoInteg') return autoIntegrate();
+  if(act==='clearAutoInteg') return clearAutoIntegrals();
+  if(act==='resetAutoInteg') return resetAutoIntegSettings();
   if(act==='detectThr') return detectThreshold();
   if(act==='defineMult') return defineMultipletFromSel();
   if(act==='clearMultSel'){ S.selPeaks=[]; S.selMults=[]; renderResults(); draw(); return; }
@@ -6165,6 +6633,11 @@ function resetPeakStyle(){
 function resetIntegStyle(){
   applyDefaults('resetInteg');
   syncUIControls(); persistUI(); renderResults(); draw();
+}
+/* 自動検出のパラメータだけ既定へ。すでに作った積分そのものは残す。 */
+function resetAutoIntegSettings(){
+  applyDefaults('resetAutoInteg');
+  syncAutoIntegUI(); persistUI();
 }
 function resetTextStyle(){
   applyDefaults('resetText');
@@ -6592,6 +7065,19 @@ function impForSolvent(key){ const ci=IMP_KEYS.indexOf(key); if(ci<0) return [];
   impTable().forEach((r,idx)=>{ const v=r.v[ci]; if(v==null) return;
     out.push({idx, name:r.n, env:r.e, mult:r.m, ppm:v}); });
   out.sort((a,b)=>b.ppm-a.ppm); return out;
+}
+/* 選んだ重溶媒そのものの残留ピーク位置（論文形式テキストから外すために使う）。
+   ¹H は IMP_SOLV の残留 δ、¹³C は不純物表の "(solvent)" 行を拾う（CD₃CN や
+   THF-d₈ のように 2 本ある溶媒はどちらも返る）。表に無い溶媒は空配列。 */
+function residualSolventPpms(key, nuc){
+  if(!key) return [];
+  if(nuc==='13C'){
+    const ci=(typeof IMP_KEYS!=='undefined')?IMP_KEYS.indexOf(key):-1;
+    if(ci<0 || typeof IMP_13C==='undefined') return [];
+    return IMP_13C.filter(r=>/\(solvent\)/.test(r.n)).map(r=>r.v[ci]).filter(v=>v!=null);
+  }
+  const r=(typeof IMP_SOLV!=='undefined'?IMP_SOLV:[]).find(x=>x[0]===key);
+  return (r&&r[2]!=null)?[r[2]]:[];
 }
 // candidate impurities within tol of a given δ for the chosen solvent
 function impMatch(ppm, key, tol){ const list=impForSolvent(key); const out=[];
@@ -7697,8 +8183,11 @@ function applyEmptyState(){
 }
 function refreshActive(){
   const sp=A();
+  /* 表示範囲は「選択中のスペクトル」ではなく「いま描いている軸」の持ち物。
+     スタックでは全部が同じ δ 軸に乗るので、リストで選び直しただけで
+     範囲が飛ぶと操作が読めなくなる。切り替え時の復元はしない。
+     範囲そのものは「最後に見ていた値」として記録だけ続ける（保存・再読込用）。 */
   if(_viewOwner&&_viewOwner!==sp) saveViewFor(_viewOwner);
-  if(sp&&_viewOwner!==sp) restoreViewFor(sp);
   _viewOwner=sp||null;
   updateToolAvail(); S.selInteg=-1; S.selImg=-1;
   applyEmptyState();
@@ -8009,6 +8498,9 @@ document.getElementById('btnShowTitle').onclick=()=>{
 { const ti=document.getElementById('figTitleInput'); if(ti){
     ti.oninput=e=>{ S.figTitle=e.target.value; persistUI(); resize(); draw(); };
     ti.onfocus=()=>{ ti.placeholder=autoTitle()||'¹H NMR (CDCl₃)'; }; }
+  { const ac=document.getElementById('axisCaptionInput'); if(ac){
+      // 文字数は軸の高さに影響しないので resize は要らない
+      ac.oninput=e=>{ S.axisCaption=e.target.value; persistUI(); draw(); }; } }
   const tsz=document.getElementById('titleSize'); if(tsz){
     tsz.oninput=e=>{ S.titleSize=+e.target.value;
       const v=document.getElementById('tszv'); if(v) v.textContent=(+e.target.value)+' pt';
@@ -8143,6 +8635,9 @@ document.querySelectorAll('.menu>.tbtn').forEach(b=>b.addEventListener('click',e
 document.getElementById('btnFileDirect').addEventListener('click',e=>{ e.stopPropagation(); closeMenus(); openDataset(); });
 document.getElementById('btnFileReopen').addEventListener('click',e=>{ e.stopPropagation(); closeMenus();
   reopenLast().then(ok=>{ if(!ok) openDataset(); }); });
+{ const hb=document.getElementById('btnHintReopen');
+  if(hb) hb.addEventListener('click',e=>{ e.stopPropagation(); closeMenus();
+    reopenLast().then(ok=>{ if(!ok) openDataset(); }); }); }
 document.addEventListener('click',e=>{ if(!clickPathHas(e,'menu')) closeMenus(); });
 
 /* toolbar dropdowns open on CLICK only (pinned); hover just highlights the button border via CSS */
@@ -8561,6 +9056,34 @@ async function reopenLast(){
   return true;
 }
 function openDataset(){ pickDirectory().then(done=>{ if(!done) document.getElementById('fileIn').click(); }); }
+/* ---- リロード後の復帰 ----
+   スペクトルの配列そのものはメモリ上にしか無いので、再読み込みでは必ず消える。
+   戻せるのは「どのフォルダを開いていたか」だけ。フォルダの許可が生きていれば無操作で
+   読み直し、切れていればホーム画面にボタンを1つ出す（許可の取り直しには操作が要る）。 */
+function showHintReopen(h){
+  const wrap=document.getElementById('hintReopenWrap'); if(!wrap) return;
+  const name=h&&h.name;
+  if(!name){ wrap.hidden=true; return; }
+  const nm=document.getElementById('hintReopenName'); if(nm) nm.textContent=name;
+  wrap.hidden=false;
+}
+async function restoreLastFolder(){
+  if(S.spectra.length) return;                       // すでに何か載っているなら触らない
+  if(!lastDirHandle){ try{ lastDirHandle=await idbGet('lastDir'); }catch(_){} }
+  const h=lastDirHandle;
+  if(!h) return;
+  let mode='';
+  try{ if(h.queryPermission){
+    if(await h.queryPermission({mode:'readwrite'})==='granted') mode='readwrite';
+    else if(await h.queryPermission({mode:'read'})==='granted') mode='read';
+  } else mode='readwrite'; }catch(_){}
+  if(mode){                                          // 許可が残っていた → 無言で読み直す
+    topHandles.add(h);
+    try{ await readDirHandle(h); }catch(_){}
+    if(S.spectra.length) return;
+  }
+  showHintReopen(h);                                 // 許可切れ／読めなかった → 1クリックで復帰
+}
 // preload the stored handle so the picker can start in the last folder
 idbGet('lastDir').then(h=>{ if(h) lastDirHandle=h; }).catch(()=>{});
 
@@ -8679,6 +9202,9 @@ window.addEventListener('drop',async e=>{ e.preventDefault();dc=0;drop.classList
       for(const h of handles){
         try{
           if(h.kind==='directory'){ topHandles.add(h);
+            // ドロップで開いた場合もハンドルを覚えておく（覚えないと「前のフォルダを
+            // 再読み込み」とリロード後の復帰がピッカー経由のときしか効かない）。
+            lastDirHandle=h; idbSet('lastDir',h);
             // best-effort: try to upgrade to write access while the drop's user gesture is
             // still active, so folder auto-save can go straight to work with no extra click.
             await ensurePermRW(h,true).catch(()=>{});
@@ -8808,12 +9334,19 @@ document.getElementById('btnReport').onclick=()=>{ closeMenus(); const sp=A(); i
 /* ---------- paper-format (¹H / ¹³C NMR) characterization text ---------- */
 function pNucSup(k){ return k==='13C'?'¹³C':'¹H'; }
 function pHzList(m, jdec){ return (m.Js||[]).filter(j=>j>0.05).map(j=>(+j).toFixed(jdec)+' Hz'); }
-/* protons for a multiplet: prefer a covering integral's normalized value, else scale its own area */
+/* 積分の正規化値 → 水素数。0 に丸まるものは「測れていない」として空欄にする
+   （1H に切り上げると、取っていない値を出すことになる）。 */
+function hFromRel(rel){ const n=Math.round(rel); return (rel>0 && n>0) ? n : null; }
+/* その多重線を覆う積分からだけ水素数を出す。覆う積分が無ければ null＝空欄。
+   以前はここで、いちばん最初の積分の正規化係数を使って多重線自身の生の面積を
+   換算していた。これは積分を取っていない信号にまで水素数を作り出すので、
+   「積分は2つしか取っていないのに水素数が3つ出る」という食い違いになっていた。 */
 function hCountFor(sp,m){
-  const igs=sp.integrals||[];
-  for(const g of igs){ const hi=Math.max(g.a,g.b), lo=Math.min(g.a,g.b);
-    if(m.center<=hi+1e-9 && m.center>=lo-1e-9) return Math.max(1,Math.round(g.rel)); }
-  if(igs.length && m.integ>0){ const g=igs.find(x=>x.sum>0); if(g) return Math.max(1,Math.round(m.integ*(g.rel/g.sum))); }
+  for(const g of (sp.integrals||[])){
+    if(g.hidden) continue;
+    const hi=Math.max(g.a,g.b), lo=Math.min(g.a,g.b);
+    if(m.center<=hi+1e-9 && m.center>=lo-1e-9) return hFromRel(g.rel);
+  }
   return null;
 }
 function buildPaperText(sp, opts){
@@ -8823,27 +9356,72 @@ function buildPaperText(sp, opts){
   const solv=opts.solv||solvName(S.impSolvent)||'CDCl₃';
   const jdec=(opts.jdec==null)?1:opts.jdec, pdec=2;
   const head=pNucSup(nuc)+' NMR ('+mhz+' MHz, '+solv+'): δ ';
+  /* 重溶媒の残留ピークは既定で外す。外すのは「拾っただけのピーク」だけで、
+     自分で引いた積分区間や定義した多重線には触らない（意図して作ったものを
+     黙って消さない）。許容幅は不純物パネルと同じ ± ppm を使う。 */
+  const skipSolv=(opts.skipSolv!==false);
+  const solvPpms=skipSolv?residualSolventPpms(opts.solvKey||null, nuc):[];
+  const solvTol=(nuc==='13C')?(S.impTolC==null?0.3:S.impTolC):(S.impTol==null?0.03:S.impTol);
+  const isSolvPeak=v=>solvPpms.some(x=>Math.abs(x-v)<=solvTol);
   if(nuc==='13C'){
-    let vals=(sp.peaks||[]).map(p=>p.ppm);
+    let vals=(sp.peaks||[]).filter(p=>!p.hidden).map(p=>p.ppm).filter(v=>!isSolvPeak(v));
     if(!vals.length) vals=(sp.multiplets||[]).filter(m=>!m.hidden).map(m=>m.center);
     vals=vals.slice().sort((a,b)=>b-a).map(v=>(+v).toFixed(pdec));
     const out=[]; vals.forEach(v=>{ if(!out.length||out[out.length-1]!==v) out.push(v); });
     return out.length ? head+out.join(', ')+'.' : head.replace(/δ $/,'').trim();
   }
-  const ms=(sp.multiplets||[]).filter(m=>!m.hidden).slice().sort((a,b)=>b.center-a.center);
-  if(!ms.length) return head+'…';
-  const parts=ms.map(m=>{
-    const mult=m.mult||'m', isM=mult==='m';
-    let dtxt;
-    if(isM){ const hi=Math.max(m.a,m.b), lo=Math.min(m.a,m.b);
-      dtxt=(Math.abs(hi-lo)>0.005)?(hi.toFixed(pdec)+'–'+lo.toFixed(pdec)):m.center.toFixed(pdec); }
-    else dtxt=m.center.toFixed(pdec);
-    const H=hCountFor(sp,m), js=pHzList(m,jdec);
-    let inside=mult;
-    if(!isM && js.length) inside+=', J = '+js.join(', ');
-    if(H!=null) inside+=', '+H+'H';
-    return dtxt+' ('+inside+')';
+  /* ¹H は多重線だけではなく、多重線に入っていない積分区間と孤立ピークも拾う。
+     ただし推測はしない：多重度と J は多重線からしか、水素数は積分からしか出さない。
+     分からない項目は 'm' や 1H で埋めず、そのまま省く（δ だけの項目になる）。
+     目で消した（hidden）ものはどの種類も報告しない。 */
+  const lohi=o=>[Math.min(o.a,o.b), Math.max(o.a,o.b)];
+  const within=(v,sp2)=>v>=sp2[0]-1e-9 && v<=sp2[1]+1e-9;
+  /* δ の範囲表記。丸めた両端が同じ数字になるほど狭いときは 1 つの値にまとめる。
+     mid は「1 つにまとめたときに出す値」（多重線なら m.center、既定は中点）。 */
+  const dRange=(lo,hi,mid)=>{ const a=hi.toFixed(pdec), b=lo.toFixed(pdec);
+    if(a!==b && Math.abs(hi-lo)>0.005) return a+'–'+b;
+    return (mid!=null?mid:(hi+lo)/2).toFixed(pdec); };
+  const ms=(sp.multiplets||[]).filter(m=>!m.hidden);
+  const igs=(sp.integrals||[]).filter(g=>!g.hidden);
+  const pks=(sp.peaks||[]).filter(p=>!p.hidden);
+  const items=[];
+  // (1) 多重線 — δ・多重度・J、及び覆う積分があれば水素数
+  ms.forEach(m=>{
+    const mult=m.mult||'', asRange=(mult===''||mult==='m');
+    const [lo,hi]=lohi(m);
+    const dtxt=asRange?dRange(lo,hi,m.center):m.center.toFixed(pdec);
+    const js=(mult&&mult!=='m')?pHzList(m,jdec):[];
+    const H=hCountFor(sp,m), inside=[];
+    if(mult) inside.push(mult);
+    if(js.length) inside.push('J = '+js.join(', '));
+    if(H!=null) inside.push(H+'H');
+    items.push({d:m.center, txt:dtxt+(inside.length?' ('+inside.join(', ')+')':'')});
   });
+  // (2) 積分区間 — 多重線の水素数としてすでに使われているものは除く
+  /* 出す δ は積分の端ではなく、その区間の中で拾えているピークの範囲。積分は信号より
+     広めに引くのがふつうなので、端をそのまま書くと信号のない所まで含んだ範囲になる
+     （7.42 の 1 本しかないのに 7.44–7.40 と出ていた）。ピークを 1 本も拾っていない
+     区間だけは、手がかりが端しかないのでそのまま使う。 */
+  igs.forEach(g=>{
+    const sp2=lohi(g);
+    if(ms.some(m=>within(m.center,sp2))) return;
+    const inner=pks.filter(pk=>within(pk.ppm,sp2)).map(pk=>pk.ppm);
+    const lo=inner.length?Math.min.apply(null,inner):sp2[0];
+    const hi=inner.length?Math.max.apply(null,inner):sp2[1];
+    const H=hFromRel(g.rel);                               // 多重線側と同じ丸め方
+    items.push({d:(lo+hi)/2, txt:dRange(lo,hi)+(H!=null?' ('+H+'H)':'')});
+  });
+  // (3) 孤立ピーク — 多重線にも積分区間にも入っていないものだけ
+  pks.forEach(pk=>{
+    if(ms.some(m=>within(pk.ppm,lohi(m)))) return;
+    if(igs.some(g=>within(pk.ppm,lohi(g)))) return;
+    if(isSolvPeak(pk.ppm)) return;                        // 重溶媒の残留ピーク
+    items.push({d:pk.ppm, txt:pk.ppm.toFixed(pdec)});
+  });
+  if(!items.length) return head+'…';
+  items.sort((a,b)=>b.d-a.d);
+  // 丸めた結果が隣と完全に同じ文字列になったときだけ間引く（¹³C 側と同じ作法）
+  const parts=[]; items.forEach(o=>{ if(!parts.length||parts[parts.length-1]!==o.txt) parts.push(o.txt); });
   return head+parts.join(', ')+'.';
 }
 /* plain text → rich HTML preview (italic J, keep unicode super/subscripts) */
@@ -8888,8 +9466,9 @@ function paperInit(sp){
     mhz:Math.round(refMHz(sp)),
     solv:(auto&&known(auto)) ? auto : (known(S.impSolvent)?S.impSolvent:'cdcl3'),
     solvAuto:!!(auto&&known(auto)),
-    jdec:1, text:'', dirty:false }; }
-function paperOpts(ps){ return {nuc:ps.nuc, mhz:+ps.mhz||undefined, solv:solvName(ps.solv)||'CDCl₃', jdec:Math.max(0,Math.min(3,+ps.jdec||0))}; }
+    jdec:1, skipSolv:(S.paperSkipSolv!==false), text:'', dirty:false }; }
+function paperOpts(ps){ return {nuc:ps.nuc, mhz:+ps.mhz||undefined, solv:solvName(ps.solv)||'CDCl₃',
+  solvKey:ps.solv, skipSolv:ps.skipSolv!==false, jdec:Math.max(0,Math.min(3,+ps.jdec||0))}; }
 function paperRegen(sp,ps){ ps.text=buildPaperText(sp,paperOpts(ps)); ps.dirty=false; }
 function paperCopyPlain(txt){
   (navigator.clipboard&&navigator.clipboard.writeText?navigator.clipboard.writeText(txt):Promise.reject())
@@ -8914,6 +9493,7 @@ function renderPaperInto(body, sp){
         <label><span class="pl">${t('paperMHz')}</span><input type="number" id="pTabMHz" min="1" step="1" value="${ps.mhz}"></label>
         <label><span class="pl">${t('paperSolv')}</span><select id="pTabSolv">${solvOpts}</select></label>
         <label><span class="pl">${t('paperJDec')}</span><input type="number" id="pTabJ" min="0" max="3" step="1" value="${ps.jdec}"></label>
+        <label><span class="pl">${t('paperSkipSolv')}</span><input type="checkbox" id="pTabSkipSolv"${ps.skipSolv!==false?' checked':''}></label>
       </div>
       <textarea id="pTabEdit" class="paperedit" spellcheck="false">${(ps.text||'').replace(/</g,'&lt;')}</textarea>
     </div>
@@ -8922,6 +9502,7 @@ function renderPaperInto(body, sp){
   const nuc=body.querySelector('#pTabNuc'), mhz=body.querySelector('#pTabMHz'),
         solv=body.querySelector('#pTabSolv'), jd=body.querySelector('#pTabJ'),
         edit=body.querySelector('#pTabEdit'), prev=body.querySelector('#pTabPrev'),
+        skipSolv=body.querySelector('#pTabSkipSolv'),
         editBox=body.querySelector('#pTabEditBox'),
         regenBtn=document.getElementById('pIcRegen'), editTog=document.getElementById('pIcEdit');
   // 幅 0（メニューが閉じている／タブが非表示）で測ると極端に折り返した高さが
@@ -8932,13 +9513,14 @@ function renderPaperInto(body, sp){
      核種・MHz・溶媒・小数桁の変更はその場で本文に反映されるので、押しても同じ文章が
      出るだけの空振りになる。そのため手編集があるときだけ出す。 */
   const syncRegen=()=>{ regenBtn.hidden=!ps.dirty; regenBtn.classList.toggle('attn', !!ps.dirty); };
-  const rebuild=()=>{ ps.nuc=nuc.value; ps.mhz=+mhz.value; ps.solv=solv.value; ps.jdec=+jd.value;
+  const readCtl=()=>{ ps.nuc=nuc.value; ps.mhz=+mhz.value; ps.solv=solv.value; ps.jdec=+jd.value;
+    ps.skipSolv=!!skipSolv.checked; S.paperSkipSolv=ps.skipSolv; persistUI(); };
+  const rebuild=()=>{ readCtl();
     paperRegen(sp,ps); ps.dirty=false; edit.value=ps.text; prev.innerHTML=paperToHTML(ps.text);
     syncRegen(); autoGrow(); };
   // control change: don't clobber manual edits — flag Regenerate instead of silently overwriting
-  const onCtrl=()=>{ ps.nuc=nuc.value; ps.mhz=+mhz.value; ps.solv=solv.value; ps.jdec=+jd.value;
-    if(ps.dirty) syncRegen(); else rebuild(); };
-  [nuc,mhz,solv,jd].forEach(el=>el.addEventListener('input',onCtrl));
+  const onCtrl=()=>{ readCtl(); if(ps.dirty) syncRegen(); else rebuild(); };
+  [nuc,mhz,solv,jd,skipSolv].forEach(el=>el.addEventListener('input',onCtrl));
 
   edit.addEventListener('input',()=>{ ps.text=edit.value; ps.dirty=true; prev.innerHTML=paperToHTML(edit.value);
     syncRegen(); autoGrow(); });
@@ -9009,6 +9591,7 @@ function uiState(){ const o={
     view:{pHi:S.view.pHi,pLo:S.view.pLo}, spectrumViews:S.spectrumViews||{}, layout:S.layout, palette:S.palette, monoBase:S.monoBase,
     uiRev:UI_REV, pngScale:S.pngScale, axisW:S.axisW, annotWhere:S.annotWhere,
     lineW:S.lineW, ppmDigits:S.ppmDigits, pkDigits:S.pkDigits, fontScale:S.fontScale, nameScale:S.nameScale, axisScale:S.axisScale, markSize:S.markSize, plotFont:S.plotFont,
+    aiSigma:S.aiSigma, aiTail:S.aiTail, aiMerge:S.aiMerge, aiMinArea:S.aiMinArea, aiSkipSolv:S.aiSkipSolv, aiBlc:S.aiBlc, aiViewOnly:S.aiViewOnly, aiMode:S.aiMode,
     axisPad:S.axisPad, axisTicks:S.axisTicks, axisMinorTicks:S.axisMinorTicks, baseGap:S.baseGap, thr:S.thr, minimapH:S.minimapH, minimapStyle:S.minimapStyle, minimapPos:S.minimapPos, minimapColor:S.minimapColor, minimapMaskT:S.minimapMaskT, minimapWinT:S.minimapWinT, minimapFrameStyle:S.minimapFrameStyle, minimapFrameW:S.minimapFrameW,
     zoomBorderColor:S.zoomBorderColor, zoomBorderWidth:S.zoomBorderWidth, zoomLeaderStyle:S.zoomLeaderStyle,
     peakColor:S.peakColor, integColor:S.integColor, peakStyle:S.peakStyle, peakVScale:S.peakVScale, integStyle:S.integStyle, showIntegCurve:S.showIntegCurve,
@@ -9018,7 +9601,7 @@ function uiState(){ const o={
     customPalette:S.customPalette||[],
     impSolvent:S.impSolvent, impTol:S.impTol, impTolC:S.impTolC, showImpurities:S.showImpurities, impPins:S.impPins||[],
     lines:S.lines||[], zooms:S.zooms||[],
-    figTitle:S.figTitle, titleSize:S.titleSize, titleBold:S.titleBold, cutStyle:S.cutStyle,
+    figTitle:S.figTitle, titleSize:S.titleSize, titleBold:S.titleBold, axisCaption:S.axisCaption, paperSkipSolv:S.paperSkipSolv, cutStyle:S.cutStyle,
     cutColor:S.cutColor, cutWidth:S.cutWidth, cutWave:S.cutWave, cutSpan:S.cutSpan, cutGap:S.cutGap, cutOpacity:S.cutOpacity,
     laneStyle:S.laneStyle, laneColor:S.laneColor, laneWidth:S.laneWidth, laneTransp:S.laneTransp,
     cursorColor:S.cursorColor, cursorStyle:S.cursorStyle, cursorWidth:S.cursorWidth, cursorOpacity:S.cursorOpacity, flags:{} };
@@ -9060,6 +9643,16 @@ function applyUIState(o, withView){
   if(['zoom','main','both'].includes(o.annotWhere)) S.annotWhere=o.annotWhere;
   if(typeof o.baseGap==='number') S.baseGap=o.baseGap;
   if(typeof o.thr==='number') S.thr=o.thr;
+  /* 自動積分のパラメータ。範囲外の値で保存されたものは既定に戻す（スライダーの端に合わせる）。 */
+  const _num=(v,lo,hi)=>(typeof v==='number'&&isFinite(v))?Math.max(lo,Math.min(hi,v)):null;
+  if(_num(o.aiSigma,2,10)!=null) S.aiSigma=_num(o.aiSigma,2,10);
+  if(_num(o.aiTail,2,20)!=null) S.aiTail=Math.round(_num(o.aiTail,2,20));
+  if(_num(o.aiMerge,0,100)!=null) S.aiMerge=Math.round(_num(o.aiMerge,0,100));
+  if(_num(o.aiMinArea,0,20)!=null) S.aiMinArea=_num(o.aiMinArea,0,20);
+  if(typeof o.aiSkipSolv==='boolean') S.aiSkipSolv=o.aiSkipSolv;
+  if(typeof o.aiBlc==='boolean') S.aiBlc=o.aiBlc;
+  if(typeof o.aiViewOnly==='boolean') S.aiViewOnly=o.aiViewOnly;
+  if(o.aiMode==='replace'||o.aiMode==='add') S.aiMode=o.aiMode;
   if('zoomBorderColor' in o) S.zoomBorderColor=o.zoomBorderColor;
   if(typeof o.zoomBorderWidth==='number') S.zoomBorderWidth=o.zoomBorderWidth;
   if(o.zoomLeaderStyle) S.zoomLeaderStyle=o.zoomLeaderStyle;
@@ -9107,6 +9700,8 @@ function applyUIState(o, withView){
   if(Array.isArray(o.lines)) S.lines=o.lines;
   if(Array.isArray(o.zooms)) S.zooms=o.zooms;
   if('figTitle' in o) S.figTitle=o.figTitle;
+  if('axisCaption' in o) S.axisCaption=o.axisCaption;
+  if(typeof o.paperSkipSolv==='boolean') S.paperSkipSolv=o.paperSkipSolv;
   if(typeof o.titleSize==='number') S.titleSize=o.titleSize;
   if(typeof o.titleBold==='boolean') S.titleBold=o.titleBold;
   if(['wave','zigzag','slash'].includes(o.cutStyle)) S.cutStyle=o.cutStyle;
@@ -9244,11 +9839,13 @@ function syncUIControls(){
   set('btnMinimap',S.showMinimap); set('btnOverflow',S.laneOverflow);
   set('tgThreshold',S.showThresholdLine); set('btnShowTitle',S.showTitle);
   const fti=document.getElementById('figTitleInput'); if(fti){ fti.value=(S.figTitle||''); fti.placeholder=autoTitle()||'¹H NMR (CDCl₃)'; }
+  const aci=document.getElementById('axisCaptionInput'); if(aci){ aci.value=(S.axisCaption||''); aci.placeholder=axisCaptionDefault(); }
   const tsz=document.getElementById('titleSize'); if(tsz){ tsz.value=(S.titleSize||15); const v=document.getElementById('tszv'); if(v) v.textContent=(S.titleSize||15)+' pt'; }
   { const stw=document.getElementById('segTitleWeight'); if(stw) stw.querySelectorAll('button').forEach(b=>b.classList.toggle('on', (b.dataset.v==='bold')===!!S.titleBold)); }
   { const scs=document.getElementById('segCutStyle'); if(scs) scs.querySelectorAll('button').forEach(b=>b.classList.toggle('on', b.dataset.v===(S.cutStyle||'wave'))); }
   if(typeof syncCutStyleUI==='function') syncCutStyleUI();
   if(typeof syncLaneStyleUI==='function') syncLaneStyleUI();
+  if(typeof syncAutoIntegUI==='function') syncAutoIntegUI();
   const th=document.getElementById('thrSlider'); if(th){ th.value=Math.round(S.thr*100); const v=document.getElementById('thrVal'); if(v) v.textContent=Math.round(S.thr*100)+'%'; }
   const lw=document.getElementById('lineW'); if(lw){ lw.value=S.lineW; const v=document.getElementById('lwv'); if(v) v.textContent=(+S.lineW).toFixed(1)+' px'; }
   const pd=document.getElementById('ppmDigits'); if(pd){ pd.value=S.ppmDigits; const v=document.getElementById('digv'); if(v) v.textContent=ppmDigitsLabel(S.ppmDigits); }
@@ -9328,6 +9925,9 @@ function toast(msg, ms){ let el=document.getElementById('toast');
    a large rework bumps the major (→ 2.0). Badge shows v + CHANGELOG[0].v.
    Fields: v (version string), date (YYYY-MM-DD), en[] / ja[] bullet lists. */
 const CHANGELOG=[
+  { v:'1.24', date:'2026-09-09',
+    en:['Integrals can be found automatically. <b>Integrals › Auto-integrate</b> looks for everything well above the noise, groups each multiplet into one region, and creates all the ranges in one go; the result behaves exactly like a hand-drawn integral, so an edge can still be dragged to correct it. Two things separate it from the peak picker. Its threshold is the <b>noise itself</b> (σ, from the median absolute deviation of the trace after a block-median baseline), not a percentage of the tallest peak — with a percentage, one large signal buries every small one. And the <b>tail reach</b> is counted in multiples of each signal’s own half-width, measured outward from the outermost line of the multiplet rather than from where the trace crosses the threshold. A Lorentzian keeps its area in the tails (±5×HWHM captures 87%, ±10× 94%, ±20× 97%), and cutting at a fixed number of Hz makes broad and sharp signals lose different fractions, which distorts the ratios themselves. Adjacent regions merge when they are closer than the merge gap (Hz) or when the valley between them is shallow. Residual solvent, water and TMS are left out, taking their positions and window from Find impurities; a region is never merged across one of them, which used to swallow a real signal next to the solvent peak. Wide auto ranges also subtract a straight <b>local baseline</b> taken from just outside both edges, since a baseline offset multiplies straight into the area — hand-drawn integrals are untouched. The settings live in a gear popover on the item itself, the same as the zoom and cut style settings. Running it either <b>replaces</b> the existing integrals or <b>adds</b> to them without overlapping what is already there, and “Delete auto integrals” removes only what it made. Aimed at ¹H; in ¹³C each carbon is a single line, so the area ratios carry little meaning.'],
+    ja:['積分を<b>自動で検出</b>できるようにしました。「積分 › 自動で積分」で、ノイズより十分に高いところを探し、多重線を 1 つにまとめて、区間をまとめて作ります。できた区間は手で引いたものと同じなので、端をドラッグして直せます。ピーク検出と土台が 2 つ違います。ひとつは閾値で、最大ピークに対する％ではなく<b>ノイズ量そのもの</b>（ブロック中央値でベースラインを引いた残差の中央絶対偏差から出す σ）を使います。％だと大きい信号が 1 本あるだけで小さい信号が全部沈みます。もうひとつは<b>裾の伸ばし</b>で、固定の Hz ではなくその信号自身の半値半幅の倍数で、しかも閾値を超えた端ではなく多重線のいちばん外側の線の中心から測ります。Lorentzian の面積は裾に効き（中心から ±5 倍で 87%、±10 倍で 94%、±20 倍で 97%）、固定の Hz で切ると線幅の違う信号どうしで欠ける割合が変わって、積分比そのものが狂うからです。隣り合う区間は、隙間が指定の Hz より近いか、間の谷が浅ければ 1 つにまとめます。重溶媒の残留ピーク・水・TMS は「不純物を探す」の位置と ± ppm を借りて外し、それをまたいで統合しないようにしました（またぐと、溶媒ピークの隣にある本物の信号ごと消えます）。自動の区間は広くなりがちなので、両端の外側から求めた直線を<b>ローカルベースライン</b>として引いてから面積を出します（ベースラインのずれ × 点数がそのまま面積に乗るため）。手で引いた積分の値は変わりません。設定は項目の右端の歯車に畳んであります（拡大図やカットのスタイル設定と同じ作りです）。実行のたびに既存の積分を<b>置き換える</b>か、重ならないように<b>追加</b>するかを選べ、「自動の積分を削除」では自動で作ったものだけ消えます。¹H 向けです（¹³C は 1 炭素 1 本なので面積比に意味がありません）。'] },
   { v:'1.23', date:'2026-09-09',
     en:['Multiplet labels gain a boxed style, after MestReNova. Choose it in Multiplets › Label display (“A (d) / δ / J (boxed)”). Each multiplet is lettered from low field — the largest δ is A — and gets a three-line head right above its tree: “A (d)”, the shift, and “J(8.37)”, all inside a frame drawn in the multiplet colour. The box replaces both the stacked δ/symbol head and the J block that used to sit beside the tree, so the whole assignment reads as one card instead of three pieces the eye has to gather. Boxes that would collide are spread sideways and tied back to their stem with the same leader the δ head already used, and the box is opaque so a tree behind it does not show through. Letters are assigned over the whole spectrum, not the visible window, so panning and zooming never reshuffle them; hidden multiplets are skipped so the letters stay contiguous. With peak labels in style 2 the head no longer claims a slot in the δ column — it is not there any more — so the column does not carry an empty gap. Tree shape, height, depth, colour and J decimals all keep working as before.'],
     ja:['多重線のラベルに、MestReNova にならった<b>枠つき</b>の表示を追加しました。「多重線 › ラベルの表示」で「A (d) / δ / J（枠つき）」を選びます。多重線を低磁場側（δ の大きい側）から順に A・B・C… と名付け、「A (d)」「7.17」「J(8.37)」の 3 行を枠で囲んでツリーの真上に置きます。これまでは δ＋多重度の見出しがツリーの上、J 値はツリーの横と離れていたので、一つの帰属を読むのに目を 3 か所に配る必要がありました。枠つきはそれを 1 枚の札にまとめます。枠の中はすべて多重線の色で描き、地は不透明なので背後のトレースやツリーが透けません。枠どうしが重なるときは横にずらし、従来の見出しと同じ引き出し線で幹につなぎます。記号は表示範囲ではなくスペクトル全体の並び順で決めるので、パンやズームで A/B が入れ替わりません（非表示にした多重線は飛ばすので、残ったものに連番で付きます）。ピークの δ ラベルがスタイル2 のときは、見出しをその列に混ぜないようにしました（枠の中に δ があるので、混ぜると誰も使わない列が 1 本空くだけです）。ツリーの形状・高さ・縦幅・色・J 小数桁はこれまでどおり効きます。'] },
@@ -9914,6 +10514,7 @@ const MANUAL = {
         '<b>Bruker 元データ</b>：FID・処理済みスペクトル・測定パラメータの正本です。アプリはブラウザ上で読み取るだけで、インターネットへ送信しません。',
         '<b>データフォルダ内の nmrspectrumviewer.json</b>：位相、処理設定、ピーク、積分、多重線、注釈、自由テキスト／マーク、画像など、そのスペクトル固有の作業内容です。フォルダを開いて書き込みを許可すると、自動作成・自動更新されます。オンにする操作は不要です。',
         '<b>ブラウザのワークスペース</b>：言語・テーマに加え、複数スペクトルの順序、表示、色、縦倍率、ppm範囲、図全体の配置を localStorage に自動保存します。ブラウザの保存データを消去すると、この配置は失われます。',
+        '<b>ページを再読み込みしたとき</b>：スペクトルの数値そのものはブラウザの中だけに置かれるため、再読み込みでは必ず消えます。ただし最後に開いたフォルダは記憶していて、フォルダの許可が残っていれば自動で読み直します。許可が切れていた場合は最初の画面に<b>「前のフォルダを再読み込み」</b>ボタンが出るので、一度押してください（許可の取り直しには操作が必要です）。読み直せば nmrspectrumviewer.json の解析内容もそのまま戻ります。',
         `<b>解析データ（JSON）</b> ${manIc('session')}：共有・別PCへの移動・明示的なバックアップ用です。「データ」メニューの<b>書き出し</b>から作成し、元データを開いた後に<b>読み込み</b>から復元します。元のスペクトル数値は含みません。`,
       ]},
       {sub:'処理済み or 生 FID'},
@@ -10000,6 +10601,17 @@ const MANUAL = {
         `<b>範囲をドラッグして積分</b> ${manIc('integ')}：ツールを起動し、積分したいピーク（多重線全体）を<b>ドラッグ</b>で囲みます。面積が計算され、実際のプロットと同じようにスペクトル上側へ数値が表示されます。`,
         '<b>基準を決める</b>：既知のプロトン数のピーク（例：3H のメチル）を基準にすると、他の積分値が相対比（例 2.00 : 3.01）で読めます。結果リストで基準の設定・数値の編集ができます。',
       ]},
+      {sub:'自動で積分する'},
+      {ul:[
+        '<b>自動で積分</b>：ノイズより十分に高いところを探し、多重線を 1 つにまとめて、区間をまとめて作ります。¹H 向けです（¹³C は 1 炭素 1 本なので面積比に意味がありません）。作った区間は手で引いたものと同じで、端をドラッグして直せます。以下の設定は、この項目の右端の歯車 ⚙ で開きます。',
+        '<b>検出感度</b>：ノイズの何倍を信号とみなすか。ピーク検出の「閾値」が最大ピークに対する％なのに対し、こちらはノイズ量そのもの（σ）を測って使うので、大きいピークが 1 本あっても小さい信号が沈みません。拾いすぎるときは上げ、小さい信号を落とすときは下げます。',
+        '<b>裾の伸ばし</b>：信号の外側をどこまで含めるか。半値半幅の何倍かで指定します。Lorentzian の面積は裾に効くので、中心から ±5 倍で 87%、±10 倍で 94%、±20 倍で 97% しか入りません。線幅の違う信号どうしで欠け方を揃えるため、固定の Hz ではなくその信号自身の線幅で測ります。',
+        '<b>統合する隙間</b>：この Hz より近い区間は 1 つにまとめます。少し離れていても、間の谷が浅ければ同じ多重線とみなします。',
+        '<b>重溶媒・水を除く</b>：「その他 › 不純物を探す」で選んだ溶媒の残留ピーク、水、TMS を積分しません。位置と許容幅はそちらの表と ± ppm を使います。',
+        '<b>ベースラインを引く</b>：区間の両端の外側から求めた直線を引いてから面積を出します。自動の区間は広くなりがちで、ベースラインのずれ × 点数がそのまま面積に乗るためです。手で引いた積分の値は変わりません。',
+        '<b>既存の積分</b>：<b>置き換え</b>はいまある積分を消してから作り直します。<b>追加</b>は残したまま足し、すでに積分がある区間には重ねません。',
+        '<b>うまくいかないとき</b>：位相がずれていると負の側が出て面積が小さく出ます。先に位相を合わせてください。芳香族領域のように込み合った所は 1 つの区間にまとまることがあるので、「統合する隙間」を小さくするか、その区間だけ手で引き直してください。',
+      ]},
       {sub:'調整する'},
       {ul:[
         '<b>選択範囲の調整</b>：∫モードで積分をクリックすると、淡い青の選択領域と上端の青い四角が表示されます。左右の四角をドラッグすると、積分範囲の端を後から微調整できます。',
@@ -10082,7 +10694,8 @@ const MANUAL = {
         `<b>レイアウト</b>：複数スペクトルを<b>並べる（Stacked）</b>か<b>重ねる（Overlay）</b>か。`,
         `<b>表示 / 非表示</b> ${manIc('eye')}：ファイル名・画像・ピーク・積分・多重度・シェード・コネクタ・スペクトル間の区切り線・ズーム挿入図・結果リストなどを、目のアイコンで個別に切り替えます。`,
         `<b>ミニマップ</b>：スペクトル全体を映す帯です（既定はプロットの上）。窓の内側をドラッグで δ 移動、左右の端をドラッグで表示範囲の拡大・縮小、帯の外側の縁（上置きなら下辺、下置きなら上辺）をドラッグで高さの変更、ホイールでカーソル位置を軸にズームします。表示の切り替えと、位置（上 / 下）・高さ・範囲の示し方（範囲外をマスク / 範囲内を強調）・その透明度・枠の線（実線 / 破線 / 点線）・枠の太さ・枠の色は、「その他」メニューの「ミニマップ」にまとめてあります。`,
-        '<b>体裁（Appearance）</b>：線幅、プロットのフォント（Mono / Sans / Serif）とサイズ、δ 軸の小数桁・主目盛の数・補助目盛の数・線の太さ・文字サイズ・高さ・余白、背景色。',
+        '<b>体裁（Appearance）</b>：線幅、プロットのフォント（Mono / Sans / Serif）とサイズ、δ 軸の<b>ラベルの文字</b>・小数桁・主目盛の数・補助目盛の数・線の太さ・文字サイズ・高さ・余白、背景色。',
+        '<b>δ軸のラベルの文字</b>：軸の下に出る文字（既定は「chemical shift δ / ppm」）を自由に書き換えられます。空欄に戻すと既定に戻ります。δ・ν・λ と、前後が英字でない J は IUPAC の量記号表記にならって自動で斜体になります。ほかの部分を斜体にしたいときは <span class="kbd">*</span> で囲ってください（例：<span class="kbd">*Chemical shift*, δ / ppm</span>）。',
         '<b>カラーパレット</b>：スペクトルの配色をまとめて選び、全体に再適用できます。',
       ]},
       {sub:'線の太さについて'},
@@ -10103,6 +10716,9 @@ const MANUAL = {
         `<b>スペクトル（CSV）</b> ${manIc('csv')}：選択中スペクトル1本の δ と強度を書き出します。`,
         `<b>解析レポート（CSV）</b> ${manIc('report')}：選択中スペクトル1本のピーク・積分・多重度などを書き出します。PNG／クリップボードは、画面に見えている全スペクトルを含みます。`,
         `<b>論文形式テキスト</b>：選択中スペクトルの核種、周波数、溶媒、δ、多重度、J、積分値を論文記載形式にまとめ、プレーン／書式付きでコピーできます。<b>核種</b>は <span class="kbd">acqus</span> の NUC1（読めない場合は観測周波数）から、<b>周波数</b>は <span class="kbd">procs</span> の SF（なければ BF1）から、<b>溶媒</b>は <span class="kbd">acqus</span> の SOLVENT から自動で決まります。判定できない溶媒のときだけ CDCl₃ を仮に置くので、その場合は［編集］から選び直してください。`,
+        `<b>¹H で何が拾われるか</b>：<b>多重線</b>・<b>積分区間</b>・<b>孤立ピーク</b>の3つを δ の大きい順に並べます。多重線は「δ（多重度, <i>J</i>, 水素数）」の形で出ます。多重線の付いていない積分区間は「δ範囲（水素数）」です。この δ は<b>積分を引いた端ではなく、その中で拾えているピークの範囲</b>です（積分は信号より広めに引くのがふつうなので、端をそのまま書くと信号のない所まで入ります）。ピークを1本も拾っていない区間のときだけ、手がかりが端しかないのでそれを使います。多重線にも積分区間にも入っていないピークは <b>δ だけ</b>で並びます。分からない項目は推測せずに省きます。多重度と <i>J</i> は多重線からしか出ませんし、水素数は<b>その信号を覆う積分</b>からしか出ません。積分を取っていない信号に水素数は付きません（積分を2つ取れば、水素数が付く項目も2つまでです）。多重線に <span class="kbd">m</span> が付くのは、あなたが多重度 m で定義したときだけです。`,
+        `つまり、ピークを拾っただけの信号は δ の数字として並びます。多重度や水素数まで載せたいときは、その信号に<b>積分</b>や<b>多重線</b>を足してから ↻ で再生成してください。目のアイコンで消したピーク・積分・多重線は報告されません。`,
+        `<b>重溶媒の残留ピーク</b>は既定で外します（CDCl₃ なら 7.26、¹³C なら 77.16 の三本など）。✎ の<b>「重溶媒を除く」</b>のチェックを外せば残せます。外す対象は<b>拾っただけのピーク</b>だけで、自分で引いた積分区間や定義した多重線には触りません。判定に使う位置は［溶媒］の選択と不純物表の値、許容幅は「不純物」パネルの ± ppm（¹H 既定 0.03、¹³C 既定 0.3）です。¹³C で溶媒のシグナルが複数本ある溶媒（CD₃CN・THF-d₈・acetone-d₆・toluene-d₈）は、そのすべてを外します。水やグリースなど溶媒以外の不純物は外しません（「不純物」パネルで確認してください）。`,
         `操作は「論文形式テキスト」の行の右端に並ぶ3つのアイコンにまとまっています。<b>✎ 編集</b>で核種・周波数・溶媒・J の小数桁と本文のテキスト欄が開き、<b>⧉ コピー</b>は Word などにそのまま貼れる書式付き（<i>J</i> と δ がイタリック）でコピーします。本文を手で書き換えると <b>↻ 再生成</b> が現れます。押すと手編集を捨てて自動生成の文章に戻します（確認が出ます）。手を入れていないときは、上の項目を変えるだけでその場で本文に反映されるので、このボタンは出ません。`,
         `<b>解析データを書き出す（JSON）</b> ${manIc('session')}：共有・別PCへの移動・バックアップ用に、全スペクトルの解析データとワークスペースを1ファイルへ保存します。元データを開いた後、「読み込み」の<b>解析データを読み込む（JSON）</b> ${manIc('load')} で復元します。`,
       ]},
@@ -10145,6 +10761,7 @@ const MANUAL = {
         '<b>Original Bruker data</b>: the source of truth for FID, processed spectra and acquisition parameters. The app reads it locally in the browser and never uploads it.',
         '<b>nmrspectrumviewer.json in each data folder</b>: the spectrum-specific work — phase, processing, peaks, integrals, multiplets, annotations, free text/marks and images. Once you open a folder and allow writing, this file is created and updated automatically; there is no on/off step.',
         '<b>Browser workspace</b>: language/theme plus spectrum order, visibility, colours, vertical scales, ppm range and shared figure layout are saved automatically in localStorage. Clearing browser data removes this layout.',
+        '<b>After reloading the page</b>: the spectral arrays live only in the browser, so a reload always clears them. The last folder you opened is remembered, though: if its permission is still valid the folder is re-read automatically, and otherwise the home screen offers a <b>Reopen last folder</b> button — one click, because regaining permission requires a user action. Re-reading the folder brings back everything in nmrspectrumviewer.json as well.',
         `<b>Analysis data (JSON)</b> ${manIc('session')}: for sharing, moving to another computer or an explicit backup. Create it under <b>Export</b> in the Data menu, then restore it from <b>Import</b> after opening the original data. It does not contain the original spectral arrays.`,
       ]},
       {sub:'Processed or raw FID'},
@@ -10231,6 +10848,17 @@ const MANUAL = {
         `<b>Drag a range to integrate</b> ${manIc('integ')}: activate the tool and <b>drag</b> across a peak (the whole multiplet). The area is computed and the value appears above the spectrum, matching the plot.`,
         '<b>Set a reference</b>: make a peak of known proton count (e.g. a 3H methyl) the reference so the others read as a relative ratio (e.g. 2.00 : 3.01). Set the reference / edit values in the results list.',
       ]},
+      {sub:'Auto-integrating'},
+      {ul:[
+        '<b>Auto-integrate</b>: finds everything well above the noise, groups each multiplet into one region, and creates all the ranges at once. Aimed at ¹H (in ¹³C each carbon is a single line, so area ratios carry little meaning). The regions behave exactly like hand-drawn ones — drag an edge to correct one. The settings below open from the gear ⚙ at the right of that item.',
+        '<b>Sensitivity</b>: how many times the noise counts as signal. The peak-picking Threshold is a % of the tallest peak; this one measures the noise itself (σ), so one large peak no longer buries the small signals. Raise it if noise is picked up, lower it if small signals are missed.',
+        '<b>Tail reach</b>: how far outside the signal to include, in multiples of the half-width at half-maximum. A Lorentzian keeps its area in the tails: ±5×HWHM captures 87%, ±10× 94%, ±20× 97%. Measuring in each signal’s own line width (not a fixed Hz) keeps the loss the same for broad and sharp signals, so the ratios stay right.',
+        '<b>Merge gap</b>: regions closer than this (in Hz) become one. A wider gap still merges when the valley between them is shallow — that is one multiplet, not two signals.',
+        '<b>Skip solvent / water</b>: leaves the residual peak of the solvent chosen in “Other › Find impurities”, plus water and TMS, un-integrated. The positions and the window come from that table and its ± ppm.',
+        '<b>Subtract baseline</b>: fits a straight line from just outside both edges and subtracts it before summing. Auto regions tend to be wide, and a baseline offset multiplies straight into the area. Hand-drawn integrals are left as they were.',
+        '<b>Existing</b>: <b>Replace</b> clears the current integrals first. <b>Add</b> keeps them and never overlaps a range that already has one.',
+        '<b>When it goes wrong</b>: a mis-set phase produces negative lobes and areas that read low — phase the spectrum first. Crowded regions such as the aromatics may come out as a single range; lower the merge gap, or redraw that one by hand.',
+      ]},
       {sub:'Adjusting'},
       {ul:[
         '<b>Adjust the selected range</b>: in ∫ mode, click an integral to show the pale-blue selected region and blue squares at the top. Drag either square to fine-tune that range edge.',
@@ -10312,7 +10940,8 @@ const MANUAL = {
         '<b>Layout</b>: show multiple spectra <b>Stacked</b> or <b>Overlaid</b>.',
         `<b>Show / hide</b> ${manIc('eye')}: toggle file names, images, peaks, integrals, multiplets, shades, connectors, dividers between spectra, zoom insets and the results list individually with the eye icons.`,
         `<b>Minimap</b>: the overview strip of the whole spectrum (above the plot by default). Drag inside the window to pan δ, drag its left/right edges to widen or narrow the displayed range, drag the strip's outer edge (its bottom edge when the strip sits above the plot, its top edge when it sits below) to change its height, and use the wheel to zoom around the cursor. Showing it, its position (top / bottom), height, how the view is marked (mask the outside / highlight the inside), the transparency of that marker, its frame line (solid / dashed / dotted), frame width and frame colour are all in the Other menu, under Minimap.`,
-        '<b>Appearance</b>: line width, plot font (Mono / Sans / Serif) and size, δ-axis decimals / major ticks / minor ticks / line width / text size / height / gap, and background colour.',
+        '<b>Appearance</b>: line width, plot font (Mono / Sans / Serif) and size, δ-axis <b>label text</b> / decimals / major ticks / minor ticks / line width / text size / height / gap, and background colour.',
+        '<b>δ-axis label text</b>: the caption under the axis (default “chemical shift δ / ppm”) can be rewritten freely; clear the field to go back to the default. δ, ν, λ and a J with no letter beside it are italicised automatically, following the IUPAC convention for quantity symbols. To italicise anything else, wrap it in <span class="kbd">*</span> (e.g. <span class="kbd">*Chemical shift*, δ / ppm</span>).',
         '<b>Colour palette</b>: choose a scheme for the spectra and re-apply it to all.',
       ]},
       {sub:'About line width'},
@@ -10333,6 +10962,9 @@ const MANUAL = {
         `<b>Spectrum (CSV)</b> ${manIc('csv')}: export δ and intensity for the one active spectrum.`,
         `<b>Analysis report (CSV)</b> ${manIc('report')}: export peaks, integrals and multiplets for the one active spectrum. PNG and clipboard output include every spectrum currently visible on screen.`,
         `<b>Paper-format text</b>: format the active spectrum's nucleus, frequency, solvent, δ, multiplicity, J and integral values for a paper, then copy it as plain or formatted text. <b>Nucleus</b> comes from NUC1 in <span class="kbd">acqus</span> (or the observed frequency if NUC1 is missing), <b>frequency</b> from SF in <span class="kbd">procs</span> (or BF1), and <b>solvent</b> from SOLVENT in <span class="kbd">acqus</span>. Only when the solvent cannot be recognised does it fall back to CDCl₃ — pick the right one under Edit in that case.`,
+        `<b>What a ¹H sentence includes</b>: <b>multiplets</b>, <b>integral regions</b> and <b>isolated peaks</b>, listed from high δ to low. A multiplet reads “δ (multiplicity, <i>J</i>, nH)”. An integral region with no multiplet on it reads “δ range (nH)”, where the range is <b>the span of the peaks picked inside it</b> rather than the integration limits (integrals are normally drawn wider than the signal, so the limits would take in empty baseline); only a region with no peaks picked in it falls back to its own limits. A peak that lies in neither a multiplet nor an integral is reported as <b>the shift alone</b>. Nothing unknown is guessed at: multiplicity and <i>J</i> come only from a multiplet, and the proton count only from <b>an integral that covers the signal</b> — a signal you have not integrated carries no proton count (two integrals means at most two entries with an nH). An <span class="kbd">m</span> appears only where you defined the multiplet as m.`,
+        `So a signal you only picked a peak on appears as a bare shift. To have its multiplicity or proton count reported as well, add an <b>integral</b> or a <b>multiplet</b> there and press ↻ to regenerate. Peaks, integrals and multiplets switched off with the eye icon are left out.`,
+        `The <b>residual solvent signal</b> is dropped by default (7.26 for CDCl₃; the 77.16 triplet in ¹³C). Clear <b>Drop solvent peak</b> under ✎ to keep it. Only <b>picked peaks</b> are dropped — an integral you drew or a multiplet you defined is never removed. The position comes from the Solvent selection and the impurity tables, and the window from the ± ppm in the Impurities panel (0.03 for ¹H, 0.3 for ¹³C by default). Solvents whose ¹³C signal has more than one line (CD₃CN, THF-d₈, acetone-d₆, toluene-d₈) have all of them dropped. Non-solvent impurities such as water or grease are not removed — check those in the Impurities panel.`,
         `Everything is on the three icons at the right of the "Paper-format text" row. <b>✎ Edit</b> opens the nucleus, frequency, solvent and J-decimals fields together with the text box, and <b>⧉ Copy</b> copies with formatting (italic <i>J</i> and δ) ready to paste into Word. <b>↻ Regenerate</b> appears once you edit the text by hand; pressing it discards those edits and rebuilds the sentence (it asks first). While the text is untouched, changing a field applies straight to the sentence, so the button stays hidden.`,
         `<b>Export analysis data (JSON)</b> ${manIc('session')}: combine every spectrum's analysis data and the workspace into one file for sharing, moving or backup. After opening the original data, restore it with <b>Import analysis data (JSON)</b> ${manIc('load')} under Import.`,
       ]},
@@ -10462,6 +11094,8 @@ document.getElementById('resDock').innerHTML = S.docked?FLOAT_SVG:DOCK_SVG;
 document.getElementById('resDock').title = t(S.docked?'ttFloat':'ttDock');
 // Results are only meaningful after at least one spectrum has been loaded.
 if(S.spectra.length) openResults(); else closeResults();
+// 最後に開いていたフォルダを復帰させる（許可が生きていれば自動、なければホームにボタン）
+try{ restoreLastFolder(); }catch(_){}
 </script>
 
 
@@ -11810,7 +12444,7 @@ html[lang=en] .rtabs-segment .rtab{padding-right:2px;padding-left:2px;font-size:
                                     titleCtl]);
 
   // --- δ軸：接頭辞「δ軸の」は見出しが担う ---
-  const axisCard=card('axis',[ctl('ppmDigits'),ctl('axisTicks'),ctl('axisMinorTicks'),ctl('axisW'),ctl('axisScale'),ctl('axisPad'),ctl('baseGap')]);
+  const axisCard=card('axis',[ctl('axisCaptionInput'),ctl('ppmDigits'),ctl('axisTicks'),ctl('axisMinorTicks'),ctl('axisW'),ctl('axisScale'),ctl('axisPad'),ctl('baseGap')]);
 
   /* 左＝スペクトル(147)＋文字(250)＝397 / 右＝δ軸(345)。2026-09-08 に入れ替えた。
      以前は左がスペクトル1枚だけで 147 対 614 と偏っていた（スペクトル未読込だと
@@ -12054,7 +12688,7 @@ html[lang=en] .rtabs-segment .rtab{padding-right:2px;padding-left:2px;font-size:
     if(typeof syncVisibilityControls==='function')syncVisibilityControls();
   };
   const doResetAppearance=()=>{
-    Object.assign(S,{lineW:DEFAULTS.lineW,fontScale:DEFAULTS.fontScale,nameScale:DEFAULTS.nameScale,axisScale:DEFAULTS.axisScale,plotFont:DEFAULTS.plotFont,ppmDigits:DEFAULTS.ppmDigits,axisPad:DEFAULTS.axisPad,axisTicks:DEFAULTS.axisTicks,axisMinorTicks:DEFAULTS.axisMinorTicks,baseGap:DEFAULTS.baseGap,figTitle:DEFAULTS.figTitle,titleSize:DEFAULTS.titleSize,titleBold:DEFAULTS.titleBold,cutStyle:DEFAULTS.cutStyle,cutColor:DEFAULTS.cutColor,cutWidth:DEFAULTS.cutWidth,cutWave:DEFAULTS.cutWave,cutSpan:DEFAULTS.cutSpan,cutGap:DEFAULTS.cutGap,cutOpacity:DEFAULTS.cutOpacity,laneStyle:DEFAULTS.laneStyle,laneColor:DEFAULTS.laneColor,laneWidth:DEFAULTS.laneWidth,laneTransp:DEFAULTS.laneTransp});
+    Object.assign(S,{lineW:DEFAULTS.lineW,fontScale:DEFAULTS.fontScale,nameScale:DEFAULTS.nameScale,axisScale:DEFAULTS.axisScale,plotFont:DEFAULTS.plotFont,ppmDigits:DEFAULTS.ppmDigits,axisPad:DEFAULTS.axisPad,axisTicks:DEFAULTS.axisTicks,axisMinorTicks:DEFAULTS.axisMinorTicks,baseGap:DEFAULTS.baseGap,figTitle:DEFAULTS.figTitle,axisCaption:DEFAULTS.axisCaption,titleSize:DEFAULTS.titleSize,titleBold:DEFAULTS.titleBold,cutStyle:DEFAULTS.cutStyle,cutColor:DEFAULTS.cutColor,cutWidth:DEFAULTS.cutWidth,cutWave:DEFAULTS.cutWave,cutSpan:DEFAULTS.cutSpan,cutGap:DEFAULTS.cutGap,cutOpacity:DEFAULTS.cutOpacity,laneStyle:DEFAULTS.laneStyle,laneColor:DEFAULTS.laneColor,laneWidth:DEFAULTS.laneWidth,laneTransp:DEFAULTS.laneTransp});
     document.documentElement.style.removeProperty('--bg');
     const bg=document.getElementById('bgColor');if(bg)bg.value=css('--bg');
     syncUIControls();resize();persistUI();savePrefs();draw();
