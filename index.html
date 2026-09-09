@@ -1705,6 +1705,7 @@ html[data-theme="light"] .toolmenu.open .tmpanel{
             <div class="tmrow"><span class="tmic"></span><span data-i18n="lblIntegPos">Height</span><input type="range" id="integShift" min="-30" max="40" step="2" value="0"><span class="thrval" id="ishv">0%</span></div>
             <div class="tmrow"><span class="tmic"></span><span data-i18n="lblIntegCurveH">Curve height</span><input type="range" id="integCurveH" min="20" max="100" step="5" value="100"><span class="thrval" id="ichv">100%</span></div>
             <div class="tmrow"><span class="tmic"></span><span data-i18n="lblIntegDigits">Decimals</span><input type="range" id="integDigits" min="0" max="4" step="1" value="3"><span class="thrval" id="idgv">3 桁</span></div>
+            <div class="tmtoggles"><button class="tmtog on" id="tgIntegRefMark"><span class="eyeic"><svg class="svi" viewBox="0 0 16 16"><path d="M1.5 8S4 3.8 8 3.8 14.5 8 14.5 8 12 12.2 8 12.2 1.5 8 1.5 8z"/><circle cx="8" cy="8" r="2"/><line class="eyeslash" x1="2.5" y1="13.5" x2="13.5" y2="2.5"/></svg></span><span data-i18n="lblIntegRefMark">Show reference mark (*)</span></button></div>
             <div class="tmstyle"><span data-i18n="lblDisplayStyle">Display style</span><div class="seg" id="segIntegStyle"><button class="on" data-v="style1" data-i18n="optStyle1">Style 1</button><button data-v="style2" data-i18n="optStyle2">Style 2</button><button data-v="style3" data-i18n="optStyle3">Style 3</button></div></div>
             <button class="tmitem tbtn uset-reset" data-act="resetInteg"><svg class="svi" viewBox="0 0 16 16" aria-hidden="true"><path d="M13 5.6A5.8 5.8 0 1 0 13.6 9"/><path d="M13 2.7v3h-3"/></svg><span data-i18n="btnResetDef">Reset to defaults</span></button>
           </section>
@@ -2052,7 +2053,7 @@ const I18N={
   lblAiSigma:"Sensitivity", lblAiTail:"Tail reach", lblAiMerge:"Merge gap", lblAiMode:"Existing",
   optAiReplace:"Replace", optAiAdd:"Add", lblAiSkipSolv:"Skip solvent / water", lblAiBlc:"Subtract baseline", lblAiViewOnly:"Visible range only",
   msgAiNone:"No signals found — lower the sensitivity", msgAiDone:"Integrated {n} regions automatically", msgAiDone1:"Integrated 1 region automatically",
-  integGroupCreate:"Create integrals", integGroupDelete:"Delete integrals", actClearAllIntegs:"Delete all integrals", lblShowIntegsMenu:"Show integrals", lblIntegCurveMenu:"Show stair curve",
+  integGroupCreate:"Create integrals", integGroupDelete:"Delete integrals", actClearAllIntegs:"Delete all integrals", lblShowIntegsMenu:"Show integrals", lblIntegCurveMenu:"Show stair curve", lblIntegRefMark:"Show reference mark (*)",
   multGroupCreate:"Create multiplets", multGroupDelete:"Delete multiplets", actClearAllMults:"Delete all multiplets", lblShowMultsMenu:"Show multiplets", lblMultSourcesMenu:"Show source peak δ",
   actIntegrate:"Integrate (drag range)", actDelSel:"Delete selected", actMark:"Mark", actText:"Text label",
   actMultPick:"Select peaks (click) / drag range", actMultDefine:"From selected peaks", actMultClearSel:"Clear selection", lblMultColor:"Multiplet color", lblMultDigits:"J decimals", lblMultPos:"Height", lblMultSpan:"Tree depth", lblMultJStyle:"Label display", optMultJFull:"d + J = X Hz", optMultJInline:"J = X Hz (d)", optMultJOnly:"J = X Hz", optMultJValue:"d + X (number only)", optMultJBox:"A (d) / δ / J  (boxed)", lblTreeStyle:"Tree style", lblMultSources:"Source peak δ", ttEraseMult:"Drag a region to remove multiplets there", msgMultSplit:"Excluded distant peaks; analyzed the largest cluster", msgMultBigJ:"Coupling looks too large — the range may span separate signals",
@@ -2194,7 +2195,7 @@ const I18N={
   lblAiSigma:"検出感度", lblAiTail:"裾の伸ばし", lblAiMerge:"統合する隙間", lblAiMode:"既存の積分",
   optAiReplace:"置き換え", optAiAdd:"追加", lblAiSkipSolv:"重溶媒・水を除く", lblAiBlc:"ベースラインを引く", lblAiViewOnly:"表示範囲だけ",
   msgAiNone:"信号が見つかりませんでした（検出感度を下げてください）", msgAiDone:"{n} 区間を自動で積分しました", msgAiDone1:"1 区間を自動で積分しました",
-  integGroupCreate:"積分する", integGroupDelete:"積分を削除する", actClearAllIntegs:"すべての積分を削除", lblShowIntegsMenu:"積分を表示", lblIntegCurveMenu:"階段カーブを表示",
+  integGroupCreate:"積分する", integGroupDelete:"積分を削除する", actClearAllIntegs:"すべての積分を削除", lblShowIntegsMenu:"積分を表示", lblIntegCurveMenu:"階段カーブを表示", lblIntegRefMark:"基準マーク（*）を表示",
   multGroupCreate:"多重線を作成する", multGroupDelete:"多重線を削除する", actClearAllMults:"すべての多重線を削除", lblShowMultsMenu:"多重線を表示", lblMultSourcesMenu:"元ピークの δ を表示",
   actIntegrate:"範囲選択で積分", actDelSel:"選択した積分を削除", actMark:"マーク", actText:"テキストラベル",
   actMultPick:"ピークを選択（クリック）／範囲ドラッグ", actMultDefine:"選択したピークから作成", actMultClearSel:"選択をクリア", lblMultColor:"多重線の色", lblMultDigits:"J小数桁", lblMultPos:"高さ", lblMultSpan:"縦幅", lblMultJStyle:"ラベルの表示", optMultJFull:"d と J = X Hz", optMultJInline:"J = X Hz (d)", optMultJOnly:"J = X Hz", optMultJValue:"d と X（数値のみ）", optMultJBox:"A (d) / δ / J（枠つき）", lblTreeStyle:"ツリーの形状", lblMultSources:"元ピークの δ", ttEraseMult:"範囲をドラッグして多重線を消去", msgMultSplit:"離れたピークを除外し、最も大きな一群で解析しました", msgMultBigJ:"結合定数が大きすぎます。別シグナルをまたいだ範囲かもしれません",
@@ -2441,7 +2442,7 @@ function paletteSwatch(name){ return paletteColors(name,6); }
 const UI_REV=3;              // 既定値を変えたら上げる（古い保存状態の移行に使う）
 const DEFAULTS={lineW:0.5, wheelSens:1, wheelInertia:false, wheelInvert:false, hscroll:true, limitView:true, cursorGuide:true, cursorColor:null, cursorStyle:'dashed', cursorWidth:1, cursorOpacity:.55, axisPad:50, axisTicks:15, axisMinorTicks:4, axisW:null, baseGap:0.035, annotWhere:'zoom', minimapH:110, minimapStyle:'mask', minimapPos:'top', minimapColor:null, minimapMaskT:38, minimapWinT:88, minimapFrameStyle:'solid', minimapFrameW:1,
   fontScale:1, nameScale:1, axisScale:1, markSize:4.6, markColor:'#0E6E7E', shadeColor:'#D33A2C', textColor:'#000000', textSize:10.5, textBold:false, textItalic:false, textUnderline:false, textFontFam:'', lineColor:null, lineStyle:'dashed', connW:0.5, lineArrow:'none', imageBorder:false, imageBorderColor:'#3A4750', imageBorderWidth:1, imageBorderStyle:'solid', integDigits:3, integShift:0, integCurveH:1, peakColor:null, peakVScale:1, integColor:null, multColor:null, multDigits:2, multJStyle:'full', multStyle:'style1', multShift:0, multVScale:1, plotFont:'topspin', ppmDigits:2, pkDigits:2,
-  zoomBorderColor:null, zoomBorderWidth:1, zoomLeaderStyle:'dashed', peakStyle:'style1', integStyle:'style1', showIntegCurve:true,
+  zoomBorderColor:null, zoomBorderWidth:1, zoomLeaderStyle:'dashed', peakStyle:'style1', integStyle:'style1', showIntegCurve:true, integRefMark:true,
   showTitle:false, figTitle:null, titleSize:15, titleBold:false, axisCaption:null, cutStyle:'wave', cutColor:null, cutWidth:0.5, cutWave:6, cutSpan:2, cutGap:10, cutOpacity:0.9,
   laneStyle:'solid', laneColor:'#000000', laneWidth:0.5, laneTransp:0,
   floatPanels:false, paperSkipSolv:true,
@@ -2453,7 +2454,7 @@ const S={ spectra:[], active:-1, view:{pHi:1,pLo:0}, spectrumViews:{}, yscale:1,
   lineW:0.5, wheelSens:1, wheelInertia:false, wheelInvert:false, hscroll:true, limitView:true, cursorGuide:true, cursorColor:null, cursorStyle:'dashed', cursorWidth:1, cursorOpacity:.55, selInteg:-1, selImg:-1, selZoom:-1, selLine:-1,
   aiSigma:4, aiTail:8, aiMerge:25, aiMinArea:0.5, aiSkipSolv:true, aiBlc:true, aiViewOnly:false, aiMode:'replace',
   selPeak:-1, selPeaks:[], selMults:[], thr:0.05, axisPad:50, axisTicks:15, axisMinorTicks:4, axisW:null, baseGap:0.035, annotWhere:'zoom', integShift:0, integCurveH:1, peakVScale:1,
-  peakColor:null, integColor:null, peakStyle:'style1', integStyle:'style1', showIntegCurve:true, multColor:null, multDigits:2, multJStyle:'full', multStyle:'style1', multShift:0, multVScale:1, showMultSources:false,
+  peakColor:null, integColor:null, peakStyle:'style1', integStyle:'style1', showIntegCurve:true, integRefMark:true, multColor:null, multDigits:2, multJStyle:'full', multStyle:'style1', multShift:0, multVScale:1, showMultSources:false,
   markColor:'#0E6E7E', shadeColor:'#D33A2C', markSize:4.6, textColor:'#000000', textSize:10.5, textBold:false, textItalic:false, textUnderline:false, textFontFam:'', lineColor:null, lineStyle:'dashed', connW:0.5, lineArrow:'none', imageDefaultScale:1, imageBorder:false, imageBorderColor:'#3A4750', imageBorderWidth:1, imageBorderStyle:'solid', integDigits:3, showInsets:true, showNames:true, showPeaks:true, showIntegs:true, showShades:true, showMarks:true, showText:true,
   resTab:'peaks', asgSub:'text', asgOpen:{}, docked:true, secOpen:{}, floatPanels:false, floatPos:{}, nextColor:0, layout:'stack', palette:'wbHC', paletteReverse:false, monoBase:'#0E6E7E', ppmDigits:2,
   pkDigits:2, showMults:true, showJTree:true, showThresholdLine:true, showLanes:false, laneOverflow:false, showLines:true, showZooms:true, lines:[], zooms:[],
@@ -3960,6 +3961,9 @@ function headroomFor(sp){
   const hasPeakLabels = S.showPeaks && (sp.peaks||[]).some(p=>!p.hidden);
   return hasPeakLabels ? 30 : 8;
 }
+/* 積分値のうしろに付く基準マーク。norm>0 の区間（＝比の基準にした積分）だけに付き、
+   「基準の * を表示」を切ると全部消える。スタイル1は元から値だけなので無関係。 */
+function integRefStar(ig){ return (ig.norm>0 && S.integRefMark!==false) ? ' *' : ''; }
 function geomFor(sp, li){
   const top0=curTop();
   // スタイル2/3 は拡大図でも同じように描く。以前は !VP で外していたため、
@@ -3979,7 +3983,7 @@ function geomFor(sp, li){
   const integ2Band=laneH=>{
     const digs=S.integDigits??3, k=(S.fontScale||1);
     let mx=0; (sp.integrals||[]).forEach(ig=>{ if(!ig.hidden)
-      mx=Math.max(mx,(ig.rel.toFixed(digs)+(ig.norm>0?' *':'')).length); });
+      mx=Math.max(mx,(ig.rel.toFixed(digs)+integRefStar(ig)).length); });
     if(!mx) mx=digs+2;
     // 5.6/字は 10px Arial の数字幅（0.556em）に合わせた見積もり。小数点はもっと
     // 細いので実測よりわずかに大きめに出るが、その差はそのまま下余白になる。
@@ -3993,7 +3997,7 @@ function geomFor(sp, li){
   const integ3Band=laneH=>{
     const digs=S.integDigits??3, k=(S.fontScale||1);
     let str=''; (sp.integrals||[]).forEach(ig=>{ if(ig.hidden) return;
-      const t=ig.rel.toFixed(digs)+(ig.norm>0?' *':''); if(t.length>str.length) str=t; });
+      const t=ig.rel.toFixed(digs)+integRefStar(ig); if(t.length>str.length) str=t; });
     if(!str) str='0'.repeat(digs+2);
     const of=ctx.font; ctx.font=plotFont(10);
     const tw=ctx.measureText(str).width; ctx.font=of;
@@ -5224,7 +5228,7 @@ function renderContent(opts){
         // 数字はブラケットの直下にぶら下げる。帯の底（g.bottom-4）に固定すると、
         // 帯がラベルより高いぶんがそのまま空白として残ってしまう。
         // rotate(-90°)+textAlign:left なので、アンカーから上向きに伸びる。
-        const istr=ig.rel.toFixed(S.integDigits??3)+(ig.norm>0?' *':'');
+        const istr=ig.rel.toFixed(S.integDigits??3)+integRefStar(ig);
         ctx.font=plotFont(10);
         const itw=ctx.measureText(istr).width, ik=(S.fontScale||1);
         const iy=Math.min(g.bottom-2, by+tick+5*ik+itw);
@@ -5237,7 +5241,7 @@ function renderContent(opts){
         // narrow box of two vertical walls flanking the rotated (bottom→top) value.
         const rx1=Math.max(XL,x1), rx2=Math.min(XR,x2);
         const y0=lb+8;                            // just below the lane baseline
-        const str=ig.rel.toFixed(S.integDigits??3)+(ig.norm>0?' *':'');
+        const str=ig.rel.toFixed(S.integDigits??3)+integRefStar(ig);
         const fnt=plotFont(10); ctx.font=fnt; const tw=ctx.measureText(str).width;
         const gm=ctx.measureText('0.0');
         const glyphH=(gm.actualBoundingBoxAscent||7)+(gm.actualBoundingBoxDescent||2);
@@ -6491,7 +6495,7 @@ const RESET_KEYS={
   resetTitle:  ['titleSize','titleBold'],
   resetMark:   ['markColor','markSize'],
   resetPeak:   ['peakColor','pkDigits','peakStyle','peakVScale'],
-  resetInteg:  ['integColor','integShift','integCurveH','integDigits','integStyle'],
+  resetInteg:  ['integColor','integShift','integCurveH','integDigits','integStyle','integRefMark'],
   resetAutoInteg:['aiSigma','aiTail','aiMerge','aiMinArea','aiSkipSolv','aiBlc','aiViewOnly','aiMode'],
   resetText:   ['textColor','textSize'],
   resetMult:   ['multColor','multShift','multVScale','multDigits','multJStyle','multStyle']
@@ -8418,7 +8422,7 @@ document.getElementById('btnResetSet').onclick=()=>{
   persistUI(); resize(); draw(); };
 document.getElementById('btnResetView').onclick=()=>{
   S.ppmDigits=DEFAULTS.ppmDigits; S.pkDigits=DEFAULTS.pkDigits; S.lineW=DEFAULTS.lineW;
-  S.peakVScale=DEFAULTS.peakVScale; S.peakStyle=DEFAULTS.peakStyle; S.integStyle=DEFAULTS.integStyle; S.showIntegCurve=DEFAULTS.showIntegCurve; S.multStyle=DEFAULTS.multStyle;
+  S.peakVScale=DEFAULTS.peakVScale; S.peakStyle=DEFAULTS.peakStyle; S.integStyle=DEFAULTS.integStyle; S.showIntegCurve=DEFAULTS.showIntegCurve; S.integRefMark=DEFAULTS.integRefMark; S.multStyle=DEFAULTS.multStyle;
   const set=(id,val,txt)=>{ const el=document.getElementById(id); if(el) el.value=val;
     const v=document.getElementById(txt); if(v) v.textContent=String(val); };
   set('ppmDigits',DEFAULTS.ppmDigits,'digv');
@@ -8460,7 +8464,7 @@ document.getElementById('textColor').oninput=e=>{ S.textColor=e.target.value; pe
 document.getElementById('lineColor').oninput=e=>{ S.lineColor=e.target.value; persistUI(); if(S.tool!=='tLine') setTool('tLine'); else draw(); };
 /* assign/multiplet dropdowns: show/hide toggles */
 (function(){
-  const map=[['tgMark','showMarks'],['tgText','showText'],['tgShade','showShades'],['tgMult','showMults'],['tgMultSources','showMultSources'],['tgLine','showLines'],['tgPeaks','showPeaks'],['tgThreshold','showThresholdLine'],['tgInteg','showIntegs'],['tgIntegCurve','showIntegCurve'],['tgInsets','showInsets']];
+  const map=[['tgMark','showMarks'],['tgText','showText'],['tgShade','showShades'],['tgMult','showMults'],['tgMultSources','showMultSources'],['tgLine','showLines'],['tgPeaks','showPeaks'],['tgThreshold','showThresholdLine'],['tgInteg','showIntegs'],['tgIntegCurve','showIntegCurve'],['tgIntegRefMark','integRefMark'],['tgInsets','showInsets']];
   /* 設定パネル側に残っている対応ボタン（今は画像のみ）。ピーク/積分/多重線/塗りつぶし/
      破線コネクタはツールバー側だけになったので、ここには載せない。 */
   const vmMap={};   /* 表示/非表示はツールバー側のトグルだけになった */
@@ -9594,7 +9598,7 @@ function uiState(){ const o={
     aiSigma:S.aiSigma, aiTail:S.aiTail, aiMerge:S.aiMerge, aiMinArea:S.aiMinArea, aiSkipSolv:S.aiSkipSolv, aiBlc:S.aiBlc, aiViewOnly:S.aiViewOnly, aiMode:S.aiMode,
     axisPad:S.axisPad, axisTicks:S.axisTicks, axisMinorTicks:S.axisMinorTicks, baseGap:S.baseGap, thr:S.thr, minimapH:S.minimapH, minimapStyle:S.minimapStyle, minimapPos:S.minimapPos, minimapColor:S.minimapColor, minimapMaskT:S.minimapMaskT, minimapWinT:S.minimapWinT, minimapFrameStyle:S.minimapFrameStyle, minimapFrameW:S.minimapFrameW,
     zoomBorderColor:S.zoomBorderColor, zoomBorderWidth:S.zoomBorderWidth, zoomLeaderStyle:S.zoomLeaderStyle,
-    peakColor:S.peakColor, integColor:S.integColor, peakStyle:S.peakStyle, peakVScale:S.peakVScale, integStyle:S.integStyle, showIntegCurve:S.showIntegCurve,
+    peakColor:S.peakColor, integColor:S.integColor, peakStyle:S.peakStyle, peakVScale:S.peakVScale, integStyle:S.integStyle, showIntegCurve:S.showIntegCurve, integRefMark:S.integRefMark,
     multColor:S.multColor, multDigits:S.multDigits, multJStyle:S.multJStyle, multStyle:S.multStyle, multShift:S.multShift, multVScale:S.multVScale, markColor:S.markColor, shadeColor:S.shadeColor, textColor:S.textColor, textSize:S.textSize, textBold:S.textBold, textItalic:S.textItalic,
     textUnderline:S.textUnderline, textFontFam:S.textFontFam, lineColor:S.lineColor, lineStyle:S.lineStyle, connW:S.connW, lineArrow:S.lineArrow,
     imageDefaultScale:S.imageDefaultScale, imageBorder:S.imageBorder, imageBorderColor:S.imageBorderColor, imageBorderWidth:S.imageBorderWidth, imageBorderStyle:S.imageBorderStyle, integDigits:S.integDigits, integShift:S.integShift, integCurveH:S.integCurveH,
@@ -9663,6 +9667,7 @@ function applyUIState(o, withView){
   if(o.integStyle==='style1'||o.integStyle==='style2'||o.integStyle==='style3') S.integStyle=o.integStyle;
   if(o.multStyle==='style1'||o.multStyle==='style2') S.multStyle=o.multStyle;
   if(typeof o.showIntegCurve==='boolean') S.showIntegCurve=o.showIntegCurve;
+  if(typeof o.integRefMark==='boolean') S.integRefMark=o.integRefMark;
   if(o.markColor) S.markColor=o.markColor;
   if(o.shadeColor) S.shadeColor=o.shadeColor;
   if('textColor' in o) S.textColor=o.textColor;
@@ -9903,6 +9908,7 @@ function syncUIControls(){
   const is=document.getElementById('segIntegStyle'); if(is) is.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===S.integStyle));
   const mss=document.getElementById('segMultStyle'); if(mss) mss.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===S.multStyle));
   set('tgIntegCurve',S.showIntegCurve);
+  set('tgIntegRefMark',S.integRefMark!==false);
   const zbc=document.getElementById('zoomBorderColor'); if(zbc) zbc.value=S.zoomBorderColor||css('--axis')||'#6B7780';
   const zbw=document.getElementById('zoomBorderW'); if(zbw){ zbw.value=(S.zoomBorderWidth!=null?S.zoomBorderWidth:1); const v=document.getElementById('zbwv'); if(v) v.textContent=(S.zoomBorderWidth!=null?+S.zoomBorderWidth:1).toFixed(1)+' px'; }
   const zls=document.getElementById('segLeaderStyle'); if(zls) zls.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===(S.zoomLeaderStyle||'dashed')));
@@ -11630,6 +11636,7 @@ html[data-theme="light"] #toolbar .rsub:not(.on):hover{
     {ids:['tgPeaks'],key:'showPeaks',has:()=>allSpectraHave(sp=>(sp.peaks||[]).length)},
     {ids:['tgInteg'],key:'showIntegs',has:()=>allSpectraHave(sp=>(sp.integrals||[]).length)},
     {ids:['tgIntegCurve'],key:'showIntegCurve',has:()=>allSpectraHave(sp=>(sp.integrals||[]).length)},
+    {ids:['tgIntegRefMark'],key:'integRefMark',has:()=>S.integStyle!=='style1'&&allSpectraHave(sp=>(sp.integrals||[]).some(g=>g.norm>0))},
     {ids:['tgMult'],key:'showMults',has:()=>allSpectraHave(sp=>(sp.multiplets||[]).length)},
     {ids:['tgMultSources'],key:'showMultSources',has:()=>allSpectraHave(sp=>(sp.multiplets||[]).some(m=>(m.lines||[]).length))},
     {ids:['tgThreshold'],key:'showThresholdLine',has:()=>!!A()},
